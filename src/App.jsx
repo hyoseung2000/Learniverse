@@ -1,7 +1,7 @@
 function App() {
   return (
     <div>
-      Learniverse
+      Learniverse - dev
     </div>
   );
 }
