@@ -5,8 +5,7 @@
   "parserOptions": {
     "project": "./tsconfig.json",
     "createDefaultProgram": true,
-    "sourceType": "module",
-    "tsconfigRootDir": "__dirname"
+    "sourceType": "module"
   },
   "env": {
     // 전역객체를 eslint가 인식하는 구간
@@ -19,7 +18,6 @@
     "airbnb",
     "airbnb-typescript",
     "next/core-web-vitals",
-    "plugin:@typescript-eslint/parser",
     "plugin:@typescript-eslint/recommended", // ts 권장
     "plugin:prettier/recommended", // eslint의 포매팅을 prettier로 사용.
     "prettier" // eslint-config-prettier prettier와 중복된 eslint 규칙 제거
