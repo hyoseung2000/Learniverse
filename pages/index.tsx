@@ -1,3 +1,5 @@
+import Landing from '@/components/Landing/Landing';
+
 export default function Home() {
-  return <>시작 페이지 라우팅</>;
+  return <Landing />;
 }
