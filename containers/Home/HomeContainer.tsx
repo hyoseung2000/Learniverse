@@ -1,13 +1,11 @@
 import { styled } from 'styled-components';
 
-import { Header } from '@/components/Common/Header';
 import { Home } from '@/components/Home';
 
 const index = () => {
   return (
     <StHomeContainer>
       <p>홈 페이지 컨테이너</p>
-      <Header />
       <Home />
     </StHomeContainer>
   );
