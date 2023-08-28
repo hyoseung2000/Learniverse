@@ -1,20 +1,15 @@
-import { styled } from 'styled-components';
+// /home으로 라우팅됨
+// page 폴더는 최대한 깔끔하게 유지하기!(여기에서 스타일링 하지 말고 최대한 import만 하기)
 
-import { Header } from '@/components/Common/Header';
-import { Home } from '@/components/Home';
+// 초기 데이터 관련된 것 빼고는 containers에서 가져와서 넣기
+import { HomeContainer } from '@/containers/Home';
 
-export default function index() {
+const index = () => {
   return (
-    <StHomePageWrapper>
-      <p>홈 페이지 라우팅</p>
-      <Header />
-      <Home />
-    </StHomePageWrapper>
+    <>
+      <HomeContainer />
+    </>
   );
-}
+};
 
-const StHomePageWrapper = styled.div`
-  & > p {
-    color: blue;
-  }
-`;
+export default index;
