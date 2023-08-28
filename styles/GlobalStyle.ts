@@ -144,8 +144,6 @@ export const reset = css`
 export const GlobalStyle = createGlobalStyle`
 ${reset}
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400;500;600;700;800;900&display=swap');
-
 #root, body, html {
   width: 100vw;
   height: 100vh;

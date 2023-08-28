@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  swcMinify: true,
   compiler: {
     styledComponents: true,
   },
-  swcMinify: true,
   webpack: (config) => {
     config.module.rules.push({
       test: /\.svg$/i,
@@ -12,6 +12,11 @@ const nextConfig = {
       use: ['@svgr/webpack'],
     });
     return config;
+  },
+  experimental: {
+    fontLoaders: [
+      { loader: '@next/font/google', options: { subsets: ['latin'] } },
+    ],
   },
 };
 
