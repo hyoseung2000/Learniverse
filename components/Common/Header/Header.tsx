@@ -9,33 +9,43 @@ const Header = () => {
 
   return (
     <StHeaderWrapper path={asPath}>
-      <p>헤더 컴포넌트입니다</p>
-      <IcLogo />
-      <IcProfile />
+      <StHeader>
+        <IcLogo />
+        <button type="button">
+          logout
+          <IcProfile />
+        </button>
+      </StHeader>
     </StHeaderWrapper>
   );
 };
 
 export default Header;
 
-// styled component는 앞에 St 접두사 붙이기!!!! (일반 컴포넌트와 구분을 위해서)
 const StHeaderWrapper = styled.header<{ path: string }>`
-  // css 순서 및 개행 컨벤션 지키기!!!
-  display: flex;
-  justify-content: space-between;
-
-  width: 100%;
-  height: 100px;
-
-  background-color: yellow;
-
-  & > p {
-    color: red;
-  }
+  height: 10rem;
+  padding: 5rem 10rem 0 5rem;
 
   ${({ path }) =>
     path === '/' &&
     css`
       display: none;
     `}
+`;
+
+const StHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  width: 100%;
+
+  & > button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.9rem;
+
+    color: ${({ theme }) => theme.colors.White};
+    ${({ theme }) => theme.fonts.Body0};
+  }
 `;
