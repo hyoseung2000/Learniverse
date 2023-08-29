@@ -2,7 +2,7 @@ import { styled } from 'styled-components';
 
 import { Home } from '@/components/Home';
 
-const index = () => {
+const HomeContainer = () => {
   return (
     <StHomeContainer>
       <p>홈 페이지 컨테이너</p>
@@ -11,7 +11,7 @@ const index = () => {
   );
 };
 
-export default index;
+export default HomeContainer;
 
 const StHomeContainer = styled.main`
   & > p {

@@ -5,11 +5,7 @@
 import { HomeContainer } from '@/containers/Home';
 
 const index = () => {
-  return (
-    <>
-      <HomeContainer />
-    </>
-  );
+  return <HomeContainer />;
 };
 
 export default index;
