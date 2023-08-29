@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import type { AppProps } from 'next/app';
+import Head from 'next/head';
 import { RecoilRoot } from 'recoil';
 import { ThemeProvider } from 'styled-components';
 
@@ -12,6 +13,10 @@ export default function App({ Component, pageProps }: AppProps) {
     <RecoilRoot>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
+        <Head>
+          <title>LearniVerse</title>
+          <link rel="icon" href="/favicon.png" />
+        </Head>
         <Header />
         <Component {...pageProps} />
       </ThemeProvider>
