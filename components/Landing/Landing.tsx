@@ -1,6 +1,7 @@
 import { styled } from 'styled-components';
 
 import { IcLoginBtn } from '@/public/assets/icons';
+import { ImgBg } from '@/public/assets/images';
 
 const Landing = () => {
   return (
@@ -21,6 +22,10 @@ const StLandingWrapper = styled.main`
 
   width: 100%;
   height: 100vh;
+
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)),
+    url(${ImgBg.src}) center/cover no-repeat;
 
   & > h1 {
     margin-bottom: 4rem;
