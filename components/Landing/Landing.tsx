@@ -1,12 +1,19 @@
+import { useRouter } from 'next/router';
 import { styled } from 'styled-components';
 
 import { IcLoginBtn } from '@/public/assets/icons';
 
 const Landing = () => {
+  const router = useRouter();
+
+  const handleLoginClick = () => {
+    router.push('/home');
+  };
+
   return (
     <StLandingWrapper>
       <h1>LearniVerse</h1>
-      <StLoginBtn type="button">
+      <StLoginBtn type="button" onClick={handleLoginClick}>
         <IcLoginBtn />
       </StLoginBtn>
     </StLandingWrapper>
