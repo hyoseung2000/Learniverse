@@ -3,6 +3,8 @@ import { styled } from 'styled-components';
 
 import { IcSearch } from '@/public/assets/icons';
 
+import { PurpleButton } from '../Common/Button';
+
 const Home = () => {
   const [selectedInput, setSelectedInput] = useState(0);
   const [searchInput, setSearchInputInput] = useState('');
@@ -15,6 +17,9 @@ const Home = () => {
   };
   const handleSearch = (e: React.MouseEvent<HTMLButtonElement>) => {
     console.log('검색 : 2차 데모 이후 개발');
+  };
+  const handleRecommend = () => {
+    console.log('스터디 추천 : 2차 데모 이후 개발');
   };
 
   return (
@@ -62,6 +67,10 @@ const Home = () => {
           </StIconWrapper>
         </StInputWrapper>
       </StSearchWrapper>
+      <PurpleButton
+        btnName="✨ 나와 맞는 스터디 추천받기"
+        handleClick={handleRecommend}
+      />
     </SwHomeWrapper>
   );
 };
@@ -92,6 +101,7 @@ const SwHomeWrapper = styled.main`
 
 const StSearchWrapper = styled.div`
   margin-top: 5.6rem;
+  margin-bottom: 2rem;
 `;
 
 const StRadioWrapper = styled.div`
