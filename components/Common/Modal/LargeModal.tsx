@@ -4,18 +4,10 @@ import { styled } from 'styled-components';
 interface LargeModalProps {
   title: string;
   isShowing: boolean;
-  handleConfirm?: () => void;
-  handleCancel?: () => void;
   children?: React.ReactNode;
 }
 
-const LargeModal = ({
-  title,
-  isShowing,
-  handleConfirm,
-  handleCancel,
-  children,
-}: LargeModalProps) => {
+const LargeModal = ({ title, isShowing, children }: LargeModalProps) => {
   return (
     isShowing && (
       <StAddStudyroomModalWrapper>

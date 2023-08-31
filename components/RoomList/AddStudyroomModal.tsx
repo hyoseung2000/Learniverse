@@ -1,5 +1,6 @@
 import { styled } from 'styled-components';
 
+import { CancelButton, ConfirmButton } from '../Common/Button';
 import { LargeModal } from '../Common/Modal';
 
 interface AddStudyroomModalProps {
@@ -11,15 +12,18 @@ const AddStudyroomModal = ({
   isShowing,
   handleCancel,
 }: AddStudyroomModalProps) => {
+  const handleAddRoom = () => {};
+
   return (
     isShowing && (
       <StAddStudyroomModalWrapper>
-        <LargeModal
-          title="스터디룸 만들기"
-          isShowing={isShowing}
-          handleConfirm={handleCancel}
-          handleCancel={handleCancel}
-        ></LargeModal>
+        <LargeModal title="스터디룸 만들기" isShowing={isShowing}>
+          스터디명
+          <StBtnWrapper>
+            <ConfirmButton btnName="만들기" onClick={handleAddRoom} />
+            <CancelButton btnName="취소" onClick={handleCancel} />
+          </StBtnWrapper>
+        </LargeModal>
       </StAddStudyroomModalWrapper>
     )
   );
@@ -28,3 +32,5 @@ const AddStudyroomModal = ({
 export default AddStudyroomModal;
 
 const StAddStudyroomModalWrapper = styled.div``;
+
+const StBtnWrapper = styled.div``;
