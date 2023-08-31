@@ -5,7 +5,6 @@ import { Home } from '@/components/Home';
 const HomeContainer = () => {
   return (
     <StHomeContainer>
-      <p>홈 페이지 컨테이너</p>
       <Home />
     </StHomeContainer>
   );

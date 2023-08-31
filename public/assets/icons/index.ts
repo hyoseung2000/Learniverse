@@ -7,5 +7,6 @@
 import IcLoginBtn from './ic_login_btn.svg';
 import IcLogo from './ic_logo.svg';
 import IcProfile from './ic_profile.svg';
+import IcSearch from './ic_search.svg';
 
-export { IcLogo, IcProfile, IcLoginBtn };
+export { IcLogo, IcProfile, IcLoginBtn, IcSearch };
