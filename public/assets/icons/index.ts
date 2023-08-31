@@ -4,9 +4,10 @@
 // export는 index.ts 만들어서 한꺼번에
 // export는 camel case로!!! (ic_logo -> IcLogo)
 
+import IcAddStudyRoom from './ic_add_studyroom_btn.svg';
 import IcLoginBtn from './ic_login_btn.svg';
 import IcLogo from './ic_logo.svg';
 import IcProfile from './ic_profile.svg';
 import IcSearch from './ic_search.svg';
 
-export { IcLogo, IcProfile, IcLoginBtn, IcSearch };
+export { IcLogo, IcAddStudyRoom, IcProfile, IcLoginBtn, IcSearch };

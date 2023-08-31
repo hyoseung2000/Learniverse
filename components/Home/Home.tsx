@@ -4,6 +4,7 @@ import { styled } from 'styled-components';
 import { IcSearch } from '@/public/assets/icons';
 
 import { PurpleButton } from '../Common/Button';
+import { StudyroomList } from '../RoomList';
 
 const Home = () => {
   const [selectedInput, setSelectedInput] = useState(0);
@@ -27,7 +28,6 @@ const Home = () => {
       <h1>
         나의 스터디룸에서 코딩해요, <span>LearniVerse</span>
       </h1>
-
       <StSearchWrapper>
         <StRadioWrapper>
           <StRadio>
@@ -71,6 +71,8 @@ const Home = () => {
         btnName="✨ 나와 맞는 스터디 추천받기"
         handleClick={handleRecommend}
       />
+
+      <StudyroomList />
     </SwHomeWrapper>
   );
 };
