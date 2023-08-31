@@ -16,8 +16,9 @@ const AddStudyroomModal = ({
   const handleAddRoom = () => {};
 
   const [studyName, setStudyName] = useState('');
-  const [introduction, setIntroduction] = useState('');
+  const [category, setCategory] = useState('기타');
   const [member, setMember] = useState(2);
+  const [introduction, setIntroduction] = useState(5);
 
   return (
     isShowing && (
@@ -35,6 +36,23 @@ const AddStudyroomModal = ({
               autoComplete="off"
             />
           </StInputStudyName>
+
+          <StCategory>
+            <label>카테고리</label>
+            <select
+              value={category}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                setCategory(e.target.value);
+              }}
+            >
+              <option value="5">기타</option>
+              <option value="0">코딩테스트 대비</option>
+              <option value="1">사이드 프로젝트</option>
+              <option value="2">취업 준비</option>
+              <option value="3">개발 공부</option>
+              <option value="4">그룹/모임</option>
+            </select>
+          </StCategory>
 
           <StMember>
             <label>정원 (최대 5명)</label>
@@ -61,7 +79,7 @@ const AddStudyroomModal = ({
               name="introduction"
               value={introduction}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setIntroduction(e.target.value);
+                setIntroduction(Number(e.target.value));
               }}
               autoComplete="off"
             />
@@ -120,10 +138,23 @@ const StInputStudyName = styled.div`
   }
 `;
 
+const StCategory = styled(StInputStudyName)`
+  & > select {
+    width: 16.5rem;
+    height: 3.2rem;
+    padding-left: 1rem;
+
+    border: none;
+    border-radius: 0.4rem;
+    color: ${({ theme }) => theme.colors.White};
+    background-color: ${({ theme }) => theme.colors.Purple4};
+    ${({ theme }) => theme.fonts.Title5};
+  }
+`;
+
 const StMember = styled(StInputStudyName)`
   & > div {
     float: left;
-    /* display: flex; */
 
     ${({ theme }) => theme.fonts.Title4};
     color: ${({ theme }) => theme.colors.Learniverse_BG};
