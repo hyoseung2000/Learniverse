@@ -5,8 +5,10 @@
 // export는 camel case로!!! (ic_logo -> IcLogo)
 
 import IcAddStudyRoom from './ic_add_studyroom_btn.svg';
+import IcAddTag from './ic_add_tag.svg';
 import IcCancel from './ic_cancel.svg';
 import IcConfirm from './ic_confirm.svg';
+import IcDeleteTag from './ic_delete_tag.svg';
 import IcLoginBtn from './ic_login_btn.svg';
 import IcLogo from './ic_logo.svg';
 import IcProfile from './ic_profile.svg';
@@ -20,4 +22,6 @@ export {
   IcProfile,
   IcLoginBtn,
   IcSearch,
+  IcDeleteTag,
+  IcAddTag,
 };

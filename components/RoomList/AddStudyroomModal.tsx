@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { styled } from 'styled-components';
 
+import { IcAddTag, IcDeleteTag } from '@/public/assets/icons';
+
+import index from '../../pages/login/index';
 import { CancelButton, ConfirmButton } from '../Common/Button';
 import { LargeModal } from '../Common/Modal';
 
@@ -16,10 +19,21 @@ const AddStudyroomModal = ({
   const handleAddRoom = () => {};
 
   const [studyName, setStudyName] = useState('');
-  const [category, setCategory] = useState('기타');
+  const [category, setCategory] = useState(5);
+  const [hashtag, setHashtag] = useState('');
+  const [hashtagList, setHashtagList] = useState<string[]>([]);
   const [member, setMember] = useState(2);
-  const [introduction, setIntroduction] = useState(5);
+  const [introduction, setIntroduction] = useState('');
 
+  const handleHashtag = () => {
+    if (hashtag) {
+      setHashtagList((prev) => [...prev, hashtag]);
+      setHashtag('');
+    }
+  };
+  const handleRemoveHashtag = (index: number) => {
+    setHashtagList((prev) => prev.filter((_, i) => i !== index));
+  };
   return (
     isShowing && (
       <LargeModal title="스터디룸 만들기" isShowing={isShowing}>
@@ -42,7 +56,7 @@ const AddStudyroomModal = ({
             <select
               value={category}
               onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                setCategory(e.target.value);
+                setCategory(parseInt(e.target.value));
               }}
             >
               <option value="5">기타</option>
@@ -53,6 +67,37 @@ const AddStudyroomModal = ({
               <option value="4">그룹/모임</option>
             </select>
           </StCategory>
+
+          <StHashtag>
+            <label>해시태그</label>
+            <div>
+              <input
+                type="text"
+                name="hashtag"
+                value={hashtag}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setHashtag(e.target.value);
+                }}
+                autoComplete="off"
+              />
+              <StAddTagBtn type="button" onClick={handleHashtag}>
+                <IcAddTag />
+              </StAddTagBtn>
+              <StHashtagList>
+                {hashtagList.map((tag, index) => (
+                  <StHashtagItem key={index}>
+                    # {tag}
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveHashtag(index)}
+                    >
+                      <IcDeleteTag />
+                    </button>
+                  </StHashtagItem>
+                ))}
+              </StHashtagList>
+            </div>
+          </StHashtag>
 
           <StMember>
             <label>정원 (최대 5명)</label>
@@ -79,7 +124,7 @@ const AddStudyroomModal = ({
               name="introduction"
               value={introduction}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setIntroduction(Number(e.target.value));
+                setIntroduction(e.target.value);
               }}
               autoComplete="off"
             />
@@ -142,13 +187,63 @@ const StCategory = styled(StInputStudyName)`
   & > select {
     width: 16.5rem;
     height: 3.2rem;
-    padding-left: 1rem;
+    padding: 0 1rem;
 
     border: none;
     border-radius: 0.4rem;
     color: ${({ theme }) => theme.colors.White};
     background-color: ${({ theme }) => theme.colors.Purple4};
     ${({ theme }) => theme.fonts.Title5};
+  }
+`;
+
+const StHashtag = styled(StInputStudyName)`
+  position: relative;
+
+  & > div {
+    max-width: 35.5rem;
+  }
+  & > div > input {
+    width: 16.5rem;
+  }
+`;
+
+const StAddTagBtn = styled.button`
+  position: absolute;
+  top: 1rem;
+  left: 29rem;
+`;
+
+const StHashtagList = styled.ul`
+  display: flex;
+  flex-wrap: wrap;
+
+  margin-top: 0.5rem;
+  margin-bottom: -0.5rem;
+`;
+
+const StHashtagItem = styled.li`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: fit-content;
+  height: 3.3rem;
+  padding: 0 0.8rem;
+  margin-top: 0.5rem;
+  margin-right: 0.5rem;
+
+  border-radius: 15rem;
+  color: ${({ theme }) => theme.colors.Gray1};
+  background-color: ${({ theme }) => theme.colors.Yellow2};
+  ${({ theme }) => theme.fonts.Body3};
+
+  & > button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-left: 0.5rem;
   }
 `;
 
