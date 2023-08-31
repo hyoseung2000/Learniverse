@@ -1,13 +1,22 @@
 import { styled } from 'styled-components';
 
+import useModal from '@/hooks/useModal';
 import { IcAddStudyRoom } from '@/public/assets/icons';
 
+import AddStudyroomModal from './AddStudyroomModal';
+
 const AddStudyroom = () => {
+  const { isShowing, toggle } = useModal();
   return (
-    <StAddStudyroomWrapper>
-      <IcAddStudyRoom />
-      스터디룸 생성
-    </StAddStudyroomWrapper>
+    <>
+      <StAddStudyroomWrapper onClick={toggle}>
+        <IcAddStudyRoom />
+        스터디룸 생성
+      </StAddStudyroomWrapper>
+      <StAddModalWrapper isShowing={isShowing}>
+        <AddStudyroomModal isShowing={isShowing} handleCancel={toggle} />
+      </StAddModalWrapper>
+    </>
   );
 };
 
@@ -28,4 +37,20 @@ const StAddStudyroomWrapper = styled.button`
   background: ${({ theme }) => theme.colors.White};
   color: ${({ theme }) => theme.colors.Gray1};
   ${({ theme }) => theme.fonts.Title5};
+`;
+
+const StAddModalWrapper = styled.div<{ isShowing: boolean }>`
+  display: ${({ isShowing }) => (isShowing ? 'block' : 'none')};
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+
+  justify-content: center;
+  align-items: center;
+
+  width: 100vw;
+  height: 100vh;
+
+  background-color: rgba(0, 0, 0, 0.5);
 `;
