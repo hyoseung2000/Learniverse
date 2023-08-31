@@ -10,26 +10,26 @@ interface LargeModalProps {
 const LargeModal = ({ title, isShowing, children }: LargeModalProps) => {
   return (
     isShowing && (
-      <StAddStudyroomModalWrapper>
+      <StLargeModalWrapper>
         <StTitle>{title}</StTitle>
         {children}
-      </StAddStudyroomModalWrapper>
+      </StLargeModalWrapper>
     )
   );
 };
 
 export default LargeModal;
 
-const StAddStudyroomModalWrapper = styled.div`
+const StLargeModalWrapper = styled.div`
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 
   width: 60.1rem;
-  border-radius: 2rem;
+  height: fit-content;
 
-  height: 37.6rem;
+  border-radius: 2rem;
   box-shadow: 0px 4px 100px 0px rgba(153, 133, 254, 0.2) inset,
     -30px 30px 100px 0px rgba(132, 139, 227, 0.15);
   background-color: ${({ theme }) => theme.colors.LightGray1};
