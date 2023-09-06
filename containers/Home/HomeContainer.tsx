@@ -1,6 +1,6 @@
-import { styled } from 'styled-components';
+import { styled } from "styled-components";
 
-import { Home } from '@/components/Home';
+import { Home } from "@/components/Home";
 
 const HomeContainer = () => {
   return (
@@ -12,9 +12,4 @@ const HomeContainer = () => {
 
 export default HomeContainer;
 
-const StHomeContainer = styled.main`
-  & > p {
-    color: ${({ theme }) => theme.colors.White};
-    ${({ theme }) => theme.fonts.Body0};
-  }
-`;
+const StHomeContainer = styled.main``;

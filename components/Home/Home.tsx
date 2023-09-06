@@ -15,7 +15,7 @@ const Home = () => {
 
 export default Home;
 
-const SwHomeWrapper = styled.main`
+const SwHomeWrapper = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
