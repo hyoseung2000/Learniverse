@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 
-import { getWaitMembers } from "@/apis/memberList";
+import { getWaitMembers, JoinMember, RejectMember } from "@/apis/memberList";
 import { CancelButton, ConfirmButton } from "@/components/Common/Button";
 import { SmallModal } from "@/components/Common/Modal";
 import { memberInfo } from "@/types/member";
@@ -26,6 +26,14 @@ const ManageModal = ({
     setApplyList(list);
   };
 
+  const handleJoin = async (memberId: number) => {
+    await JoinMember(roomId, memberId);
+  };
+
+  const handleReject = async (memberId: number) => {
+    await RejectMember(roomId, memberId);
+  };
+
   useEffect(() => {
     if (roomId !== 0) getApplyList();
   }, [roomId]);
@@ -47,8 +55,18 @@ const ManageModal = ({
                   <span>{apply.memberEmail}</span>
                   {apply.isMember === '대기' ? (
                     <span>
-                      <button type="button">승인</button>
-                      <button type="button">거절</button>
+                      <button
+                        type="button"
+                        onClick={() => handleJoin(apply.memberId)}
+                      >
+                        승인
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleReject(apply.memberId)}
+                      >
+                        거절
+                      </button>
                     </span>
                   ) : (
                     <span className="status">{apply.isMember}</span>
