@@ -14,6 +14,7 @@ import IcConfirm from "./ic_confirm.svg";
 import IcDeleteTag from "./ic_delete_tag.svg";
 import IcLoginBtn from "./ic_login_btn.svg";
 import IcLogo from "./ic_logo.svg";
+import IcPlanet from "./ic_planet.svg";
 import IcProfile from "./ic_profile.svg";
 import IcSearch from "./ic_search.svg";
 
@@ -30,4 +31,5 @@ export {
   IcCharacterCheck,
   IcCharacterDot,
   IcCharacterSpeaker,
+  IcPlanet,
 };

@@ -6,3 +6,18 @@ export interface LearniverseResponse<T> {
   message: string;
   data: T;
 }
+
+export interface studyRoomListInfo {
+  rooms: studyRoomInfo[];
+}
+
+export interface studyRoomInfo {
+  roomId: number;
+  roomName: string;
+  roomIntro: string;
+  hashtags: string[];
+  roomCategory: string;
+  roomCount: number;
+  roomLimit: number;
+  isMember: string;
+}

@@ -1,12 +1,47 @@
-import { styled } from 'styled-components';
+import { styled } from "styled-components";
 
-const StudyroomCard = () => {
-  return <StStudyroomCardWrapper></StStudyroomCardWrapper>;
+import { IcPlanet } from "@/public/assets/icons";
+import { studyRoomInfo } from "@/types/studyroom";
+import { getCategoryColor } from "@/utils/getCategoryColor";
+
+interface StudyroomCardProps {
+  roomData: studyRoomInfo;
+}
+
+const StudyroomCard = ({ roomData }: StudyroomCardProps) => {
+  const {
+    roomId,
+    roomName,
+    roomIntro,
+    hashtags,
+    roomCategory,
+    roomCount,
+    roomLimit,
+    isMember,
+  } = roomData;
+
+  const planetColor = getCategoryColor(roomCategory);
+
+  return (
+    <StStudyroomCardWrapper planetColor={planetColor}>
+      <IcPlanet />
+      <br />
+      {roomName}
+      <br />
+      {hashtags}
+      <br />
+      {roomCategory}
+      <br />
+      {roomIntro}
+      <br />
+      {roomLimit}
+    </StStudyroomCardWrapper>
+  );
 };
 
 export default StudyroomCard;
 
-const StStudyroomCardWrapper = styled.article`
+const StStudyroomCardWrapper = styled.article<{ planetColor: string }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -23,4 +58,10 @@ const StStudyroomCardWrapper = styled.article`
   ${({ theme }) => theme.fonts.Title5};
 
   cursor: pointer;
+
+  & > svg {
+    path {
+      fill: ${({ planetColor }) => planetColor};
+    }
+  }
 `;

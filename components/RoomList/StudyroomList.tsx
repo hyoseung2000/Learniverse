@@ -1,20 +1,31 @@
-import { styled } from 'styled-components';
+import { useEffect, useState } from "react";
+import { styled } from "styled-components";
 
-import AddStudyroom from './AddStudyroom';
-import StudyroomCard from './StudyroomCard';
+import { getRoomList } from "@/apis/home";
+import { studyRoomInfo, studyRoomListInfo } from "@/types/studyroom";
+
+import AddStudyroom from "./AddStudyroom";
+import StudyroomCard from "./StudyroomCard";
 
 const StudyroomList = () => {
+  const [roomList, setRoomList] = useState<studyRoomInfo[]>();
+
+  const getAllRoom = async () => {
+    const rooms = await getRoomList();
+    setRoomList(rooms);
+  };
+
+  useEffect(() => {
+    getAllRoom();
+  }, []);
+
   return (
     <StStudyroomListWrapper>
       <AddStudyroom />
-      <StudyroomCard />
-      <StudyroomCard />
-      <StudyroomCard />
-      <StudyroomCard />
-      <StudyroomCard />
-      <StudyroomCard />
-      <StudyroomCard />
-      <StudyroomCard />
+      {roomList &&
+        roomList.map((room) => (
+          <StudyroomCard key={room.roomId} roomData={room} />
+        ))}
     </StStudyroomListWrapper>
   );
 };
