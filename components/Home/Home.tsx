@@ -20,6 +20,8 @@ const SwHomeWrapper = styled.main`
   flex-direction: column;
   align-items: center;
 
+  padding: 3.79rem 11.3rem 0 11.3rem;
+
   & > h1 {
     color: ${({ theme }) => theme.colors.White};
     ${({ theme }) => theme.fonts.Head0};
