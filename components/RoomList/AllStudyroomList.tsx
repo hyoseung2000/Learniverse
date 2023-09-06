@@ -4,10 +4,10 @@ import { styled } from "styled-components";
 import { getRoomList } from "@/apis/home";
 import { studyRoomInfo, studyRoomListInfo } from "@/types/studyroom";
 
-import AddStudyroom from "./AddStudyroom";
-import StudyroomCard from "./StudyroomCard";
+import AddStudyroom from "../RoomCard/AddStudyroom";
+import StudyroomCard from "../RoomCard/StudyroomCard";
 
-const StudyroomList = () => {
+const AllStudyroomList = () => {
   const [roomList, setRoomList] = useState<studyRoomInfo[]>();
 
   const getAllRoom = async () => {
@@ -21,7 +21,6 @@ const StudyroomList = () => {
 
   return (
     <StStudyroomListWrapper>
-      <AddStudyroom />
       {roomList &&
         roomList.map((room) => (
           <StudyroomCard key={room.roomId} roomData={room} />
@@ -30,7 +29,7 @@ const StudyroomList = () => {
   );
 };
 
-export default StudyroomList;
+export default AllStudyroomList;
 
 const StStudyroomListWrapper = styled.section`
   display: grid;

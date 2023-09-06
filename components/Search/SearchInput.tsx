@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { styled } from 'styled-components';
+import { useState } from "react";
+import { styled } from "styled-components";
 
-import { IcSearch } from '@/public/assets/icons';
+import { IcSearch } from "@/public/assets/icons";
 
-const Search = () => {
+const SearchInput = () => {
   const [selectedInput, setSelectedInput] = useState(0);
   const [searchInput, setSearchInputInput] = useState('');
 
@@ -17,7 +17,7 @@ const Search = () => {
     console.log('검색 : 2차 데모 이후 개발');
   };
   return (
-    <StSearchWrapper>
+    <StSearchInputWrapper>
       <StRadioWrapper>
         <StRadio>
           <input
@@ -55,13 +55,13 @@ const Search = () => {
           <IcSearch />
         </StIconWrapper>
       </StInputWrapper>
-    </StSearchWrapper>
+    </StSearchInputWrapper>
   );
 };
 
-export default Search;
+export default SearchInput;
 
-const StSearchWrapper = styled.div`
+const StSearchInputWrapper = styled.div`
   margin-top: 5.6rem;
   margin-bottom: 2rem;
 `;

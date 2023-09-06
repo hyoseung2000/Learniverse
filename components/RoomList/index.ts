@@ -1,4 +1,2 @@
-export { default as AddStudyroom } from './AddStudyroom';
-export { default as AddStudyroomModal } from './AddStudyroomModal';
-export { default as StudyroomCard } from './StudyroomCard';
-export { default as StudyroomList } from './StudyroomList';
+export { default as AllStudyroomList } from './AllStudyroomList';
+export { default as MyStudyroomList } from './MyStudyroomList';

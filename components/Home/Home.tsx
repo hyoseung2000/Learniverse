@@ -1,25 +1,14 @@
-import { styled } from 'styled-components';
+import { styled } from "styled-components";
 
-import { PurpleButton } from '../Common/Button';
-import { StudyroomList } from '../RoomList';
-import Search from './Search';
+import { MyStudyroomList } from "../RoomList";
 
 const Home = () => {
-  const handleRecommend = () => {
-    console.log('스터디 추천 : 2차 데모 이후 개발');
-  };
-
   return (
     <SwHomeWrapper>
       <h1>
         나의 스터디룸에서 코딩해요, <span>LearniVerse</span>
       </h1>
-      <Search />
-      <PurpleButton
-        btnName="✨ 나와 맞는 스터디 추천받기"
-        handleClick={handleRecommend}
-      />
-      <StudyroomList />
+      <MyStudyroomList />
     </SwHomeWrapper>
   );
 };
@@ -29,11 +18,9 @@ export default Home;
 const SwHomeWrapper = styled.main`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 
   & > h1 {
-    margin-top: 3.8rem;
     color: ${({ theme }) => theme.colors.White};
     ${({ theme }) => theme.fonts.Head0};
 

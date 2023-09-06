@@ -40,7 +40,9 @@ const StudyroomCard = ({ roomData }: StudyroomCardProps) => {
           정원
           <span> {roomLimit}</span> / 5명
         </StLimit>
-        <StJoin type="button">참여</StJoin>
+        <StJoin type="button" disabled={roomLimit === 5}>
+          참여
+        </StJoin>
       </StJoinWrapper>
     </StStudyroomCardWrapper>
   );
@@ -51,8 +53,6 @@ export default StudyroomCard;
 const StStudyroomCardWrapper = styled.article`
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
-  /* gap: 0.7rem; */
 
   width: 14.1rem;
   height: 18.6rem;
@@ -78,7 +78,6 @@ const StIconWrapper = styled.div<{ planetColor: string }>`
     width: 3.5rem;
     height: 3.5rem;
     margin-top: 0.4rem;
-    /*margin-bottom: 1.2rem; */
 
     path {
       fill: ${({ planetColor }) => planetColor};
@@ -155,6 +154,11 @@ const StJoin = styled.button`
   padding: 0.2rem 0.7rem;
 
   border-radius: 0.4rem;
-  background-color: ${({ theme }) => theme.colors.Yellow2};
+  background-color: ${({ theme, disabled }) =>
+    disabled ? theme.colors.Gray4 : theme.colors.Yellow2};
+  color: ${({ theme, disabled }) =>
+    disabled ? theme.colors.White : theme.colors.Learniverse_BG};
   ${({ theme }) => theme.fonts.Body8};
+
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 `;

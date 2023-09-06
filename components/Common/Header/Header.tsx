@@ -1,10 +1,10 @@
-import { useRouter } from 'next/router';
-import { css, styled } from 'styled-components';
+import { useRouter } from "next/router";
+import { css, styled } from "styled-components";
 
-import useModal from '@/hooks/useModal';
-import { IcLogo, IcProfile } from '@/public/assets/icons';
+import useModal from "@/hooks/useModal";
+import { IcLogo, IcProfile } from "@/public/assets/icons";
 
-import HeaderModal from './HeaderModal';
+import HeaderModal from "./HeaderModal";
 
 const Header = () => {
   const router = useRouter();
@@ -30,8 +30,9 @@ const Header = () => {
 export default Header;
 
 const StHeaderWrapper = styled.header<{ path: string }>`
-  height: 10rem;
-  padding: 5rem 10rem 0 5rem;
+  height: 9.6rem;
+  padding: 5rem 10rem 0rem 5rem;
+  box-sizing: border-box;
 
   ${({ path }) =>
     path === '/' &&
