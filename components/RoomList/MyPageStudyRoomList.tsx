@@ -30,7 +30,11 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
     <StMyPageRoomListWrapper>
       {roomList &&
         roomList.map((room) => (
-          <StudyroomCard key={room.roomId} roomData={room} />
+          <StudyroomCard
+            key={room.roomId}
+            roomData={room}
+            roomType={isLeader ? 'leader' : 'apply'}
+          />
         ))}
     </StMyPageRoomListWrapper>
   );

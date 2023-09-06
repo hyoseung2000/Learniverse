@@ -46,14 +46,22 @@ const StudyroomCard = ({ roomData, roomType }: StudyroomCardProps) => {
           <StJoin type="button">입장</StJoin>
         </StJoinWrapper>
       </StStudyroomCardWrapper>
-      <StBtnWrapper>
-        <button type="button" className="manage">
-          신청자 관리
-        </button>
-        <button type="button" className="edit">
-          스터디 정보수정
-        </button>
-      </StBtnWrapper>
+      {roomType === 'leader' ? (
+        <StBtnWrapper>
+          <button type="button" className="manage">
+            신청자 관리
+          </button>
+          <button type="button" className="edit">
+            스터디 정보수정
+          </button>
+        </StBtnWrapper>
+      ) : roomType === 'apply' ? (
+        <StStatusWrapper memberStatus={isMember}>
+          신청 현황 <span>{isMember}</span>
+        </StStatusWrapper>
+      ) : (
+        <></>
+      )}
     </StCardWrapper>
   );
 };
@@ -198,5 +206,38 @@ const StBtnWrapper = styled.div`
   .edit {
     color: ${({ theme }) => theme.colors.Learniverse_BG};
     background-color: ${({ theme }) => theme.colors.SkyBlue};
+  }
+`;
+
+const StStatusWrapper = styled.div<{ memberStatus: string }>`
+  display: flex;
+  justify-content: center;
+  gap: 0.3rem;
+
+  margin-top: 0.3rem;
+
+  color: ${({ theme }) => theme.colors.LightGray1};
+  ${({ theme }) => theme.fonts.Title5};
+
+  & > span {
+    margin-top: 0.3rem;
+    margin-left: 2.4rem;
+    padding: 0rem 0.3rem;
+
+    border-radius: 0.4rem;
+    ${({ theme }) => theme.fonts.Body4};
+    /* background-color: ${({ theme }) => theme.colors.Green}; */
+    background-color: ${({ memberStatus, theme }) => {
+      switch (memberStatus) {
+        case '승인':
+          return '#0ACF84';
+        case '거절':
+          return '#F14E1C';
+        case '대기':
+          return '#26C6DA';
+        default:
+          return 'transparent';
+      }
+    }};
   }
 `;
