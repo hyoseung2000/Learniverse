@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { styled } from "styled-components";
+import { useEffect, useState } from 'react';
+import { styled } from 'styled-components';
 
-import { getWaitMembers, JoinMember, RejectMember } from "@/apis/memberList";
-import { CancelButton, ConfirmButton } from "@/components/Common/Button";
-import { SmallModal } from "@/components/Common/Modal";
-import { memberInfo } from "@/types/member";
+import { getWaitMembers, JoinMember, RejectMember } from '@/apis/memberList';
+import { CancelButton, ConfirmButton } from '@/components/Common/Button';
+import { SmallModal } from '@/components/Common/Modal';
+import { memberInfo } from '@/types/member';
 
 interface CompleteModalProps {
   roomId: number;
@@ -20,6 +20,7 @@ const ManageModal = ({
   handleCancel,
 }: CompleteModalProps) => {
   const [applyList, setApplyList] = useState<memberInfo[]>();
+  const [statusChange, setStatusChange] = useState(false);
 
   const getApplyList = async () => {
     const list = await getWaitMembers(roomId);
@@ -28,15 +29,17 @@ const ManageModal = ({
 
   const handleJoin = async (memberId: number) => {
     await JoinMember(roomId, memberId);
+    setStatusChange((prev) => !prev);
   };
 
   const handleReject = async (memberId: number) => {
     await RejectMember(roomId, memberId);
+    setStatusChange((prev) => !prev);
   };
 
   useEffect(() => {
     if (roomId !== 0) getApplyList();
-  }, [roomId]);
+  }, [roomId, statusChange]);
 
   return (
     <>
