@@ -5,11 +5,18 @@ import { studyRoomInfo } from "@/types/studyroom";
 import { getCategoryColor } from "@/utils/getCategoryColor";
 
 interface StudyroomCardProps {
-  roomType?: string;
   roomData: studyRoomInfo;
+  roomType?: string;
+  handleManage?: () => void;
+  handleEdit?: () => void;
 }
 
-const StudyroomCard = ({ roomData, roomType }: StudyroomCardProps) => {
+const StudyroomCard = ({
+  roomData,
+  roomType,
+  handleManage,
+  handleEdit,
+}: StudyroomCardProps) => {
   const {
     roomId,
     roomName,
@@ -48,10 +55,10 @@ const StudyroomCard = ({ roomData, roomType }: StudyroomCardProps) => {
       </StStudyroomCardWrapper>
       {roomType === 'leader' ? (
         <StBtnWrapper>
-          <button type="button" className="manage">
+          <button type="button" className="manage" onClick={handleManage}>
             신청자 관리
           </button>
-          <button type="button" className="edit">
+          <button type="button" className="edit" onClick={handleEdit}>
             스터디 정보수정
           </button>
         </StBtnWrapper>
@@ -226,7 +233,6 @@ const StStatusWrapper = styled.div<{ memberStatus: string }>`
 
     border-radius: 0.4rem;
     ${({ theme }) => theme.fonts.Body4};
-    /* background-color: ${({ theme }) => theme.colors.Green}; */
     background-color: ${({ memberStatus, theme }) => {
       switch (memberStatus) {
         case '승인':

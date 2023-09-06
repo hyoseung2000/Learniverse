@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 
 import { getApplyRoomList, getLeaderRoomList } from "@/apis/home";
+import useModal from "@/hooks/useModal";
 import { studyRoomInfo } from "@/types/studyroom";
 
+import { ManageModal } from "../RoomCard/Modal";
 import StudyroomCard from "../RoomCard/StudyroomCard";
 
 interface MyPageStudyRoomListProps {
@@ -11,6 +13,8 @@ interface MyPageStudyRoomListProps {
 }
 const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
   const [roomList, setRoomList] = useState<studyRoomInfo[]>();
+  const manage = useModal();
+  const edit = useModal();
 
   const getAllRoom = async () => {
     let rooms: studyRoomInfo[] = [];
@@ -22,21 +26,34 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
     setRoomList(rooms);
   };
 
+  const handleManage = () => {};
+  const handleEdit = () => {};
   useEffect(() => {
     getAllRoom();
   }, [isLeader]);
 
   return (
-    <StMyPageRoomListWrapper>
-      {roomList &&
-        roomList.map((room) => (
-          <StudyroomCard
-            key={room.roomId}
-            roomData={room}
-            roomType={isLeader ? 'leader' : 'apply'}
-          />
-        ))}
-    </StMyPageRoomListWrapper>
+    <>
+      <StMyPageRoomListWrapper>
+        {roomList &&
+          roomList.map((room) => (
+            <StudyroomCard
+              key={room.roomId}
+              roomData={room}
+              roomType={isLeader ? 'leader' : 'apply'}
+              handleManage={isLeader ? manage.toggle : undefined}
+              handleEdit={isLeader ? edit.toggle : undefined}
+            />
+          ))}
+      </StMyPageRoomListWrapper>
+      <StManageModalWrapper isShowing={manage.isShowing}>
+        <ManageModal
+          isShowing={manage.isShowing}
+          handleConfirm={handleManage}
+          handleCancel={manage.toggle}
+        />
+      </StManageModalWrapper>
+    </>
   );
 };
 
@@ -51,4 +68,20 @@ const StMyPageRoomListWrapper = styled.section`
 
   margin-top: 4.6rem;
   margin-bottom: 8rem;
+`;
+
+const StManageModalWrapper = styled.div<{ isShowing: boolean }>`
+  display: ${({ isShowing }) => (isShowing ? 'block' : 'none')};
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+
+  justify-content: center;
+  align-items: center;
+
+  width: 100vw;
+  height: 100vh;
+
+  background-color: rgba(0, 0, 0, 0.5);
 `;

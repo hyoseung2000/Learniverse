@@ -1,9 +1,8 @@
 import { styled } from "styled-components";
 
+import { CancelButton, ConfirmButton } from "@/components/Common/Button";
+import { SmallModal } from "@/components/Common/Modal";
 import { IcCharacterSpeaker } from "@/public/assets/icons";
-
-import { CancelButton, ConfirmButton } from "../Common/Button";
-import { SmallModal } from "../Common/Modal";
 
 interface CompleteModalProps {
   isShowing: boolean;
@@ -50,6 +49,7 @@ const StCompleteModalWrapper = styled.section`
 
   padding: 1.6rem;
 `;
+
 const StContentWrapper = styled.div`
   display: flex;
   align-items: center;

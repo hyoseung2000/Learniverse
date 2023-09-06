@@ -4,8 +4,8 @@ import { styled } from "styled-components";
 import useModal from "@/hooks/useModal";
 import { IcAddTag, IcDeleteTag } from "@/public/assets/icons";
 
-import { CancelButton, ConfirmButton } from "../Common/Button";
-import { LargeModal, SmallModal } from "../Common/Modal";
+import { CancelButton, ConfirmButton } from "../../Common/Button";
+import { LargeModal, SmallModal } from "../../Common/Modal";
 
 interface AddStudyroomModalProps {
   isShowing: boolean;
