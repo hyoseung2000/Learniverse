@@ -16,7 +16,9 @@ const AddStudyroomModal = ({
   isShowing,
   handleCancel,
 }: AddStudyroomModalProps) => {
-  const handleAddRoom = () => {};
+  const handleAddRoom = () => {
+    console.log('스터디룸 만들기 : 1차 데모 API 연결해야함');
+  };
 
   const [studyName, setStudyName] = useState('');
   const [category, setCategory] = useState(5);
