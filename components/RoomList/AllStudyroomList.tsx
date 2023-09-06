@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 
-import { getRoomList } from "@/apis/home";
+import { getRoomList } from "@/apis/roomList";
 import { studyRoomInfo } from "@/types/studyroom";
 
 import StudyroomCard from "../RoomCard/StudyroomCard";

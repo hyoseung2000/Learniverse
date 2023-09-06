@@ -34,6 +34,7 @@ const StudyroomCard = ({
     <StCardWrapper>
       <StStudyroomCardWrapper>
         <StIconWrapper planetColor={planetColor}>
+          {roomId}
           <IcPlanet />
         </StIconWrapper>
         <StRoomName>{roomName}</StRoomName>
@@ -47,10 +48,11 @@ const StudyroomCard = ({
         <StJoinWrapper>
           <StLimit>
             정원
-            <span> {roomLimit}</span> / 5명
+            <span> {roomCount}</span> / {roomLimit}명
           </StLimit>
-          {/* <StJoin type="button" disabled={roomLimit === 5}> */}
-          <StJoin type="button">입장</StJoin>
+          <StJoin type="button" disabled={roomLimit === roomCount}>
+            입장
+          </StJoin>
         </StJoinWrapper>
       </StStudyroomCardWrapper>
       {roomType === 'leader' ? (

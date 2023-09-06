@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 
-import { getMyRoomList } from "@/apis/home";
+import { getMyRoomList } from "@/apis/roomList";
 import { studyRoomInfo } from "@/types/studyroom";
 
 import { PurpleButton } from "../Common/Button";

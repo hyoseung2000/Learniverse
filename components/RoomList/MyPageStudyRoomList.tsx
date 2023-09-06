@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 
-import { getApplyRoomList, getLeaderRoomList } from "@/apis/home";
+import { getApplyRoomList, getLeaderRoomList } from "@/apis/roomList";
 import useModal from "@/hooks/useModal";
 import { studyRoomInfo } from "@/types/studyroom";
 
@@ -13,6 +13,7 @@ interface MyPageStudyRoomListProps {
 }
 const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
   const [roomList, setRoomList] = useState<studyRoomInfo[]>();
+  const [roomId, setRoomId] = useState<number>(0);
   const manage = useModal();
   const edit = useModal();
 
@@ -26,7 +27,13 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
     setRoomList(rooms);
   };
 
-  const handleManage = () => {};
+  const handleManage = async (roomId: number) => {
+    setRoomId(roomId);
+    manage.toggle();
+    // const members = awai
+    // manage.setPayload(roomId);
+  };
+
   const handleEdit = () => {};
   useEffect(() => {
     getAllRoom();
@@ -41,15 +48,22 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
               key={room.roomId}
               roomData={room}
               roomType={isLeader ? 'leader' : 'apply'}
-              handleManage={isLeader ? manage.toggle : undefined}
+              handleManage={
+                isLeader
+                  ? () => {
+                      handleManage(room.roomId);
+                    }
+                  : undefined
+              }
               handleEdit={isLeader ? edit.toggle : undefined}
             />
           ))}
       </StMyPageRoomListWrapper>
       <StManageModalWrapper isShowing={manage.isShowing}>
         <ManageModal
+          roomId={roomId}
           isShowing={manage.isShowing}
-          handleConfirm={handleManage}
+          handleConfirm={manage.toggle}
           handleCancel={manage.toggle}
         />
       </StManageModalWrapper>
