@@ -1,5 +1,5 @@
-import { useRouter } from 'next/router';
-import { styled } from 'styled-components';
+import { useRouter } from "next/router";
+import { styled } from "styled-components";
 
 interface HeaderModalProps {
   isShowing: boolean;
@@ -66,6 +66,6 @@ const StHeaderModalWrapper = styled.div`
     width: 100%;
   }
   & > button:hover {
-    color: ${({ theme }) => theme.colors.Blue};
+    color: ${({ theme }) => theme.colors.SkyBlue};
   }
 `;
