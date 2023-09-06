@@ -142,7 +142,7 @@ export const reset = css`
   input {
     border: none;
     background: none;
-    
+
     &:focus {
       outline: none;
     }

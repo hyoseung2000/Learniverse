@@ -47,7 +47,7 @@ const MyStudyroomList = () => {
 export default MyStudyroomList;
 
 const StStudyroomListWrapper = styled.section`
-  margin-top: 3.4rem;
+  margin-top: 8.4rem;
 `;
 
 const StStudyroomList = styled.section`

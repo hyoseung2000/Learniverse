@@ -15,7 +15,11 @@ const Header = () => {
   return (
     <StHeaderWrapper path={asPath}>
       <StHeader>
-        <IcLogo />
+        <IcLogo
+          onClick={() => {
+            router.push('/home');
+          }}
+        />
         <button type="button" onClick={toggle}>
           <IcProfile />
         </button>
@@ -49,6 +53,9 @@ const StHeader = styled.div`
 
   width: 100%;
 
+  & > svg {
+    cursor: pointer;
+  }
   & > button {
     display: flex;
     justify-content: space-between;

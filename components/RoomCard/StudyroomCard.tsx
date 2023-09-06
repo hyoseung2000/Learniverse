@@ -5,10 +5,11 @@ import { studyRoomInfo } from "@/types/studyroom";
 import { getCategoryColor } from "@/utils/getCategoryColor";
 
 interface StudyroomCardProps {
+  roomType?: string;
   roomData: studyRoomInfo;
 }
 
-const StudyroomCard = ({ roomData }: StudyroomCardProps) => {
+const StudyroomCard = ({ roomData, roomType }: StudyroomCardProps) => {
   const {
     roomId,
     roomName,
@@ -23,38 +24,51 @@ const StudyroomCard = ({ roomData }: StudyroomCardProps) => {
   const planetColor = getCategoryColor(roomCategory);
 
   return (
-    <StStudyroomCardWrapper>
-      <StIconWrapper planetColor={planetColor}>
-        <IcPlanet />
-      </StIconWrapper>
-      <StRoomName>{roomName}</StRoomName>
-      <StHashtags>
-        {hashtags.map((hashtag) => (
-          <li key={hashtag}>#{hashtag}</li>
-        ))}
-      </StHashtags>
-      <StCategory>{roomCategory}</StCategory>
-      <StIntro>{roomIntro}</StIntro>
-      <StJoinWrapper>
-        <StLimit>
-          정원
-          <span> {roomLimit}</span> / 5명
-        </StLimit>
-        <StJoin type="button" disabled={roomLimit === 5}>
-          참여
-        </StJoin>
-      </StJoinWrapper>
-    </StStudyroomCardWrapper>
+    <StCardWrapper>
+      <StStudyroomCardWrapper>
+        <StIconWrapper planetColor={planetColor}>
+          <IcPlanet />
+        </StIconWrapper>
+        <StRoomName>{roomName}</StRoomName>
+        <StHashtags>
+          {hashtags.map((hashtag) => (
+            <li key={hashtag}>#{hashtag}</li>
+          ))}
+        </StHashtags>
+        <StCategory>{roomCategory}</StCategory>
+        <StIntro>{roomIntro}</StIntro>
+        <StJoinWrapper>
+          <StLimit>
+            정원
+            <span> {roomLimit}</span> / 5명
+          </StLimit>
+          {/* <StJoin type="button" disabled={roomLimit === 5}> */}
+          <StJoin type="button">입장</StJoin>
+        </StJoinWrapper>
+      </StStudyroomCardWrapper>
+      <StBtnWrapper>
+        <button type="button" className="manage">
+          신청자 관리
+        </button>
+        <button type="button" className="edit">
+          스터디 정보수정
+        </button>
+      </StBtnWrapper>
+    </StCardWrapper>
   );
 };
 
 export default StudyroomCard;
 
+const StCardWrapper = styled.div`
+  width: 14.1rem;
+`;
+
 const StStudyroomCardWrapper = styled.article`
   display: flex;
   flex-direction: column;
 
-  width: 14.1rem;
+  width: 100%;
   height: 18.6rem;
   padding: 1.8rem 1.9rem;
   box-sizing: border-box;
@@ -161,4 +175,28 @@ const StJoin = styled.button`
   ${({ theme }) => theme.fonts.Body8};
 
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+`;
+
+const StBtnWrapper = styled.div`
+  display: flex;
+  gap: 0.6rem;
+
+  width: 100%;
+  height: 2rem;
+  margin-top: 0.5rem;
+
+  & > button {
+    padding: 0.3rem 0.45rem;
+
+    border-radius: 0.5rem;
+    ${({ theme }) => theme.fonts.Body6};
+  }
+  .manage {
+    color: ${({ theme }) => theme.colors.LightGray2};
+    background-color: ${({ theme }) => theme.colors.Purple3};
+  }
+  .edit {
+    color: ${({ theme }) => theme.colors.Learniverse_BG};
+    background-color: ${({ theme }) => theme.colors.SkyBlue};
+  }
 `;

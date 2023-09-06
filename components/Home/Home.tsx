@@ -27,6 +27,8 @@ const SwHomeWrapper = styled.section`
     ${({ theme }) => theme.fonts.Head0};
 
     & > span {
+      width: fit-content;
+
       background: linear-gradient(90deg, #9985fe 0%, #93cdfd 100%);
       background-clip: text;
       ${({ theme }) => theme.fonts.Head0};

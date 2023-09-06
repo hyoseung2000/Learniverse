@@ -1,40 +1,50 @@
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 
-import { getRoomList } from "@/apis/home";
+import { getApplyRoomList, getLeaderRoomList } from "@/apis/home";
 import { studyRoomInfo } from "@/types/studyroom";
 
 import StudyroomCard from "../RoomCard/StudyroomCard";
 
-const AllStudyroomList = () => {
+interface MyPageStudyRoomListProps {
+  isLeader?: boolean;
+}
+const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
   const [roomList, setRoomList] = useState<studyRoomInfo[]>();
 
   const getAllRoom = async () => {
-    const rooms = await getRoomList();
+    let rooms: studyRoomInfo[] = [];
+    if (isLeader) {
+      rooms = await getLeaderRoomList();
+    } else {
+      rooms = await getApplyRoomList();
+    }
     setRoomList(rooms);
   };
 
   useEffect(() => {
     getAllRoom();
-  }, []);
+  }, [isLeader]);
 
   return (
-    <StStudyroomListWrapper>
+    <StMyPageRoomListWrapper>
       {roomList &&
         roomList.map((room) => (
           <StudyroomCard key={room.roomId} roomData={room} />
         ))}
-    </StStudyroomListWrapper>
+    </StMyPageRoomListWrapper>
   );
 };
 
-export default AllStudyroomList;
+export default MyPageStudyRoomList;
 
-const StStudyroomListWrapper = styled.section`
+const StMyPageRoomListWrapper = styled.section`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
+  align-items: center;
+  justify-content: center;
   gap: 1.5rem;
 
-  margin-top: 8.4rem;
+  margin-top: 4.6rem;
   margin-bottom: 8rem;
 `;

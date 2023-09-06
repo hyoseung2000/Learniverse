@@ -1,6 +1,7 @@
 import { styled } from "styled-components";
 
 import { PurpleButton } from "../Common/Button";
+import { AllStudyroomList } from "../RoomList";
 import SearchInput from "./SearchInput";
 
 const Search = () => {

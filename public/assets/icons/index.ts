@@ -16,11 +16,14 @@ import IcLoginBtn from "./ic_login_btn.svg";
 import IcLogo from "./ic_logo.svg";
 import IcPlanet from "./ic_planet.svg";
 import IcProfile from "./ic_profile.svg";
+import IcProfileImage from "./ic_profile_image.svg";
 import IcSearch from "./ic_search.svg";
+import IcTracker from "./ic_tracker.svg";
 
 export {
   IcConfirm,
   IcCancel,
+  IcProfileImage,
   IcLogo,
   IcAddStudyRoom,
   IcProfile,
@@ -32,4 +35,5 @@ export {
   IcCharacterDot,
   IcCharacterSpeaker,
   IcPlanet,
+  IcTracker,
 };
