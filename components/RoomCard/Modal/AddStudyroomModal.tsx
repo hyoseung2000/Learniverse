@@ -30,11 +30,26 @@ const AddStudyroomModal = ({
   const [addRoomInfo, setAddRoomInfo] = useState<postStudyRoomInfo>();
   const [, setEncodedUrl] = useRecoilState(encodedUrlState);
 
+  const initInfo = () => {
+    setStudyName('');
+    setCategory(5);
+    setHashtag('');
+    setHashtagList([]);
+    setMember(2);
+    setIntroduction('');
+    setAddRoomInfo(undefined);
+  };
+
   const handleAddRoom = async () => {
+    if (!studyName || hashtagList.length === 0) {
+      alert('스터디명, 해시태그 입력은 필수입니다.');
+      return;
+    }
     const url = addRoomInfo ? await createRoom(addRoomInfo) : '';
     console.log(url);
     setEncodedUrl(url);
     handleCreate();
+    initInfo();
   };
 
   const handleHashtag = () => {
@@ -157,7 +172,13 @@ const AddStudyroomModal = ({
 
             <StBtnWrapper>
               <ConfirmButton btnName="만들기" onClick={handleAddRoom} />
-              <CancelButton btnName="취소" onClick={handleCancel} />
+              <CancelButton
+                btnName="취소"
+                onClick={() => {
+                  initInfo();
+                  handleCancel();
+                }}
+              />
             </StBtnWrapper>
           </StAddStudyroomModalWrapper>
         </LargeModal>
