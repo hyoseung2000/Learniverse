@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { styled } from 'styled-components';
 
 import { IcPlanet } from '@/public/assets/icons';
@@ -28,6 +29,7 @@ const StudyroomCard = ({
     isMember,
   } = roomData;
 
+  const router = useRouter();
   const planetColor = getCategoryColor(roomCategory);
 
   return (
@@ -56,6 +58,9 @@ const StudyroomCard = ({
               roomLimit === roomCount ||
               !(isMember === '승인' || isMember === '팀장')
             }
+            onClick={() => {
+              router.push(`/studyroom/${roomId}`);
+            }}
           >
             입장
           </StJoin>
