@@ -1,8 +1,8 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components';
 
-import { CancelButton, ConfirmButton } from "@/components/Common/Button";
-import { SmallModal } from "@/components/Common/Modal";
-import { IcCharacterSpeaker } from "@/public/assets/icons";
+import { CancelButton, ConfirmButton } from '@/components/Common/Button';
+import { SmallModal } from '@/components/Common/Modal';
+import { IcCharacterSpeaker } from '@/public/assets/icons';
 
 interface CompleteModalProps {
   isShowing: boolean;
@@ -27,9 +27,11 @@ const CompleteModal = ({ isShowing, handleCancel }: CompleteModalProps) => {
                 링크를 공유하여 팀원을 초대하세요!
               </p>
             </StContentWrapper>
-            <StLink>https://learniverse/sdjslekf/2343</StLink>
+            <StLink>
+              https://learniverse/studyroom/RO8dIb0cp9cMygXjWWEFDw==
+            </StLink>
             <StBtnWrapper>
-              <ConfirmButton btnName="만들기" onClick={handleCopy} />
+              <ConfirmButton btnName="공유하기" onClick={handleCopy} />
               <CancelButton btnName="취소" onClick={handleCancel} />
             </StBtnWrapper>
           </StCompleteModalWrapper>
@@ -80,5 +82,5 @@ const StLink = styled.p`
   border: 0.2rem solid ${({ theme }) => theme.colors.Purple4};
 
   color: ${({ theme }) => theme.colors.Learniverse_BG};
-  ${({ theme }) => theme.fonts.Body1};
+  ${({ theme }) => theme.fonts.Body5};
 `;

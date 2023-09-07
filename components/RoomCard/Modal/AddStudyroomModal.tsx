@@ -1,11 +1,12 @@
-import { useState } from "react";
-import { styled } from "styled-components";
+import { useEffect, useState } from 'react';
+import { styled } from 'styled-components';
 
-import useModal from "@/hooks/useModal";
-import { IcAddTag, IcDeleteTag } from "@/public/assets/icons";
+import { createRoom } from '@/apis/roomList';
+import { IcAddTag, IcDeleteTag } from '@/public/assets/icons';
+import { postStudyRoomInfo } from '@/types/studyroom';
 
-import { CancelButton, ConfirmButton } from "../../Common/Button";
-import { LargeModal, SmallModal } from "../../Common/Modal";
+import { CancelButton, ConfirmButton } from '../../Common/Button';
+import { LargeModal } from '../../Common/Modal';
 
 interface AddStudyroomModalProps {
   isShowing: boolean;
@@ -24,10 +25,12 @@ const AddStudyroomModal = ({
   const [hashtagList, setHashtagList] = useState<string[]>([]);
   const [member, setMember] = useState(2);
   const [introduction, setIntroduction] = useState('');
+  const [addRoomInfo, setAddRoomInfo] = useState<postStudyRoomInfo>();
 
-  const handleAddRoom = () => {
+  const handleAddRoom = async () => {
+    const url = addRoomInfo ? await createRoom(addRoomInfo) : '';
+    console.log(url);
     handleCreate();
-    handleCancel();
   };
 
   const handleHashtag = () => {
@@ -39,6 +42,18 @@ const AddStudyroomModal = ({
   const handleRemoveHashtag = (index: number) => {
     setHashtagList((prev) => prev.filter((_, i) => i !== index));
   };
+
+  useEffect(() => {
+    setAddRoomInfo({
+      member_id: 1,
+      roomName: studyName,
+      roomCategory: category,
+      roomIntro: introduction,
+      roomLimit: member,
+      roomHashtags: hashtagList,
+    });
+  }, [studyName, category, hashtagList, member, introduction]);
+
   return (
     <>
       {isShowing && (

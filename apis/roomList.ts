@@ -1,4 +1,18 @@
-import { client } from "./axios";
+import { postStudyRoomInfo } from '@/types/studyroom';
+
+import { client } from './axios';
+
+export const createRoom = async (postRoomData: postStudyRoomInfo) => {
+  try {
+    console.log(postRoomData);
+    const { data } = await client.post('/room/create', postRoomData);
+    console.log(data.data.encoded);
+    return data.data.encoded;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
 
 export const getRoomList = async () => {
   try {
