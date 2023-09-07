@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
-import { styled } from 'styled-components';
+import { useEffect, useState } from "react";
+import { useRecoilState } from "recoil";
+import { styled } from "styled-components";
 
-import { createRoom } from '@/apis/roomList';
-import { IcAddTag, IcDeleteTag } from '@/public/assets/icons';
-import { encodedUrlState } from '@/recoil/atom';
-import { postStudyRoomInfo } from '@/types/studyroom';
+import { createRoom } from "@/apis/roomList";
+import { IcAddTag, IcDeleteTag } from "@/public/assets/icons";
+import { encodedUrlState } from "@/recoil/atom";
+import { postStudyRoomInfo } from "@/types/studyroom";
 
-import { CancelButton, ConfirmButton } from '../../Common/Button';
-import { LargeModal } from '../../Common/Modal';
+import { CancelButton, ConfirmButton } from "../../Common/Button";
+import { LargeModal } from "../../Common/Modal";
 
 interface AddStudyroomModalProps {
   isShowing: boolean;
@@ -46,7 +46,6 @@ const AddStudyroomModal = ({
       return;
     }
     const url = addRoomInfo ? await createRoom(addRoomInfo) : '';
-    console.log(url);
     setEncodedUrl(url);
     handleCreate();
     initInfo();
