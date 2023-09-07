@@ -1,8 +1,10 @@
+import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { SmallModal } from '@/components/Common/Modal';
 import { IcCharacterSpeaker } from '@/public/assets/icons';
+import { encodedUrlState } from '@/recoil/atom';
 
 interface CompleteModalProps {
   isShowing: boolean;
@@ -10,8 +12,14 @@ interface CompleteModalProps {
 }
 
 const CompleteModal = ({ isShowing, handleCancel }: CompleteModalProps) => {
+  const encodedUrl = useRecoilValue(encodedUrlState);
+  const linkToCopy = `https://learniverse/studyroom/${encodedUrl}`;
+  const linkToRoute = `http://localhost:3000/studyroom/${encodedUrl}`;
+
   const handleCopy = () => {
-    console.log('공유하기');
+    navigator.clipboard.writeText(linkToRoute).then(() => {
+      alert('링크를 클립보드에 복사했습니다.');
+    });
   };
 
   return (
@@ -27,9 +35,7 @@ const CompleteModal = ({ isShowing, handleCancel }: CompleteModalProps) => {
                 링크를 공유하여 팀원을 초대하세요!
               </p>
             </StContentWrapper>
-            <StLink>
-              https://learniverse/studyroom/RO8dIb0cp9cMygXjWWEFDw==
-            </StLink>
+            <StLink>{linkToCopy}</StLink>
             <StBtnWrapper>
               <ConfirmButton btnName="공유하기" onClick={handleCopy} />
               <CancelButton btnName="취소" onClick={handleCancel} />
