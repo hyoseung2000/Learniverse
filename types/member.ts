@@ -10,3 +10,8 @@ export interface memberInfo {
   status: boolean;
   isMember: string;
 }
+
+export interface moonInfo {
+  moonDate: Date;
+  moonScore: number;
+}

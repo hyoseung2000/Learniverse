@@ -1,19 +1,58 @@
-import { useEffect, useState } from "react";
-import { styled } from "styled-components";
+import { useEffect, useState } from 'react';
+import { styled } from 'styled-components';
 
-import { IcProfileImage, IcTracker } from "@/public/assets/icons";
+import { getMoon } from '@/apis/moon';
+import {
+  IcMoon0,
+  IcMoon1,
+  IcMoon2,
+  IcMoon3,
+  IcMoon4,
+  IcMoonBox,
+  IcProfileImage,
+} from '@/public/assets/icons';
+import { moonInfo } from '@/types/member';
 
-import { MyPageStudyRoomList } from "../RoomList";
+import { MyPageStudyRoomList } from '../RoomList';
 
 const MyPage = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [loading, setLoading] = useState(false);
   const [isLeader, setIsLeader] = useState(true);
+  const [moons, setMoons] = useState<moonInfo[]>([]);
+  const [moonScores, setMoonScores] = useState<number[]>([]);
 
-  useEffect(() => {
-    setLoading(true);
-    setIsLeader(activeTab === 0);
-  }, [activeTab]);
+  const getMoonData = async () => {
+    const moonData = await getMoon();
+    setMoons(moonData);
+  };
+
+  const getMoonScores = () => {
+    const scores = moons.map((moon) => moon.moonScore);
+    setMoonScores(scores);
+  };
+  console.log(moons);
+
+  const matchMoonIcons = () => {
+    const reversedMoonScores = [...moonScores].reverse();
+
+    return reversedMoonScores.map((score, index) => {
+      switch (score) {
+        case 0:
+          return <IcMoon0 key={index} />;
+        case 1:
+          return <IcMoon1 key={index} />;
+        case 2:
+          return <IcMoon2 key={index} />;
+        case 3:
+          return <IcMoon3 key={index} />;
+        case 4:
+          return <IcMoon4 key={index} />;
+        default:
+          return null; // Handle other cases or provide a default component
+      }
+    });
+  };
 
   const handleTabClick = (tabValue: number) => {
     if (activeTab !== tabValue) {
@@ -22,6 +61,15 @@ const MyPage = () => {
     }
   };
 
+  useEffect(() => {
+    getMoonData();
+    getMoonScores();
+  }, []);
+
+  useEffect(() => {
+    setLoading(true);
+    setIsLeader(activeTab === 0);
+  }, [activeTab]);
   return (
     <StMyPageWrapper>
       <h2>마이페이지</h2>
@@ -34,7 +82,8 @@ const MyPage = () => {
         </StProfile>
         <StMoon>
           <p>나의 달</p>
-          <IcTracker />
+          <IcMoonBox className="box" />
+          <StMoonWrapper>{matchMoonIcons()}</StMoonWrapper>
         </StMoon>
       </StMyInfo>
       <StTabs>
@@ -101,7 +150,12 @@ const StProfile = styled.div`
 
 const StMoon = styled.div`
   width: 40.5rem;
+  position: relative;
 
+  & > span {
+    color: white;
+    ${({ theme }) => theme.fonts.Body2};
+  }
   & > p {
     width: fit-content;
     margin-bottom: 0.9rem;
@@ -112,6 +166,27 @@ const StMoon = styled.div`
     -webkit-text-fill-color: transparent;
     ${({ theme }) => theme.fonts.Head2};
   }
+
+  .box {
+    position: absolute;
+    top: 4.5rem;
+    left: -1rem;
+  }
+`;
+
+const StMoonWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  justify-items: center;
+  gap: 1rem;
+
+  padding-top: 2.5rem;
+  padding-left: 1.3rem;
+
+  max-width: 35rem;
+  box-sizing: border-box;
+
+  z-index: 10;
 `;
 
 const StTabs = styled.div`
