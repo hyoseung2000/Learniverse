@@ -19,3 +19,17 @@ export const getRoomInfo = async (roomId: number) => {
     throw err;
   }
 };
+
+export const applyRoom = async (roomId: number, memberId: number) => {
+  try {
+    console.log(roomId, memberId);
+    const { data } = await client.post(`/room/member/apply`, {
+      roomId,
+      memberId,
+    });
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};

@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
-import { decodeRoomId, getRoomInfo } from '@/apis/studyroom';
+import { applyRoom, decodeRoomId, getRoomInfo } from '@/apis/studyroom';
 import { CancelButton } from '@/components/Common/Button';
 import { LargeModal } from '@/components/Common/Modal';
 import { StudyroomCard } from '@/components/RoomCard';
@@ -13,8 +13,6 @@ interface ApplyContainerProps {
 }
 
 const ApplyContainer = ({ url }: ApplyContainerProps) => {
-  console.log(url);
-
   const router = useRouter();
   const [roomId, setRoomId] = useState<number>(0);
   const [roomInfo, setRoomInfo] = useState<studyRoomInfo>();
@@ -36,10 +34,14 @@ const ApplyContainer = ({ url }: ApplyContainerProps) => {
     setRoomId(decodedUrl);
   };
 
-  // const getRoomData = async () => {
-  //   const roomData = await getRoomInfo(roomId);
-  //   setRoomInfo(roomData);
-  // };
+  const getRoomData = async () => {
+    const roomData = await getRoomInfo(roomId);
+    setRoomInfo(roomData);
+  };
+
+  const handleApply = async () => {
+    await applyRoom(27, 2); // memberId=1
+  };
 
   useEffect(() => {
     // decodeId();
@@ -50,8 +52,10 @@ const ApplyContainer = ({ url }: ApplyContainerProps) => {
     <StApplyContainer>
       <LargeModal isShowing={true} title={'스터디룸 참여'}>
         <StRoomCardWrapper>
-          <p>스터디룸에 참여하시려면 '입장' 버튼을 눌러주세요.</p>
-          {ROOM_DATA && <StudyroomCard roomData={ROOM_DATA} />}
+          <p>스터디룸에 참여하시려면 '참여' 버튼을 눌러주세요.</p>
+          {ROOM_DATA && (
+            <StudyroomCard roomData={ROOM_DATA} handleApply={handleApply} />
+          )}
           <CancelButton
             btnName="취소"
             onClick={() => {

@@ -8,6 +8,7 @@ import { getCategoryColor } from '@/utils/getCategoryColor';
 interface StudyroomCardProps {
   roomData: studyRoomInfo;
   roomType?: string;
+  handleApply?: () => void;
   handleManage?: () => void;
   handleEdit?: () => void;
 }
@@ -15,6 +16,7 @@ interface StudyroomCardProps {
 const StudyroomCard = ({
   roomData,
   roomType,
+  handleApply,
   handleManage,
   handleEdit,
 }: StudyroomCardProps) => {
@@ -31,6 +33,10 @@ const StudyroomCard = ({
 
   const router = useRouter();
   const planetColor = getCategoryColor(roomCategory);
+
+  const handleGotoRoom = () => {
+    router.push(`/studyroom/${roomId}`);
+  };
 
   return (
     <StCardWrapper>
@@ -58,11 +64,9 @@ const StudyroomCard = ({
               roomLimit === roomCount ||
               !(isMember === '승인' || isMember === '팀장')
             }
-            onClick={() => {
-              router.push(`/studyroom/${roomId}`);
-            }}
+            onClick={handleApply ? handleApply : handleGotoRoom}
           >
-            입장
+            {handleApply ? '참여' : '입장'}
           </StJoin>
         </StJoinWrapper>
       </StStudyroomCardWrapper>
