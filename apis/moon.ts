@@ -5,7 +5,7 @@ import { client } from './axios';
 export const getMoon = async () => {
   try {
     const { data } = await client.get(`/member/moon/list?memberId=1`);
-    // console.log(data);
+    console.log(data.data.moons);
     return data.data.moons;
   } catch (err) {
     console.error(err);
@@ -13,15 +13,20 @@ export const getMoon = async () => {
   }
 };
 
-export const addMoon = async () => {
+export const addMoon = async (curScore: number) => {
   try {
-    const { data } = await client.post(`/member/moon`, {
+    if (curScore >= 4) return;
+
+    const data = await client.post(`/member/moon/add`, {
       memberId: 1,
       moonDate: getToday(),
+      // moonDate: '2023-08-20',
     });
-    return data.data;
-  } catch (err) {
+    console.log(data);
+    return data;
+  } catch (err: any) {
     console.error(err);
-    throw err;
+    console.log(err.response?.data.status);
+    return err.response?.data.status;
   }
 };

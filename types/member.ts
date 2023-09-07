@@ -15,3 +15,9 @@ export interface moonInfo {
   moonDate: Date;
   moonScore: number;
 }
+
+export interface moonScoreInfo {
+  isFirstAccess: number;
+  isCoreTimeParticipate: number;
+  isCapture: number;
+}

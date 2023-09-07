@@ -21,17 +21,18 @@ const MyPage = () => {
   const [isLeader, setIsLeader] = useState(true);
   const [moons, setMoons] = useState<moonInfo[]>([]);
   const [moonScores, setMoonScores] = useState<number[]>([]);
+  const [isMoon, setIsMoon] = useState(false);
 
   const getMoonData = async () => {
     const moonData = await getMoon();
     setMoons(moonData);
+    setIsMoon(true);
   };
 
   const getMoonScores = () => {
     const scores = moons.map((moon) => moon.moonScore);
     setMoonScores(scores);
   };
-  console.log(moons);
 
   const matchMoonIcons = () => {
     const reversedMoonScores = [...moonScores].reverse();
@@ -49,7 +50,7 @@ const MyPage = () => {
         case 4:
           return <IcMoon4 key={index} />;
         default:
-          return null; // Handle other cases or provide a default component
+          return null;
       }
     });
   };
@@ -64,7 +65,7 @@ const MyPage = () => {
   useEffect(() => {
     getMoonData();
     getMoonScores();
-  }, []);
+  }, [isMoon]);
 
   useEffect(() => {
     setLoading(true);
