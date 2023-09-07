@@ -1,8 +1,8 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components';
 
-import { IcPlanet } from "@/public/assets/icons";
-import { studyRoomInfo } from "@/types/studyroom";
-import { getCategoryColor } from "@/utils/getCategoryColor";
+import { IcPlanet } from '@/public/assets/icons';
+import { studyRoomInfo } from '@/types/studyroom';
+import { getCategoryColor } from '@/utils/getCategoryColor';
 
 interface StudyroomCardProps {
   roomData: studyRoomInfo;
@@ -50,7 +50,13 @@ const StudyroomCard = ({
             정원
             <span> {roomCount}</span> / {roomLimit}명
           </StLimit>
-          <StJoin type="button" disabled={roomLimit === roomCount}>
+          <StJoin
+            type="button"
+            disabled={
+              roomLimit === roomCount ||
+              !(isMember === '승인' || isMember === '팀장')
+            }
+          >
             입장
           </StJoin>
         </StJoinWrapper>
@@ -96,7 +102,7 @@ const StStudyroomCardWrapper = styled.article`
   color: ${({ theme }) => theme.colors.Gray1};
   ${({ theme }) => theme.fonts.Title5};
 
-  cursor: pointer;
+  /* cursor: pointer; */
 `;
 
 const StIconWrapper = styled.div<{ planetColor: string }>`

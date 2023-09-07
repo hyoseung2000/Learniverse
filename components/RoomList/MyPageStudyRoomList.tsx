@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
-import { styled } from "styled-components";
+import { useEffect, useState } from 'react';
+import { styled } from 'styled-components';
 
-import { getApplyRoomList, getLeaderRoomList } from "@/apis/roomList";
-import useModal from "@/hooks/useModal";
-import { studyRoomInfo } from "@/types/studyroom";
+import { getApplyRoomList, getLeaderRoomList } from '@/apis/roomList';
+import useModal from '@/hooks/useModal';
+import { studyRoomInfo } from '@/types/studyroom';
 
-import { ManageModal } from "../RoomCard/Modal";
-import StudyroomCard from "../RoomCard/StudyroomCard";
+import { ManageModal } from '../RoomCard/Modal';
+import StudyroomCard from '../RoomCard/StudyroomCard';
 
 interface MyPageStudyRoomListProps {
   isLeader?: boolean;
@@ -30,11 +30,10 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
   const handleManage = async (roomId: number) => {
     setRoomId(roomId);
     manage.toggle();
-    // const members = awai
-    // manage.setPayload(roomId);
   };
 
   const handleEdit = () => {};
+
   useEffect(() => {
     getAllRoom();
   }, [isLeader]);
