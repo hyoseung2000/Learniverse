@@ -34,6 +34,13 @@ const StudyroomCard = ({
   const router = useRouter();
   const planetColor = getCategoryColor(roomCategory);
 
+  const isMemberApproved = isMember === '승인' || isMember === '팀장';
+  const canJoinRoom = isMemberApproved || roomLimit > roomCount;
+  const buttonText = handleApply ? '참여' : '입장';
+
+  const showManagementButtons = roomType === 'leader';
+  const showStatus = roomType === 'apply';
+
   const handleGotoRoom = () => {
     router.push(`/studyroom/${roomId}`);
   };
@@ -60,17 +67,14 @@ const StudyroomCard = ({
           </StLimit>
           <StJoin
             type="button"
-            disabled={
-              roomLimit === roomCount ||
-              !(isMember === '승인' || isMember === '팀장')
-            }
+            disabled={!canJoinRoom}
             onClick={handleApply ? handleApply : handleGotoRoom}
           >
-            {handleApply ? '참여' : '입장'}
+            {buttonText}
           </StJoin>
         </StJoinWrapper>
       </StStudyroomCardWrapper>
-      {roomType === 'leader' ? (
+      {showManagementButtons && (
         <StBtnWrapper>
           <button type="button" className="manage" onClick={handleManage}>
             신청자 관리
@@ -79,12 +83,11 @@ const StudyroomCard = ({
             스터디 정보수정
           </button>
         </StBtnWrapper>
-      ) : roomType === 'apply' ? (
+      )}
+      {showStatus && (
         <StStatusWrapper memberStatus={isMember}>
           신청 현황 <span>{isMember}</span>
         </StStatusWrapper>
-      ) : (
-        <></>
       )}
     </StCardWrapper>
   );

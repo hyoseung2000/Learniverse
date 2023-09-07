@@ -12,8 +12,9 @@ export const decodeRoomId = async (encodedUrl: string) => {
 
 export const getRoomInfo = async (roomId: number) => {
   try {
-    const { data } = await client.get(`/room/info?roomId=${roomId}`);
-    return data.data.info;
+    const { data } = await client.get(`/room/info?roomId=${roomId}&memberId=3`);
+    console.log(data.data);
+    return data.data.rooms;
   } catch (err) {
     console.error(err);
     throw err;

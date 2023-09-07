@@ -22,16 +22,16 @@ const ApplyContainer = ({ url }: ApplyContainerProps) => {
   const applyModal = useModal();
   const applyCompleteModal = useModal();
 
-  const ROOM_DATA = {
-    roomId: 27,
-    roomName: '러니버스',
-    roomIntro: '소웨공주들 졸프',
-    hashtags: ['졸프'],
-    roomCategory: '그룹/모임',
-    roomCount: 1,
-    roomLimit: 5,
-    isMember: '팀장',
-  };
+  // const ROOM_DATA = {
+  //   roomId: 27,
+  //   roomName: '러니버스',
+  //   roomIntro: '소웨공주들 졸프',
+  //   hashtags: ['졸프'],
+  //   roomCategory: '그룹/모임',
+  //   roomCount: 1,
+  //   roomLimit: 5,
+  //   isMember: '팀장',
+  // };
 
   const decodeId = async () => {
     const decodedUrl = await decodeRoomId(url);
@@ -40,12 +40,13 @@ const ApplyContainer = ({ url }: ApplyContainerProps) => {
   };
 
   const getRoomData = async () => {
+    if (roomId === 0) return;
     const roomData = await getRoomInfo(roomId);
     setRoomInfo(roomData);
   };
 
   const handleApply = async () => {
-    await applyRoom(roomId, 1); // memberId=1
+    await applyRoom(roomId, 2); // memberId=2
     applyModal.toggle();
     applyCompleteModal.toggle();
   };
@@ -54,15 +55,15 @@ const ApplyContainer = ({ url }: ApplyContainerProps) => {
     applyModal.setShowing(true);
     decodeId();
     getRoomData();
-  }, [url]);
+  }, [roomId]);
 
   return (
     <StApplyContainer>
       <LargeModal isShowing={applyModal.isShowing} title={'스터디룸 참여'}>
         <StRoomCardWrapper>
           <p>스터디룸에 참여하시려면 '참여' 버튼을 눌러주세요.</p>
-          {ROOM_DATA && (
-            <StudyroomCard roomData={ROOM_DATA} handleApply={handleApply} />
+          {roomInfo && (
+            <StudyroomCard roomData={roomInfo} handleApply={handleApply} />
           )}
           <CancelButton
             btnName="취소"
