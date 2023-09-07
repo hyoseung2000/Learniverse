@@ -3,9 +3,11 @@ import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
 import { applyRoom, decodeRoomId, getRoomInfo } from '@/apis/studyroom';
-import { CancelButton } from '@/components/Common/Button';
-import { LargeModal } from '@/components/Common/Modal';
+import { CancelButton, ConfirmButton } from '@/components/Common/Button';
+import { LargeModal, SmallModal } from '@/components/Common/Modal';
 import { StudyroomCard } from '@/components/RoomCard';
+import useModal from '@/hooks/useModal';
+import { IcCharacterCheck } from '@/public/assets/icons';
 import { studyRoomInfo } from '@/types/studyroom';
 
 interface ApplyContainerProps {
@@ -16,6 +18,9 @@ const ApplyContainer = ({ url }: ApplyContainerProps) => {
   const router = useRouter();
   const [roomId, setRoomId] = useState<number>(0);
   const [roomInfo, setRoomInfo] = useState<studyRoomInfo>();
+
+  const applyModal = useModal();
+  const applyCompleteModal = useModal();
 
   const ROOM_DATA = {
     roomId: 27,
@@ -40,17 +45,20 @@ const ApplyContainer = ({ url }: ApplyContainerProps) => {
   };
 
   const handleApply = async () => {
-    await applyRoom(27, 2); // memberId=1
+    await applyRoom(roomId, 1); // memberId=1
+    applyModal.toggle();
+    applyCompleteModal.toggle();
   };
 
   useEffect(() => {
-    // decodeId();
-    // getRoomData();
+    applyModal.setShowing(true);
+    decodeId();
+    getRoomData();
   }, [url]);
 
   return (
     <StApplyContainer>
-      <LargeModal isShowing={true} title={'스터디룸 참여'}>
+      <LargeModal isShowing={applyModal.isShowing} title={'스터디룸 참여'}>
         <StRoomCardWrapper>
           <p>스터디룸에 참여하시려면 '참여' 버튼을 눌러주세요.</p>
           {ROOM_DATA && (
@@ -59,11 +67,32 @@ const ApplyContainer = ({ url }: ApplyContainerProps) => {
           <CancelButton
             btnName="취소"
             onClick={() => {
-              router.push('/');
+              router.push('/home');
             }}
           />
         </StRoomCardWrapper>
       </LargeModal>
+      <SmallModal
+        title="스터디 참여 신청 완료"
+        isShowing={applyCompleteModal.isShowing}
+      >
+        <StSmallModalWrapper>
+          <StContentWrapper>
+            <IcCharacterCheck />
+            <p>
+              스터디 참여 신청이 완료되었어요.
+              <br />
+              팀장이 수락한 뒤 스터디에 참여할 수 있어요.
+            </p>
+          </StContentWrapper>
+          <ConfirmButton
+            btnName="확인"
+            onClick={() => {
+              router.push('/home');
+            }}
+          />
+        </StSmallModalWrapper>
+      </SmallModal>
     </StApplyContainer>
   );
 };
@@ -84,5 +113,25 @@ const StRoomCardWrapper = styled.section`
   & > p {
     margin-top: 1rem;
     ${({ theme }) => theme.fonts.Title5};
+  }
+`;
+
+const StSmallModalWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 1.6rem;
+`;
+
+const StContentWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+
+  & > p {
+    color: ${({ theme }) => theme.colors.Learniverse_BG};
+    ${({ theme }) => theme.fonts.Title5};
+    font-size: 1.5rem;
   }
 `;

@@ -14,7 +14,7 @@ export const createRoom = async (postRoomData: postStudyRoomInfo) => {
 
 export const getRoomList = async () => {
   try {
-    const { data } = await client.get('/room/list');
+    const { data } = await client.get('/room/list?memberId=1');
     return data.data.rooms;
   } catch (err) {
     console.error(err);
@@ -24,7 +24,7 @@ export const getRoomList = async () => {
 
 export const getMyRoomList = async () => {
   try {
-    const { data } = await client.get('/member/room/list');
+    const { data } = await client.get('/member/room/list?memberId=1');
     return data.data.rooms;
   } catch (err) {
     console.error(err);
@@ -34,7 +34,7 @@ export const getMyRoomList = async () => {
 
 export const getLeaderRoomList = async () => {
   try {
-    const { data } = await client.get('/member/room/list/leader');
+    const { data } = await client.get('/member/room/list/leader?memberId=1');
     return data.data.rooms;
   } catch (err) {
     console.error(err);
@@ -44,7 +44,7 @@ export const getLeaderRoomList = async () => {
 
 export const getApplyRoomList = async () => {
   try {
-    const { data } = await client.get('/member/room/list/apply');
+    const { data } = await client.get('/member/room/list/apply?memberId=1');
     return data.data.rooms;
   } catch (err) {
     console.error(err);
