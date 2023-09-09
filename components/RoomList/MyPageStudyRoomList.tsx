@@ -39,7 +39,7 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
   }, [isLeader]);
 
   return (
-    <>
+    <StMyPageWrapper>
       <StMyPageRoomListWrapper>
         {roomList &&
           roomList.map((room) => (
@@ -66,18 +66,23 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
           handleCancel={manage.toggle}
         />
       </StManageModalWrapper>
-    </>
+    </StMyPageWrapper>
   );
 };
 
 export default MyPageStudyRoomList;
 
+const StMyPageWrapper = styled.section`
+  display: flex;
+  justify-content: center;
+`;
+
 const StMyPageRoomListWrapper = styled.section`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  align-items: center;
-  justify-content: center;
   gap: 1.5rem;
+
+  max-width: 76.5rem;
 
   margin-top: 4.6rem;
   margin-bottom: 8rem;

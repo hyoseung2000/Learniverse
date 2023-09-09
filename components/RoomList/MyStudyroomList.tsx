@@ -1,13 +1,13 @@
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { styled } from "styled-components";
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { styled } from 'styled-components';
 
-import { getMyRoomList } from "@/apis/roomList";
-import { studyRoomInfo } from "@/types/studyroom";
+import { getMyRoomList } from '@/apis/roomList';
+import { studyRoomInfo } from '@/types/studyroom';
 
-import { PurpleButton } from "../Common/Button";
-import AddStudyroom from "../RoomCard/AddStudyroom";
-import StudyroomCard from "../RoomCard/StudyroomCard";
+import { PurpleButton } from '../Common/Button';
+import AddStudyroom from '../RoomCard/AddStudyroom';
+import StudyroomCard from '../RoomCard/StudyroomCard';
 
 const MyStudyroomList = () => {
   const [myRoomList, setMyRoomList] = useState<studyRoomInfo[]>();
@@ -62,8 +62,6 @@ const StStudyroomList = styled.section`
 const StHomeTitle = styled.div`
   display: flex;
   justify-content: space-between;
-
-  width: 100%;
 
   & > h2 {
     color: ${({ theme }) => theme.colors.White};
