@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
-import { styled } from "styled-components";
+import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { styled } from 'styled-components';
 
-import { createRoom } from "@/apis/roomList";
-import { IcAddTag, IcDeleteTag } from "@/public/assets/icons";
-import { encodedUrlState } from "@/recoil/atom";
-import { postStudyRoomInfo } from "@/types/studyroom";
+import { createRoom } from '@/apis/roomList';
+import { IcAddTag, IcDeleteTag } from '@/public/assets/icons';
+import { encodedUrlState } from '@/recoil/atom';
+import { postStudyRoomInfo } from '@/types/studyroom';
 
-import { CancelButton, ConfirmButton } from "../../Common/Button";
-import { LargeModal } from "../../Common/Modal";
+import { CancelButton, ConfirmButton } from '../../Common/Button';
+import { LargeModal } from '../../Common/Modal';
 
 interface AddStudyroomModalProps {
   isShowing: boolean;
@@ -43,6 +43,10 @@ const AddStudyroomModal = ({
   const handleAddRoom = async () => {
     if (!studyName || hashtagList.length === 0) {
       alert('스터디명, 해시태그 입력은 필수입니다.');
+      return;
+    }
+    if (member > 5 || member < 2) {
+      alert('스터디룸 정원은 최소 2명 ~ 최대 5명입니다');
       return;
     }
     const url = addRoomInfo ? await createRoom(addRoomInfo) : '';
