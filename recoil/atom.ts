@@ -1,17 +1,32 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
+import { moonScoreInfo } from '@/types/member';
+import getToday from '@/utils/getToday';
+
+import { totalMoonScoreSelector } from './selector';
+
 const { persistAtom } = recoilPersist();
 
-// 예시1
-export const exState = atom<number>({
-  key: `ex`,
-  default: 0,
+const resetTime = new Date();
+resetTime.setHours(0, 0, 0, 0);
+
+export const encodedUrlState = atom<string>({
+  key: `encodedUrl`,
+  default: '',
 });
 
-// 예시2. 페이지 이동 시에도 전역 상태 유지해야 하는 경우 persistAtom 사용
-export const exState2 = atom<string>({
-  key: `ex2`,
-  default: '',
+export const moonScoreState = atom<moonScoreInfo>({
+  key: `moonScore`,
+  default: {
+    isFirstAccess: 0,
+    isCoreTimeParticipate: 0,
+    isCapture: 0,
+  },
   effects_UNSTABLE: [persistAtom],
+});
+
+export const todayState = atom<string>({
+  key: `todayState`,
+  default: getToday(),
 });

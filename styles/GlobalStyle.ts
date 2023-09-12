@@ -1,4 +1,4 @@
-import { createGlobalStyle, css } from 'styled-components';
+import { createGlobalStyle, css } from "styled-components";
 
 export const reset = css`
   html,
@@ -138,6 +138,14 @@ export const reset = css`
     background: transparent;
     border: none;
     cursor: pointer;
+  }
+  input {
+    border: none;
+    background: none;
+
+    &:focus {
+      outline: none;
+    }
   }
 `;
 
