@@ -1,5 +1,5 @@
-import { Noto_Sans_KR } from 'next/font/google';
-import { css } from 'styled-components';
+import { Noto_Sans_KR } from "next/font/google";
+import { css } from "styled-components";
 
 const notoSansKr = Noto_Sans_KR({
   weight: ['100', '300', '400', '500', '700', '900'],
@@ -158,6 +158,7 @@ export const colors = {
   Mint2: '#8CE1EB',
   Mint3: '#E3F8FA',
   Blue: '#3952F3',
+  SkyBlue: '#93CDFD',
   Yellow1: '#FFBF00',
   Yellow2: '#FFE599',
   Yellow3: '#FFF9DD',

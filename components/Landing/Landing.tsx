@@ -1,13 +1,21 @@
+import { useRouter } from 'next/router';
 import { styled } from 'styled-components';
 
 import { IcLoginBtn } from '@/public/assets/icons';
-import { ImgBg } from '@/public/assets/images';
 
 const Landing = () => {
+  const router = useRouter();
+
+  const handleLoginClick = () => {
+    router.push('/home');
+  };
+
   return (
     <StLandingWrapper>
       <h1>LearniVerse</h1>
-      <IcLoginBtn />
+      <StLoginBtn type="button" onClick={handleLoginClick}>
+        <IcLoginBtn />
+      </StLoginBtn>
     </StLandingWrapper>
   );
 };
@@ -19,13 +27,14 @@ const StLandingWrapper = styled.main`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 
   width: 100%;
   height: 100vh;
 
-  background:
-    linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)),
-    url(${ImgBg.src}) center/cover no-repeat;
+  background-color: #0f173b;
+  background: url('https://user-images.githubusercontent.com/73213437/264514735-92fc6e5a-7a3a-4841-a9fa-b97d778b2633.svg')
+    center/cover no-repeat;
 
   & > h1 {
     margin-bottom: 4rem;
@@ -34,7 +43,6 @@ const StLandingWrapper = styled.main`
     ${({ theme }) => theme.fonts.Head0};
     font-size: 8rem;
   }
-  & > svg {
-    cursor: pointer;
-  }
 `;
+
+const StLoginBtn = styled.button``;
