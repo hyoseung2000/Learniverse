@@ -1,24 +1,42 @@
-import { useState } from 'react';
+/* eslint-disable jsx-a11y/media-has-caption */
+import { Device } from 'mediasoup-client';
+import { useEffect, useRef, useState } from 'react';
+import io, { Socket } from 'socket.io-client';
 import { styled } from 'styled-components';
 
 const WebRTCContainer = () => {
-  // const [isLobby, setIsLobby] = useState(true);
-  // const { stream } = useMediaStream();
+  const [device, setDevice] = useState<Device | null>(null);
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    const socketConnection = io('https://0.0.0.0:8080');
+    setSocket(socketConnection);
+    const mediasoupDevice = new Device();
+    setDevice(mediasoupDevice);
+    // Handle socket.io events and mediasoup client here
+  }, []);
+
+  const startScreenSharing = async () => {
+    const stream = await navigator.mediaDevices.getDisplayMedia({
+      video: true,
+    });
+    if (videoRef && videoRef.current) {
+      videoRef.current.srcObject = stream;
+    }
+    // Use stream with mediasoup client to send to the server
+  };
 
   return (
     <StWebRTCContainerWrapper>
       <StMediaWrapper>
-        <StMedia />
-        <StMedia />
-        <StMedia />
-        <StMedia />
-        <StMedia />
+        <button type="button" onClick={startScreenSharing}>
+          Share Screen
+        </button>
+        <video ref={videoRef} autoPlay playsInline />
+        {/* <StMedia /> */}
       </StMediaWrapper>
       <StUserWrapper>
-        <p>접속자</p>
-        <p>접속자</p>
-        <p>접속자</p>
-        <p>접속자</p>
         <p>접속자</p>
       </StUserWrapper>
     </StWebRTCContainerWrapper>
