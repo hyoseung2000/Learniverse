@@ -5,6 +5,7 @@
 // export는 camel case로!!! (ic_logo -> IcLogo)
 
 import IcChar from './ic_char.svg';
+import IcCoreChar from './ic_core_char.svg';
 import IcFigma from './ic_figma.svg';
 import IcGDrive from './ic_gdrive.svg';
 import IcGithub from './ic_github.svg';
@@ -13,11 +14,15 @@ import IcIssueLogo from './ic_issue_logo.svg';
 import IcLine from './ic_line.svg';
 import IcLoginBtn from './ic_login_btn.svg';
 import IcLogo from './ic_logo.svg';
+import IcMedia from './ic_media.svg';
+import IcMike from './ic_mike.svg';
 import IcNotion from './ic_notion.svg';
 import IcPlusBtn from './ic_plus_btn.svg';
 import IcProfile from './ic_profile.svg';
 import IcRoomLogo from './ic_room_logo.svg';
 import IcSend from './ic_send.svg';
+import IcSpeaker from './ic_speaker.svg';
+import IcTimer from './ic_timer.svg';
 
 export {
   IcLogo,
@@ -34,4 +39,9 @@ export {
   IcFigma,
   IcChar,
   IcSend,
+  IcTimer,
+  IcMedia,
+  IcMike,
+  IcSpeaker,
+  IcCoreChar,
 };

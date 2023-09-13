@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { styled } from 'styled-components';
 
 import { IcLine, IcLogo, IcPlusBtn } from '@/public/assets/icons';
@@ -10,17 +11,23 @@ import {
   NotnBtn,
 } from '../Common/Button';
 import { Side } from '../Side';
-import CoreTime from './CoreTime';
+import CoreTimeSet from './CoreTimeSet';
 import Issue from './Issue';
 
 const Studyroom = () => {
+  const router = useRouter();
+
+  const handleAttend = () => {
+    router.push('./coretime');
+  };
+
   return (
     <StStudyroomWrapper>
       <StStudyMainWrapper>
         <IcLogo />
         <h1>이슈</h1>
         <Issue />
-        <CoreTime />
+        <CoreTimeSet />
         <IcLine />
         <StWorkspaceWrapper>
           <h1>워크 스페이스</h1>
@@ -30,12 +37,12 @@ const Studyroom = () => {
             <GDriveBtn />
             <GithbBtn />
             <FigmaBtn />
-            <CoreBtn btnName="코어타임 입장" />
+            <CoreBtn btnName="코어타임 입장" handleClick={handleAttend} />
           </StBtnWrapper>
         </StWorkspaceWrapper>
       </StStudyMainWrapper>
       <StStudySideWrapper>
-        <Side />
+        <Side chatName="스터디룸 게시판" />
       </StStudySideWrapper>
     </StStudyroomWrapper>
   );
