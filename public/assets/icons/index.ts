@@ -17,6 +17,7 @@ import IcNotion from './ic_notion.svg';
 import IcPlusBtn from './ic_plus_btn.svg';
 import IcProfile from './ic_profile.svg';
 import IcRoomLogo from './ic_room_logo.svg';
+import IcSend from './ic_send.svg';
 
 export {
   IcLogo,
@@ -32,4 +33,5 @@ export {
   IcGDrive,
   IcFigma,
   IcChar,
+  IcSend,
 };
