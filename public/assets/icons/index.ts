@@ -28,6 +28,7 @@ import IcProfile from './ic_profile.svg';
 import IcProfileImage from './ic_profile_image.svg';
 import IcRoomLogo from './ic_room_logo.svg';
 import IcSearch from './ic_search.svg';
+import IcSend from './ic_send.svg';
 import IcTracker from './ic_tracker.svg';
 
 export {
@@ -62,4 +63,5 @@ export {
   IcGDrive,
   IcFigma,
   IcChar,
+  IcSend,
 };

@@ -1,12 +1,6 @@
 import { styled } from 'styled-components';
 
-import {
-  IcChar,
-  IcLine,
-  IcLogo,
-  IcPlusBtn,
-  IcRoomLogo,
-} from '@/public/assets/icons';
+import { IcLine, IcLogo, IcPlusBtn } from '@/public/assets/icons';
 
 import {
   CoreBtn,
@@ -15,6 +9,7 @@ import {
   GithbBtn,
   NotnBtn,
 } from '../Common/Button';
+import { Side } from '../Side';
 import CoreTime from './CoreTime';
 import Issue from './Issue';
 
@@ -39,20 +34,8 @@ const Studyroom = () => {
           </StBtnWrapper>
         </StWorkspaceWrapper>
       </StStudyMainWrapper>
-
       <StStudySideWrapper>
-        <StRoomNameWrapper>
-          <IcRoomLogo />
-          <span>소웨5공주 공부방</span>
-        </StRoomNameWrapper>
-        <StMemberListWrapper>
-          <p>현재 접속중</p>
-          <IcChar />
-        </StMemberListWrapper>
-        <IcLine />
-        <StChatWrapper>
-          <p>스터디룸 채팅</p>
-        </StChatWrapper>
+        <Side />
       </StStudySideWrapper>
     </StStudyroomWrapper>
   );
@@ -127,39 +110,5 @@ const StStudySideWrapper = styled.div`
 
   & > svg {
     width: 100%;
-  }
-`;
-
-const StRoomNameWrapper = styled.div`
-  margin-left: 3.1rem;
-  margin-top: 5.4rem;
-
-  & > span {
-    margin-left: 1rem;
-
-    color: ${({ theme }) => theme.colors.White};
-    ${({ theme }) => theme.fonts.Title1};
-  }
-`;
-
-const StMemberListWrapper = styled.div`
-  margin-top: 3.3rem;
-
-  & > p {
-    margin-left: 3.1rem;
-
-    color: ${({ theme }) => theme.colors.White};
-    ${({ theme }) => theme.fonts.Title3};
-  }
-`;
-
-const StChatWrapper = styled.div`
-  margin-top: 1.2rem;
-
-  & > p {
-    margin-left: 3.1rem;
-
-    color: ${({ theme }) => theme.colors.White};
-    ${({ theme }) => theme.fonts.Title3};
   }
 `;
