@@ -1,6 +1,10 @@
+import { useState } from 'react';
 import { styled } from 'styled-components';
 
 const WebRTCContainer = () => {
+  // const [isLobby, setIsLobby] = useState(true);
+  // const { stream } = useMediaStream();
+
   return (
     <StWebRTCContainerWrapper>
       <StMediaWrapper>

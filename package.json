@@ -6,6 +6,7 @@
     "@types/react": "18.2.20",
     "@types/react-dom": "18.2.7",
     "@types/recoil": "^0.0.9",
+    "@types/simple-peer": "^9.11.5",
     "@types/styled-components": "^5.1.26",
     "axios": "^1.5.0",
     "eslint": "^8.46.0",
@@ -16,6 +17,9 @@
     "react-dom": "18.2.0",
     "recoil": "^0.7.7",
     "recoil-persist": "^5.1.0",
+    "simple-peer": "^9.11.1",
+    "socket.io": "^4.7.2",
+    "socket.io-client": "^4.7.2",
     "styled-components": "^6.0.7",
     "typescript": "5.1.6"
   },
