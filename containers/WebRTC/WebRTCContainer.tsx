@@ -32,6 +32,26 @@ const WebRTCContainer = () => {
   const [producer, setProducer] = useState<Producer>();
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
+  const initSockets = () => {
+    if (!socket) return;
+    socket.on('consumerClosed', ({ consumer_id }) => {
+      console.log('Closing consumer:', consumer_id);
+      socket.removeConsumer(consumer_id);
+    });
+    socket.on('newProducers', async (data) => {
+      console.log('4. New producers (consumeList)', data);
+      await produce('videoType', userName);
+
+      for (const { producer_id } of data) {
+        await consume(producer_id);
+      }
+    });
+
+    socket.on('disconnect', () => {
+      router.push('/webrtcroom');
+    });
+  };
+
   const connect = async () => {
     const socketConnection: CustomSocket = await io('https://0.0.0.0:8080/', {
       transports: ['websocket'],
@@ -40,28 +60,48 @@ const WebRTCContainer = () => {
     socketConnection.request = socketPromise(socketConnection);
     setSocket(socketConnection);
     console.log('1. socket connect', socketConnection);
+
+    try {
+      if (!curMemberId || !curCoreTimeId) return;
+      await createRoom(curCoreTimeId);
+      await join(curMemberId, curCoreTimeId);
+      initSockets();
+    } catch (error) {
+      console.error('Error in creating or joining the room:', error);
+    }
+  };
+
+  const createRoom = async (coretimeId: string) => {
+    if (!socket || !socket.request) return;
+    try {
+      await socket.request('createRoom', {
+        coretimeId,
+      });
+    } catch (err) {
+      console.error('Create room error:', err);
+    }
   };
 
   const join = async (memberId: string, coreTimeId: string) => {
-    if (socket && socket.request) {
-      try {
-        const socketJoin = await socket.request('join', {
-          curMemberId,
-          curCoreTimeId,
-        });
-        console.log('2. Joined to room', socketJoin);
+    if (!socket || !socket.request) return;
+    console.log('join');
+    try {
+      const socketJoin = await socket.request('join', {
+        memberId,
+        coreTimeId,
+      });
+      console.log('2. Joined to room', socketJoin);
 
-        const data = await socket.request('getRouterRtpCapabilities');
-        const device = await loadDevice(data);
-        console.log('3. device 로딩 ', device);
+      const data = await socket.request('getRouterRtpCapabilities');
+      const device = await loadDevice(data);
+      console.log('3. device 로딩 ', device);
 
-        if (device) {
-          await initTransports(device);
-          socket.emit('getProducers');
-        }
-      } catch (err) {
-        console.log('Join error:', err);
+      if (device) {
+        await initTransports(device);
+        socket.emit('getProducers');
       }
+    } catch (err) {
+      console.log('Join error:', err);
     }
   };
 
