@@ -1,13 +1,4 @@
 {
-  "name": "learniverse",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev -p 3000",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
   "dependencies": {
     "@next/font": "^13.4.19",
     "@types/axios": "^0.14.0",
@@ -19,6 +10,7 @@
     "axios": "^1.5.0",
     "eslint": "^8.46.0",
     "eslint-config-next": "13.4.13",
+    "mediasoup-client": "^3.6.100",
     "next": "13.4.13",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -40,5 +32,14 @@
     "eslint-plugin-react": "^7.33.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "prettier": "^3.0.1"
-  }
+  },
+  "name": "learniverse",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev -p 3003",
+    "lint": "next lint",
+    "start": "next start"
+  },
+  "version": "0.1.0"
 }

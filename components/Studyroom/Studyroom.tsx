@@ -18,7 +18,7 @@ const Studyroom = () => {
   const router = useRouter();
 
   const handleAttend = () => {
-    router.push('./coretime');
+    router.push('/coretime');
   };
 
   return (
