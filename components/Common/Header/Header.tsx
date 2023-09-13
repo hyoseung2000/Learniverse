@@ -43,11 +43,6 @@ const StHeaderWrapper = styled.header<{ path: string }>`
     css`
       display: none;
     `}
-  ${({ path }) =>
-    path === '/studyroom' &&
-    css`
-      display: none;
-    `}
 `;
 
 const StHeader = styled.div`
