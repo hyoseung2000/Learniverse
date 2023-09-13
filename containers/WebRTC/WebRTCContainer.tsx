@@ -14,7 +14,6 @@ const WebRTCContainer = () => {
     setSocket(socketConnection);
     const mediasoupDevice = new Device();
     setDevice(mediasoupDevice);
-    // Handle socket.io events and mediasoup client here
   }, []);
 
   const startScreenSharing = async () => {
@@ -24,7 +23,6 @@ const WebRTCContainer = () => {
     if (videoRef && videoRef.current) {
       videoRef.current.srcObject = stream;
     }
-    // Use stream with mediasoup client to send to the server
   };
 
   return (
