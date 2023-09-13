@@ -5,7 +5,7 @@ import { styled } from 'styled-components';
 import { createRoom } from '@/apis/roomList';
 import { IcAddTag, IcDeleteTag } from '@/public/assets/icons';
 import { encodedUrlState } from '@/recoil/atom';
-import { postStudyRoomInfo } from '@/types/studyroom';
+import { PostStudyRoomInfo } from '@/types/studyroom';
 
 import { CancelButton, ConfirmButton } from '../../Common/Button';
 import { LargeModal } from '../../Common/Modal';
@@ -27,7 +27,7 @@ const AddStudyroomModal = ({
   const [hashtagList, setHashtagList] = useState<string[]>([]);
   const [member, setMember] = useState(2);
   const [introduction, setIntroduction] = useState('');
-  const [addRoomInfo, setAddRoomInfo] = useState<postStudyRoomInfo>();
+  const [addRoomInfo, setAddRoomInfo] = useState<PostStudyRoomInfo>();
   const [, setEncodedUrl] = useRecoilState(encodedUrlState);
 
   const initInfo = () => {

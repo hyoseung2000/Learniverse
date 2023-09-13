@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
 import { getRoomList } from '@/apis/roomList';
-import { studyRoomInfo } from '@/types/studyroom';
+import { StudyRoomInfo } from '@/types/studyroom';
 
 import StudyroomCard from '../RoomCard/StudyroomCard';
 
 const AllStudyroomList = () => {
-  const [roomList, setRoomList] = useState<studyRoomInfo[]>();
+  const [roomList, setRoomList] = useState<StudyRoomInfo[]>();
 
   const getAllRoom = async () => {
     const rooms = await getRoomList();

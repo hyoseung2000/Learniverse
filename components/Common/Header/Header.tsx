@@ -24,7 +24,7 @@ const Header = () => {
           <IcProfile />
         </button>
         <StHeaderModalWrapper>
-          <HeaderModal isShowing={isShowing} handleHide={toggle} />
+          <HeaderModal isShowing={isShowing} />
         </StHeaderModalWrapper>
       </StHeader>
     </StHeaderWrapper>

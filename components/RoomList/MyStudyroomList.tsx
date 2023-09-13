@@ -3,14 +3,14 @@ import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
 import { getMyRoomList } from '@/apis/roomList';
-import { studyRoomInfo } from '@/types/studyroom';
+import { StudyRoomInfo } from '@/types/studyroom';
 
 import { PurpleButton } from '../Common/Button';
 import AddStudyroom from '../RoomCard/AddStudyroom';
 import StudyroomCard from '../RoomCard/StudyroomCard';
 
 const MyStudyroomList = () => {
-  const [myRoomList, setMyRoomList] = useState<studyRoomInfo[]>();
+  const [myRoomList, setMyRoomList] = useState<StudyRoomInfo[]>();
   const router = useRouter();
 
   const getMyStudyRoom = async () => {

@@ -2,11 +2,11 @@ import { useRouter } from 'next/router';
 import { styled } from 'styled-components';
 
 import { IcPlanet } from '@/public/assets/icons';
-import { studyRoomInfo } from '@/types/studyroom';
+import { StudyRoomInfo } from '@/types/studyroom';
 import { getCategoryColor } from '@/utils/getCategoryColor';
 
 interface StudyroomCardProps {
-  roomData: studyRoomInfo;
+  roomData: StudyRoomInfo;
   roomType?: string;
   handleApply?: () => void;
   handleManage?: () => void;

@@ -8,7 +8,7 @@ import { LargeModal, SmallModal } from '@/components/Common/Modal';
 import { StudyroomCard } from '@/components/RoomCard';
 import useModal from '@/hooks/useModal';
 import { IcCharacterCheck } from '@/public/assets/icons';
-import { studyRoomInfo } from '@/types/studyroom';
+import { StudyRoomInfo } from '@/types/studyroom';
 
 interface ApplyContainerProps {
   url: string;
@@ -17,7 +17,7 @@ interface ApplyContainerProps {
 const ApplyContainer = ({ url }: ApplyContainerProps) => {
   const router = useRouter();
   const [roomId, setRoomId] = useState<number>(0);
-  const [roomInfo, setRoomInfo] = useState<studyRoomInfo>();
+  const [roomInfo, setRoomInfo] = useState<StudyRoomInfo>();
 
   const applyModal = useModal();
   const applyCompleteModal = useModal();
