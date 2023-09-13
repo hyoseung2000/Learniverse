@@ -7,11 +7,11 @@ export interface LearniverseResponse<T> {
   data: T;
 }
 
-export interface studyRoomListInfo {
-  rooms: studyRoomInfo[];
+export interface StudyRoomListInfo {
+  rooms: StudyRoomInfo[];
 }
 
-export interface studyRoomInfo {
+export interface StudyRoomInfo {
   roomId: number;
   roomName: string;
   roomIntro: string;
@@ -22,7 +22,7 @@ export interface studyRoomInfo {
   isMember: string;
 }
 
-export interface postStudyRoomInfo {
+export interface PostStudyRoomInfo {
   member_id: number;
   roomName: string;
   roomCategory: number;

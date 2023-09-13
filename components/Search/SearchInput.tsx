@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { styled } from "styled-components";
+import { useState } from 'react';
+import { styled } from 'styled-components';
 
-import { IcSearch } from "@/public/assets/icons";
+import { IcSearch } from '@/public/assets/icons';
 
 const SearchInput = () => {
   const [selectedInput, setSelectedInput] = useState(0);
@@ -13,7 +13,7 @@ const SearchInput = () => {
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInputInput(e.target.value);
   };
-  const handleSearch = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSearch = () => {
     console.log('검색 : 2차 데모 이후 개발');
   };
   return (
@@ -27,7 +27,7 @@ const SearchInput = () => {
             checked={selectedInput === 0}
             onChange={handleRadioChange}
           />
-          <span></span>방 이름
+          <span />방 이름
         </StRadio>
         <StRadio>
           <input
@@ -37,7 +37,7 @@ const SearchInput = () => {
             checked={selectedInput === 1}
             onChange={handleRadioChange}
           />
-          <span></span>
+          <span />
           해시태그
         </StRadio>
       </StRadioWrapper>
@@ -48,12 +48,13 @@ const SearchInput = () => {
           name="search"
           value={searchInput}
           onChange={handleSearchInputChange}
-          placeholder={'방 이름 또는 해시태그를 입력해주세요.'}
+          placeholder="방 이름 또는 해시태그를 입력해주세요."
         />
-        <button type="button" onClick={handleSearch}></button>
-        <StIconWrapper>
-          <IcSearch />
-        </StIconWrapper>
+        <button type="button" onClick={handleSearch}>
+          <StIconWrapper>
+            <IcSearch />
+          </StIconWrapper>
+        </button>
       </StInputWrapper>
     </StSearchInputWrapper>
   );

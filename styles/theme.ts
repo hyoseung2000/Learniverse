@@ -1,5 +1,5 @@
-import { Noto_Sans_KR } from "next/font/google";
-import { css } from "styled-components";
+import { Noto_Sans_KR } from 'next/font/google';
+import { css } from 'styled-components';
 
 const notoSansKr = Noto_Sans_KR({
   weight: ['100', '300', '400', '500', '700', '900'],

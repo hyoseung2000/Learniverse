@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { styled } from "styled-components";
+import { useEffect, useState } from 'react';
+import { styled } from 'styled-components';
 
-import { getRoomList } from "@/apis/roomList";
-import { studyRoomInfo } from "@/types/studyroom";
+import { getRoomList } from '@/apis/roomList';
+import { studyRoomInfo } from '@/types/studyroom';
 
-import StudyroomCard from "../RoomCard/StudyroomCard";
+import StudyroomCard from '../RoomCard/StudyroomCard';
 
 const AllStudyroomList = () => {
   const [roomList, setRoomList] = useState<studyRoomInfo[]>();

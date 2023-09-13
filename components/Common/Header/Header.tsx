@@ -1,10 +1,10 @@
-import { useRouter } from "next/router";
-import { css, styled } from "styled-components";
+import { useRouter } from 'next/router';
+import { css, styled } from 'styled-components';
 
-import useModal from "@/hooks/useModal";
-import { IcLogo, IcProfile } from "@/public/assets/icons";
+import useModal from '@/hooks/useModal';
+import { IcLogo, IcProfile } from '@/public/assets/icons';
 
-import HeaderModal from "./HeaderModal";
+import HeaderModal from './HeaderModal';
 
 const Header = () => {
   const router = useRouter();

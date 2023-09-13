@@ -1,14 +1,14 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
+// import { useRecoilValue } from 'recoil';
 
-import { moonScoreState } from '@/recoil/atom';
-import { totalMoonScoreSelector } from '@/recoil/selector';
+// import { moonScoreState } from '@/recoil/atom';
+// import { totalMoonScoreSelector } from '@/recoil/selector';
 
 export const addMoonScore = () => {
   // const [moonScore, setMoonScoreState] = useRecoilState(moonScoreState);
 
   const isMax = () => {
-    const totalMoonScore = useRecoilValue(totalMoonScoreSelector);
-    return totalMoonScore >= 4;
+    // const totalMoonScore = useRecoilValue(totalMoonScoreSelector);
+    // return totalMoonScore >= 4;
   };
 
   const addFirstAccess = () => {
@@ -20,7 +20,7 @@ export const addMoonScore = () => {
   };
 
   const addCoreTimeAccess = () => {
-    if (isMax()) return;
+    // if (isMax()) return;
     // setMoonScoreState((prevMoonScore) => ({
     //   ...prevMoonScore,
     //   isCoreTimeParticipate: prevMoonScore.isCoreTimeParticipate + 1,
@@ -28,7 +28,7 @@ export const addMoonScore = () => {
   };
 
   const addCapture = () => {
-    if (isMax()) return;
+    // if (isMax()) return;
     // setMoonScoreState((prevMoonScore) => ({
     //   ...prevMoonScore,
     //   isCapture: prevMoonScore.isCapture + 1,

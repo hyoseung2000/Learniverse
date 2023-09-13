@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
@@ -11,15 +12,15 @@ import {
   IcMoonBox,
   IcProfileImage,
 } from '@/public/assets/icons';
-import { moonInfo } from '@/types/member';
+import { MoonInfo } from '@/types/member';
 
 import { MyPageStudyRoomList } from '../RoomList';
 
 const MyPage = () => {
   const [activeTab, setActiveTab] = useState(0);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [isLeader, setIsLeader] = useState(true);
-  const [moons, setMoons] = useState<moonInfo[]>([]);
+  const [moons, setMoons] = useState<MoonInfo[]>([]);
   const [moonScores, setMoonScores] = useState<number[]>([]);
   const [isMoon, setIsMoon] = useState(false);
 
@@ -57,7 +58,7 @@ const MyPage = () => {
 
   const handleTabClick = (tabValue: number) => {
     if (activeTab !== tabValue) {
-      setLoading(true);
+      // setLoading(true);
       setActiveTab(tabValue);
     }
   };
@@ -68,9 +69,12 @@ const MyPage = () => {
   }, [isMoon]);
 
   useEffect(() => {
-    setLoading(true);
+    // setLoading(true);
     setIsLeader(activeTab === 0);
   }, [activeTab]);
+
+  // if (loading) return '로딩중..';
+
   return (
     <StMyPageWrapper>
       <h2>마이페이지</h2>

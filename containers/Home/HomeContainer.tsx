@@ -26,21 +26,21 @@ const HomeContainer = () => {
     }));
   };
 
-  const addCoreTimeAccess = () => {
-    if (isMax()) return;
-    setMoonScore((prevMoonScore) => ({
-      ...prevMoonScore,
-      isCoreTimeParticipate: prevMoonScore.isCoreTimeParticipate + 1,
-    }));
-  };
+  // const addCoreTimeAccess = () => {
+  //   if (isMax()) return;
+  //   setMoonScore((prevMoonScore) => ({
+  //     ...prevMoonScore,
+  //     isCoreTimeParticipate: prevMoonScore.isCoreTimeParticipate + 1,
+  //   }));
+  // };
 
-  const addCapture = () => {
-    if (isMax()) return;
-    setMoonScore((prevMoonScore) => ({
-      ...prevMoonScore,
-      isCapture: prevMoonScore.isCapture + 1,
-    }));
-  };
+  // const addCapture = () => {
+  //   if (isMax()) return;
+  //   setMoonScore((prevMoonScore) => ({
+  //     ...prevMoonScore,
+  //     isCapture: prevMoonScore.isCapture + 1,
+  //   }));
+  // };
 
   const initMoonScore = () => {
     setMoonScore({
@@ -65,7 +65,8 @@ const HomeContainer = () => {
   useEffect(() => {
     const addMoons = async () => {
       const res = await addMoon(totalMoonScore);
-      if (res === 400) return;
+      if (res === 400) return null;
+      return res;
     };
     addMoons();
   }, [moonScore]);

@@ -4,6 +4,7 @@ import React from 'react';
 import { ApplyContainer } from '@/containers/Apply';
 
 const index = () => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const router = useRouter();
   const { encodedUrl } = router.query;
 

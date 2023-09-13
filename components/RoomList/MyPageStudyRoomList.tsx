@@ -3,7 +3,7 @@ import { styled } from 'styled-components';
 
 import { getApplyRoomList, getLeaderRoomList } from '@/apis/roomList';
 import useModal from '@/hooks/useModal';
-import { studyRoomInfo } from '@/types/studyroom';
+import { StudyRoomInfo } from '@/types/studyroom';
 
 import { ManageModal } from '../RoomCard/Modal';
 import StudyroomCard from '../RoomCard/StudyroomCard';
@@ -12,13 +12,13 @@ interface MyPageStudyRoomListProps {
   isLeader?: boolean;
 }
 const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
-  const [roomList, setRoomList] = useState<studyRoomInfo[]>();
+  const [roomList, setRoomList] = useState<StudyRoomInfo[]>();
   const [roomId, setRoomId] = useState<number>(0);
   const manage = useModal();
   const edit = useModal();
 
   const getAllRoom = async () => {
-    let rooms: studyRoomInfo[] = [];
+    let rooms: StudyRoomInfo[] = [];
     if (isLeader) {
       rooms = await getLeaderRoomList();
     } else {
@@ -27,12 +27,10 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
     setRoomList(rooms);
   };
 
-  const handleManage = async (roomId: number) => {
-    setRoomId(roomId);
+  const handleManage = async (curRoomId: number) => {
+    setRoomId(curRoomId);
     manage.toggle();
   };
-
-  const handleEdit = () => {};
 
   useEffect(() => {
     getAllRoom();

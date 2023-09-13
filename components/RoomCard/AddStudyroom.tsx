@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
 import useModal from '@/hooks/useModal';

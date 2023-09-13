@@ -68,7 +68,7 @@ const StudyroomCard = ({
           <StJoin
             type="button"
             disabled={!canJoinRoom}
-            onClick={handleApply ? handleApply : handleGotoRoom}
+            onClick={handleApply || handleGotoRoom}
           >
             {buttonText}
           </StJoin>
@@ -253,7 +253,7 @@ const StStatusWrapper = styled.div<{ memberStatus: string }>`
 
     border-radius: 0.4rem;
     ${({ theme }) => theme.fonts.Body4};
-    background-color: ${({ memberStatus, theme }) => {
+    background-color: ${({ memberStatus }) => {
       switch (memberStatus) {
         case '승인':
           return '#0ACF84';

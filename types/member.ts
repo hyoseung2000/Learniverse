@@ -1,8 +1,8 @@
-export interface memberListInfo {
-  members: memberInfo[];
+export interface MemberListInfo {
+  members: MemberInfo[];
 }
 
-export interface memberInfo {
+export interface MemberInfo {
   memberId: number;
   memberEmail: string;
   nickname: string;
@@ -11,12 +11,12 @@ export interface memberInfo {
   isMember: string;
 }
 
-export interface moonInfo {
+export interface MoonInfo {
   moonDate: Date;
   moonScore: number;
 }
 
-export interface moonScoreInfo {
+export interface MoonScoreInfo {
   isFirstAccess: number;
   isCoreTimeParticipate: number;
   isCapture: number;

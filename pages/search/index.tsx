@@ -1,4 +1,4 @@
-import { SearchContainer } from "@/containers/Search";
+import { SearchContainer } from '@/containers/Search';
 
 const index = () => {
   return <SearchContainer />;

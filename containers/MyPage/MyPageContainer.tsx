@@ -1,6 +1,6 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components';
 
-import { MyPage } from "@/components/MyPage";
+import { MyPage } from '@/components/MyPage';
 
 const MyPageContainer = () => {
   return (

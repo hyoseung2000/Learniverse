@@ -20,22 +20,21 @@ export default function App({ Component, pageProps }: AppProps) {
     return null;
   }
   if (typeof window === 'undefined') {
-    return <></>;
-  } else {
-    return (
-      isClient && (
-        <RecoilRoot>
-          <ThemeProvider theme={theme}>
-            <GlobalStyle />
-            <Head>
-              <title>LearniVerse</title>
-              <link rel="icon" href="/favicon.png" />
-            </Head>
-            <Header />
-            <Component {...pageProps} />
-          </ThemeProvider>
-        </RecoilRoot>
-      )
-    );
+    return null;
   }
+  return (
+    isClient && (
+      <RecoilRoot>
+        <ThemeProvider theme={theme}>
+          <GlobalStyle />
+          <Head>
+            <title>LearniVerse</title>
+            <link rel="icon" href="/favicon.png" />
+          </Head>
+          <Header />
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </RecoilRoot>
+    )
+  );
 }

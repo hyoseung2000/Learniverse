@@ -1,10 +1,8 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
-import { moonScoreInfo } from '@/types/member';
+import { MoonScoreInfo } from '@/types/member';
 import getToday from '@/utils/getToday';
-
-import { totalMoonScoreSelector } from './selector';
 
 const { persistAtom } = recoilPersist();
 
@@ -16,7 +14,7 @@ export const encodedUrlState = atom<string>({
   default: '',
 });
 
-export const moonScoreState = atom<moonScoreInfo>({
+export const moonScoreState = atom<MoonScoreInfo>({
   key: `moonScore`,
   default: {
     isFirstAccess: 0,

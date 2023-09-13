@@ -59,9 +59,9 @@ const ApplyContainer = ({ url }: ApplyContainerProps) => {
 
   return (
     <StApplyContainer>
-      <LargeModal isShowing={applyModal.isShowing} title={'스터디룸 참여'}>
+      <LargeModal isShowing={applyModal.isShowing} title="스터디룸 참여">
         <StRoomCardWrapper>
-          <p>스터디룸에 참여하시려면 '참여' 버튼을 눌러주세요.</p>
+          <p>스터디룸에 참여하시려면 참여 버튼을 눌러주세요.</p>
           {roomInfo && (
             <StudyroomCard roomData={roomInfo} handleApply={handleApply} />
           )}

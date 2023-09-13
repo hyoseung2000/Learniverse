@@ -4,7 +4,7 @@ import { styled } from 'styled-components';
 interface LargeModalProps {
   title: string;
   isShowing: boolean;
-  children?: React.ReactNode;
+  children: React.ReactNode;
 }
 
 const LargeModal = ({ title, isShowing, children }: LargeModalProps) => {
@@ -30,7 +30,8 @@ const StLargeModalWrapper = styled.div`
   height: fit-content;
 
   border-radius: 2rem;
-  box-shadow: 0px 4px 100px 0px rgba(153, 133, 254, 0.2) inset,
+  box-shadow:
+    0px 4px 100px 0px rgba(153, 133, 254, 0.2) inset,
     -30px 30px 100px 0px rgba(132, 139, 227, 0.15);
   background-color: ${({ theme }) => theme.colors.LightGray1};
 `;

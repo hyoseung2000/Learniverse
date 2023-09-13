@@ -23,27 +23,25 @@ const CompleteModal = ({ isShowing, handleCancel }: CompleteModalProps) => {
   };
 
   return (
-    <>
-      {isShowing && (
-        <SmallModal title="초대 링크 공유하기" isShowing={isShowing}>
-          <StCompleteModalWrapper>
-            <StContentWrapper>
-              <IcCharacterSpeaker />
-              <p>
-                스터디룸이 생성되었어요.
-                <br />
-                링크를 공유하여 팀원을 초대하세요!
-              </p>
-            </StContentWrapper>
-            <StLink>{linkToCopy}</StLink>
-            <StBtnWrapper>
-              <ConfirmButton btnName="공유하기" onClick={handleCopy} />
-              <CancelButton btnName="취소" onClick={handleCancel} />
-            </StBtnWrapper>
-          </StCompleteModalWrapper>
-        </SmallModal>
-      )}
-    </>
+    isShowing && (
+      <SmallModal title="초대 링크 공유하기" isShowing={isShowing}>
+        <StCompleteModalWrapper>
+          <StContentWrapper>
+            <IcCharacterSpeaker />
+            <p>
+              스터디룸이 생성되었어요.
+              <br />
+              링크를 공유하여 팀원을 초대하세요!
+            </p>
+          </StContentWrapper>
+          <StLink>{linkToCopy}</StLink>
+          <StBtnWrapper>
+            <ConfirmButton btnName="공유하기" onClick={handleCopy} />
+            <CancelButton btnName="취소" onClick={handleCancel} />
+          </StBtnWrapper>
+        </StCompleteModalWrapper>
+      </SmallModal>
+    )
   );
 };
 

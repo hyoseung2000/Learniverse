@@ -1,6 +1,6 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components';
 
-import { MyStudyroomList } from "../RoomList";
+import { MyStudyroomList } from '../RoomList';
 
 const Home = () => {
   return (

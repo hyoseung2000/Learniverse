@@ -77,116 +77,119 @@ const AddStudyroomModal = ({
   }, [studyName, category, hashtagList, member, introduction]);
 
   return (
-    <>
-      {isShowing && (
-        <LargeModal title="스터디룸 만들기" isShowing={isShowing}>
-          <StAddStudyroomModalWrapper>
-            <StInputStudyName>
-              <label>스터디명</label>
+    isShowing && (
+      <LargeModal title="스터디룸 만들기" isShowing={isShowing}>
+        <StAddStudyroomModalWrapper>
+          <StInputStudyName>
+            <label htmlFor="studyName">스터디명</label>
+            <input
+              type="text"
+              id="studyName"
+              name="studyName"
+              value={studyName}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setStudyName(e.target.value);
+              }}
+              autoComplete="off"
+            />
+          </StInputStudyName>
+
+          <StCategory>
+            <label htmlFor="category">카테고리</label>
+            <select
+              id="category"
+              value={category}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                setCategory(parseInt(e.target.value, 10));
+              }}
+            >
+              <option value="5">기타</option>
+              <option value="0">코딩테스트 대비</option>
+              <option value="1">사이드 프로젝트</option>
+              <option value="2">취업 준비</option>
+              <option value="3">개발 공부</option>
+              <option value="4">그룹/모임</option>
+            </select>
+          </StCategory>
+
+          <StHashtag>
+            <label htmlFor="hashtag">해시태그</label>
+            <div>
               <input
                 type="text"
-                name="studyName"
-                value={studyName}
+                id="hashtag"
+                name="hashtag"
+                value={hashtag}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setStudyName(e.target.value);
+                  setHashtag(e.target.value);
                 }}
                 autoComplete="off"
               />
-            </StInputStudyName>
+              <StAddTagBtn type="button" onClick={handleHashtag}>
+                <IcAddTag />
+              </StAddTagBtn>
+              <StHashtagList>
+                {hashtagList.map((tag, index) => (
+                  <StHashtagItem key={tag}>
+                    # {tag}
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveHashtag(index)}
+                    >
+                      <IcDeleteTag />
+                    </button>
+                  </StHashtagItem>
+                ))}
+              </StHashtagList>
+            </div>
+          </StHashtag>
 
-            <StCategory>
-              <label>카테고리</label>
-              <select
-                value={category}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                  setCategory(parseInt(e.target.value));
-                }}
-              >
-                <option value="5">기타</option>
-                <option value="0">코딩테스트 대비</option>
-                <option value="1">사이드 프로젝트</option>
-                <option value="2">취업 준비</option>
-                <option value="3">개발 공부</option>
-                <option value="4">그룹/모임</option>
-              </select>
-            </StCategory>
-
-            <StHashtag>
-              <label>해시태그</label>
-              <div>
-                <input
-                  type="text"
-                  name="hashtag"
-                  value={hashtag}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setHashtag(e.target.value);
-                  }}
-                  autoComplete="off"
-                />
-                <StAddTagBtn type="button" onClick={handleHashtag}>
-                  <IcAddTag />
-                </StAddTagBtn>
-                <StHashtagList>
-                  {hashtagList.map((tag, index) => (
-                    <StHashtagItem key={index}>
-                      # {tag}
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveHashtag(index)}
-                      >
-                        <IcDeleteTag />
-                      </button>
-                    </StHashtagItem>
-                  ))}
-                </StHashtagList>
-              </div>
-            </StHashtag>
-
-            <StMember>
-              <label>정원 (최대 5명)</label>
-              <div>
-                <input
-                  type="number"
-                  name="member"
-                  value={member}
-                  min={2}
-                  max={5}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setMember(parseInt(e.target.value));
-                  }}
-                  autoComplete="off"
-                />
-                명
-              </div>
-            </StMember>
-
-            <StIntro>
-              <label>한줄소개 (선택)</label>
+          <StMember>
+            <label htmlFor="member">정원 (최대 5명)</label>
+            <div>
               <input
-                type="text"
-                name="introduction"
-                value={introduction}
+                type="number"
+                id="member"
+                name="member"
+                value={member}
+                min={2}
+                max={5}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  setIntroduction(e.target.value);
+                  setMember(parseInt(e.target.value, 10));
                 }}
                 autoComplete="off"
               />
-            </StIntro>
+              명
+            </div>
+          </StMember>
 
-            <StBtnWrapper>
-              <ConfirmButton btnName="만들기" onClick={handleAddRoom} />
-              <CancelButton
-                btnName="취소"
-                onClick={() => {
-                  initInfo();
-                  handleCancel();
-                }}
-              />
-            </StBtnWrapper>
-          </StAddStudyroomModalWrapper>
-        </LargeModal>
-      )}
-    </>
+          <StIntro>
+            <label htmlFor="introduction">한줄소개 (선택)</label>
+            <input
+              type="text"
+              id="introduction"
+              name="introduction"
+              value={introduction}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setIntroduction(e.target.value);
+              }}
+              autoComplete="off"
+            />
+          </StIntro>
+
+          <StBtnWrapper>
+            <ConfirmButton btnName="만들기" onClick={handleAddRoom} />
+            <CancelButton
+              btnName="취소"
+              onClick={() => {
+                initInfo();
+                handleCancel();
+              }}
+            />
+          </StBtnWrapper>
+        </StAddStudyroomModalWrapper>
+      </LargeModal>
+    )
   );
 };
 

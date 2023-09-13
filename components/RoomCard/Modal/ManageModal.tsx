@@ -4,7 +4,7 @@ import { styled } from 'styled-components';
 import { getWaitMembers, JoinMember, RejectMember } from '@/apis/memberList';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { SmallModal } from '@/components/Common/Modal';
-import { memberInfo } from '@/types/member';
+import { MemberInfo } from '@/types/member';
 
 interface CompleteModalProps {
   roomId: number;
@@ -19,7 +19,7 @@ const ManageModal = ({
   handleConfirm,
   handleCancel,
 }: CompleteModalProps) => {
-  const [applyList, setApplyList] = useState<memberInfo[]>();
+  const [applyList, setApplyList] = useState<MemberInfo[]>();
   const [statusChange, setStatusChange] = useState(false);
 
   const getApplyList = async () => {
@@ -42,48 +42,44 @@ const ManageModal = ({
   }, [roomId, statusChange]);
 
   return (
-    <>
-      {isShowing && (
-        <>
-          <SmallModal title="신청자 관리하기" isShowing={isShowing}>
-            <StManageModalWrapper>
-              <p>닉네임</p>
-              <p>깃허브 아이디</p>
-              <p>승인상태</p>
-            </StManageModalWrapper>
-            {applyList &&
-              applyList.map((apply, index) => (
-                <StApplyList key={index}>
-                  <span>{apply.nickname}</span>
-                  <span>{apply.memberEmail}</span>
-                  {apply.isMember === '대기' ? (
-                    <span>
-                      <button
-                        type="button"
-                        onClick={() => handleJoin(apply.memberId)}
-                      >
-                        승인
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleReject(apply.memberId)}
-                      >
-                        거절
-                      </button>
-                    </span>
-                  ) : (
-                    <span className="status">{apply.isMember}</span>
-                  )}
-                </StApplyList>
-              ))}
-            <StBtnWrapper>
-              <ConfirmButton btnName="완료" onClick={handleConfirm} />
-              <CancelButton btnName="취소" onClick={handleCancel} />
-            </StBtnWrapper>
-          </SmallModal>
-        </>
-      )}
-    </>
+    isShowing && (
+      <SmallModal title="신청자 관리하기" isShowing={isShowing}>
+        <StManageModalWrapper>
+          <p>닉네임</p>
+          <p>깃허브 아이디</p>
+          <p>승인상태</p>
+        </StManageModalWrapper>
+        {applyList &&
+          applyList.map((apply) => (
+            <StApplyList key={apply.memberId}>
+              <span>{apply.nickname}</span>
+              <span>{apply.memberEmail}</span>
+              {apply.isMember === '대기' ? (
+                <span>
+                  <button
+                    type="button"
+                    onClick={() => handleJoin(apply.memberId)}
+                  >
+                    승인
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleReject(apply.memberId)}
+                  >
+                    거절
+                  </button>
+                </span>
+              ) : (
+                <span className="status">{apply.isMember}</span>
+              )}
+            </StApplyList>
+          ))}
+        <StBtnWrapper>
+          <ConfirmButton btnName="완료" onClick={handleConfirm} />
+          <CancelButton btnName="취소" onClick={handleCancel} />
+        </StBtnWrapper>
+      </SmallModal>
+    )
   );
 };
 

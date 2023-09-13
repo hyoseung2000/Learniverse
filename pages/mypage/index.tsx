@@ -1,4 +1,4 @@
-import { MyPageContainer } from "@/containers/MyPage";
+import { MyPageContainer } from '@/containers/MyPage';
 
 const index = () => {
   return <MyPageContainer />;

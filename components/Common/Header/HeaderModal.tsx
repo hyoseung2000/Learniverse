@@ -1,12 +1,12 @@
-import { useRouter } from "next/router";
-import { styled } from "styled-components";
+import { useRouter } from 'next/router';
+import { styled } from 'styled-components';
 
 interface HeaderModalProps {
   isShowing: boolean;
-  handleHide: React.MouseEventHandler;
+  // handleHide: React.MouseEventHandler;
 }
 
-const HeaderModal = ({ isShowing, handleHide }: HeaderModalProps) => {
+const HeaderModal = ({ isShowing }: HeaderModalProps) => {
   const router = useRouter();
 
   const handleProfile = () => {

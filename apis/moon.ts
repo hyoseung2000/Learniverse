@@ -23,10 +23,11 @@ export const addMoon = async (curScore: number) => {
       // moonDate: '2023-08-20',
     });
     console.log(data);
-    return data;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     console.error(err);
     console.log(err.response?.data.status);
+    // eslint-disable-next-line consistent-return
     return err.response?.data.status;
   }
 };
