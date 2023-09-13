@@ -1,17 +1,60 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable jsx-a11y/media-has-caption */
 import { Device } from 'mediasoup-client';
+import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import io, { Socket } from 'socket.io-client';
 import { styled } from 'styled-components';
 
 const WebRTCContainer = () => {
+  const router = useRouter();
+  const { memberId, coreTimeId } = router.query;
+  const [curMemberId, setCurMemberId] = useState<string>();
+  const [curCoreTimeId, setCurCoreTimeId] = useState<string>();
+
   const [device, setDevice] = useState<Device | null>(null);
   const [socket, setSocket] = useState<Socket | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  useEffect(() => {
-    const socketConnection = io('https://0.0.0.0:8080');
+  const connect = async () => {
+    const socketConnection = await io('https://0.0.0.0:8080/', {
+      transports: ['websocket'],
+      path: '/server',
+    });
     setSocket(socketConnection);
+    console.log('1. socket 연결됨', socketConnection);
+  };
+
+  const join = async (name, room_id) => {
+    socket
+      .request('join', {
+        name,
+        room_id,
+      })
+      .then(async function (e) {
+        console.log('2. Joined to room', e);
+        const data = await socket.request('getRouterRtpCapabilities');
+        device = await loadDevice(data);
+        console.log('3. device 로딩 ', device);
+        // device = device;
+        await initTransports(device);
+        socket.emit('getProducers');
+      })
+      .catch((err) => {
+        console.log('Join error:', err);
+      });
+  };
+
+  useEffect(() => {
+    if (memberId && coreTimeId) {
+      console.log('memberId:', memberId[0], 'coreTimeId:', coreTimeId[0]);
+      setCurMemberId(memberId[0]);
+      setCurCoreTimeId(coreTimeId[0]);
+    }
+  }, [memberId, coreTimeId]);
+
+  useEffect(() => {
+    connect();
     const mediasoupDevice = new Device();
     setDevice(mediasoupDevice);
   }, []);
