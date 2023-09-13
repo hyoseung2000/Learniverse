@@ -4,7 +4,7 @@ import { IcGraylineLogo } from '@/public/assets/icons';
 
 import { StateBtn } from '../Common/Button';
 
-const CoreTime = () => {
+const CoreTimeSet = () => {
   return (
     <StCoretimeWrapper>
       <h1>코어타임</h1>
@@ -26,7 +26,7 @@ const CoreTime = () => {
   );
 };
 
-export default CoreTime;
+export default CoreTimeSet;
 
 const StCoretimeWrapper = styled.div`
   margin-top: 0.4rem;

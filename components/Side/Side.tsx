@@ -2,7 +2,11 @@ import { styled } from 'styled-components';
 
 import { IcChar, IcLine, IcRoomLogo, IcSend } from '@/public/assets/icons';
 
-const Side = () => {
+interface Props {
+  chatName: string;
+}
+
+const Side = ({ chatName }: Props) => {
   return (
     <StSideWrapper>
       <StRoomNameWrapper>
@@ -49,7 +53,7 @@ const Side = () => {
       </StMemberListWrapper>
       <IcLine />
       <StChatWrapper>
-        <p>스터디룸 채팅</p>
+        <p>{chatName}</p>
         <StSendWrapper>
           <IcSend />
         </StSendWrapper>
