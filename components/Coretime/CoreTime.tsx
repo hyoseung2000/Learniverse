@@ -1,19 +1,11 @@
 import { styled } from 'styled-components';
 
-import {
-  IcCoreChar,
-  IcMedia,
-  IcMike,
-  IcSpeaker,
-  IcTimer,
-} from '@/public/assets/icons';
+import { IcTimer } from '@/public/assets/icons';
 
-import { CoreBtn } from '../Common/Button';
 import { Side } from '../Side';
+import Media from './Media';
 
 const CoreTime = () => {
-  const handleOut = () => {};
-
   return (
     <StCoreTimeWrapper>
       <StCoreMainWrapper>
@@ -21,34 +13,7 @@ const CoreTime = () => {
           <IcTimer />
           <h1>1 : 38 : 30 </h1>
         </StTimeWrapper>
-        <IcMedia />
-        <IcMike />
-        <IcSpeaker />
-        <StMediaWrapper>
-          <div>
-            <StVideo />
-            <IcCoreChar />
-          </div>
-          <div>
-            <StVideo />
-            <IcCoreChar />
-          </div>
-          <div>
-            <StVideo />
-            <IcCoreChar />
-          </div>
-          <div>
-            <StVideo />
-            <IcCoreChar />
-          </div>
-          <div>
-            <StVideo />
-            <IcCoreChar />
-          </div>
-          <StbtnWrapper>
-            <CoreBtn btnName="코어타임 나가기" handleClick={handleOut} />
-          </StbtnWrapper>
-        </StMediaWrapper>
+        <Media />
       </StCoreMainWrapper>
       <StCoreSideWrapper>
         <Side chatName="코어타임 채팅" />
@@ -68,11 +33,6 @@ const StCoreMainWrapper = styled.div`
 
   margin-top: 2.6rem;
   margin-left: 11.2rem;
-
-  & > svg {
-    margin-top: 1rem;
-    margin-right: 1rem;
-  }
 `;
 
 const StTimeWrapper = styled.div`
@@ -85,29 +45,6 @@ const StTimeWrapper = styled.div`
     color: ${({ theme }) => theme.colors.Orange2};
     ${({ theme }) => theme.fonts.Head0};
   }
-`;
-
-const StMediaWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 50% 50%;
-  grid-gap: 1rem;
-
-  & > div {
-    margin-top: 4rem;
-
-    display: flex;
-  }
-`;
-
-const StVideo = styled.div`
-  height: 13.4rem;
-  width: 23.4rem;
-
-  background: ${({ theme }) => theme.colors.Gray4};
-`;
-
-const StbtnWrapper = styled.div`
-  margin-top: 10rem;
 `;
 const StCoreSideWrapper = styled.div`
   width: 35%;
