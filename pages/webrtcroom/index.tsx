@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable jsx-a11y/media-has-caption */
 import { useRouter } from 'next/router';
@@ -5,13 +6,13 @@ import { styled } from 'styled-components';
 
 const index = () => {
   const router = useRouter();
-  const coreTimeId = 1;
-  const memberId = 1;
+  const room_id = 'room1';
+  const name = 'user1';
 
   const goCoretime = () => {
     router.push({
       pathname: '/webrtc/1',
-      query: { coreTimeId, memberId },
+      query: { room_id, name },
     });
   };
 

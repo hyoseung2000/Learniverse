@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable jsx-a11y/media-has-caption */
 import { Device } from 'mediasoup-client';
 import {
+  Consumer,
+  MediaKind,
   Producer,
   RtpCapabilities,
   RtpParameters,
@@ -15,36 +18,46 @@ import { useEffect, useRef, useState } from 'react';
 import io, { Socket } from 'socket.io-client';
 import { styled } from 'styled-components';
 
+import RTCVideo from './RTCVideo';
 import socketPromise from './socketPromise';
 
 interface CustomSocket extends Socket {
   request?: (event: string, data?: any) => Promise<any>;
 }
+interface ExtendedVideoElement extends HTMLVideoElement {
+  srcObject: MediaStream | null;
+}
+
+const SERVER_URL = 'https://0.0.0.0:8080';
 
 const WebRTCContainer = () => {
   const router = useRouter();
-  const { memberId, coreTimeId } = router.query;
-  const [curMemberId, setCurMemberId] = useState<string>();
-  const [curCoreTimeId, setCurCoreTimeId] = useState<string>();
+  const { name, room_id } = router.query;
+  const [curName, setCurName] = useState<string>();
+  const [curRoomId, setRoomId] = useState<string>();
+
+  const [curProducerId, setCurProducerId] = useState<string>();
+  const [curConsumerId, setCurConsumerId] = useState<string>();
 
   const [device, setDevice] = useState<Device>();
   const [socket, setSocket] = useState<CustomSocket | null>(null);
   const [producer, setProducer] = useState<Producer>();
-  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  const [streams, setStreams] = useState<MediaStream[]>([]);
+  const [consumers, setConsumers] = useState<Consumer[]>([]);
 
   const initSockets = () => {
-    if (!socket) return;
-    socket.on('consumerClosed', ({ consumer_id }) => {
-      console.log('Closing consumer:', consumer_id);
-      socket.removeConsumer(consumer_id);
+    if (!socket || !curName || !curProducerId || !curConsumerId) return;
+
+    socket.on('consumerClosed', ({ curConsumerId }) => {
+      console.log('Closing consumer:', curConsumerId);
+      // removeConsumer(curConsumerId);
     });
+
     socket.on('newProducers', async (data) => {
       console.log('4. New producers (consumeList)', data);
-      await produce('videoType', userName);
-
-      for (const { producer_id } of data) {
-        await consume(producer_id);
-      }
+      await produce('video', curName);
+      await consume(curProducerId);
     });
 
     socket.on('disconnect', () => {
@@ -53,23 +66,24 @@ const WebRTCContainer = () => {
   };
 
   const connect = async () => {
-    const socketConnection: CustomSocket = await io('https://0.0.0.0:8080/', {
+    if (!curRoomId) return;
+    const socketConnection = await io(SERVER_URL, {
       transports: ['websocket'],
       path: '/server',
     });
     socketConnection.request = socketPromise(socketConnection);
     setSocket(socketConnection);
-    console.log('1. socket connect', socketConnection);
 
     try {
-      if (!curMemberId || !curCoreTimeId) return;
-      await createRoom(curCoreTimeId);
-      await join(curMemberId, curCoreTimeId);
+      if (!curName || !curRoomId) return;
+      await createRoom(curRoomId);
+      await join(curName, curRoomId);
       initSockets();
     } catch (error) {
       console.error('Error in creating or joining the room:', error);
     }
   };
+  console.log('1. socket connect', socket);
 
   const createRoom = async (coretimeId: string) => {
     if (!socket || !socket.request) return;
@@ -177,6 +191,7 @@ const WebRTCContainer = () => {
               kind,
               rtpParameters,
             });
+
             callback({ id: producerId });
           } catch (err) {
             errback(err as Error);
@@ -184,53 +199,127 @@ const WebRTCContainer = () => {
         },
       );
     }
-
     return transport;
   };
 
   const initTransports = async (device: Device) => {
     try {
-      const producerTransport = await createTransport(device, 'send');
-      const consumerTransport = await createTransport(device, 'recv');
+      // const producerTransport = await createTransport(device, 'send');
+      // const consumerTransport = await createTransport(device, 'recv');
+      await createTransport(device, 'send');
+      await createTransport(device, 'recv');
     } catch (err) {
       console.error('Failed to initialize transports:', err);
     }
   };
 
-  useEffect(() => {
-    if (memberId && coreTimeId) {
-      console.log('memberId:', memberId[0], 'coreTimeId:', coreTimeId[0]);
-      setCurMemberId(memberId[0]);
-      setCurCoreTimeId(coreTimeId[0]);
+  const produce = async (type: MediaKind, memberId: string): Promise<void> => {
+    try {
+      if (!device || !socket || !socket.request) return;
+      const stream = await navigator.mediaDevices.getUserMedia({
+        [type]: true,
+      });
+
+      const track =
+        type === 'audio'
+          ? stream.getAudioTracks()[0]
+          : stream.getVideoTracks()[0];
+
+      const producerTransport = await createTransport(device, 'send');
+      const producer = await producerTransport.produce({ track });
+      setProducer(producer);
+      setCurProducerId(producer.id);
+
+      producer.on('trackended', () => {
+        closeProducer();
+        console.log('Track ended');
+      });
+
+      console.log(`Producing ${type} for member: ${memberId}`);
+    } catch (error) {
+      console.error(`Error producing ${type}:`, error);
     }
-  }, [memberId, coreTimeId]);
+  };
+
+  const consume = async (producerId: string): Promise<void> => {
+    try {
+      if (!device || !socket || !socket.request) return;
+
+      const consumerTransport = await createTransport(device, 'recv');
+      const { rtpCapabilities } = device;
+
+      const data = await socket.request('consume', {
+        producerId,
+        rtpCapabilities,
+      });
+
+      const { id, kind, rtpParameters } = data;
+      const consumer: Consumer = await consumerTransport.consume({
+        id,
+        producerId,
+        kind,
+        rtpParameters,
+      });
+      setConsumers((prev) => [...prev, consumer]);
+
+      consumer.on('transportclose', () => {
+        console.log('Consumer transport closed');
+      });
+
+      console.log(`Consumed media from producerId: ${producerId}`);
+
+      addStream(new MediaStream([consumer.track]));
+    } catch (error) {
+      console.error('Error consuming:', error);
+    }
+  };
+
+  const addStream = (newStream: MediaStream) => {
+    setStreams((prevStreams) => [...prevStreams, newStream]);
+  };
+
+  const closeProducer = () => {
+    if (producer) {
+      producer.close();
+      setProducer(undefined);
+    }
+  };
 
   useEffect(() => {
-    connect();
-    const mediasoupDevice = new Device();
-    setDevice(mediasoupDevice);
-  }, []);
+    if (name && room_id) {
+      console.log('name:', name, 'room_id:', room_id);
+      setCurName(name as string);
+      setRoomId(room_id as string);
+    }
+  }, [name, room_id]);
+
+  // useEffect(() => {
+  // connect();
+  // const mediasoupDevice = new Device();
+  // setDevice(mediasoupDevice);
+  // }, []);
 
   const startScreenSharing = async () => {
     const stream = await navigator.mediaDevices.getDisplayMedia({
       video: true,
     });
-    if (videoRef && videoRef.current) {
-      videoRef.current.srcObject = stream;
-    }
+    addStream(stream);
   };
 
   return (
     <StWebRTCContainerWrapper>
       <StMediaWrapper>
+        {streams.map((stream) => (
+          <RTCVideo key={stream.id} mediaStream={stream} />
+        ))}
+      </StMediaWrapper>
+      <StUserWrapper>
+        <button type="button" onClick={connect}>
+          connect
+        </button>
         <button type="button" onClick={startScreenSharing}>
           Share Screen
         </button>
-        <video ref={videoRef} autoPlay playsInline />
-        {/* <StMedia /> */}
-      </StMediaWrapper>
-      <StUserWrapper>
-        <p>접속자</p>
       </StUserWrapper>
     </StWebRTCContainerWrapper>
   );
@@ -250,7 +339,9 @@ const StWebRTCContainerWrapper = styled.main`
 const StUserWrapper = styled.section`
   width: 20%;
 
-  & > p {
+  & > p,
+  button {
+    margin-bottom: 5rem;
     color: ${({ theme }) => theme.colors.White};
     ${({ theme }) => theme.fonts.Body0};
   }
@@ -262,12 +353,4 @@ const StMediaWrapper = styled.section`
   gap: 1rem;
 
   width: fit-content;
-`;
-
-const StMedia = styled.div`
-  width: 30rem;
-  height: 20rem;
-
-  background-color: ${({ theme }) => theme.colors.Gray4};
-  border-radius: 1rem;
 `;
