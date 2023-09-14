@@ -221,10 +221,8 @@ const WebRTCContainer = () => {
 
   const initTransports = async (device: Device) => {
     try {
-      const producerTransport = await createTransport(device, 'produce');
-      const consumerTransport = await createTransport(device, 'consume');
-      // await createTransport(device, 'produce');
-      // await createTransport(device, 'consume');
+      await createTransport(device, 'produce');
+      await createTransport(device, 'consume');
     } catch (err) {
       console.error('Failed to initialize transports:', err);
     }
@@ -293,12 +291,12 @@ const WebRTCContainer = () => {
       const stream = new MediaStream();
       stream.addTrack(consumer.track);
 
-      consumer.on('transportclose', () => {
-        console.log('Consumer transport closed');
-      });
+      // consumer.on('transportclose', () => {
+      //   console.log('Consumer transport closed');
+      // });
       console.log(`Consumed media from producerId: ${producerId}`);
 
-      // addStream(new MediaStream([consumer.track]));
+      addStream(new MediaStream([consumer.track]));
     } catch (error) {
       console.error('Error consuming:', error);
     }
