@@ -22,6 +22,12 @@ import RTCVideo from './RTCVideo';
 import socketPromise from './socketPromise';
 
 type SocketType = typeof Socket;
+type mediaType = 'audioType' | 'videoType' | 'screenType';
+
+interface ProducerList {
+  producer_id: string;
+  producer_socket_id: string;
+}
 interface CustomSocket extends SocketType {
   request?: (event: string, data?: any) => Promise<any>;
 }
@@ -47,19 +53,28 @@ const WebRTCContainer = () => {
   const [streams, setStreams] = useState<MediaStream[]>([]);
   const [consumers, setConsumers] = useState<Consumer[]>([]);
 
-  const initSockets = () => {
-    if (!socket || !curName || !curProducerId || !curConsumerId) return;
+  const consumeProducers = async (producers: ProducerList[]) => {
+    const consumePromises = producers.map((producer) => {
+      const { producer_id } = producer;
+      return consume(producer_id).catch((error) =>
+        console.error(`Error while consuming producer ${producer_id}:`, error),
+      );
+    });
+    await Promise.all(consumePromises);
+  };
 
+  const initSockets = () => {
+    if (!socket || !curName) return;
     // socket.on('consumerClosed', ({ curConsumerId }) => {
     //   console.log('Closing consumer:', curConsumerId);
     //   // removeConsumer(curConsumerId);
     // });
 
-    // socket.on('newProducers', async (data) => {
-    //   console.log('4. New producers (consumeList)', data);
-    //   await produce('video', curName);
-    //   await consume(curProducerId);
-    // });
+    socket.on('newProducers', async (data: any) => {
+      console.log('4. New producers (consumeList)', data);
+      await produce('screenType', curName);
+      await consumeProducers(data);
+    });
 
     socket.on('disconnect', () => {
       router.push('/webrtcroom');
@@ -78,7 +93,7 @@ const WebRTCContainer = () => {
 
     try {
       if (!curName || !curRoomId) return;
-      // await createRoom(curRoomId);
+      await createRoom(curRoomId);
       await join(curRoomId, curName);
       initSockets();
     } catch (error) {
@@ -138,14 +153,14 @@ const WebRTCContainer = () => {
 
   const createTransport = async (
     device: Device,
-    direction: 'send' | 'recv',
+    direction: 'produce' | 'consume',
   ): Promise<Transport> => {
     if (!socket || !socket.request) throw new Error('Socket not initialized');
 
     const data = await socket.request('createWebRtcTransport', {
       forceTcp: false,
       rtpCapabilities:
-        direction === 'send' ? device.rtpCapabilities : undefined,
+        direction === 'produce' ? device.rtpCapabilities : undefined,
     });
     if (data.error) {
       console.error(data.error);
@@ -180,7 +195,7 @@ const WebRTCContainer = () => {
       }
     });
 
-    if (direction === 'send') {
+    if (direction === 'produce') {
       transport.on(
         'produce',
         async ({ kind, rtpParameters }, callback, errback) => {
@@ -191,7 +206,6 @@ const WebRTCContainer = () => {
               kind,
               rtpParameters,
             });
-
             callback({ id: producerId });
           } catch (err) {
             errback(err as Error);
@@ -204,28 +218,32 @@ const WebRTCContainer = () => {
 
   const initTransports = async (device: Device) => {
     try {
-      // const producerTransport = await createTransport(device, 'send');
-      // const consumerTransport = await createTransport(device, 'recv');
-      await createTransport(device, 'send');
-      await createTransport(device, 'recv');
+      const producerTransport = await createTransport(device, 'produce');
+      const consumerTransport = await createTransport(device, 'consume');
+      // await createTransport(device, 'produce');
+      // await createTransport(device, 'consume');
     } catch (err) {
       console.error('Failed to initialize transports:', err);
     }
   };
 
-  const produce = async (type: MediaKind, memberId: string): Promise<void> => {
+  const produce = async (type: mediaType, memberId: string): Promise<void> => {
     try {
       if (!device || !socket || !socket.request) return;
+
       const stream = await navigator.mediaDevices.getUserMedia({
         [type]: true,
       });
+      addStream(stream);
 
       const track =
-        type === 'audio'
+        type === 'audioType'
           ? stream.getAudioTracks()[0]
           : stream.getVideoTracks()[0];
 
-      const producerTransport = await createTransport(device, 'send');
+      const producerTransport = await createTransport(device, 'produce');
+      console.log('producerTransport');
+
       const producer = await producerTransport.produce({ track });
       setProducer(producer);
       setCurProducerId(producer.id);
@@ -245,7 +263,7 @@ const WebRTCContainer = () => {
     try {
       if (!device || !socket || !socket.request) return;
 
-      const consumerTransport = await createTransport(device, 'recv');
+      const consumerTransport = await createTransport(device, 'consume');
       const { rtpCapabilities } = device;
 
       const data = await socket.request('consume', {
