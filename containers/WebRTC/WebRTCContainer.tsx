@@ -1,29 +1,26 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-shadow */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable jsx-a11y/media-has-caption */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Device } from 'mediasoup-client';
 import {
   Consumer,
-  MediaKind,
   Producer,
   RtpCapabilities,
-  RtpParameters,
   Transport,
   UnsupportedError,
 } from 'mediasoup-client/lib/types';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import io, { Socket } from 'socket.io-client';
 import { styled } from 'styled-components';
 
 import RTCVideo from './RTCVideo';
 import socketPromise from './socketPromise';
 
-type SocketType = typeof Socket;
-type mediaType = 'audioType' | 'videoType' | 'screenType';
+const SERVER_URL = 'https://0.0.0.0:8080';
 
+type SocketType = typeof Socket;
+type MediaType = 'audioType' | 'videoType' | 'screenType';
 interface ProducerList {
   producer_id: string;
   producer_socket_id: string;
@@ -31,11 +28,6 @@ interface ProducerList {
 interface CustomSocket extends SocketType {
   request?: (event: string, data?: any) => Promise<any>;
 }
-interface ExtendedVideoElement extends HTMLVideoElement {
-  srcObject: MediaStream | null;
-}
-
-const SERVER_URL = 'https://0.0.0.0:8080';
 
 const WebRTCContainer = () => {
   const router = useRouter();
@@ -43,15 +35,10 @@ const WebRTCContainer = () => {
   const [curName, setCurName] = useState<string>();
   const [curRoomId, setRoomId] = useState<string>();
 
-  const [curProducerId, setCurProducerId] = useState<string>();
-  const [curConsumerId, setCurConsumerId] = useState<string>();
-
   const [device, setDevice] = useState<Device>();
   const [socket, setSocket] = useState<CustomSocket | null>(null);
-  const [producer, setProducer] = useState<Producer>();
-
+  const [curProducer, setCurProducer] = useState<Producer>();
   const [streams, setStreams] = useState<MediaStream[]>([]);
-  const [consumers, setConsumers] = useState<Consumer[]>([]);
 
   const consumeProducers = async (producers: ProducerList[]) => {
     const consumePromises = producers.map((producer) => {
@@ -62,6 +49,15 @@ const WebRTCContainer = () => {
     });
     await Promise.all(consumePromises);
   };
+  const shouldProduceForNewProducer = (currentName: string): boolean => {
+    console.log(currentName, curName);
+    if (currentName !== curName) {
+      return true;
+    }
+    return false;
+  };
+
+  const [hasProduced, setHasProduced] = useState(false);
 
   const initSockets = () => {
     if (!socket || !curName) return;
@@ -72,7 +68,12 @@ const WebRTCContainer = () => {
 
     socket.on('newProducers', async (data: any) => {
       console.log('4. New producers (consumeList)', data);
-      await produce('screenType', curName);
+      console.log(curName, shouldProduceForNewProducer(curName));
+
+      if (!hasProduced) {
+        await produce('screenType', curName);
+        setHasProduced(true);
+      }
       await consumeProducers(data);
     });
 
@@ -82,26 +83,19 @@ const WebRTCContainer = () => {
   };
 
   const connect = async () => {
-    if (!curRoomId) return;
+    if (!curName || !curRoomId) return;
     const socketConnection: CustomSocket = await io(SERVER_URL, {
       transports: ['websocket'],
       path: '/server',
     });
-    socketConnection.request = socketPromise(socketConnection);
+    await socketPromise(socketConnection);
+    socketConnection.request = await socketPromise(socketConnection);
     setSocket(socketConnection);
-    console.log('1. socket connect', socket);
-
-    try {
-      if (!curName || !curRoomId) return;
-      await createRoom(curRoomId);
-      await join(curRoomId, curName);
-      initSockets();
-    } catch (error) {
-      console.error('Error in creating or joining the room:', error);
-    }
+    console.log('1. socket connect', socketConnection);
   };
 
   const createRoom = async (room_id: string) => {
+    console.log('1-1. createRoom');
     if (!socket || !socket.request) return;
     try {
       await socket.request('createRoom', {
@@ -122,11 +116,10 @@ const WebRTCContainer = () => {
       console.log('2. Joined to room', socketJoin);
 
       const data = await socket.request('getRouterRtpCapabilities');
-      const device = await loadDevice(data);
-      console.log('3. device 로딩 ', device);
+      const curDevice = await loadDevice(data);
+      console.log('3. device 로딩 ', curDevice);
 
       if (device) {
-        // await initTransports(device);
         socket.emit('getProducers');
       }
     } catch (err) {
@@ -219,18 +212,10 @@ const WebRTCContainer = () => {
     return transport;
   };
 
-  const initTransports = async (device: Device) => {
-    try {
-      await createTransport(device, 'produce');
-      await createTransport(device, 'consume');
-    } catch (err) {
-      console.error('Failed to initialize transports:', err);
-    }
-  };
-
-  const produce = async (type: mediaType, memberId: string): Promise<void> => {
+  const produce = async (type: MediaType, memberId: string): Promise<void> => {
     try {
       if (!device || !socket || !socket.request) return;
+      // if (curProducer) return;
 
       let stream: MediaStream;
       if (type === 'screenType') {
@@ -251,8 +236,7 @@ const WebRTCContainer = () => {
       const producerTransport = await createTransport(device, 'produce');
 
       const producer = await producerTransport.produce({ track });
-      setProducer(producer);
-      setCurProducerId(producer.id);
+      setCurProducer(producer);
 
       producer.on('trackended', () => {
         closeProducer();
@@ -285,8 +269,6 @@ const WebRTCContainer = () => {
         kind,
         rtpParameters,
       });
-      setConsumers((prev) => [...prev, consumer]);
-      console.log('consumerc', consumer);
 
       const stream = new MediaStream();
       stream.addTrack(consumer.track);
@@ -307,9 +289,9 @@ const WebRTCContainer = () => {
   };
 
   const closeProducer = () => {
-    if (producer) {
-      producer.close();
-      setProducer(undefined);
+    if (curProducer) {
+      curProducer.close();
+      setCurProducer(undefined);
     }
   };
 
@@ -321,18 +303,31 @@ const WebRTCContainer = () => {
     }
   }, [name, room_id]);
 
-  // useEffect(() => {
-  //   connect();
-  // const mediasoupDevice = new Device();
-  // setDevice(mediasoupDevice);
-  // }, []);
+  useEffect(() => {
+    if (curRoomId) connect();
+  }, [curRoomId]);
 
-  const startScreenSharing = async () => {
-    const stream = await navigator.mediaDevices.getDisplayMedia({
-      video: true,
-    });
-    addStream(stream);
+  const initiate = async () => {
+    if (!socket || !curRoomId || !curName) return;
+    try {
+      await createRoom(curRoomId);
+      await join(curRoomId, curName);
+      initSockets();
+    } catch (error) {
+      console.error('Error in creating or joining the room:', error);
+    }
   };
+
+  useEffect(() => {
+    initiate();
+  }, [socket, curRoomId, curName]);
+
+  // const startScreenSharing = async () => {
+  //   const stream = await navigator.mediaDevices.getDisplayMedia({
+  //     video: true,
+  //   });
+  //   addStream(stream);
+  // };
 
   return (
     <StWebRTCContainerWrapper>
@@ -345,9 +340,9 @@ const WebRTCContainer = () => {
         <button type="button" onClick={connect}>
           connect
         </button>
-        <button type="button" onClick={startScreenSharing}>
+        {/* <button type="button" onClick={startScreenSharing}>
           Share Screen
-        </button>
+        </button> */}
       </StUserWrapper>
     </StWebRTCContainerWrapper>
   );
