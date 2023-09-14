@@ -74,36 +74,35 @@ const WebRTCContainer = () => {
     });
     socketConnection.request = socketPromise(socketConnection);
     setSocket(socketConnection);
+    console.log('1. socket connect', socket);
 
     try {
       if (!curName || !curRoomId) return;
-      await createRoom(curRoomId);
-      await join(curName, curRoomId);
+      // await createRoom(curRoomId);
+      await join(curRoomId, curName);
       initSockets();
     } catch (error) {
       console.error('Error in creating or joining the room:', error);
     }
   };
-  console.log('1. socket connect', socket);
 
-  const createRoom = async (coretimeId: string) => {
+  const createRoom = async (room_id: string) => {
     if (!socket || !socket.request) return;
     try {
       await socket.request('createRoom', {
-        coretimeId,
+        room_id,
       });
     } catch (err) {
       console.error('Create room error:', err);
     }
   };
 
-  const join = async (memberId: string, coreTimeId: string) => {
+  const join = async (room_id: string, name: string) => {
     if (!socket || !socket.request) return;
-    console.log('join');
     try {
       const socketJoin = await socket.request('join', {
-        memberId,
-        coreTimeId,
+        room_id,
+        name,
       });
       console.log('2. Joined to room', socketJoin);
 
@@ -295,7 +294,7 @@ const WebRTCContainer = () => {
   }, [name, room_id]);
 
   // useEffect(() => {
-  // connect();
+  //   connect();
   // const mediasoupDevice = new Device();
   // setDevice(mediasoupDevice);
   // }, []);
