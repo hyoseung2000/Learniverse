@@ -49,14 +49,6 @@ const WebRTCContainer = () => {
     });
     await Promise.all(consumePromises);
   };
-  const shouldProduceForNewProducer = (currentName: string): boolean => {
-    console.log(currentName, curName);
-    if (currentName !== curName) {
-      return true;
-    }
-    return false;
-  };
-
   const [hasProduced, setHasProduced] = useState(false);
 
   const initSockets = () => {
@@ -68,7 +60,6 @@ const WebRTCContainer = () => {
 
     socket.on('newProducers', async (data: any) => {
       console.log('4. New producers (consumeList)', data);
-      console.log(curName, shouldProduceForNewProducer(curName));
 
       if (!hasProduced) {
         await produce('screenType', curName);
@@ -177,7 +168,6 @@ const WebRTCContainer = () => {
         errback(err as Error);
       }
     });
-
     transport.on('connectionstatechange', (state) => {
       switch (state) {
         case 'connected':
@@ -190,7 +180,6 @@ const WebRTCContainer = () => {
           break;
       }
     });
-
     if (direction === 'produce') {
       transport.on(
         'produce',
@@ -215,7 +204,6 @@ const WebRTCContainer = () => {
   const produce = async (type: MediaType, memberId: string): Promise<void> => {
     try {
       if (!device || !socket || !socket.request) return;
-      // if (curProducer) return;
 
       let stream: MediaStream;
       if (type === 'screenType') {
