@@ -1,3 +1,4 @@
+import { Producer } from 'mediasoup-client/lib/Producer';
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
@@ -27,4 +28,9 @@ export const moonScoreState = atom<MoonScoreInfo>({
 export const todayState = atom<string>({
   key: `todayState`,
   default: getToday(),
+});
+
+export const producerState = atom<Producer[]>({
+  key: `producerState`,
+  default: [],
 });

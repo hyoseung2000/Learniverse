@@ -11,9 +11,11 @@ import {
 } from 'mediasoup-client/lib/types';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+// import { useRecoilState } from 'recoil';
 import io, { Socket } from 'socket.io-client';
 import { styled } from 'styled-components';
 
+// import { producerState } from '@/recoil/atom';
 import RTCVideo from './RTCVideo';
 import socketPromise from './socketPromise';
 
@@ -38,6 +40,8 @@ const WebRTCContainer = () => {
   const [device, setDevice] = useState<Device>();
   const [socket, setSocket] = useState<CustomSocket | null>(null);
   const [curProducer, setCurProducer] = useState<Producer>();
+  // const [curProducerList, setCurProducerList] =
+  //   useRecoilState<Producer[]>(producerState);
   const [streams, setStreams] = useState<MediaStream[]>([]);
 
   const consumeProducers = async (producers: ProducerList[]) => {
@@ -49,7 +53,6 @@ const WebRTCContainer = () => {
     });
     await Promise.all(consumePromises);
   };
-  const [hasProduced, setHasProduced] = useState(false);
 
   const initSockets = () => {
     if (!socket || !curName) return;
@@ -60,11 +63,7 @@ const WebRTCContainer = () => {
 
     socket.on('newProducers', async (data: any) => {
       console.log('4. New producers (consumeList)', data);
-
-      if (!hasProduced) {
-        await produce('screenType', curName);
-        setHasProduced(true);
-      }
+      await produce('screenType', curName);
       await consumeProducers(data);
     });
 
@@ -79,14 +78,12 @@ const WebRTCContainer = () => {
       transports: ['websocket'],
       path: '/server',
     });
-    await socketPromise(socketConnection);
     socketConnection.request = await socketPromise(socketConnection);
     setSocket(socketConnection);
     console.log('1. socket connect', socketConnection);
   };
 
   const createRoom = async (room_id: string) => {
-    console.log('1-1. createRoom');
     if (!socket || !socket.request) return;
     try {
       await socket.request('createRoom', {
@@ -95,6 +92,7 @@ const WebRTCContainer = () => {
     } catch (err) {
       console.error('Create room error:', err);
     }
+    console.log('1-1. createRoom');
   };
 
   const join = async (room_id: string, name: string) => {
@@ -174,7 +172,8 @@ const WebRTCContainer = () => {
           console.log(`${direction} transport connected`);
           break;
         case 'failed':
-          transport.close();
+          console.log(`${direction} transport Error`);
+          // transport.close();
           break;
         default:
           break;
@@ -225,6 +224,8 @@ const WebRTCContainer = () => {
 
       const producer = await producerTransport.produce({ track });
       setCurProducer(producer);
+      // setCurProducerList((prevProducers) => [...prevProducers, producer]);
+      console.log(producer);
 
       producer.on('trackended', () => {
         closeProducer();
@@ -317,11 +318,20 @@ const WebRTCContainer = () => {
   //   addStream(stream);
   // };
 
+  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+
   return (
     <StWebRTCContainerWrapper>
       <StMediaWrapper>
         {streams.map((stream) => (
-          <RTCVideo key={stream.id} mediaStream={stream} />
+          <RTCVideo
+            key={stream.id}
+            mediaStream={stream}
+            isSelected={selectedVideo === stream.id}
+            onClick={() =>
+              setSelectedVideo(selectedVideo === stream.id ? null : stream.id)
+            }
+          />
         ))}
       </StMediaWrapper>
       <StUserWrapper>
