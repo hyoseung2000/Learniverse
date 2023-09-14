@@ -21,7 +21,8 @@ import { styled } from 'styled-components';
 import RTCVideo from './RTCVideo';
 import socketPromise from './socketPromise';
 
-interface CustomSocket extends Socket {
+type SocketType = typeof Socket;
+interface CustomSocket extends SocketType {
   request?: (event: string, data?: any) => Promise<any>;
 }
 interface ExtendedVideoElement extends HTMLVideoElement {
@@ -49,16 +50,16 @@ const WebRTCContainer = () => {
   const initSockets = () => {
     if (!socket || !curName || !curProducerId || !curConsumerId) return;
 
-    socket.on('consumerClosed', ({ curConsumerId }) => {
-      console.log('Closing consumer:', curConsumerId);
-      // removeConsumer(curConsumerId);
-    });
+    // socket.on('consumerClosed', ({ curConsumerId }) => {
+    //   console.log('Closing consumer:', curConsumerId);
+    //   // removeConsumer(curConsumerId);
+    // });
 
-    socket.on('newProducers', async (data) => {
-      console.log('4. New producers (consumeList)', data);
-      await produce('video', curName);
-      await consume(curProducerId);
-    });
+    // socket.on('newProducers', async (data) => {
+    //   console.log('4. New producers (consumeList)', data);
+    //   await produce('video', curName);
+    //   await consume(curProducerId);
+    // });
 
     socket.on('disconnect', () => {
       router.push('/webrtcroom');
@@ -67,7 +68,7 @@ const WebRTCContainer = () => {
 
   const connect = async () => {
     if (!curRoomId) return;
-    const socketConnection = await io(SERVER_URL, {
+    const socketConnection: CustomSocket = await io(SERVER_URL, {
       transports: ['websocket'],
       path: '/server',
     });
