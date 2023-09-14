@@ -126,7 +126,7 @@ const WebRTCContainer = () => {
       console.log('3. device 로딩 ', device);
 
       if (device) {
-        await initTransports(device);
+        // await initTransports(device);
         socket.emit('getProducers');
       }
     } catch (err) {
@@ -167,7 +167,10 @@ const WebRTCContainer = () => {
       throw new Error(data.error);
     }
 
-    const transport = device.createSendTransport(data);
+    const transport =
+      direction === 'produce'
+        ? device.createSendTransport(data)
+        : device.createRecvTransport(data);
 
     transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
       try {
@@ -231,9 +234,15 @@ const WebRTCContainer = () => {
     try {
       if (!device || !socket || !socket.request) return;
 
-      const stream = await navigator.mediaDevices.getUserMedia({
-        [type]: true,
-      });
+      let stream: MediaStream;
+      if (type === 'screenType') {
+        stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+      } else {
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: type === 'audioType',
+          video: type === 'videoType',
+        });
+      }
       addStream(stream);
 
       const track =
@@ -242,7 +251,6 @@ const WebRTCContainer = () => {
           : stream.getVideoTracks()[0];
 
       const producerTransport = await createTransport(device, 'produce');
-      console.log('producerTransport');
 
       const producer = await producerTransport.produce({ track });
       setProducer(producer);
@@ -268,10 +276,11 @@ const WebRTCContainer = () => {
 
       const data = await socket.request('consume', {
         producerId,
+        consumerTransportId: consumerTransport.id,
         rtpCapabilities,
       });
-
       const { id, kind, rtpParameters } = data;
+
       const consumer: Consumer = await consumerTransport.consume({
         id,
         producerId,
@@ -279,14 +288,17 @@ const WebRTCContainer = () => {
         rtpParameters,
       });
       setConsumers((prev) => [...prev, consumer]);
+      console.log('consumerc', consumer);
+
+      const stream = new MediaStream();
+      stream.addTrack(consumer.track);
 
       consumer.on('transportclose', () => {
         console.log('Consumer transport closed');
       });
-
       console.log(`Consumed media from producerId: ${producerId}`);
 
-      addStream(new MediaStream([consumer.track]));
+      // addStream(new MediaStream([consumer.track]));
     } catch (error) {
       console.error('Error consuming:', error);
     }
