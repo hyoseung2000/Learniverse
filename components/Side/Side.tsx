@@ -51,7 +51,7 @@ const Side = ({ chatName }: Props) => {
           </div>
         </StMemberWrapper>
       </StMemberListWrapper>
-      <IcLine />
+      {/* <IcLine /> */}
       <StChatWrapper>
         <p>{chatName}</p>
         <StSendWrapper>
@@ -67,11 +67,12 @@ export default Side;
 const StSideWrapper = styled.main``;
 
 const StRoomNameWrapper = styled.div`
-  margin-left: 3.1rem;
-  margin-top: 5.4rem;
+  box-sizing: border-box;
+  padding-left: 3.1rem;
+  padding-top: 5.4rem;
 
   & > span {
-    margin-left: 1rem;
+    padding-left: 1rem;
 
     color: ${({ theme }) => theme.colors.White};
     ${({ theme }) => theme.fonts.Title1};
@@ -79,13 +80,14 @@ const StRoomNameWrapper = styled.div`
 `;
 
 const StMemberListWrapper = styled.div`
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
 
-  margin-top: 3.3rem;
+  padding-top: 3.3rem;
 
   & > p {
-    margin-left: 3.1rem;
+    padding-left: 3.1rem;
 
     color: ${({ theme }) => theme.colors.White};
     ${({ theme }) => theme.fonts.Title3};
@@ -93,10 +95,11 @@ const StMemberListWrapper = styled.div`
 `;
 
 const StMemberWrapper = styled.div`
+  box-sizing: border-box;
   display: flex;
 
-  margin-top: 1.7rem;
-  margin-left: 3.5rem;
+  padding-top: 1.7rem;
+  padding-left: 3.5rem;
 
   & > div {
     & > p {
@@ -112,10 +115,11 @@ const StMemberWrapper = styled.div`
 `;
 
 const StChatWrapper = styled.div`
-  margin-top: 1.2rem;
+  box-sizing: border-box;
+  padding-top: 1.2rem;
 
   & > p {
-    margin-left: 3.1rem;
+    padding-left: 3.1rem;
 
     color: ${({ theme }) => theme.colors.White};
     ${({ theme }) => theme.fonts.Title3};

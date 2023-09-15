@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { styled } from 'styled-components';
 
-import { IcLine, IcLogo, IcPlusBtn } from '@/public/assets/icons';
+import { IcLine, IcPlusBtn } from '@/public/assets/icons';
 
 import {
   CoreBtn,
@@ -24,7 +24,6 @@ const Studyroom = () => {
   return (
     <StStudyroomWrapper>
       <StStudyMainWrapper>
-        <IcLogo />
         <h1>이슈</h1>
         <Issue />
         <CoreTimeSet />
@@ -60,8 +59,9 @@ const StStudyMainWrapper = styled.div`
   display: flex;
   flex-direction: column;
 
-  margin-top: 2.6rem;
-  margin-left: 11.2rem;
+  /* padding-top: 2.6rem; */
+  padding-left: 11.2rem;
+  box-sizing: border-box;
 
   & > h1 {
     color: ${({ theme }) => theme.colors.White};
@@ -70,7 +70,7 @@ const StStudyMainWrapper = styled.div`
 `;
 
 const StWorkspaceWrapper = styled.div`
-  margin-top: 2.8rem;
+  padding-top: 2.8rem;
 
   position: relative;
 
@@ -89,7 +89,7 @@ const StWorkspaceWrapper = styled.div`
   }
 
   & > div {
-    margin-top: 1.3rem;
+    padding-top: 1.3rem;
 
     & > p {
       color: ${({ theme }) => theme.colors.White};
@@ -105,9 +105,9 @@ const StBtnWrapper = styled.div`
 
 const StStudySideWrapper = styled.div`
   width: 35%;
-  height: 76.8rem;
+  /* height: 76.8rem; */
 
-  margin-left: 3.1rem;
+  /* padding-left: 3.1rem; */
 
   background: linear-gradient(
     47deg,
