@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-import { IcChar, IcLine, IcRoomLogo, IcSend } from '@/public/assets/icons';
+import { IcChar, IcRoomLogo, IcSend } from '@/public/assets/icons';
 
 interface Props {
   chatName: string;
@@ -8,70 +8,70 @@ interface Props {
 
 const Side = ({ chatName }: Props) => {
   return (
-    <StSideWrapper>
+    <StStudySideWrapper>
       <StRoomNameWrapper>
         <IcRoomLogo />
-        <span>소웨5공주 공부방</span>
+        <h1>소웨5공주 공부방</h1>
       </StRoomNameWrapper>
       <StMemberListWrapper>
-        <p>현재 접속중</p>
-        <StMemberWrapper>
-          <IcChar />
-          <div>
+        <p>스터디룸 팀원</p>
+        <StMemberList>
+          <StMemberWrapper>
+            <IcChar />
             <p>코딩천사 선영이</p>
-            <p>졸프과제 하는 중</p>
-          </div>
-        </StMemberWrapper>
-        <StMemberWrapper>
-          <IcChar />
-          <div>
-            <p>코딩천사 선영이</p>
-            <p>졸프과제 하는 중</p>
-          </div>
-        </StMemberWrapper>
-        <StMemberWrapper>
-          <IcChar />
-          <div>
-            <p>코딩천사 선영이</p>
-            <p>졸프과제 하는 중</p>
-          </div>
-        </StMemberWrapper>
-        <StMemberWrapper>
-          <IcChar />
-          <div>
-            <p>코딩천사 선영이</p>
-            <p>졸프과제 하는 중</p>
-          </div>
-        </StMemberWrapper>
-        <StMemberWrapper>
-          <IcChar />
-          <div>
-            <p>코딩천사 선영이</p>
-            <p>졸프과제 하는 중</p>
-          </div>
-        </StMemberWrapper>
+          </StMemberWrapper>
+          <StMemberWrapper>
+            <IcChar />
+            <p>유지니</p>
+          </StMemberWrapper>
+          <StMemberWrapper>
+            <IcChar />
+            <p>100지민</p>
+          </StMemberWrapper>
+          <StMemberWrapper>
+            <IcChar />
+            <p>효승이</p>
+          </StMemberWrapper>
+          <StMemberWrapper>
+            <IcChar />
+            <p>iamphj3</p>
+          </StMemberWrapper>
+        </StMemberList>
       </StMemberListWrapper>
-      {/* <IcLine /> */}
+      <hr />
       <StChatWrapper>
         <p>{chatName}</p>
         <StSendWrapper>
           <IcSend />
         </StSendWrapper>
       </StChatWrapper>
-    </StSideWrapper>
+    </StStudySideWrapper>
   );
 };
 
 export default Side;
 
-const StSideWrapper = styled.main``;
+const StStudySideWrapper = styled.section`
+  position: relative;
+
+  width: 35%;
+  height: calc(100vh - 9.6rem);
+
+  background: linear-gradient(
+    47deg,
+    rgba(238, 238, 250, 0.15) 7%,
+    rgba(238, 238, 250, 0.03) 100%
+  );
+`;
 
 const StRoomNameWrapper = styled.div`
-  box-sizing: border-box;
-  padding-left: 3.1rem;
-  padding-top: 5.4rem;
+  display: flex;
+  align-items: center;
 
-  & > span {
+  padding-left: 3.1rem;
+  padding-top: 2.588rem;
+
+  & > h1 {
     padding-left: 1rem;
 
     color: ${({ theme }) => theme.colors.White};
@@ -80,11 +80,11 @@ const StRoomNameWrapper = styled.div`
 `;
 
 const StMemberListWrapper = styled.div`
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
 
   padding-top: 3.3rem;
+  padding-bottom: 2rem;
 
   & > p {
     padding-left: 3.1rem;
@@ -94,29 +94,31 @@ const StMemberListWrapper = styled.div`
   }
 `;
 
+const StMemberList = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+`;
+
 const StMemberWrapper = styled.div`
-  box-sizing: border-box;
   display: flex;
 
   padding-top: 1.7rem;
   padding-left: 3.5rem;
 
-  & > div {
-    & > p {
-      color: ${({ theme }) => theme.colors.White};
-      ${({ theme }) => theme.fonts.Body2};
-    }
+  & > p {
+    color: ${({ theme }) => theme.colors.White};
+    ${({ theme }) => theme.fonts.Body2};
+  }
 
-    & > p :nth-child(2) {
-      color: ${({ theme }) => theme.colors.White};
-      ${({ theme }) => theme.fonts.Body4};
-    }
+  & > p :nth-child(2) {
+    color: ${({ theme }) => theme.colors.White};
+    ${({ theme }) => theme.fonts.Body4};
   }
 `;
 
 const StChatWrapper = styled.div`
-  box-sizing: border-box;
   padding-top: 1.2rem;
+  width: 100%;
 
   & > p {
     padding-left: 3.1rem;
@@ -127,7 +129,7 @@ const StChatWrapper = styled.div`
 `;
 
 const StSendWrapper = styled.div`
-  width: 33%;
+  width: 100%;
   height: 3.6rem;
 
   position: absolute;

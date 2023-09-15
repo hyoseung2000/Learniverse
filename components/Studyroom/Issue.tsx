@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-import { IcIssueLogo, IcLine } from '@/public/assets/icons';
+import { IcIssueLogo } from '@/public/assets/icons';
 
 const Issue = () => {
   return (
@@ -12,7 +12,6 @@ const Issue = () => {
           <p>실행하면 버튼이 안생기는 오류가 나네,, 왜그런지 모르겠음 </p>
         </div>
       </div>
-      <IcLine />
       <div>
         <IcIssueLogo />
         <div>
@@ -30,12 +29,12 @@ const StIsuueWrapper = styled.div`
   display: flex;
   flex-direction: column;
 
+  margin-top: 1.5rem;
   margin-left: 0.1rem;
 
   & > div {
     display: flex;
 
-    margin-top: 2.9rem;
     margin-bottom: 3.1rem;
 
     & > div > p {

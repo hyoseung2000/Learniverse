@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { styled } from 'styled-components';
 
-import { IcLine, IcPlusBtn } from '@/public/assets/icons';
+import { IcPlusBtn } from '@/public/assets/icons';
 
 import {
   CoreBtn,
@@ -24,13 +24,14 @@ const Studyroom = () => {
   return (
     <StStudyroomWrapper>
       <StStudyMainWrapper>
-        <h1>이슈</h1>
+        <h2>이슈</h2>
         <Issue />
         <CoreTimeSet />
-        <IcLine />
         <StWorkspaceWrapper>
-          <h1>워크 스페이스</h1>
-          <IcPlusBtn />
+          <h2>
+            워크 스페이스
+            <IcPlusBtn />
+          </h2>
           <StBtnWrapper>
             <NotnBtn />
             <GDriveBtn />
@@ -40,9 +41,7 @@ const Studyroom = () => {
           </StBtnWrapper>
         </StWorkspaceWrapper>
       </StStudyMainWrapper>
-      <StStudySideWrapper>
-        <Side chatName="스터디룸 게시판" />
-      </StStudySideWrapper>
+      <Side chatName="스터디룸 게시판" />
     </StStudyroomWrapper>
   );
 };
@@ -53,17 +52,17 @@ const StStudyroomWrapper = styled.main`
   display: flex;
   width: 100%;
 `;
-const StStudyMainWrapper = styled.div`
+const StStudyMainWrapper = styled.section`
   width: 65%;
 
   display: flex;
   flex-direction: column;
 
-  /* padding-top: 2.6rem; */
+  padding-top: 2.588rem;
   padding-left: 11.2rem;
   box-sizing: border-box;
 
-  & > h1 {
+  & > h2 {
     color: ${({ theme }) => theme.colors.White};
     ${({ theme }) => theme.fonts.Head1};
   }
@@ -77,7 +76,11 @@ const StWorkspaceWrapper = styled.div`
   display: flex;
   flex-direction: column;
 
-  & > h1 {
+  & > h2 {
+    display: flex;
+    align-items: center;
+    gap: 4.4rem;
+
     color: ${({ theme }) => theme.colors.White};
     ${({ theme }) => theme.fonts.Head1};
   }
@@ -89,7 +92,7 @@ const StWorkspaceWrapper = styled.div`
   }
 
   & > div {
-    padding-top: 1.3rem;
+    padding-top: 1.5rem;
 
     & > p {
       color: ${({ theme }) => theme.colors.White};
@@ -101,21 +104,4 @@ const StWorkspaceWrapper = styled.div`
 const StBtnWrapper = styled.div`
   display: flex;
   position: relative;
-`;
-
-const StStudySideWrapper = styled.div`
-  width: 35%;
-  /* height: 76.8rem; */
-
-  /* padding-left: 3.1rem; */
-
-  background: linear-gradient(
-    47deg,
-    rgba(238, 238, 250, 0.15) 7%,
-    rgba(238, 238, 250, 0.03) 100%
-  );
-
-  & > svg {
-    width: 100%;
-  }
 `;

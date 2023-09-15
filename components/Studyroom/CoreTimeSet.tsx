@@ -44,7 +44,7 @@ const StCoretableWrapper = styled.div`
   width: 49.2rem;
   height: 11rem;
 
-  margin-top: 1.2rem;
+  margin-top: 1.5rem;
   margin-bottom: 1.2rem;
 
   display: flex;

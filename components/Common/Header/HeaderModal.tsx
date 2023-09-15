@@ -65,11 +65,6 @@ const StHeaderModalWrapper = styled.div`
     color: ${({ theme }) => theme.colors.White};
     ${({ theme }) => theme.fonts.Body2};
   }
-  & > hr {
-    border: none;
-    border-top: 0.06rem solid ${({ theme }) => theme.colors.White};
-    width: 100%;
-  }
   & > button:hover {
     color: ${({ theme }) => theme.colors.SkyBlue};
   }
