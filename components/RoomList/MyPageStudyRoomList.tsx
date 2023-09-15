@@ -56,7 +56,7 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
             />
           ))}
       </StMyPageRoomListWrapper>
-      <StManageModalWrapper isShowing={manage.isShowing}>
+      <StManageModalWrapper $showing={manage.isShowing}>
         <ManageModal
           roomId={roomId}
           isShowing={manage.isShowing}
@@ -86,8 +86,8 @@ const StMyPageRoomListWrapper = styled.section`
   margin-bottom: 8rem;
 `;
 
-const StManageModalWrapper = styled.div<{ isShowing: boolean }>`
-  display: ${({ isShowing }) => (isShowing ? 'block' : 'none')};
+const StManageModalWrapper = styled.div<{ $showing: boolean }>`
+  display: ${({ $showing }) => ($showing ? 'block' : 'none')};
   position: fixed;
   top: 0;
   left: 0;
