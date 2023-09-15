@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { getMoon } from '@/apis/moon';
+import { getMoon, getProfile } from '@/apis/profile';
 import {
   IcMoon0,
   IcMoon1,
@@ -14,7 +14,7 @@ import {
   IcProfileImage,
 } from '@/public/assets/icons';
 import { memberIdState } from '@/recoil/atom';
-import { MoonInfo } from '@/types/member';
+import { MoonInfo, ProfileInfo } from '@/types/member';
 
 import { MyPageStudyRoomList } from '../RoomList';
 
@@ -22,10 +22,16 @@ const MyPage = () => {
   const [activeTab, setActiveTab] = useState(0);
   // const [loading, setLoading] = useState(false);
   const [isLeader, setIsLeader] = useState(true);
+  const [profile, setProfile] = useState<ProfileInfo>();
   const [moons, setMoons] = useState<MoonInfo[]>([]);
   const [moonScores, setMoonScores] = useState<number[]>([]);
   const [isMoon, setIsMoon] = useState(false);
   const memberId = useRecoilValue(memberIdState);
+
+  const getProfileData = async () => {
+    const profileData = await getProfile(memberId);
+    setProfile(profileData);
+  };
 
   const getMoonData = async () => {
     const moonData = await getMoon(memberId);
@@ -67,6 +73,7 @@ const MyPage = () => {
   };
 
   useEffect(() => {
+    getProfileData();
     getMoonData();
     getMoonScores();
   }, [isMoon]);
@@ -84,9 +91,7 @@ const MyPage = () => {
       <StMyInfo>
         <StProfile>
           <IcProfileImage />
-          <p>
-            <span>지민 </span>님 어서오세요 !
-          </p>
+          <p>{profile?.nickname}</p>
         </StProfile>
         <StMoon>
           <p>나의 달</p>
@@ -145,14 +150,9 @@ const StProfile = styled.div`
   & > p {
     margin-top: -1rem;
 
-    color: ${({ theme }) => theme.colors.White};
-    ${({ theme }) => theme.fonts.Title3};
+    color: ${({ theme }) => theme.colors.Purple2};
+    ${({ theme }) => theme.fonts.Title1};
     text-align: center;
-
-    & > span {
-      color: ${({ theme }) => theme.colors.Purple2};
-      ${({ theme }) => theme.fonts.Title1};
-    }
   }
 `;
 

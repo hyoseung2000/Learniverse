@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { addMoon } from '@/apis/moon';
+import { addMoon } from '@/apis/profile';
 import { Home } from '@/components/Home';
 import { memberIdState, moonScoreState, todayState } from '@/recoil/atom';
 import { totalMoonScoreSelector } from '@/recoil/selector';
