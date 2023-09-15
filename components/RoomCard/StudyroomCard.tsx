@@ -34,8 +34,9 @@ const StudyroomCard = ({
   const router = useRouter();
   const planetColor = getCategoryColor(roomCategory);
 
-  const isMemberApproved = isMember === '승인' || isMember === '팀장';
-  const canJoinRoom = isMemberApproved || roomLimit > roomCount;
+  // const isMemberApproved = isMember === '승인' || isMember === '팀장';
+  const isMemberNotApproved = isMember === '대기' || isMember === '거절';
+  const canJoinRoom = !isMemberNotApproved && roomLimit > roomCount;
   const buttonText = handleApply ? '참여' : '입장';
 
   const showManagementButtons = roomType === 'leader';
@@ -48,7 +49,7 @@ const StudyroomCard = ({
   return (
     <StCardWrapper>
       <StStudyroomCardWrapper>
-        <StIconWrapper planetColor={planetColor}>
+        <StIconWrapper $planetColor={planetColor}>
           {roomId}
           <IcPlanet />
         </StIconWrapper>
@@ -85,7 +86,7 @@ const StudyroomCard = ({
         </StBtnWrapper>
       )}
       {showStatus && (
-        <StStatusWrapper memberStatus={isMember}>
+        <StStatusWrapper $memberStatus={isMember}>
           신청 현황 <span>{isMember}</span>
         </StStatusWrapper>
       )}
@@ -117,7 +118,7 @@ const StStudyroomCardWrapper = styled.article`
   /* cursor: pointer; */
 `;
 
-const StIconWrapper = styled.div<{ planetColor: string }>`
+const StIconWrapper = styled.div<{ $planetColor: string }>`
   display: flex;
   justify-content: center;
   width: 100%;
@@ -129,7 +130,7 @@ const StIconWrapper = styled.div<{ planetColor: string }>`
     margin-top: 0.4rem;
 
     path {
-      fill: ${({ planetColor }) => planetColor};
+      fill: ${({ $planetColor }) => $planetColor};
     }
   }
 `;
@@ -236,7 +237,7 @@ const StBtnWrapper = styled.div`
   }
 `;
 
-const StStatusWrapper = styled.div<{ memberStatus: string }>`
+const StStatusWrapper = styled.div<{ $memberStatus: string }>`
   display: flex;
   justify-content: center;
   gap: 0.3rem;
@@ -253,8 +254,8 @@ const StStatusWrapper = styled.div<{ memberStatus: string }>`
 
     border-radius: 0.4rem;
     ${({ theme }) => theme.fonts.Body4};
-    background-color: ${({ memberStatus }) => {
-      switch (memberStatus) {
+    background-color: ${({ $memberStatus }) => {
+      switch ($memberStatus) {
         case '승인':
           return '#0ACF84';
         case '거절':

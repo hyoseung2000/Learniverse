@@ -147,6 +147,11 @@ export const reset = css`
       outline: none;
     }
   }
+  hr {
+    border: none;
+    border-top: 0.06rem solid ${({ theme }) => theme.colors.White};
+    width: 100%;
+  }
 `;
 
 export const GlobalStyle = createGlobalStyle`

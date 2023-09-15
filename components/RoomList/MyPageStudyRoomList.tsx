@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 import { getApplyRoomList, getLeaderRoomList } from '@/apis/roomList';
 import useModal from '@/hooks/useModal';
+import { memberIdState } from '@/recoil/atom';
 import { StudyRoomInfo } from '@/types/studyroom';
 
 import { ManageModal } from '../RoomCard/Modal';
@@ -16,13 +18,14 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
   const [roomId, setRoomId] = useState<number>(0);
   const manage = useModal();
   const edit = useModal();
+  const memberId = useRecoilValue(memberIdState);
 
   const getAllRoom = async () => {
     let rooms: StudyRoomInfo[] = [];
     if (isLeader) {
-      rooms = await getLeaderRoomList();
+      rooms = await getLeaderRoomList(memberId);
     } else {
-      rooms = await getApplyRoomList();
+      rooms = await getApplyRoomList(memberId);
     }
     setRoomList(rooms);
   };
@@ -56,7 +59,7 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
             />
           ))}
       </StMyPageRoomListWrapper>
-      <StManageModalWrapper isShowing={manage.isShowing}>
+      <StManageModalWrapper $showing={manage.isShowing}>
         <ManageModal
           roomId={roomId}
           isShowing={manage.isShowing}
@@ -86,8 +89,8 @@ const StMyPageRoomListWrapper = styled.section`
   margin-bottom: 8rem;
 `;
 
-const StManageModalWrapper = styled.div<{ isShowing: boolean }>`
-  display: ${({ isShowing }) => (isShowing ? 'block' : 'none')};
+const StManageModalWrapper = styled.div<{ $showing: boolean }>`
+  display: ${({ $showing }) => ($showing ? 'block' : 'none')};
   position: fixed;
   top: 0;
   left: 0;

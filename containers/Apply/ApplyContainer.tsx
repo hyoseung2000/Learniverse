@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 import { applyRoom, decodeRoomId, getRoomInfo } from '@/apis/studyroom';
@@ -8,6 +9,7 @@ import { LargeModal, SmallModal } from '@/components/Common/Modal';
 import { StudyroomCard } from '@/components/RoomCard';
 import useModal from '@/hooks/useModal';
 import { IcCharacterCheck } from '@/public/assets/icons';
+import { memberIdState } from '@/recoil/atom';
 import { StudyRoomInfo } from '@/types/studyroom';
 
 interface ApplyContainerProps {
@@ -18,20 +20,10 @@ const ApplyContainer = ({ url }: ApplyContainerProps) => {
   const router = useRouter();
   const [roomId, setRoomId] = useState<number>(0);
   const [roomInfo, setRoomInfo] = useState<StudyRoomInfo>();
+  const memberId = useRecoilValue(memberIdState);
 
   const applyModal = useModal();
   const applyCompleteModal = useModal();
-
-  // const ROOM_DATA = {
-  //   roomId: 27,
-  //   roomName: '러니버스',
-  //   roomIntro: '소웨공주들 졸프',
-  //   hashtags: ['졸프'],
-  //   roomCategory: '그룹/모임',
-  //   roomCount: 1,
-  //   roomLimit: 5,
-  //   isMember: '팀장',
-  // };
 
   const decodeId = async () => {
     const decodedUrl = await decodeRoomId(url);
@@ -41,12 +33,12 @@ const ApplyContainer = ({ url }: ApplyContainerProps) => {
 
   const getRoomData = async () => {
     if (roomId === 0) return;
-    const roomData = await getRoomInfo(roomId);
+    const roomData = await getRoomInfo(roomId, memberId);
     setRoomInfo(roomData);
   };
 
   const handleApply = async () => {
-    await applyRoom(roomId, 2); // memberId=2
+    await applyRoom(roomId, memberId);
     applyModal.toggle();
     applyCompleteModal.toggle();
   };

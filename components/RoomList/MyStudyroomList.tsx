@@ -1,8 +1,10 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 import { getMyRoomList } from '@/apis/roomList';
+import { memberIdState } from '@/recoil/atom';
 import { StudyRoomInfo } from '@/types/studyroom';
 
 import { PurpleButton } from '../Common/Button';
@@ -12,9 +14,10 @@ import StudyroomCard from '../RoomCard/StudyroomCard';
 const MyStudyroomList = () => {
   const [myRoomList, setMyRoomList] = useState<StudyRoomInfo[]>();
   const router = useRouter();
+  const memberId = useRecoilValue(memberIdState);
 
   const getMyStudyRoom = async () => {
-    const rooms = await getMyRoomList();
+    const rooms = await getMyRoomList(memberId);
     setMyRoomList(rooms);
   };
 
