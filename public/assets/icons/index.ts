@@ -2,6 +2,7 @@ import IcAddStudyRoom from './ic_add_studyroom_btn.svg';
 import IcAddTag from './ic_add_tag.svg';
 import IcCancel from './ic_cancel.svg';
 import IcChar from './ic_char.svg';
+import IcCoreChar from './ic_core_char.svg';
 import IcCharacterCheck from './ic_character_check.svg';
 import IcCharacterDot from './ic_character_dot.svg';
 import IcCharacterSpeaker from './ic_character_speaker.svg';
@@ -15,6 +16,8 @@ import IcIssueLogo from './ic_issue_logo.svg';
 import IcLine from './ic_line.svg';
 import IcLoginBtn from './ic_login_btn.svg';
 import IcLogo from './ic_logo.svg';
+import IcMedia from './ic_media.svg';
+import IcMike from './ic_mike.svg';
 import IcMoon0 from './ic_moon_0.svg';
 import IcMoon1 from './ic_moon_1.svg';
 import IcMoon2 from './ic_moon_2.svg';
@@ -29,6 +32,8 @@ import IcProfileImage from './ic_profile_image.svg';
 import IcRoomLogo from './ic_room_logo.svg';
 import IcSearch from './ic_search.svg';
 import IcSend from './ic_send.svg';
+import IcSpeaker from './ic_speaker.svg';
+import IcTimer from './ic_timer.svg';
 import IcTracker from './ic_tracker.svg';
 
 export {
@@ -64,4 +69,9 @@ export {
   IcFigma,
   IcChar,
   IcSend,
+  IcTimer,
+  IcMedia,
+  IcMike,
+  IcSpeaker,
+  IcCoreChar,
 };
