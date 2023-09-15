@@ -49,13 +49,10 @@ const HomeContainer = () => {
       isCapture: 0,
     });
   };
-  console.log(lastDay);
 
   useEffect(() => {
     const today = getToday();
-    // const today = '2023-08-20';
     if (lastDay !== today) {
-      console.log('추가');
       setLastDay(today);
       initMoonScore();
       addFirstAccess();
@@ -73,9 +70,6 @@ const HomeContainer = () => {
 
   return (
     <StHomeContainer>
-      {/* <button onClick={addFirstAccess}>첫 접속</button>
-      <button onClick={addCoreTimeAccess}>코어타임</button>
-      <button onClick={addCapture}>캡처</button> */}
       <Home />
     </StHomeContainer>
   );
