@@ -1,6 +1,7 @@
 import { styled } from 'styled-components';
 
 import { PurpleButton } from '../Common/Button';
+import { AllStudyroomList } from '../RoomList';
 import SearchInput from './SearchInput';
 
 const Search = () => {
@@ -15,6 +16,7 @@ const Search = () => {
         btnName="✨ 나와 맞는 스터디 추천받기"
         handleClick={handleRecommend}
       />
+      <AllStudyroomList />
     </StSearchWrapper>
   );
 };

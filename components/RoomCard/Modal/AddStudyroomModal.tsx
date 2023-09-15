@@ -68,7 +68,7 @@ const AddStudyroomModal = ({
 
   useEffect(() => {
     setAddRoomInfo({
-      member_id: memberId,
+      member_id: Number(memberId),
       roomName: studyName,
       roomCategory: category,
       roomIntro: introduction,
