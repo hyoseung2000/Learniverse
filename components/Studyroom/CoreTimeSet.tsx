@@ -1,7 +1,5 @@
 import { styled } from 'styled-components';
 
-import { IcGraylineLogo } from '@/public/assets/icons';
-
 import { StateBtn } from '../Common/Button';
 
 const CoreTimeSet = () => {
@@ -14,13 +12,13 @@ const CoreTimeSet = () => {
           <p>17:00 - 19:00</p>
           <StateBtn btnName="진행중" />
         </div>
-        <IcGraylineLogo />
+        <hr />
         <div>
           <p>9월 7일</p>
           <p>13:00 - 19:00</p>
           <StateBtn btnName="삭제" />
         </div>
-        <IcGraylineLogo />
+        <hr />
       </StCoretableWrapper>
     </StCoretimeWrapper>
   );
@@ -50,6 +48,9 @@ const StCoretableWrapper = styled.div`
   display: flex;
   flex-direction: column;
 
+  background: ${({ theme }) => theme.colors.LightGray2};
+  border-radius: 1.2rem;
+
   & > div {
     display: flex;
     justify-content: space-around;
@@ -63,7 +64,7 @@ const StCoretableWrapper = styled.div`
       ${({ theme }) => theme.fonts.Title5};
     }
   }
-
-  background: ${({ theme }) => theme.colors.LightGray2};
-  border-radius: 1.2rem;
+  & > hr {
+    border-color: ${({ theme }) => theme.colors.Gray3};
+  }
 `;

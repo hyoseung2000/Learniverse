@@ -54,7 +54,11 @@ export default Studyroom;
 
 const StStudyroomWrapper = styled.main`
   display: flex;
+  justify-content: space-between;
+
   width: 100%;
+  padding: 1.5rem 6.5rem 0 6.5rem;
+  box-sizing: border-box;
 `;
 const StStudyMainWrapper = styled.section`
   width: 60%;
@@ -62,7 +66,7 @@ const StStudyMainWrapper = styled.section`
   display: flex;
   flex-direction: column;
 
-  padding: 4.088rem 7rem 0 11.2rem;
+  padding-top: 2.588rem;
   box-sizing: border-box;
 
   & > h2 {

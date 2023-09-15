@@ -9,14 +9,14 @@ const Issue = () => {
         <IcIssueLogo />
         <div>
           <p>이대로 했는데 작동오류남 ㅠㅠ</p>
-          <p>실행하면 버튼이 안생기는 오류가 나네,, 왜그런지 모르겠음 </p>
+          <span>실행하면 버튼이 안생기는 오류가 나네,, 왜그런지 모르겠음 </span>
         </div>
       </div>
       <div>
         <IcIssueLogo />
         <div>
           <p>이대로 했는데 작동오류남 ㅠㅠ</p>
-          <p>실행하면 버튼이 안생기는 오류가 나네,, 왜그런지 모르겠음 </p>
+          <span>실행하면 버튼이 안생기는 오류가 나네,, 왜그런지 모르겠음 </span>
         </div>
       </div>
     </StIsuueWrapper>
@@ -43,6 +43,13 @@ const StIsuueWrapper = styled.div`
 
       color: ${({ theme }) => theme.colors.White};
       ${({ theme }) => theme.fonts.Title5};
+    }
+    & > div > span {
+      margin-left: 2.1rem;
+      margin-top: 0.4rem;
+
+      color: ${({ theme }) => theme.colors.White};
+      ${({ theme }) => theme.fonts.Body3};
     }
   }
 `;

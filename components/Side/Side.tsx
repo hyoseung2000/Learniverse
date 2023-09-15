@@ -56,7 +56,6 @@ const StStudySideWrapper = styled.section`
 
   width: 33%;
   height: calc(100vh - 13.5rem);
-  margin-top: 1.5rem;
 
   border-radius: 3rem;
   background: linear-gradient(
