@@ -1,3 +1,4 @@
+import { Producer } from 'mediasoup-client/lib/Producer';
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
@@ -8,6 +9,12 @@ const { persistAtom } = recoilPersist();
 
 const resetTime = new Date();
 resetTime.setHours(0, 0, 0, 0);
+
+export const memberIdState = atom<number>({
+  key: `memberIdState`,
+  default: 1,
+  effects_UNSTABLE: [persistAtom],
+});
 
 export const encodedUrlState = atom<string>({
   key: `encodedUrl`,
@@ -27,4 +34,9 @@ export const moonScoreState = atom<MoonScoreInfo>({
 export const todayState = atom<string>({
   key: `todayState`,
   default: getToday(),
+});
+
+export const producerState = atom<Producer[]>({
+  key: `producerState`,
+  default: [],
 });

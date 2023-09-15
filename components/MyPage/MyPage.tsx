@@ -1,8 +1,10 @@
+import Image from 'next/image';
 /* eslint-disable react/no-array-index-key */
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { getMoon } from '@/apis/moon';
+import { getMoon, getProfile } from '@/apis/profile';
 import {
   IcMoon0,
   IcMoon1,
@@ -12,20 +14,27 @@ import {
   IcMoonBox,
   IcProfileImage,
 } from '@/public/assets/icons';
-import { MoonInfo } from '@/types/member';
+import { memberIdState } from '@/recoil/atom';
+import { MoonInfo, ProfileInfo } from '@/types/member';
 
 import { MyPageStudyRoomList } from '../RoomList';
 
 const MyPage = () => {
   const [activeTab, setActiveTab] = useState(0);
-  // const [loading, setLoading] = useState(false);
   const [isLeader, setIsLeader] = useState(true);
+  const [profile, setProfile] = useState<ProfileInfo>();
   const [moons, setMoons] = useState<MoonInfo[]>([]);
   const [moonScores, setMoonScores] = useState<number[]>([]);
   const [isMoon, setIsMoon] = useState(false);
+  const memberId = useRecoilValue(memberIdState);
+
+  const getProfileData = async () => {
+    const profileData = await getProfile(memberId);
+    setProfile(profileData);
+  };
 
   const getMoonData = async () => {
-    const moonData = await getMoon();
+    const moonData = await getMoon(memberId);
     setMoons(moonData);
     setIsMoon(true);
   };
@@ -58,33 +67,37 @@ const MyPage = () => {
 
   const handleTabClick = (tabValue: number) => {
     if (activeTab !== tabValue) {
-      // setLoading(true);
       setActiveTab(tabValue);
     }
   };
 
   useEffect(() => {
+    getProfileData();
     getMoonData();
     getMoonScores();
   }, [isMoon]);
 
   useEffect(() => {
-    // setLoading(true);
     setIsLeader(activeTab === 0);
   }, [activeTab]);
-
-  // if (loading) return '로딩중..';
 
   return (
     <StMyPageWrapper>
       <h2>마이페이지</h2>
       <StMyInfo>
-        <StProfile>
-          <IcProfileImage />
-          <p>
-            <span>지민 </span>님 어서오세요 !
-          </p>
-        </StProfile>
+        {profile && (
+          <StProfile>
+            <IcProfileImage />
+            <Image
+              className="githubImage"
+              src={profile.imageUrl}
+              alt="profile"
+              width={77}
+              height={70}
+            />
+            <p>{profile.nickname}</p>
+          </StProfile>
+        )}
         <StMoon>
           <p>나의 달</p>
           <IcMoonBox className="box" />
@@ -139,17 +152,21 @@ const StMyInfo = styled.section`
 `;
 
 const StProfile = styled.div`
+  position: relative;
+
+  & > .githubImage {
+    position: absolute;
+    top: 7.7rem;
+    left: 6.45rem;
+
+    border-radius: 10rem;
+  }
   & > p {
     margin-top: -1rem;
 
-    color: ${({ theme }) => theme.colors.White};
-    ${({ theme }) => theme.fonts.Title3};
+    color: ${({ theme }) => theme.colors.Purple2};
+    ${({ theme }) => theme.fonts.Title1};
     text-align: center;
-
-    & > span {
-      color: ${({ theme }) => theme.colors.Purple2};
-      ${({ theme }) => theme.fonts.Title1};
-    }
   }
 `;
 

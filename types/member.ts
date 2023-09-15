@@ -11,6 +11,11 @@ export interface MemberInfo {
   isMember: string;
 }
 
+export interface ProfileInfo {
+  imageUrl: string;
+  nickname: string;
+}
+
 export interface MoonInfo {
   moonDate: Date;
   moonScore: number;
