@@ -2,9 +2,9 @@ import getToday from '@/utils/getToday';
 
 import { client } from './axios';
 
-export const getMoon = async () => {
+export const getMoon = async (memberId: number) => {
   try {
-    const { data } = await client.get(`/member/moon/list?memberId=1`);
+    const { data } = await client.get(`/member/moon/list?memberId=${memberId}`);
     return data.data.moons;
   } catch (err) {
     console.error(err);
@@ -12,11 +12,11 @@ export const getMoon = async () => {
   }
 };
 
-export const addMoon = async (curScore: number) => {
+export const addMoon = async (memberId: number, curScore: number) => {
   try {
     if (curScore >= 4) return null;
     const data = await client.post(`/member/moon/add`, {
-      memberId: 1,
+      memberId,
       moonDate: getToday(),
     });
     return data;

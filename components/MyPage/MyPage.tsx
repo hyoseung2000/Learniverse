@@ -1,5 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 import { getMoon } from '@/apis/moon';
@@ -12,6 +13,7 @@ import {
   IcMoonBox,
   IcProfileImage,
 } from '@/public/assets/icons';
+import { memberIdState } from '@/recoil/atom';
 import { MoonInfo } from '@/types/member';
 
 import { MyPageStudyRoomList } from '../RoomList';
@@ -23,9 +25,10 @@ const MyPage = () => {
   const [moons, setMoons] = useState<MoonInfo[]>([]);
   const [moonScores, setMoonScores] = useState<number[]>([]);
   const [isMoon, setIsMoon] = useState(false);
+  const memberId = useRecoilValue(memberIdState);
 
   const getMoonData = async () => {
-    const moonData = await getMoon();
+    const moonData = await getMoon(memberId);
     setMoons(moonData);
     setIsMoon(true);
   };

@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 import { getApplyRoomList, getLeaderRoomList } from '@/apis/roomList';
 import useModal from '@/hooks/useModal';
+import { memberIdState } from '@/recoil/atom';
 import { StudyRoomInfo } from '@/types/studyroom';
 
 import { ManageModal } from '../RoomCard/Modal';
@@ -16,13 +18,14 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
   const [roomId, setRoomId] = useState<number>(0);
   const manage = useModal();
   const edit = useModal();
+  const memberId = useRecoilValue(memberIdState);
 
   const getAllRoom = async () => {
     let rooms: StudyRoomInfo[] = [];
     if (isLeader) {
-      rooms = await getLeaderRoomList();
+      rooms = await getLeaderRoomList(memberId);
     } else {
-      rooms = await getApplyRoomList();
+      rooms = await getApplyRoomList(memberId);
     }
     setRoomList(rooms);
   };

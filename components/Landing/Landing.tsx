@@ -4,11 +4,11 @@ import { useRecoilState } from 'recoil';
 import { styled } from 'styled-components';
 
 import { IcLoginBtn } from '@/public/assets/icons';
-import { memberIdStaate } from '@/recoil/atom';
+import { memberIdState } from '@/recoil/atom';
 
 const Landing = () => {
   const router = useRouter();
-  const [curMemberId, setCurMemberId] = useRecoilState(memberIdStaate);
+  const [curMemberId, setCurMemberId] = useRecoilState(memberIdState);
   const [showInput, setShowInput] = useState(false);
   const inputRef = useRef(null);
 

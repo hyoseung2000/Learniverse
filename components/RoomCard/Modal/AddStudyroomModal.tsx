@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { styled } from 'styled-components';
 
 import { createRoom } from '@/apis/roomList';
 import { IcAddTag, IcDeleteTag } from '@/public/assets/icons';
-import { encodedUrlState } from '@/recoil/atom';
+import { encodedUrlState, memberIdState } from '@/recoil/atom';
 import { PostStudyRoomInfo } from '@/types/studyroom';
 
 import { CancelButton, ConfirmButton } from '../../Common/Button';
@@ -28,7 +28,8 @@ const AddStudyroomModal = ({
   const [member, setMember] = useState(2);
   const [introduction, setIntroduction] = useState('');
   const [addRoomInfo, setAddRoomInfo] = useState<PostStudyRoomInfo>();
-  const [, setEncodedUrl] = useRecoilState(encodedUrlState);
+  const setEncodedUrl = useSetRecoilState(encodedUrlState);
+  const memberId = useRecoilValue(memberIdState);
 
   const initInfo = () => {
     setStudyName('');
@@ -67,7 +68,7 @@ const AddStudyroomModal = ({
 
   useEffect(() => {
     setAddRoomInfo({
-      member_id: 1,
+      member_id: memberId,
       roomName: studyName,
       roomCategory: category,
       roomIntro: introduction,

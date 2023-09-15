@@ -4,7 +4,7 @@ import { styled } from 'styled-components';
 
 import { addMoon } from '@/apis/moon';
 import { Home } from '@/components/Home';
-import { moonScoreState, todayState } from '@/recoil/atom';
+import { memberIdState, moonScoreState, todayState } from '@/recoil/atom';
 import { totalMoonScoreSelector } from '@/recoil/selector';
 import getToday from '@/utils/getToday';
 
@@ -12,6 +12,7 @@ const HomeContainer = () => {
   const totalMoonScore = useRecoilValue(totalMoonScoreSelector);
   const [moonScore, setMoonScore] = useRecoilState(moonScoreState);
   const [lastDay, setLastDay] = useRecoilState(todayState);
+  const memberId = useRecoilValue(memberIdState);
 
   const isMax = () => {
     return totalMoonScore >= 4;
@@ -61,7 +62,7 @@ const HomeContainer = () => {
 
   useEffect(() => {
     const addMoons = async () => {
-      const res = await addMoon(totalMoonScore);
+      const res = await addMoon(memberId, totalMoonScore);
       if (res === 400) return null;
       return res;
     };
