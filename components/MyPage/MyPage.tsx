@@ -1,3 +1,4 @@
+import Image from 'next/image';
 /* eslint-disable react/no-array-index-key */
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -90,8 +91,18 @@ const MyPage = () => {
       <h2>마이페이지</h2>
       <StMyInfo>
         <StProfile>
-          <IcProfileImage />
-          <p>{profile?.nickname}</p>
+          {profile && (
+            <>
+              <IcProfileImage />
+              {/* <Image
+                src={profile.imageUrl}
+                alt="profile"
+                width={20}
+                height={20}
+              /> */}
+              <p>{profile.nickname}</p>
+            </>
+          )}
         </StProfile>
         <StMoon>
           <p>나의 달</p>
