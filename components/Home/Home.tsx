@@ -1,9 +1,40 @@
-// 이런식으로 컴포넌트별로 폴더 만들어주세요!
-// 컴포넌트명, 컴포넌트 폴더명은 대문자로!
-// 폴더별 index.ts 파일 만들어서 export 해주세요
+import { styled } from 'styled-components';
+
+import { MyStudyroomList } from '../RoomList';
 
 const Home = () => {
-  return <div>홈 컴포넌트입니다</div>;
+  return (
+    <SwHomeWrapper>
+      <h1>
+        나의 스터디룸에서 코딩해요, <span>LearniVerse</span>
+      </h1>
+      <MyStudyroomList />
+    </SwHomeWrapper>
+  );
 };
 
 export default Home;
+
+const SwHomeWrapper = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 3.79rem 11.3rem 0 11.3rem;
+
+  & > h1 {
+    color: ${({ theme }) => theme.colors.White};
+    ${({ theme }) => theme.fonts.Head0};
+
+    & > span {
+      width: fit-content;
+
+      background: linear-gradient(90deg, #9985fe 0%, #93cdfd 100%);
+      background-clip: text;
+      ${({ theme }) => theme.fonts.Head0};
+
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+`;

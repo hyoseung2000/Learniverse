@@ -158,6 +158,7 @@ export const colors = {
   Mint2: '#8CE1EB',
   Mint3: '#E3F8FA',
   Blue: '#3952F3',
+  SkyBlue: '#93CDFD',
   Yellow1: '#FFBF00',
   Yellow2: '#FFE599',
   Yellow3: '#FFF9DD',

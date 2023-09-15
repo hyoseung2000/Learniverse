@@ -1,13 +1,4 @@
 {
-  "name": "learniverse",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
   "dependencies": {
     "@next/font": "^13.4.19",
     "@types/axios": "^0.14.0",
@@ -40,5 +31,14 @@
     "eslint-plugin-react": "^7.33.1",
     "eslint-plugin-react-hooks": "^4.6.0",
     "prettier": "^3.0.1"
-  }
+  },
+  "name": "learniverse",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev -p 3000",
+    "lint": "next lint",
+    "start": "next start"
+  },
+  "version": "0.1.0"
 }

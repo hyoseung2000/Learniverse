@@ -139,6 +139,14 @@ export const reset = css`
     border: none;
     cursor: pointer;
   }
+  input {
+    border: none;
+    background: none;
+
+    &:focus {
+      outline: none;
+    }
+  }
 `;
 
 export const GlobalStyle = createGlobalStyle`

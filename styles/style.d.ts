@@ -23,6 +23,7 @@ declare module 'styled-components' {
       Mint2: string;
       Mint3: string;
       Blue: string;
+      SkyBlue: string;
       Yellow1: string;
       Yellow2: string;
       Yellow3: string;
