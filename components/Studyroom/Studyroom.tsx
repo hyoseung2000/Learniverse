@@ -26,22 +26,26 @@ const Studyroom = () => {
       <StStudyMainWrapper>
         <h2>이슈</h2>
         <Issue />
+        <hr />
         <CoreTimeSet />
+        <hr />
         <StWorkspaceWrapper>
           <h2>
             워크 스페이스
             <IcPlusBtn />
           </h2>
           <StBtnWrapper>
-            <NotnBtn />
-            <GDriveBtn />
-            <GithbBtn />
-            <FigmaBtn />
+            <StWorkSpace>
+              <NotnBtn />
+              <GDriveBtn />
+              <GithbBtn />
+              <FigmaBtn />
+            </StWorkSpace>
             <CoreBtn btnName="코어타임 입장" handleClick={handleAttend} />
           </StBtnWrapper>
         </StWorkspaceWrapper>
       </StStudyMainWrapper>
-      <Side chatName="스터디룸 게시판" />
+      <Side chatName="스터디룸 공지" />
     </StStudyroomWrapper>
   );
 };
@@ -53,13 +57,12 @@ const StStudyroomWrapper = styled.main`
   width: 100%;
 `;
 const StStudyMainWrapper = styled.section`
-  width: 65%;
+  width: 60%;
 
   display: flex;
   flex-direction: column;
 
-  padding-top: 2.588rem;
-  padding-left: 11.2rem;
+  padding: 4.088rem 7rem 0 11.2rem;
   box-sizing: border-box;
 
   & > h2 {
@@ -69,7 +72,7 @@ const StStudyMainWrapper = styled.section`
 `;
 
 const StWorkspaceWrapper = styled.div`
-  padding-top: 2.8rem;
+  padding-top: 2.3rem;
 
   position: relative;
 
@@ -92,7 +95,7 @@ const StWorkspaceWrapper = styled.div`
   }
 
   & > div {
-    padding-top: 1.5rem;
+    padding-top: 2.3rem;
 
     & > p {
       color: ${({ theme }) => theme.colors.White};
@@ -102,6 +105,13 @@ const StWorkspaceWrapper = styled.div`
 `;
 
 const StBtnWrapper = styled.div`
-  display: flex;
   position: relative;
+
+  display: flex;
+  justify-content: space-between;
+`;
+
+const StWorkSpace = styled.div`
+  display: flex;
+  align-items: center;
 `;

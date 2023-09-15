@@ -29,7 +29,7 @@ const StIsuueWrapper = styled.div`
   display: flex;
   flex-direction: column;
 
-  margin-top: 1.5rem;
+  margin-top: 2.3rem;
   margin-left: 0.1rem;
 
   & > div {

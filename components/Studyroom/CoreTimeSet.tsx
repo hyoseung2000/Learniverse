@@ -29,7 +29,8 @@ const CoreTimeSet = () => {
 export default CoreTimeSet;
 
 const StCoretimeWrapper = styled.div`
-  margin-top: 0.4rem;
+  margin-top: 2.3rem;
+  margin-bottom: 3.1rem;
 
   display: flex;
   flex-direction: column;
@@ -41,11 +42,10 @@ const StCoretimeWrapper = styled.div`
 `;
 
 const StCoretableWrapper = styled.div`
-  width: 49.2rem;
+  width: 100%;
   height: 11rem;
 
-  margin-top: 1.5rem;
-  margin-bottom: 1.2rem;
+  margin-top: 2.3rem;
 
   display: flex;
   flex-direction: column;

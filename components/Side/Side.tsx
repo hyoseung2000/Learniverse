@@ -54,9 +54,11 @@ export default Side;
 const StStudySideWrapper = styled.section`
   position: relative;
 
-  width: 35%;
-  height: calc(100vh - 9.6rem);
+  width: 33%;
+  height: calc(100vh - 13.5rem);
+  margin-top: 1.5rem;
 
+  border-radius: 3rem;
   background: linear-gradient(
     47deg,
     rgba(238, 238, 250, 0.15) 7%,
@@ -83,7 +85,7 @@ const StMemberListWrapper = styled.div`
   display: flex;
   flex-direction: column;
 
-  padding-top: 3.3rem;
+  padding-top: 1.5rem;
   padding-bottom: 2rem;
 
   & > p {
@@ -97,13 +99,14 @@ const StMemberListWrapper = styled.div`
 const StMemberList = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+
+  padding-top: 1.2rem;
+  padding-left: 3.5rem;
 `;
 
 const StMemberWrapper = styled.div`
   display: flex;
-
-  padding-top: 1.7rem;
-  padding-left: 3.5rem;
+  align-items: center;
 
   & > p {
     color: ${({ theme }) => theme.colors.White};
@@ -117,7 +120,7 @@ const StMemberWrapper = styled.div`
 `;
 
 const StChatWrapper = styled.div`
-  padding-top: 1.2rem;
+  padding-top: 2.3rem;
   width: 100%;
 
   & > p {
@@ -130,16 +133,17 @@ const StChatWrapper = styled.div`
 
 const StSendWrapper = styled.div`
   width: 100%;
-  height: 3.6rem;
+  height: 5rem;
 
   position: absolute;
   bottom: 0rem;
 
   background: ${({ theme }) => theme.colors.White};
+  border-radius: 0 0 3rem 3rem;
 
   & > svg {
     position: absolute;
     right: 1.3rem;
-    bottom: 0.8rem;
+    bottom: 1.5rem;
   }
 `;
