@@ -21,7 +21,7 @@ import { MyPageStudyRoomList } from '../RoomList';
 
 const MyPage = () => {
   const [activeTab, setActiveTab] = useState(0);
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [isLeader, setIsLeader] = useState(true);
   const [profile, setProfile] = useState<ProfileInfo>();
   const [moons, setMoons] = useState<MoonInfo[]>([]);
@@ -32,17 +32,20 @@ const MyPage = () => {
   const getProfileData = async () => {
     const profileData = await getProfile(memberId);
     setProfile(profileData);
+    setLoading(false);
   };
 
   const getMoonData = async () => {
     const moonData = await getMoon(memberId);
     setMoons(moonData);
     setIsMoon(true);
+    setLoading(false);
   };
 
   const getMoonScores = () => {
     const scores = moons.map((moon) => moon.moonScore);
     setMoonScores(scores);
+    setLoading(false);
   };
 
   const matchMoonIcons = () => {
@@ -68,7 +71,7 @@ const MyPage = () => {
 
   const handleTabClick = (tabValue: number) => {
     if (activeTab !== tabValue) {
-      // setLoading(true);
+      setLoading(true);
       setActiveTab(tabValue);
     }
   };
@@ -80,30 +83,29 @@ const MyPage = () => {
   }, [isMoon]);
 
   useEffect(() => {
-    // setLoading(true);
+    setLoading(true);
     setIsLeader(activeTab === 0);
   }, [activeTab]);
 
-  // if (loading) return '로딩중..';
+  if (loading) return '로딩중..';
 
   return (
     <StMyPageWrapper>
       <h2>마이페이지</h2>
       <StMyInfo>
-        <StProfile>
-          {profile && (
-            <>
-              <IcProfileImage />
-              {/* <Image
-                src={profile.imageUrl}
-                alt="profile"
-                width={20}
-                height={20}
-              /> */}
-              <p>{profile.nickname}</p>
-            </>
-          )}
-        </StProfile>
+        {profile && (
+          <StProfile>
+            <IcProfileImage />
+            <Image
+              className="githubImage"
+              src={profile.imageUrl}
+              alt="profile"
+              width={77}
+              height={70}
+            />
+            <p>{profile.nickname}</p>
+          </StProfile>
+        )}
         <StMoon>
           <p>나의 달</p>
           <IcMoonBox className="box" />
@@ -158,6 +160,15 @@ const StMyInfo = styled.section`
 `;
 
 const StProfile = styled.div`
+  position: relative;
+
+  & > .githubImage {
+    position: absolute;
+    top: 7.7rem;
+    left: 6.45rem;
+
+    border-radius: 10rem;
+  }
   & > p {
     margin-top: -1rem;
 
