@@ -13,7 +13,7 @@ const Header = () => {
   const { isShowing, toggle } = useModal();
 
   return (
-    <StHeaderWrapper path={asPath}>
+    <StHeaderWrapper $path={asPath}>
       <StHeader>
         <IcLogo
           onClick={() => {
@@ -33,13 +33,13 @@ const Header = () => {
 
 export default Header;
 
-const StHeaderWrapper = styled.header<{ path: string }>`
+const StHeaderWrapper = styled.header<{ $path: string }>`
   height: 9.6rem;
   padding: 5rem 10rem 0rem 5rem;
   box-sizing: border-box;
 
-  ${({ path }) =>
-    path === '/' &&
+  ${({ $path }) =>
+    $path === '/' &&
     css`
       display: none;
     `}
