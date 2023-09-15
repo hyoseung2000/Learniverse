@@ -9,6 +9,12 @@ const { persistAtom } = recoilPersist();
 const resetTime = new Date();
 resetTime.setHours(0, 0, 0, 0);
 
+export const memberIdStaate = atom<number>({
+  key: `memberIdStaate`,
+  default: 1,
+  effects_UNSTABLE: [persistAtom],
+});
+
 export const encodedUrlState = atom<string>({
   key: `encodedUrl`,
   default: '',
