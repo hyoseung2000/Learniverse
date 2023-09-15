@@ -18,7 +18,7 @@ const Studyroom = () => {
   const router = useRouter();
 
   const handleAttend = () => {
-    router.push('/coretime'); // TODO : coreitimeId 추가
+    router.push('/coretime/1'); // TODO : coreitimeId 추가
   };
 
   return (
