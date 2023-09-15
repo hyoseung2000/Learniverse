@@ -21,7 +21,6 @@ import { MyPageStudyRoomList } from '../RoomList';
 
 const MyPage = () => {
   const [activeTab, setActiveTab] = useState(0);
-  const [loading, setLoading] = useState(false);
   const [isLeader, setIsLeader] = useState(true);
   const [profile, setProfile] = useState<ProfileInfo>();
   const [moons, setMoons] = useState<MoonInfo[]>([]);
@@ -32,20 +31,17 @@ const MyPage = () => {
   const getProfileData = async () => {
     const profileData = await getProfile(memberId);
     setProfile(profileData);
-    setLoading(false);
   };
 
   const getMoonData = async () => {
     const moonData = await getMoon(memberId);
     setMoons(moonData);
     setIsMoon(true);
-    setLoading(false);
   };
 
   const getMoonScores = () => {
     const scores = moons.map((moon) => moon.moonScore);
     setMoonScores(scores);
-    setLoading(false);
   };
 
   const matchMoonIcons = () => {
@@ -71,7 +67,6 @@ const MyPage = () => {
 
   const handleTabClick = (tabValue: number) => {
     if (activeTab !== tabValue) {
-      setLoading(true);
       setActiveTab(tabValue);
     }
   };
@@ -83,11 +78,8 @@ const MyPage = () => {
   }, [isMoon]);
 
   useEffect(() => {
-    setLoading(true);
     setIsLeader(activeTab === 0);
   }, [activeTab]);
-
-  if (loading) return '로딩중..';
 
   return (
     <StMyPageWrapper>
