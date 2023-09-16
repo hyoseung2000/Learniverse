@@ -19,8 +19,8 @@ import { styled } from 'styled-components';
 import RTCVideo from './RTCVideo';
 import socketPromise from './socketPromise';
 
-const SERVER_URL = 'https://learniverse-media.kro.kr:8080';
-// const SERVER_URL = 'https://0.0.0.0:8080/';
+// const SERVER_URL = 'https://learniverse-media.kro.kr:8080';
+const SERVER_URL = 'https://0.0.0.0:8080/';
 
 type SocketType = typeof Socket;
 type MediaType = 'audioType' | 'videoType' | 'screenType';
@@ -55,16 +55,35 @@ const WebRTCContainer = () => {
     await Promise.all(consumePromises);
   };
 
-  const initSockets = () => {
+  const initSockets = async () => {
     if (!socket || !curName) return;
     // socket.on('consumerClosed', ({ curConsumerId }) => {
     //   console.log('Closing consumer:', curConsumerId);
-    //   // removeConsumer(curConsumerId);
+    //   removeConsumer(curConsumerId);
     // });
+
+    // socket.on('newProducers', async (data: any) => {
+    //   console.log('4. New producers (consumeList)', data);
+    //   await produce('screenType', curName);
+    //   await consumeProducers(data);
+    // });
+
+    // socket.on('disconnect', () => {
+    //   router.push('/webrtcroom');
+    // });
+
+    await produce('screenType', curName);
+    socket.emit('getOriginProducers');
+
+    socket.on('existedProducers', async (data: any) => {
+      console.log('4-1. existedProducers (consumeList)', data);
+      const formatData = data.slice(0, -1);
+      await consumeProducers(formatData);
+    });
 
     socket.on('newProducers', async (data: any) => {
       console.log('4. New producers (consumeList)', data);
-      await produce('screenType', curName);
+
       await consumeProducers(data);
     });
 
