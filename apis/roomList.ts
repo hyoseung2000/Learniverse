@@ -5,7 +5,6 @@ import { client } from './axios';
 export const createRoom = async (postRoomData: PostStudyRoomInfo) => {
   try {
     const { data } = await client.post('/room/create', postRoomData);
-    console.log(data);
     return data.data.encoded;
   } catch (err) {
     console.error(err);
@@ -16,7 +15,6 @@ export const createRoom = async (postRoomData: PostStudyRoomInfo) => {
 export const getRoomList = async (memberId: number) => {
   try {
     const { data } = await client.get(`/room/list?memberId=${memberId}`);
-    console.log(data.data.rooms);
     return data.data.rooms;
   } catch (err) {
     console.error(err);

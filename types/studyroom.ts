@@ -23,7 +23,7 @@ export interface StudyRoomInfo {
 }
 
 export interface PostStudyRoomInfo {
-  member_id: number;
+  memberId: number;
   roomName: string;
   roomCategory: number;
   roomIntro?: string;

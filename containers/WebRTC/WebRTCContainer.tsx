@@ -19,7 +19,8 @@ import { styled } from 'styled-components';
 import RTCVideo from './RTCVideo';
 import socketPromise from './socketPromise';
 
-const SERVER_URL = 'https://learniverse-media.kro.kr';
+const SERVER_URL = 'https://learniverse-media.kro.kr/';
+// const SERVER_URL = 'https://0.0.0.0:8080/';
 
 type SocketType = typeof Socket;
 type MediaType = 'audioType' | 'videoType' | 'screenType';
