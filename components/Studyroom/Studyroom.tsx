@@ -1,59 +1,33 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-import { useRouter } from 'next/router';
 import { styled } from 'styled-components';
 
-import { IcPlusBtn } from '@/public/assets/icons';
-
-import {
-  CoreBtn,
-  FigmaBtn,
-  GDriveBtn,
-  GithbBtn,
-  NotnBtn,
-} from '../Common/Button';
-import { Side } from '../Side';
 import CoreTimeSet from './CoreTimeSet';
 import Issue from './Issue';
+import MemberList from './MemberList';
+import Notice from './Notice';
+import WorkSpace from './Workspace';
 
 const Studyroom = () => {
-  const router = useRouter();
-  const room_id = 'room1';
-
-  const handleEnterCoretime = () => {
-    router.push({
-      pathname: '/coretime',
-      query: { room_id },
-    });
-  };
-
   return (
     <StStudyroomWrapper>
-      <StStudyMainWrapper>
-        <h2>이슈</h2>
-        <Issue />
-        <hr />
-        <CoreTimeSet />
-        <hr />
+      <StTopWrapper>
+        <StIssueWrapper>
+          <Issue />
+        </StIssueWrapper>
         <StWorkspaceWrapper>
-          <h2>
-            워크 스페이스
-            <IcPlusBtn />
-          </h2>
-          <StBtnWrapper>
-            <StWorkSpace>
-              <NotnBtn />
-              <GDriveBtn />
-              <GithbBtn />
-              <FigmaBtn />
-            </StWorkSpace>
-            <CoreBtn
-              btnName="코어타임 입장"
-              handleClick={handleEnterCoretime}
-            />
-          </StBtnWrapper>
+          <WorkSpace />
         </StWorkspaceWrapper>
-      </StStudyMainWrapper>
-      <Side chatName="스터디룸 공지" />
+        <StMembersWrapper>
+          <MemberList />
+        </StMembersWrapper>
+      </StTopWrapper>
+      <StBottomWrapper>
+        <StNoticeWrapper>
+          <Notice />
+        </StNoticeWrapper>
+        <StCoretimeWrapper>
+          <CoreTimeSet />
+        </StCoretimeWrapper>
+      </StBottomWrapper>
     </StStudyroomWrapper>
   );
 };
@@ -61,69 +35,146 @@ const Studyroom = () => {
 export default Studyroom;
 
 const StStudyroomWrapper = styled.main`
-  display: flex;
-  justify-content: space-between;
+  grid-template-rows: 1fr 1fr;
+
+  /* display: flex;
+  justify-content: space-between; */
 
   width: 100%;
   padding: 1.5rem 6.5rem 0 6.5rem;
   box-sizing: border-box;
 `;
-const StStudyMainWrapper = styled.section`
-  width: 60%;
 
+const StTopWrapper = styled.div`
   display: flex;
-  flex-direction: column;
+  justify-content: space-around;
+`;
+const StBottomWrapper = styled.div`
+  display: flex;
+  justify-content: space-around;
+`;
 
-  padding-top: 2.588rem;
-  box-sizing: border-box;
+const StIssueWrapper = styled.div`
+  flex-grow: 3;
+  margin: 1.4rem;
 
-  & > h2 {
-    color: ${({ theme }) => theme.colors.White};
-    ${({ theme }) => theme.fonts.Head1};
-  }
+  border-radius: 2rem;
+  background: linear-gradient(
+    47deg,
+    rgba(238, 238, 250, 0.15) 7%,
+    rgba(238, 238, 250, 0.03) 100%
+  );
 `;
 
 const StWorkspaceWrapper = styled.div`
-  padding-top: 2.3rem;
+  flex-grow: 1;
+  margin: 1.4rem;
 
-  position: relative;
+  border-radius: 2rem;
+  background: linear-gradient(
+    47deg,
+    rgba(238, 238, 250, 0.15) 7%,
+    rgba(238, 238, 250, 0.03) 100%
+  );
+`;
 
-  display: flex;
-  flex-direction: column;
+const StNoticeWrapper = styled.div`
+  flex-grow: 5;
+  margin: 1.4rem;
 
-  & > h2 {
-    display: flex;
-    align-items: center;
-    gap: 4.4rem;
+  border-radius: 2rem;
+  background: linear-gradient(
+    47deg,
+    rgba(238, 238, 250, 0.15) 7%,
+    rgba(238, 238, 250, 0.03) 100%
+  );
+`;
 
+const StMembersWrapper = styled.div`
+  flex-grow: 4.5;
+  margin: 1.4rem;
+
+  border-radius: 2rem;
+  background: linear-gradient(
+    47deg,
+    rgba(238, 238, 250, 0.15) 7%,
+    rgba(238, 238, 250, 0.03) 100%
+  );
+`;
+
+const StCoretimeWrapper = styled.div`
+  flex-grow: 2;
+  margin: 1.4rem;
+
+  & > h1 {
     color: ${({ theme }) => theme.colors.White};
     ${({ theme }) => theme.fonts.Head1};
   }
 
-  & > svg {
-    position: absolute;
-    left: 25rem;
-    top: 0.4rem;
-  }
-
-  & > div {
-    padding-top: 2.3rem;
-
-    & > p {
-      color: ${({ theme }) => theme.colors.White};
-      ${({ theme }) => theme.fonts.Title5};
-    }
-  }
+  border-radius: 2rem;
+  background: linear-gradient(
+    47deg,
+    rgba(238, 238, 250, 0.15) 7%,
+    rgba(238, 238, 250, 0.03) 100%
+  );
 `;
 
-const StBtnWrapper = styled.div`
-  position: relative;
+// const StStudyMainWrapper = styled.section`
+//   width: 60%;
 
-  display: flex;
-  justify-content: space-between;
-`;
+//   display: flex;
+//   flex-direction: column;
 
-const StWorkSpace = styled.div`
-  display: flex;
-  align-items: center;
-`;
+//   padding-top: 2.588rem;
+//   box-sizing: border-box;
+
+//   & > h2 {
+//     color: ${({ theme }) => theme.colors.White};
+//     ${({ theme }) => theme.fonts.Head1};
+//   }
+// `;
+
+// const StWorkspaceWrapper = styled.div`
+//   padding-top: 2.3rem;
+
+//   position: relative;
+
+//   display: flex;
+//   flex-direction: column;
+
+//   & > h2 {
+//     display: flex;
+//     align-items: center;
+//     gap: 4.4rem;
+
+//     color: ${({ theme }) => theme.colors.White};
+//     ${({ theme }) => theme.fonts.Head1};
+//   }
+
+//   & > svg {
+//     position: absolute;
+//     left: 25rem;
+//     top: 0.4rem;
+//   }
+
+//   & > div {
+//     padding-top: 2.3rem;
+
+//     & > p {
+//       color: ${({ theme }) => theme.colors.White};
+//       ${({ theme }) => theme.fonts.Title5};
+//     }
+//   }
+// `;
+
+// const StBtnWrapper = styled.div`
+//   position: relative;
+
+//   display: flex;
+//   justify-content: space-between;
+// `;
+
+// const StWorkSpace = styled.div`
+//   display: flex;
+//   align-items: center;
+// `;
