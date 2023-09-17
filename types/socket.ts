@@ -11,6 +11,7 @@ export interface ProducerList {
 }
 
 export interface CustomSocket extends SocketType {
+  withCredentials: boolean;
   request?: (event: string, data?: any) => Promise<any>;
 }
 
