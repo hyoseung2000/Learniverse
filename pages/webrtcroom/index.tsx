@@ -7,12 +7,11 @@ import { styled } from 'styled-components';
 const index = () => {
   const router = useRouter();
   const room_id = 'room1';
-  const name = 'user1';
 
   const goCoretime = () => {
     router.push({
-      pathname: '/webrtc/1',
-      query: { room_id, name },
+      pathname: '/webrtc',
+      query: { room_id },
     });
   };
 
