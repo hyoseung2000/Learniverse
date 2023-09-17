@@ -1,8 +1,15 @@
+import { useRouter } from 'next/router';
 import { styled } from 'styled-components';
 
-import { StateBtn } from '../Common/Button';
+import { CoreBtn, StateBtn, StateDeleteBtn } from '../Common/Button';
 
 const CoreTimeSet = () => {
+  const router = useRouter();
+
+  const handleAttend = () => {
+    router.push('/coretime/1'); // TODO : coreitimeId 추가
+  };
+
   return (
     <StCoretimeWrapper>
       <h1>코어타임</h1>
@@ -16,10 +23,10 @@ const CoreTimeSet = () => {
         <div>
           <p>9월 7일</p>
           <p>13:00 - 19:00</p>
-          <StateBtn btnName="삭제" />
+          <StateDeleteBtn btnName="삭제" />
         </div>
-        <hr />
       </StCoretableWrapper>
+      <CoreBtn btnName="코어타임 입장하기" handleClick={handleAttend} />
     </StCoretimeWrapper>
   );
 };
@@ -27,8 +34,7 @@ const CoreTimeSet = () => {
 export default CoreTimeSet;
 
 const StCoretimeWrapper = styled.div`
-  margin-top: 2.3rem;
-  margin-bottom: 3.1rem;
+  margin: 1.8rem;
 
   display: flex;
   flex-direction: column;
@@ -41,9 +47,8 @@ const StCoretimeWrapper = styled.div`
 
 const StCoretableWrapper = styled.div`
   width: 100%;
-  height: 11rem;
 
-  margin-top: 2.3rem;
+  margin: 2.3rem 0 4rem 0;
 
   display: flex;
   flex-direction: column;
