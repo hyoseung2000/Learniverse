@@ -27,7 +27,6 @@ import {
 } from '@/types/socket';
 import { getTime } from '@/utils/getTime';
 
-import index from '../../pages/login/index';
 import RTCVideo from './RTCVideo';
 import socketPromise from './socketPromise';
 
