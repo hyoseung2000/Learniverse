@@ -5,9 +5,13 @@ import { CoreBtn, StateBtn, StateDeleteBtn } from '../Common/Button';
 
 const CoreTimeSet = () => {
   const router = useRouter();
+  const room_id = 'room1';
 
   const handleAttend = () => {
-    router.push('/coretime/1'); // TODO : coreitimeId 추가
+    router.push({
+      pathname: '/coretime',
+      query: { room_id },
+    });
   };
 
   return (
