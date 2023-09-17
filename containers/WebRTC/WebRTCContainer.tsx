@@ -63,7 +63,6 @@ const WebRTCContainer = () => {
     try {
       await createRoom(curRoomId);
       await join(curRoomId, curName);
-      // initSockets();
     } catch (error) {
       console.error('Error in creating or joining the room:', error);
     }
