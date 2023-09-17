@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -24,7 +25,9 @@ import {
   MediaType,
   ProducerList,
 } from '@/types/socket';
+import { getTime } from '@/utils/getTime';
 
+import index from '../../pages/login/index';
 import RTCVideo from './RTCVideo';
 import socketPromise from './socketPromise';
 
@@ -43,48 +46,7 @@ const WebRTCContainer = () => {
   const [streams, setStreams] = useState<MediaStream[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [chatting, setChatting] = useState<string>('');
-  const [chattingList, setChattingList] = useState<ChattingInfo[]>([
-    {
-      name: '일이삼사오육칠팔구십',
-      message: 'chatting 안녕하세요안녕하세요안녕하세요안녕하세요안녕하세요',
-      time: '11:11',
-    },
-    {
-      name: '1',
-      message: 'chatting 안녕하세요',
-      time: '11:11',
-    },
-    {
-      name: '1',
-      message: 'chatting 안녕하세요',
-      time: '11:11',
-    },
-    {
-      name: '1',
-      message: 'chatting 안녕하세요',
-      time: '11:11',
-    },
-    {
-      name: '1',
-      message: 'chatting 안녕하세요',
-      time: '11:11',
-    },
-    {
-      name: '1',
-      message: 'chatting 안녕하세요',
-      time: '11:11',
-    },
-    {
-      name: '1',
-      message: 'chatting 안녕하세요',
-      time: '11:11',
-    },
-    {
-      name: '1',
-      message: 'chatting 안녕하세요',
-      time: '11:11',
-    },
-  ]);
+  const [chattingList, setChattingList] = useState<ChattingInfo[]>([]);
 
   const consumeProducers = async (producers: ProducerList[]) => {
     const consumePromises = producers.map((producer) => {
@@ -101,7 +63,7 @@ const WebRTCContainer = () => {
     try {
       await createRoom(curRoomId);
       await join(curRoomId, curName);
-      initSockets();
+      // initSockets();
     } catch (error) {
       console.error('Error in creating or joining the room:', error);
     }
@@ -109,6 +71,7 @@ const WebRTCContainer = () => {
 
   const connect = async () => {
     if (!curName || !curRoomId) return;
+    console.log('connect');
     const socketConnection: CustomSocket = await io(MEDIA_SERVER_URL!, {
       transports: ['websocket'],
       path: '/server',
@@ -349,45 +312,48 @@ const WebRTCContainer = () => {
     const sentChat: ChattingInfo = {
       name: name.toString(),
       message: chatting,
-      time: new Date().toISOString(),
+      time: getTime(new Date()),
     };
 
     setChattingList((prev) => [...prev, sentChat]);
     setChatting('');
   };
 
-  // useEffect(() => {
-  //   if (name && room_id) {
-  //     console.log('name:', name, 'room_id:', room_id);
-  //     setCurName(name as unknown as string);
-  //     setRoomId(room_id as string);
-  //   }
-  // }, [name, room_id]);
-  // useEffect(() => {
-  //   if (curRoomId) connect();
-  // }, [curRoomId]);
+  useEffect(() => {
+    if (name && room_id) {
+      console.log('name:', name, 'room_id:', room_id);
+      setCurName(name as unknown as string);
+      setRoomId(room_id as string);
+    }
+  }, [name, room_id]);
 
-  // useEffect(() => {
-  //   enterRoom();
-  // }, [socket, curRoomId, curName]);
+  useEffect(() => {
+    if (curRoomId) connect();
+  }, [curRoomId]);
+
+  useEffect(() => {
+    enterRoom();
+  }, [socket, curRoomId, curName]);
 
   return (
     <StWebRTCContainerWrapper>
       <StMediaContainer>
-        <TimeProvider>
-          <Timer />
-        </TimeProvider>
-        <StSettings>
-          <button type="button" onClick={connect}>
-            <IcMedia />
-          </button>
-          <button type="button" onClick={connect}>
-            <IcMike />
-          </button>
-          <button type="button" onClick={connect}>
-            <IcSpeaker />
-          </button>
-        </StSettings>
+        <StSettingWrapper>
+          <TimeProvider>
+            <Timer />
+          </TimeProvider>
+          <StSettings>
+            <button type="button" onClick={initSockets}>
+              <IcMedia />
+            </button>
+            <button type="button" onClick={initSockets}>
+              <IcMike />
+            </button>
+            <button type="button" onClick={initSockets}>
+              <IcSpeaker />
+            </button>
+          </StSettings>
+        </StSettingWrapper>
         <StMediaWrapper>
           {streams.map((stream) => (
             <RTCVideo
@@ -405,8 +371,8 @@ const WebRTCContainer = () => {
         <StChattingWrapper>
           <h3>코어타임 채팅</h3>
           <StChattings>
-            {chattingList.map((chattings) => (
-              <StChatting key={chattings.time}>
+            {chattingList.map((chattings, index) => (
+              <StChatting key={index}>
                 <span>{chattings.name}</span>
                 <p>{chattings.message}</p>
                 <time>{chattings.time}</time>
@@ -446,6 +412,10 @@ const StMediaContainer = styled.section`
   box-sizing: border-box;
 `;
 
+const StSettingWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
 const StSettings = styled.section`
   display: flex;
   gap: 0.8rem;
