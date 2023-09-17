@@ -11,9 +11,11 @@ import {
 } from 'mediasoup-client/lib/types';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import io from 'socket.io-client';
 import { styled } from 'styled-components';
 
+import { memberIdState } from '@/recoil/atom';
 import { CustomSocket, MediaType, ProducerList } from '@/types/socket';
 
 import RTCVideo from './RTCVideo';
@@ -23,7 +25,8 @@ const MEDIA_SERVER_URL = process.env.NEXT_PUBLIC_MEDIA_IP;
 
 const WebRTCContainer = () => {
   const router = useRouter();
-  const { name, room_id } = router.query;
+  const { room_id } = router.query;
+  const name = useRecoilValue(memberIdState);
   const [curName, setCurName] = useState<string>();
   const [curRoomId, setRoomId] = useState<string>();
 
@@ -292,7 +295,7 @@ const WebRTCContainer = () => {
   useEffect(() => {
     if (name && room_id) {
       console.log('name:', name, 'room_id:', room_id);
-      setCurName(name as string);
+      setCurName(name as unknown as string);
       setRoomId(room_id as string);
     }
   }, [name, room_id]);
