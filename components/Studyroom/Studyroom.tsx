@@ -57,6 +57,13 @@ const StBottomWrapper = styled.div`
 const StIssueWrapper = styled.div`
   flex-grow: 3;
   margin: 1.4rem;
+
+  border-radius: 2rem;
+  background: linear-gradient(
+    47deg,
+    rgba(238, 238, 250, 0.15) 7%,
+    rgba(238, 238, 250, 0.03) 100%
+  );
 `;
 
 const StWorkspaceWrapper = styled.div`
