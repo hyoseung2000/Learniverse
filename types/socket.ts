@@ -13,3 +13,9 @@ export interface ProducerList {
 export interface CustomSocket extends SocketType {
   request?: (event: string, data?: any) => Promise<any>;
 }
+
+export interface ChattingInfo {
+  name: string;
+  message: string;
+  time: string;
+}
