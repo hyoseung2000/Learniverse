@@ -15,6 +15,8 @@ import { useRecoilValue } from 'recoil';
 import io from 'socket.io-client';
 import { styled } from 'styled-components';
 
+import { TimeProvider, Timer } from '@/components/Coretime/Timer';
+import { IcMedia } from '@/public/assets/icons';
 import { memberIdState } from '@/recoil/atom';
 import { CustomSocket, MediaType, ProducerList } from '@/types/socket';
 
@@ -309,6 +311,16 @@ const WebRTCContainer = () => {
 
   return (
     <StWebRTCContainerWrapper>
+      <TimeProvider>
+        <Timer />
+      </TimeProvider>
+
+      <StSettings>
+        <button type="button" onClick={connect}>
+          <IcMedia />
+        </button>
+      </StSettings>
+
       <StMediaWrapper>
         {streams.map((stream) => (
           <RTCVideo
@@ -321,11 +333,6 @@ const WebRTCContainer = () => {
           />
         ))}
       </StMediaWrapper>
-      <StUserWrapper>
-        <button type="button" onClick={connect}>
-          connect
-        </button>
-      </StUserWrapper>
     </StWebRTCContainerWrapper>
   );
 };
@@ -334,23 +341,23 @@ export default WebRTCContainer;
 
 const StWebRTCContainerWrapper = styled.main`
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
 
   width: 100%;
-  padding: 5rem;
+  padding: 2rem 5rem;
   box-sizing: border-box;
 `;
 
-const StUserWrapper = styled.section`
+const StSettings = styled.section`
   width: 20%;
 
-  & > p,
-  button {
-    margin-bottom: 5rem;
+  & > button {
+    padding: 1.8rem 0 0.7rem 0;
     color: ${({ theme }) => theme.colors.White};
     ${({ theme }) => theme.fonts.Body0};
   }
 `;
+
 const StMediaWrapper = styled.section`
   display: grid;
   grid-template-columns: repeat(2, 1fr);

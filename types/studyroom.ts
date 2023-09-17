@@ -34,12 +34,3 @@ export interface PostStudyRoomInfo {
   room_google_drive?: string;
   room_figma?: string;
 }
-
-// {
-// "member_id" : 1,
-// "roomCategory" : 4,
-// "roomHashtags": ["졸프"],
-// "roomIntro" : "소웨공주들 졸프",
-// "roomLimit" : 5,
-// "roomName" : "러니버스"
-// }

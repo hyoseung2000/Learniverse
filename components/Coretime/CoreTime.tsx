@@ -1,6 +1,5 @@
 import { styled } from 'styled-components';
 
-import { Side } from '../Side';
 import Media from './Media';
 import { TimeProvider, Timer } from './Timer';
 
@@ -13,7 +12,6 @@ const CoreTime = () => {
         </TimeProvider>
         <Media />
       </StCoreMainWrapper>
-      <Side chatName="코어타임 채팅" />
     </StCoreTimeWrapper>
   );
 };

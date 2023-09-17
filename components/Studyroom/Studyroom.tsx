@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useRouter } from 'next/router';
 import { styled } from 'styled-components';
 
@@ -16,9 +17,13 @@ import Issue from './Issue';
 
 const Studyroom = () => {
   const router = useRouter();
+  const room_id = 'room1';
 
-  const handleAttend = () => {
-    router.push('/coretime/1'); // TODO : coreitimeId 추가
+  const handleEnterCoretime = () => {
+    router.push({
+      pathname: '/coretime',
+      query: { room_id },
+    });
   };
 
   return (
@@ -41,7 +46,10 @@ const Studyroom = () => {
               <GithbBtn />
               <FigmaBtn />
             </StWorkSpace>
-            <CoreBtn btnName="코어타임 입장" handleClick={handleAttend} />
+            <CoreBtn
+              btnName="코어타임 입장"
+              handleClick={handleEnterCoretime}
+            />
           </StBtnWrapper>
         </StWorkspaceWrapper>
       </StStudyMainWrapper>
