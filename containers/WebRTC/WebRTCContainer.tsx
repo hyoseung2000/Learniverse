@@ -207,12 +207,14 @@ const WebRTCContainer = () => {
         async ({ kind, rtpParameters }, callback, errback) => {
           try {
             if (!socket.request) return;
-            const { producerId } = await socket.request('produce', {
+            const producerId = await socket.request('produce', {
               producerTransportId: transport.id,
               kind,
               rtpParameters,
             });
-            callback({ id: producerId });
+            callback({ id: producerId.producer_id });
+            console.log(producerId.producer_id);
+            setCurProducer(producerId.producer_id);
           } catch (err) {
             errback(err as Error);
           }
@@ -233,13 +235,13 @@ const WebRTCContainer = () => {
       let stream: MediaStream;
       if (type === 'screenType') {
         stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+        addStream(stream);
       } else {
         stream = await navigator.mediaDevices.getUserMedia({
           audio: type === 'audioType',
           video: type === 'videoType',
         });
       }
-      addStream(stream);
 
       const track =
         type === 'audioType'
@@ -249,8 +251,6 @@ const WebRTCContainer = () => {
       const producerTransport = await createTransport(device, 'produce');
 
       const producer = await producerTransport.produce({ track });
-      setCurProducer(producer);
-      console.log(producer);
 
       producer.on('trackended', () => {
         closeProducer();
@@ -305,6 +305,18 @@ const WebRTCContainer = () => {
     }
   };
 
+  const stopProduce = () => {
+    console.log('curProducer', curProducer);
+
+    if (!socket) return;
+    socket.emit('producerClosed', curProducer);
+  };
+
+  const handleAudio = async () => {
+    if (!curName) return;
+    await produce('audioType', curName);
+  };
+
   const handleSendChatting = () => {
     if (!socket) return;
     socket.emit('message', chatting);
@@ -349,10 +361,10 @@ const WebRTCContainer = () => {
             <Timer />
           </TimeProvider>
           <StSettings>
-            <button type="button" onClick={initSockets}>
+            <button type="button" onClick={stopProduce}>
               <IcMedia />
             </button>
-            <button type="button" onClick={initSockets}>
+            <button type="button" onClick={handleAudio}>
               <IcMike />
             </button>
             <button type="button" onClick={initSockets}>
