@@ -330,13 +330,16 @@ const WebRTCContainer = () => {
   useEffect(() => {
     if (curRoomId) {
       connect();
-      initSockets();
     }
   }, [curRoomId]);
 
   useEffect(() => {
     enterRoom();
   }, [socket, curRoomId, curName]);
+
+  useEffect(() => {
+    initSockets();
+  }, [device]);
 
   return (
     <StWebRTCContainerWrapper>
