@@ -4,7 +4,7 @@ import { styled } from 'styled-components';
 
 import { getPresignedUrl, putFile } from '../../apis/coretime';
 
-interface RTCVideoProps {
+interface WebRTCVideoProps {
   roomId: string;
   memberId: string;
   mediaStream: MediaStream | undefined;
@@ -12,13 +12,13 @@ interface RTCVideoProps {
   onClick: () => void;
 }
 
-const RTCVideo = ({
+const WebRTCVideo = ({
   roomId,
   memberId,
   mediaStream,
   isSelected,
   onClick,
-}: RTCVideoProps) => {
+}: WebRTCVideoProps) => {
   const viewRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -89,7 +89,8 @@ const RTCVideo = ({
   );
 };
 
-export default RTCVideo;
+export default WebRTCVideo;
+
 const StVideoWrapper = styled.div`
   display: flex;
   flex-direction: column;

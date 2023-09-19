@@ -27,8 +27,8 @@ import {
 } from '@/types/socket';
 import { getTime } from '@/utils/getTime';
 
-import RTCVideo from './RTCVideo';
 import socketPromise from './socketPromise';
+import WebRTCVideo from './WebRTCVideo';
 
 const MEDIA_SERVER_URL = process.env.NEXT_PUBLIC_MEDIA_IP;
 
@@ -42,7 +42,7 @@ const WebRTCContainer = () => {
   const [device, setDevice] = useState<Device>();
   const [socket, setSocket] = useState<CustomSocket | null>(null);
   const [curProducer, setCurProducer] = useState<Producer>();
-  const [streams, setStreams] = useState<MediaStream[]>([]);
+  const [videoStreams, setVideoStreams] = useState<MediaStream[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [chatting, setChatting] = useState<string>('');
   const [chattingList, setChattingList] = useState<ChattingInfo[]>([]);
@@ -225,7 +225,7 @@ const WebRTCContainer = () => {
   };
 
   const addStream = (newStream: MediaStream) => {
-    setStreams((prevStreams) => [...prevStreams, newStream]);
+    setVideoStreams((prevStreams) => [...prevStreams, newStream]);
   };
 
   const produce = async (type: MediaType, memberId: string): Promise<void> => {
@@ -392,10 +392,10 @@ const WebRTCContainer = () => {
           </StSettings>
         </StSettingWrapper>
         <StMediaWrapper>
-          {streams.map((stream) => (
-            <RTCVideo
-              roomId={curRoomId}
-              memberId={curName}
+          {videoStreams.map((stream) => (
+            <WebRTCVideo
+              roomId={curRoomId!}
+              memberId={curName!}
               key={stream.id}
               mediaStream={stream}
               isSelected={selectedVideo === stream.id}
