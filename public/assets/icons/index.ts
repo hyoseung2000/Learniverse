@@ -17,7 +17,9 @@ import IcLine from './ic_line.svg';
 import IcLoginBtn from './ic_login_btn.svg';
 import IcLogo from './ic_logo.svg';
 import IcMedia from './ic_media.svg';
+import IcMediaOff from './ic_media_off.svg';
 import IcMike from './ic_mike.svg';
+import IcMikeOff from './ic_mike_off.svg';
 import IcMoon0 from './ic_moon_0.svg';
 import IcMoon1 from './ic_moon_1.svg';
 import IcMoon2 from './ic_moon_2.svg';
@@ -33,6 +35,7 @@ import IcRoomLogo from './ic_room_logo.svg';
 import IcSearch from './ic_search.svg';
 import IcSend from './ic_send.svg';
 import IcSpeaker from './ic_speaker.svg';
+import IcSpeakerOff from './ic_speaker_off.svg';
 import IcTimer from './ic_timer.svg';
 import IcTracker from './ic_tracker.svg';
 
@@ -73,5 +76,8 @@ export {
   IcMedia,
   IcMike,
   IcSpeaker,
+  IcMediaOff,
+  IcMikeOff,
+  IcSpeakerOff,
   IcCoreChar,
 };

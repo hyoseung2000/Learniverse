@@ -17,7 +17,14 @@ import io from 'socket.io-client';
 import { styled } from 'styled-components';
 
 import { TimeProvider, Timer } from '@/components/Coretime/Timer';
-import { IcMedia, IcMike, IcSpeaker } from '@/public/assets/icons';
+import {
+  IcMedia,
+  IcMediaOff,
+  IcMike,
+  IcMikeOff,
+  IcSpeaker,
+  IcSpeakerOff,
+} from '@/public/assets/icons';
 import { memberIdState } from '@/recoil/atom';
 import {
   ChattingInfo,
@@ -46,9 +53,12 @@ const WebRTCContainer = () => {
   const [videoStreams, setVideoStreams] = useState<MediaStream[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [audioStreams, setAudioStreams] = useState<MediaStream[]>([]);
-  const [isMuted, setIsMuted] = useState(false);
   const [chatting, setChatting] = useState<string>('');
   const [chattingList, setChattingList] = useState<ChattingInfo[]>([]);
+
+  const [isMedia, setIsMedia] = useState(true);
+  const [isMike, setIsMike] = useState(true);
+  const [isSpeaker, setIsSpeaker] = useState(true);
 
   const consumeProducers = async (producers: ProducerList[]) => {
     const consumePromises = producers.map((producer) => {
@@ -135,6 +145,7 @@ const WebRTCContainer = () => {
     if (!socket || !curName) return;
 
     await produce('screenType', curName);
+    await produce('audioType', curName);
     socket.emit('getOriginProducers');
 
     socket.on('connect_error', (error: any) => {
@@ -319,13 +330,6 @@ const WebRTCContainer = () => {
     }
   };
 
-  const stopProduce = () => {
-    console.log('curProducer', curProducer);
-
-    if (!socket) return;
-    socket.emit('producerClosed', curProducer);
-  };
-
   const handleSendChatting = () => {
     if (!socket) return;
     socket.emit('message', chatting);
@@ -340,13 +344,18 @@ const WebRTCContainer = () => {
     setChatting('');
   };
 
-  const handleAudio = async () => {
-    if (!curName) return;
-    await produce('audioType', curName);
+  const handleMedia = () => {
+    setIsMedia((prevState) => !prevState);
+    // if (!socket) return;
+    // socket.emit('producerClosed', curProducer);
+  };
+
+  const handleMike = async () => {
+    setIsMike((prevState) => !prevState);
   };
 
   const handleSpeaker = async () => {
-    setIsMuted((prevState) => !prevState);
+    setIsSpeaker((prevState) => !prevState);
   };
 
   useEffect(() => {
@@ -379,14 +388,14 @@ const WebRTCContainer = () => {
             <Timer />
           </TimeProvider>
           <StSettings>
-            <button type="button" onClick={stopProduce}>
-              <IcMedia />
+            <button type="button" onClick={handleMedia}>
+              {isMedia ? <IcMedia /> : <IcMediaOff />}
             </button>
-            <button type="button" onClick={handleAudio}>
-              <IcMike />
+            <button type="button" onClick={handleMike}>
+              {isMike ? <IcMike /> : <IcMikeOff />}
             </button>
             <button type="button" onClick={handleSpeaker}>
-              <IcSpeaker />
+              {isSpeaker ? <IcSpeaker /> : <IcSpeakerOff />}
             </button>
           </StSettings>
         </StSettingWrapper>
@@ -407,7 +416,7 @@ const WebRTCContainer = () => {
             <WebRTCAudio
               key={stream.id}
               mediaStream={stream}
-              ismuted={isMuted}
+              ismuted={!isSpeaker}
             />
           ))}
         </StMediaWrapper>
