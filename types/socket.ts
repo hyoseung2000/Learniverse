@@ -8,7 +8,7 @@ export type MediaType = 'audioType' | 'videoType' | 'screenType';
 export interface ProducerList {
   produce_type: string;
   producer_id: string;
-  producer_socket_id: string;
+  producer_socket_id?: string;
 }
 
 export interface CustomSocket extends SocketType {
@@ -19,4 +19,8 @@ export interface ChattingInfo {
   name: string;
   message: string;
   time: string;
+}
+
+export interface ConsumerId {
+  consumer_id: string;
 }

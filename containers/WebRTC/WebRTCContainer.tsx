@@ -28,6 +28,7 @@ import {
 import { memberIdState } from '@/recoil/atom';
 import {
   ChattingInfo,
+  ConsumerId,
   CustomSocket,
   MediaType,
   ProducerList,
@@ -151,18 +152,22 @@ const WebRTCContainer = () => {
     socket.on('connect_error', (error: any) => {
       console.log('socket connection error:', error.message);
     });
-    socket.on('existedProducers', async (data: any) => {
+    socket.on('existedProducers', async (data: ProducerList[]) => {
       console.log('4-1. existedProducers (consumeList)', data);
       const formatData = data.slice(0, -1);
       await consumeProducers(formatData);
     });
-    socket.on('newProducers', async (data: any) => {
+    socket.on('newProducers', async (data: ProducerList[]) => {
       console.log('4. New producers (consumeList)', data);
       await consumeProducers(data);
     });
-    socket.on('message', function (data: any) {
+    socket.on('message', (data: ChattingInfo) => {
       setChattingList((prev) => [...prev, data]);
       console.log('New message:', data);
+    });
+    socket.on('consumerClosed', (data: ConsumerId) => {
+      console.log('Closing consumer:', data.consumer_id);
+      // 전달받은 consumer_id 가진 애들 화면에서 element삭제 필요
     });
     socket.on('disconnect', () => {
       router.push('/webrtcroom');
