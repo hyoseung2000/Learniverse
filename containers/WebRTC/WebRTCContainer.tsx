@@ -44,8 +44,9 @@ const WebRTCContainer = () => {
   const [socket, setSocket] = useState<CustomSocket | null>(null);
   const [curProducer, setCurProducer] = useState<Producer>();
   const [videoStreams, setVideoStreams] = useState<MediaStream[]>([]);
-  const [audioStreams, setAudioStreams] = useState<MediaStream[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
+  const [audioStreams, setAudioStreams] = useState<MediaStream[]>([]);
+  const [isMuted, setIsMuted] = useState(false);
   const [chatting, setChatting] = useState<string>('');
   const [chattingList, setChattingList] = useState<ChattingInfo[]>([]);
 
@@ -345,17 +346,7 @@ const WebRTCContainer = () => {
   };
 
   const handleSpeaker = async () => {
-    // navigator.mediaDevices
-    //   .getUserMedia({ audio: true, video: true })
-    //   .then(function (stream) {
-    //     const audioTracks = stream.getAudioTracks();
-    //     if (audioTracks.length > 0) {
-    //       audioTracks[0].enabled = false;
-    //     }
-    //   })
-    //   .catch(function (err) {
-    //     console.error('Error accessing audio stream: ', err);
-    //   });
+    setIsMuted((prevState) => !prevState);
   };
 
   useEffect(() => {
@@ -413,7 +404,11 @@ const WebRTCContainer = () => {
             />
           ))}
           {audioStreams.map((stream) => (
-            <WebRTCAudio key={stream.id} mediaStream={stream} />
+            <WebRTCAudio
+              key={stream.id}
+              mediaStream={stream}
+              ismuted={isMuted}
+            />
           ))}
         </StMediaWrapper>
       </StMediaContainer>

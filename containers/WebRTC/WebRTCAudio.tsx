@@ -4,12 +4,11 @@ import { styled } from 'styled-components';
 
 interface WebRTCAudioProps {
   mediaStream: MediaStream | undefined;
+  ismuted: boolean;
 }
 
-const WebRTCAudio = ({ mediaStream }: WebRTCAudioProps) => {
+const WebRTCAudio = ({ mediaStream, ismuted }: WebRTCAudioProps) => {
   const viewRef = useRef<HTMLAudioElement>(null);
-
-  console.log(mediaStream);
 
   useEffect(() => {
     if (!viewRef.current) return;
@@ -18,7 +17,7 @@ const WebRTCAudio = ({ mediaStream }: WebRTCAudioProps) => {
 
   return (
     <StAudioWrapper>
-      <StAudio ref={viewRef} autoPlay controls muted={false} />
+      <StAudio ref={viewRef} autoPlay muted={ismuted} />
     </StAudioWrapper>
   );
 };
