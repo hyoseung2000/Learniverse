@@ -6,6 +6,7 @@ type SocketType = typeof Socket;
 export type MediaType = 'audioType' | 'videoType' | 'screenType';
 
 export interface ProducerList {
+  produce_type: string;
   producer_id: string;
   producer_socket_id: string;
 }

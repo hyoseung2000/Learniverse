@@ -49,8 +49,8 @@ const WebRTCContainer = () => {
 
   const consumeProducers = async (producers: ProducerList[]) => {
     const consumePromises = producers.map((producer) => {
-      const { producer_id } = producer;
-      return consume(producer_id).catch((error) =>
+      const { producer_id, produce_type } = producer;
+      return consume(producer_id, produce_type).catch((error) =>
         console.error(`Error while consuming producer ${producer_id}:`, error),
       );
     });
@@ -263,7 +263,10 @@ const WebRTCContainer = () => {
     }
   };
 
-  const consume = async (producerId: string): Promise<void> => {
+  const consume = async (
+    producerId: string,
+    produceType: string,
+  ): Promise<void> => {
     try {
       if (!device || !socket || !socket.request) return;
 
@@ -286,13 +289,14 @@ const WebRTCContainer = () => {
 
       const stream = new MediaStream();
       stream.addTrack(consumer.track);
+      // console.log(consumer.track.muted);
 
       // consumer.on('transportclose', () => {
       //   console.log('Consumer transport closed');
       // });
       console.log(`Consumed media from producerId: ${producerId}`);
 
-      addStream(new MediaStream([consumer.track]));
+      if (produceType === 'video') addStream(new MediaStream([consumer.track]));
     } catch (error) {
       console.error('Error consuming:', error);
     }
@@ -312,11 +316,6 @@ const WebRTCContainer = () => {
     socket.emit('producerClosed', curProducer);
   };
 
-  const handleAudio = async () => {
-    if (!curName) return;
-    await produce('audioType', curName);
-  };
-
   const handleSendChatting = () => {
     if (!socket) return;
     socket.emit('message', chatting);
@@ -329,6 +328,26 @@ const WebRTCContainer = () => {
 
     setChattingList((prev) => [...prev, sentChat]);
     setChatting('');
+  };
+
+  const handleAudio = async () => {
+    if (!curName) return;
+    await produce('audioType', curName);
+  };
+
+  const handleSpeaker = async () => {
+    navigator.mediaDevices
+      .getUserMedia({ audio: true, video: true })
+      .then(function (stream) {
+        const audioTracks = stream.getAudioTracks();
+
+        if (audioTracks.length > 0) {
+          audioTracks[0].enabled = false;
+        }
+      })
+      .catch(function (err) {
+        console.error('Error accessing audio stream: ', err);
+      });
   };
 
   useEffect(() => {
@@ -367,7 +386,7 @@ const WebRTCContainer = () => {
             <button type="button" onClick={handleAudio}>
               <IcMike />
             </button>
-            <button type="button" onClick={initSockets}>
+            <button type="button" onClick={handleSpeaker}>
               <IcSpeaker />
             </button>
           </StSettings>
