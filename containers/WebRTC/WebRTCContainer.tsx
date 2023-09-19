@@ -328,7 +328,10 @@ const WebRTCContainer = () => {
   }, [name, room_id]);
 
   useEffect(() => {
-    if (curRoomId) connect();
+    if (curRoomId) {
+      connect();
+      initSockets();
+    }
   }, [curRoomId]);
 
   useEffect(() => {
