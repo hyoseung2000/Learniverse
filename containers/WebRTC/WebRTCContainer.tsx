@@ -28,6 +28,7 @@ import {
 import { memberIdState } from '@/recoil/atom';
 import {
   ChattingInfo,
+  ConsumeInfo,
   ConsumerId,
   CustomSocket,
   MediaType,
@@ -51,9 +52,9 @@ const WebRTCContainer = () => {
   const [device, setDevice] = useState<Device>();
   const [socket, setSocket] = useState<CustomSocket | null>(null);
   const [curProducer, setCurProducer] = useState<Producer>();
-  const [videoStreams, setVideoStreams] = useState<MediaStream[]>([]);
+  const [videoStreams, setVideoStreams] = useState<ConsumeInfo[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
-  const [audioStreams, setAudioStreams] = useState<MediaStream[]>([]);
+  const [audioStreams, setAudioStreams] = useState<ConsumeInfo[]>([]);
   const [chatting, setChatting] = useState<string>('');
   const [chattingList, setChattingList] = useState<ChattingInfo[]>([]);
 
@@ -167,7 +168,7 @@ const WebRTCContainer = () => {
     });
     socket.on('consumerClosed', (data: ConsumerId) => {
       console.log('Closing consumer:', data.consumer_id);
-      // 전달받은 consumer_id 가진 애들 화면에서 element삭제 필요
+      removeStream(data.consumer_id);
     });
     socket.on('disconnect', () => {
       router.push('/webrtcroom');
@@ -243,18 +244,35 @@ const WebRTCContainer = () => {
     return transport;
   };
 
-  const addStream = (newStream: MediaStream, type: string) => {
+  const addStream = (
+    newStream: MediaStream,
+    producerId: string,
+    type: string,
+  ) => {
+    const curStream: ConsumeInfo = {
+      producer_id: producerId,
+      stream: newStream,
+    };
     switch (type) {
       case 'video':
-        setVideoStreams((prevStreams) => [...prevStreams, newStream]);
+        setVideoStreams((prevStreams) => [...prevStreams, curStream]);
         break;
       case 'audio':
-        setAudioStreams((prevStreams) => [...prevStreams, newStream]);
+        setAudioStreams((prevStreams) => [...prevStreams, curStream]);
         break;
       default:
         break;
     }
+    console.log(curStream, videoStreams, audioStreams);
   };
+
+  useEffect(() => {
+    console.log('Updated videoStreams:', videoStreams);
+  }, [videoStreams]);
+
+  useEffect(() => {
+    console.log('Updated audioStreams:', audioStreams);
+  }, [audioStreams]);
 
   const produce = async (type: MediaType, memberId: string): Promise<void> => {
     try {
@@ -263,10 +281,10 @@ const WebRTCContainer = () => {
       let stream: MediaStream;
       if (type === 'screenType') {
         stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-        addStream(stream, 'video');
+        addStream(stream, socket.id, 'video');
       } else {
         stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        addStream(stream, 'audio');
+        addStream(stream, socket.id, 'audio');
       }
 
       const track =
@@ -322,7 +340,7 @@ const WebRTCContainer = () => {
       //   console.log('Consumer transport closed');
       // });
       console.log(`Consumed media from producerId: ${producerId}`);
-      addStream(new MediaStream([consumer.track]), produceType);
+      addStream(new MediaStream([consumer.track]), producerId, produceType);
     } catch (error) {
       console.error('Error consuming:', error);
     }
@@ -333,6 +351,20 @@ const WebRTCContainer = () => {
       curProducer.close();
       setCurProducer(undefined);
     }
+  };
+
+  const removeStream = (producer_id: string) => {
+    console.log(producer_id, audioStreams, videoStreams);
+
+    // const filteredAudioStreams: ConsumeInfo[] = audioStreams.filter(
+    //   (stream) => stream.producer_id !== producer_id,
+    // );
+    // const filteredVideoStreams: ConsumeInfo[] = videoStreams.filter(
+    //   (stream) => stream.producer_id !== producer_id,
+    // );
+
+    // setAudioStreams(filteredAudioStreams);
+    // setVideoStreams(filteredVideoStreams);
   };
 
   const handleSendChatting = () => {
@@ -409,18 +441,22 @@ const WebRTCContainer = () => {
             <WebRTCVideo
               roomId={curRoomId!}
               memberId={curName!}
-              key={stream.id}
-              mediaStream={stream}
-              isSelected={selectedVideo === stream.id}
+              key={stream.producer_id}
+              mediaStream={stream.stream}
+              isSelected={selectedVideo === stream.producer_id}
               onClick={() =>
-                setSelectedVideo(selectedVideo === stream.id ? null : stream.id)
+                setSelectedVideo(
+                  selectedVideo === stream.producer_id
+                    ? null
+                    : stream.producer_id,
+                )
               }
             />
           ))}
           {audioStreams.map((stream) => (
             <WebRTCAudio
-              key={stream.id}
-              mediaStream={stream}
+              key={stream.producer_id}
+              mediaStream={stream.stream}
               ismuted={!isSpeaker}
             />
           ))}

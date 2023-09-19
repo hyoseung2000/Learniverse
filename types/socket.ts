@@ -24,3 +24,8 @@ export interface ChattingInfo {
 export interface ConsumerId {
   consumer_id: string;
 }
+
+export interface ConsumeInfo {
+  producer_id: string;
+  stream: MediaStream;
+}
