@@ -2,6 +2,8 @@
 import { useEffect, useRef } from 'react';
 import { styled } from 'styled-components';
 
+import { getPresignedUrl } from '../../apis/coretime';
+
 interface RTCVideoProps {
   mediaStream: MediaStream | undefined;
   isSelected: boolean;
@@ -36,6 +38,11 @@ const RTCVideo = ({ mediaStream, isSelected, onClick }: RTCVideoProps) => {
     document.body.removeChild(link);
   };
 
+  const handlePresignedUrl = async () => {
+    const url = await getPresignedUrl();
+    console.log(url);
+  };
+
   return (
     <>
       <StVideo
@@ -50,7 +57,7 @@ const RTCVideo = ({ mediaStream, isSelected, onClick }: RTCVideoProps) => {
         autoPlay
         playsInline
       />
-      <button type="button" onClick={captureAndSaveVideoFrame}>
+      <button type="button" onClick={handlePresignedUrl}>
         Save Image
       </button>
     </>

@@ -9,4 +9,8 @@ const client = axios.create({
   },
 });
 
-export { client };
+const media = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_MEDIA_IP,
+});
+
+export { client, media };
