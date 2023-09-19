@@ -28,6 +28,7 @@ import {
 import { getTime } from '@/utils/getTime';
 
 import socketPromise from './socketPromise';
+import WebRTCAudio from './WebRTCAudio';
 import WebRTCVideo from './WebRTCVideo';
 
 const MEDIA_SERVER_URL = process.env.NEXT_PUBLIC_MEDIA_IP;
@@ -43,6 +44,7 @@ const WebRTCContainer = () => {
   const [socket, setSocket] = useState<CustomSocket | null>(null);
   const [curProducer, setCurProducer] = useState<Producer>();
   const [videoStreams, setVideoStreams] = useState<MediaStream[]>([]);
+  const [audioStreams, setAudioStreams] = useState<MediaStream[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [chatting, setChatting] = useState<string>('');
   const [chattingList, setChattingList] = useState<ChattingInfo[]>([]);
@@ -224,8 +226,17 @@ const WebRTCContainer = () => {
     return transport;
   };
 
-  const addStream = (newStream: MediaStream) => {
-    setVideoStreams((prevStreams) => [...prevStreams, newStream]);
+  const addStream = (newStream: MediaStream, type: string) => {
+    switch (type) {
+      case 'video':
+        setVideoStreams((prevStreams) => [...prevStreams, newStream]);
+        break;
+      case 'audio':
+        setAudioStreams((prevStreams) => [...prevStreams, newStream]);
+        break;
+      default:
+        break;
+    }
   };
 
   const produce = async (type: MediaType, memberId: string): Promise<void> => {
@@ -235,18 +246,17 @@ const WebRTCContainer = () => {
       let stream: MediaStream;
       if (type === 'screenType') {
         stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-        addStream(stream);
+        addStream(stream, 'video');
       } else {
-        stream = await navigator.mediaDevices.getUserMedia({
-          audio: type === 'audioType',
-          video: type === 'videoType',
-        });
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        addStream(stream, 'audio');
       }
 
       const track =
         type === 'audioType'
           ? stream.getAudioTracks()[0]
           : stream.getVideoTracks()[0];
+      console.log(track);
 
       const producerTransport = await createTransport(device, 'produce');
 
@@ -295,8 +305,7 @@ const WebRTCContainer = () => {
       //   console.log('Consumer transport closed');
       // });
       console.log(`Consumed media from producerId: ${producerId}`);
-
-      if (produceType === 'video') addStream(new MediaStream([consumer.track]));
+      addStream(new MediaStream([consumer.track]), produceType);
     } catch (error) {
       console.error('Error consuming:', error);
     }
@@ -336,18 +345,17 @@ const WebRTCContainer = () => {
   };
 
   const handleSpeaker = async () => {
-    navigator.mediaDevices
-      .getUserMedia({ audio: true, video: true })
-      .then(function (stream) {
-        const audioTracks = stream.getAudioTracks();
-
-        if (audioTracks.length > 0) {
-          audioTracks[0].enabled = false;
-        }
-      })
-      .catch(function (err) {
-        console.error('Error accessing audio stream: ', err);
-      });
+    // navigator.mediaDevices
+    //   .getUserMedia({ audio: true, video: true })
+    //   .then(function (stream) {
+    //     const audioTracks = stream.getAudioTracks();
+    //     if (audioTracks.length > 0) {
+    //       audioTracks[0].enabled = false;
+    //     }
+    //   })
+    //   .catch(function (err) {
+    //     console.error('Error accessing audio stream: ', err);
+    //   });
   };
 
   useEffect(() => {
@@ -403,6 +411,9 @@ const WebRTCContainer = () => {
                 setSelectedVideo(selectedVideo === stream.id ? null : stream.id)
               }
             />
+          ))}
+          {audioStreams.map((stream) => (
+            <WebRTCAudio key={stream.id} mediaStream={stream} />
           ))}
         </StMediaWrapper>
       </StMediaContainer>
