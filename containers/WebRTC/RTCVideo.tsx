@@ -2,7 +2,7 @@
 import { useEffect, useRef } from 'react';
 import { styled } from 'styled-components';
 
-import { getPresignedUrl } from '../../apis/coretime';
+import { getPresignedUrl, putFile } from '../../apis/coretime';
 
 interface RTCVideoProps {
   mediaStream: MediaStream | undefined;
@@ -28,19 +28,34 @@ const RTCVideo = ({ mediaStream, isSelected, onClick }: RTCVideoProps) => {
     const ctx = canvas.getContext('2d');
     ctx!.drawImage(viewRef.current, 0, 0, canvas.width, canvas.height);
 
+    // 캔버스로부터 Data URL을 생성
     const imageURL = canvas.toDataURL('image/png');
 
-    const link = document.createElement('a');
-    link.href = imageURL;
-    link.download = 'screenshot.png';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Data URL을 Blob으로 변환
+    const byteString = atob(imageURL.split(',')[1]);
+    const mimeString = imageURL.split(',')[0].split(':')[1].split(';')[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+
+    const blob = new Blob([ab], { type: mimeString });
+    const file = new File([blob], 'screenshot.png', { type: mimeString });
+
+    // eslint-disable-next-line consistent-return
+    return file; // 생성된 File 객체를 반환
   };
 
-  const handlePresignedUrl = async () => {
+  const handleUploadImage = async () => {
+    const capturedImage = captureAndSaveVideoFrame();
     const url = await getPresignedUrl();
     console.log(url);
+    if (capturedImage) {
+      await putFile(url, capturedImage);
+    }
   };
 
   return (
@@ -57,7 +72,7 @@ const RTCVideo = ({ mediaStream, isSelected, onClick }: RTCVideoProps) => {
         autoPlay
         playsInline
       />
-      <button type="button" onClick={handlePresignedUrl}>
+      <button type="button" onClick={handleUploadImage}>
         Save Image
       </button>
     </>
