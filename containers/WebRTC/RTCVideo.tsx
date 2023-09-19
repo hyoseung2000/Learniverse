@@ -59,7 +59,7 @@ const RTCVideo = ({ mediaStream, isSelected, onClick }: RTCVideoProps) => {
   };
 
   return (
-    <>
+    <StVideoWrapper>
       <StVideo
         ref={viewRef}
         onClick={onClick}
@@ -75,12 +75,26 @@ const RTCVideo = ({ mediaStream, isSelected, onClick }: RTCVideoProps) => {
       <button type="button" onClick={handleUploadImage}>
         Save Image
       </button>
-    </>
+    </StVideoWrapper>
   );
 };
 
 export default RTCVideo;
+const StVideoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
 
+  & > button {
+    width: 60%;
+    padding: 0.5rem 0;
+
+    border-radius: 2rem;
+    background-color: ${({ theme }) => theme.colors.White};
+    ${({ theme }) => theme.fonts.Title3};
+  }
+`;
 const StVideo = styled.video`
   min-width: 30rem;
   max-width: 30rem;
