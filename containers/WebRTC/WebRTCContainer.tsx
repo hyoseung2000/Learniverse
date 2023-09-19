@@ -53,7 +53,7 @@ const WebRTCContainer = () => {
   const [device, setDevice] = useState<Device>();
   const [socket, setSocket] = useState<CustomSocket | null>(null);
   const [curProducer, setCurProducer] = useState<Producer>();
-  const [curMembers, setCurMembers] = useState<string[]>([]);
+  // const [curMembers, setCurMembers] = useState<string[]>([]);
   const [videoStreams, setVideoStreams] = useState<ConsumeInfo[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [audioStreams, setAudioStreams] = useState<ConsumeInfo[]>([]);

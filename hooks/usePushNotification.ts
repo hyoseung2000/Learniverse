@@ -40,21 +40,31 @@ const usePushNotification = () => {
     }
   };
 
+  const closeNotification = () => {
+    notificationRef.current?.close();
+  };
+
   const fireNotification = (title: string, options?: NotificationOptions) => {
     const newOption: NotificationOptions = {
-      badge: '',
-      icon: '',
+      badge: '/favicon.png',
+      icon: '/favicon.png',
+      requireInteraction: true,
+      actions: [
+        { action: 'test1', title: 'test2' },
+        { action: 'test1', title: 'test2' },
+      ],
       ...options,
     };
 
     // notificationRef에 Notification을 넣어준다. 이 친구는 이렇게 할당만해도 바로 실행된다.
+
     notificationRef.current = new Notification(title, newOption);
 
     // 위에서 만든 클릭 이벤트 걸어주기
     setNotificationClickEvent();
   };
 
-  return { fireNotification };
+  return { fireNotification, closeNotification };
 };
 
 export default usePushNotification;
