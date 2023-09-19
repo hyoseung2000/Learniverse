@@ -49,10 +49,6 @@ const usePushNotification = () => {
       badge: '/favicon.png',
       icon: '/favicon.png',
       requireInteraction: true,
-      actions: [
-        { action: 'test1', title: 'test2' },
-        { action: 'test1', title: 'test2' },
-      ],
       ...options,
     };
 
