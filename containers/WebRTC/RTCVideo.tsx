@@ -16,19 +16,44 @@ const RTCVideo = ({ mediaStream, isSelected, onClick }: RTCVideoProps) => {
     viewRef.current.srcObject = mediaStream || null;
   }, [mediaStream]);
 
+  const captureAndSaveVideoFrame = () => {
+    if (!viewRef.current) return;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = viewRef.current.videoWidth;
+    canvas.height = viewRef.current.videoHeight;
+
+    const ctx = canvas.getContext('2d');
+    ctx!.drawImage(viewRef.current, 0, 0, canvas.width, canvas.height);
+
+    const imageURL = canvas.toDataURL('image/png');
+
+    const link = document.createElement('a');
+    link.href = imageURL;
+    link.download = 'screenshot.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
-    <StVideo
-      ref={viewRef}
-      onClick={onClick}
-      style={{
-        minWidth: isSelected ? '90rem' : '30rem',
-        maxWidth: isSelected ? '90rem' : '30rem',
-        minHeight: isSelected ? '60rem' : '20rem',
-        maxHeight: isSelected ? '60rem' : '20rem',
-      }}
-      autoPlay
-      playsInline
-    />
+    <>
+      <StVideo
+        ref={viewRef}
+        onClick={onClick}
+        style={{
+          minWidth: isSelected ? '90rem' : '30rem',
+          maxWidth: isSelected ? '90rem' : '30rem',
+          minHeight: isSelected ? '60rem' : '20rem',
+          maxHeight: isSelected ? '60rem' : '20rem',
+        }}
+        autoPlay
+        playsInline
+      />
+      <button type="button" onClick={captureAndSaveVideoFrame}>
+        Save Image
+      </button>
+    </>
   );
 };
 
