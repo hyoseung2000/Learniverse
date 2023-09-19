@@ -5,12 +5,20 @@ import { styled } from 'styled-components';
 import { getPresignedUrl, putFile } from '../../apis/coretime';
 
 interface RTCVideoProps {
+  roomId: string;
+  memberId: string;
   mediaStream: MediaStream | undefined;
   isSelected: boolean;
   onClick: () => void;
 }
 
-const RTCVideo = ({ mediaStream, isSelected, onClick }: RTCVideoProps) => {
+const RTCVideo = ({
+  roomId,
+  memberId,
+  mediaStream,
+  isSelected,
+  onClick,
+}: RTCVideoProps) => {
   const viewRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -43,7 +51,9 @@ const RTCVideo = ({ mediaStream, isSelected, onClick }: RTCVideoProps) => {
     }
 
     const blob = new Blob([ab], { type: mimeString });
-    const file = new File([blob], 'screenshot.png', { type: mimeString });
+    const file = new File([blob], `${roomId}-${memberId}.png`, {
+      type: mimeString,
+    });
 
     // eslint-disable-next-line consistent-return
     return file; // 생성된 File 객체를 반환

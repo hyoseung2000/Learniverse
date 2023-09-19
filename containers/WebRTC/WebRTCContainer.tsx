@@ -394,6 +394,8 @@ const WebRTCContainer = () => {
         <StMediaWrapper>
           {streams.map((stream) => (
             <RTCVideo
+              roomId={curRoomId}
+              memberId={curName}
               key={stream.id}
               mediaStream={stream}
               isSelected={selectedVideo === stream.id}
