@@ -17,6 +17,7 @@ import io from 'socket.io-client';
 import { styled } from 'styled-components';
 
 import { TimeProvider, Timer } from '@/components/Coretime/Timer';
+import usePushNotification from '@/hooks/usePushNotification';
 import {
   IcMedia,
   IcMediaOff,
@@ -49,6 +50,7 @@ const WebRTCContainer = () => {
   const name = useRecoilValue(memberIdState);
   const [curName, setCurName] = useState<string>();
   const [curRoomId, setRoomId] = useState<string>();
+  const pushNotification = usePushNotification();
 
   const [device, setDevice] = useState<Device>();
   const [socket, setSocket] = useState<CustomSocket | null>(null);
@@ -418,6 +420,14 @@ const WebRTCContainer = () => {
   useEffect(() => {
     initSockets();
   }, [device]);
+
+  useEffect(() => {
+    if (pushNotification) {
+      pushNotification.fireNotification('스크린이 캡처되었습니다!', {
+        body: '60초 이내에 전송해주세요!',
+      });
+    }
+  });
 
   return (
     <StWebRTCContainerWrapper>
