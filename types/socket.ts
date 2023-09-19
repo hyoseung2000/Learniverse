@@ -5,6 +5,19 @@ type SocketType = typeof Socket;
 
 export type MediaType = 'audioType' | 'videoType' | 'screenType';
 
+export interface JoinInfo {
+  id: string;
+  peers: PeersInfo[];
+}
+
+export interface PeersInfo {
+  id: number;
+  name: string;
+  producers: any[];
+  consumers: any[];
+  transports: any[];
+}
+
 export interface ProducerList {
   produce_type: string;
   producer_id: string;
