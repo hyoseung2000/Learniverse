@@ -34,10 +34,10 @@ const StudyroomCard = ({
   const router = useRouter();
   const planetColor = getCategoryColor(roomCategory);
 
-  // const isMemberApproved = isMember === '승인' || isMember === '팀장';
-  const isMemberNotApproved = isMember === '대기' || isMember === '거절';
-  // const canJoinRoom = !isMemberNotApproved && roomLimit > roomCount;
-  const canJoinRoom = !isMemberNotApproved;
+  const isMemberApproved = isMember === '승인' || isMember === '팀장';
+  // const isMemberNotApproved = isMember === '대기' || isMember === '거절';
+  const canJoinRoom =
+    isMemberApproved || (isMember === null && roomLimit > roomCount);
   const buttonText = handleApply ? '참여' : '입장';
 
   const showManagementButtons = roomType === 'leader';

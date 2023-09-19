@@ -70,8 +70,8 @@ const WebRTCContainer = () => {
   const connect = async () => {
     if (!curName || !curRoomId) return;
     const socketConnection: CustomSocket = await io(MEDIA_SERVER_URL!, {
-      transports: ['websocket'],
-      path: '/server',
+      transports: ['websocket', 'polling', 'flashsocket'],
+      secure: true,
     });
     socketConnection.request = await socketPromise(socketConnection);
     setSocket(socketConnection);
@@ -134,6 +134,9 @@ const WebRTCContainer = () => {
     await produce('screenType', curName);
     socket.emit('getOriginProducers');
 
+    socket.on('connect_error', (error: any) => {
+      console.log('socket connection error:', error.message);
+    });
     socket.on('existedProducers', async (data: any) => {
       console.log('4-1. existedProducers (consumeList)', data);
       const formatData = data.slice(0, -1);
