@@ -4,9 +4,12 @@ import { styled } from 'styled-components';
 
 import { getApplyRoomList, getLeaderRoomList } from '@/apis/roomList';
 import useModal from '@/hooks/useModal';
+import { IcCharacterCheck } from '@/public/assets/icons';
 import { memberIdState } from '@/recoil/atom';
 import { StudyRoomInfo } from '@/types/studyroom';
 
+import { ConfirmButton } from '../Common/Button';
+import SmallModal from '../Common/Modal/SmallModal';
 import { ManageModal } from '../RoomCard/Modal';
 import EditModal from '../RoomCard/Modal/EditModal';
 import StudyroomCard from '../RoomCard/StudyroomCard';
@@ -17,9 +20,11 @@ interface MyPageStudyRoomListProps {
 const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
   const [roomList, setRoomList] = useState<StudyRoomInfo[]>();
   const [roomId, setRoomId] = useState<number>(0);
+  const memberId = useRecoilValue(memberIdState);
+
   const manage = useModal();
   const edit = useModal();
-  const memberId = useRecoilValue(memberIdState);
+  const editConfirm = useModal();
 
   const getAllRoom = async () => {
     let rooms: StudyRoomInfo[] = [];
@@ -73,10 +78,27 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
         <EditModal
           roomId={roomId}
           isShowing={edit.isShowing}
-          handleConfirm={edit.toggle}
+          handleConfirm={() => {
+            edit.toggle();
+            editConfirm.toggle();
+          }}
           handleCancel={edit.toggle}
         />
       </StEditModalWrapper>
+      <StEditConfirmModalWrapper $showing={editConfirm.isShowing}>
+        <SmallModal
+          title="스터디 정보 수정 완료"
+          isShowing={editConfirm.isShowing}
+        >
+          <StSmallModalWrapper>
+            <StContentWrapper>
+              <IcCharacterCheck />
+              <p>스터디 정보 수정이 완료되었어요.</p>
+            </StContentWrapper>
+            <ConfirmButton btnName="확인" onClick={editConfirm.toggle} />
+          </StSmallModalWrapper>
+        </SmallModal>
+      </StEditConfirmModalWrapper>
     </StMyPageWrapper>
   );
 };
@@ -116,3 +138,31 @@ const StManageModalWrapper = styled.div<{ $showing: boolean }>`
 `;
 
 const StEditModalWrapper = styled(StManageModalWrapper)``;
+
+const StEditConfirmModalWrapper = styled(StManageModalWrapper)``;
+
+const StSmallModalWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 1.6rem;
+`;
+
+const StContentWrapper = styled.div`
+  display: flex;
+  align-items: center;
+
+  & > svg {
+    margin-left: -3rem;
+  }
+
+  & > p {
+    margin-top: 1rem;
+    margin-left: -2rem;
+
+    color: ${({ theme }) => theme.colors.Learniverse_BG};
+    ${({ theme }) => theme.fonts.Title5};
+    font-size: 1.5rem;
+  }
+`;
