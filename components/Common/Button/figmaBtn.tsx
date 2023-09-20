@@ -2,10 +2,14 @@ import { styled } from 'styled-components';
 
 import { IcFigma } from '@/public/assets/icons';
 
-const FigmaBtn = () => {
+interface Props {
+  handleClick: (key: number) => void;
+}
+
+const FigmaBtn = ({ handleClick }: Props) => {
   return (
     <StIconBtnWrapper>
-      <IcFigma />
+      <IcFigma onClick={handleClick} />
     </StIconBtnWrapper>
   );
 };

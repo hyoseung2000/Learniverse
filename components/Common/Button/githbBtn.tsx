@@ -2,10 +2,14 @@ import { styled } from 'styled-components';
 
 import { IcGithub } from '@/public/assets/icons';
 
-const GithbBtn = () => {
+interface Props {
+  handleClick: (key: number) => void;
+}
+
+const GithbBtn = ({ handleClick }: Props) => {
   return (
     <StIconBtnWrapper>
-      <IcGithub />
+      <IcGithub onClick={handleClick} />
     </StIconBtnWrapper>
   );
 };
