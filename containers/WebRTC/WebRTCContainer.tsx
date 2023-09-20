@@ -16,6 +16,7 @@ import { useRecoilValue } from 'recoil';
 import io from 'socket.io-client';
 import { styled } from 'styled-components';
 
+import { PurpleButton } from '@/components/Common/Button';
 import { TimeProvider, Timer } from '@/components/Coretime/Timer';
 import usePushNotification from '@/hooks/usePushNotification';
 import {
@@ -35,6 +36,7 @@ import {
   JoinInfo,
   MediaType,
   ProducerList,
+  RoomInfo,
 } from '@/types/socket';
 import { getTime } from '@/utils/getTime';
 
@@ -54,7 +56,7 @@ const WebRTCContainer = () => {
 
   const [device, setDevice] = useState<Device>();
   const [socket, setSocket] = useState<CustomSocket | null>(null);
-  const [curProducer, setCurProducer] = useState<Producer>();
+  const [curProducer, setCurProducer] = useState<string>();
   // const [curMembers, setCurMembers] = useState<string[]>([]);
   const [videoStreams, setVideoStreams] = useState<ConsumeInfo[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
@@ -148,11 +150,14 @@ const WebRTCContainer = () => {
   };
 
   const initSockets = async () => {
-    if (!socket || !curName) return;
+    if (!socket || !socket.request || !curName) return;
 
     await produce('screenType', curName);
     await produce('audioType', curName);
     socket.emit('getOriginProducers');
+
+    const peerList: RoomInfo = await socket.request('getRoomInfo');
+    console.log(peerList);
 
     socket.on('connect_error', (error: any) => {
       console.log('socket connection error:', error.message);
@@ -295,7 +300,6 @@ const WebRTCContainer = () => {
         type === 'audioType'
           ? stream.getAudioTracks()[0]
           : stream.getVideoTracks()[0];
-      console.log(track);
 
       const producerTransport = await createTransport(device, 'produce');
 
@@ -351,10 +355,10 @@ const WebRTCContainer = () => {
   };
 
   const closeProducer = () => {
-    if (curProducer) {
-      curProducer.close();
-      setCurProducer(undefined);
-    }
+    // if (curProducer) {
+    //   curProducer.close();
+    //   setCurProducer(undefined);
+    // }
   };
 
   const removeStream = (producer_id: string) => {
@@ -407,27 +411,27 @@ const WebRTCContainer = () => {
     }
   }, [name, room_id]);
 
-  useEffect(() => {
-    if (curRoomId) {
-      connect();
-    }
-  }, [curRoomId]);
+  // useEffect(() => {
+  //   if (curRoomId) {
+  //     connect();
+  //   }
+  // }, [curRoomId]);
 
-  useEffect(() => {
-    enterRoom();
-  }, [socket, curRoomId, curName]);
+  // useEffect(() => {
+  //   enterRoom();
+  // }, [socket, curRoomId, curName]);
 
-  useEffect(() => {
-    initSockets();
-  }, [device]);
+  // useEffect(() => {
+  //   initSockets();
+  // }, [device]);
 
-  useEffect(() => {
-    if (pushNotification) {
-      pushNotification.fireNotification('스크린이 캡처되었습니다!', {
-        body: '60초 이내에 전송해주세요!',
-      });
-    }
-  });
+  // useEffect(() => {
+  //   if (pushNotification) {
+  //     pushNotification.fireNotification('스크린이 캡처되었습니다!', {
+  //       body: '60초 이내에 전송해주세요!',
+  //     });
+  //   }
+  // });
 
   return (
     <StWebRTCContainerWrapper>
@@ -465,14 +469,14 @@ const WebRTCContainer = () => {
               }
             />
           ))}
-          {audioStreams.map((stream) => (
-            <WebRTCAudio
-              key={stream.producer_id}
-              mediaStream={stream.stream}
-              ismuted={!isSpeaker}
-            />
-          ))}
         </StMediaWrapper>
+        {audioStreams.map((stream) => (
+          <WebRTCAudio
+            key={stream.producer_id}
+            mediaStream={stream.stream}
+            ismuted={!isSpeaker}
+          />
+        ))}
       </StMediaContainer>
       <StCoretimeInfoWrapper>
         <StChattingWrapper>
@@ -498,6 +502,9 @@ const WebRTCContainer = () => {
             </button>
           </StChatInputWrapper>
         </StChattingWrapper>
+        <StCoreTimeBtnWrapper>
+          <StExitButton type="button">코어타임 나가기</StExitButton>
+        </StCoreTimeBtnWrapper>
       </StCoretimeInfoWrapper>
     </StWebRTCContainerWrapper>
   );
@@ -523,6 +530,7 @@ const StSettingWrapper = styled.div`
   display: flex;
   justify-content: space-between;
 `;
+
 const StSettings = styled.section`
   display: flex;
   gap: 0.8rem;
@@ -645,4 +653,24 @@ const StChatInput = styled.input`
   width: 75%;
   padding: 0.7rem 2rem;
   ${({ theme }) => theme.fonts.Body1};
+`;
+
+const StCoreTimeBtnWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+
+  padding-top: 2rem;
+`;
+
+const StExitButton = styled.button`
+  padding: 1.2rem 7.6rem;
+
+  border-radius: 100rem;
+  background-color: ${({ theme }) => theme.colors.Purple3};
+  box-shadow: 2.47864px 4.33762px 3.71796px 1.23932px rgba(0, 0, 0, 0.15),
+    0.61966px 1.23932px 7.43592px 4.33762px rgba(153, 153, 153, 0.3) inset,
+    0.61966px 1.23932px 8.67524px 4.33762px rgba(255, 255, 255, 0.15) inset;
+
+  color: ${({ theme }) => theme.colors.White};
+  ${({ theme }) => theme.fonts.Title2};
 `;
