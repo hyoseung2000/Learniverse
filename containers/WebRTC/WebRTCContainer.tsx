@@ -159,7 +159,7 @@ const WebRTCContainer = () => {
     });
     socket.on('existedProducers', async (data: ProducerList[]) => {
       console.log('4-1. existedProducers (consumeList)', data);
-      const formatData = data.slice(0, -1);
+      const formatData = data.slice(0, -2);
       await consumeProducers(formatData);
     });
     socket.on('newProducers', async (data: ProducerList[]) => {
