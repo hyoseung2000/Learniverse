@@ -2,11 +2,21 @@
 import { useRouter } from 'next/router';
 import { styled } from 'styled-components';
 
+import useModal from '@/hooks/useModal';
+import { IcPlusBtn } from '@/public/assets/icons';
+
 import { CoreBtn, StateBtn, StateDeleteBtn } from '../Common/Button';
+import CreateCoretimeModal from './Modal/CreateCoretimeModal';
 
 const CoreTimeSet = () => {
   const router = useRouter();
   const room_id = 'room1';
+
+  const create = useModal();
+
+  const handleOpen = () => {
+    create.toggle();
+  };
 
   const handleAttend = () => {
     router.push({
@@ -15,41 +25,61 @@ const CoreTimeSet = () => {
     });
   };
 
+  const handleDelete = () => {
+    console.log('코어타임 삭제 구현');
+  };
+
   return (
-    <StCoretimeWrapper>
-      <h1>코어타임</h1>
-      <StCoretableWrapper>
-        <div>
-          <p>8월 27일</p>
-          <p>17:00 - 19:00</p>
-          <StateBtn btnName="진행중" />
-        </div>
-        <hr />
-        <div>
-          <p>9월 7일</p>
-          <p>13:00 - 19:00</p>
-          <StateDeleteBtn btnName="삭제" />
-        </div>
-      </StCoretableWrapper>
-      <CoreBtn btnName="코어타임 입장하기" handleClick={handleAttend} />
-    </StCoretimeWrapper>
+    <>
+      <StCoretimeWrapper>
+        <StTitleWrapper>
+          <h1>코어타임</h1>
+          <IcPlusBtn type="button" onClick={handleOpen} />
+        </StTitleWrapper>
+        <StCoretableWrapper>
+          <div>
+            <p>8월 27일</p>
+            <p>17:00 - 19:00</p>
+            <StateBtn btnName="진행중" />
+          </div>
+          <hr />
+          <div>
+            <p>9월 7일</p>
+            <p>13:00 - 19:00</p>
+            <StateDeleteBtn btnName="삭제" handleClick={handleDelete} />
+          </div>
+        </StCoretableWrapper>
+        <CoreBtn btnName="코어타임 입장하기" handleClick={handleAttend} />
+      </StCoretimeWrapper>
+      <StCreateModalWrapper $showing={create.isShowing}>
+        <CreateCoretimeModal
+          isShowing={create.isShowing}
+          handleCancel={create.toggle}
+        />
+      </StCreateModalWrapper>
+    </>
   );
 };
 
 export default CoreTimeSet;
 
 const StCoretimeWrapper = styled.div`
-  margin: 1.8rem;
+  margin: 3.3rem;
 
   display: flex;
   flex-direction: column;
+`;
+const StTitleWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
 
   & > h1 {
     color: ${({ theme }) => theme.colors.White};
     ${({ theme }) => theme.fonts.Head1};
   }
-`;
 
+  cursor: pointer;
+`;
 const StCoretableWrapper = styled.div`
   width: 100%;
 
@@ -77,4 +107,20 @@ const StCoretableWrapper = styled.div`
   & > hr {
     border-color: ${({ theme }) => theme.colors.Gray3};
   }
+`;
+
+const StCreateModalWrapper = styled.div<{ $showing: boolean }>`
+  display: ${({ $showing }) => ($showing ? 'block' : 'none')};
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+
+  justify-content: center;
+  align-items: center;
+
+  width: 100vw;
+  height: 100vh;
+
+  background-color: rgba(0, 0, 0, 0.5);
 `;
