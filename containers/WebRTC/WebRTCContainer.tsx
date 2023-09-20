@@ -16,10 +16,11 @@ import { useRecoilValue } from 'recoil';
 import io from 'socket.io-client';
 import { styled } from 'styled-components';
 
-import { PurpleButton } from '@/components/Common/Button';
 import { TimeProvider, Timer } from '@/components/Coretime/Timer';
 import usePushNotification from '@/hooks/usePushNotification';
 import {
+  IcGallery,
+  IcIssue,
   IcMedia,
   IcMediaOff,
   IcMike,
@@ -411,46 +412,56 @@ const WebRTCContainer = () => {
     }
   }, [name, room_id]);
 
-  // useEffect(() => {
-  //   if (curRoomId) {
-  //     connect();
-  //   }
-  // }, [curRoomId]);
+  useEffect(() => {
+    if (curRoomId) {
+      connect();
+    }
+  }, [curRoomId]);
 
-  // useEffect(() => {
-  //   enterRoom();
-  // }, [socket, curRoomId, curName]);
+  useEffect(() => {
+    enterRoom();
+  }, [socket, curRoomId, curName]);
 
-  // useEffect(() => {
-  //   initSockets();
-  // }, [device]);
+  useEffect(() => {
+    initSockets();
+  }, [device]);
 
-  // useEffect(() => {
-  //   if (pushNotification) {
-  //     pushNotification.fireNotification('스크린이 캡처되었습니다!', {
-  //       body: '60초 이내에 전송해주세요!',
-  //     });
-  //   }
-  // });
+  useEffect(() => {
+    if (pushNotification) {
+      pushNotification.fireNotification('스크린이 캡처되었습니다!', {
+        body: '60초 이내에 전송해주세요!',
+      });
+    }
+  });
 
   return (
     <StWebRTCContainerWrapper>
       <StMediaContainer>
         <StSettingWrapper>
-          <TimeProvider>
-            <Timer />
-          </TimeProvider>
-          <StSettings>
-            <button type="button" onClick={handleMedia}>
-              {isMedia ? <IcMedia /> : <IcMediaOff />}
+          <div>
+            <TimeProvider>
+              <Timer />
+            </TimeProvider>
+            <StSettings>
+              <button type="button" onClick={handleMedia}>
+                {isMedia ? <IcMedia /> : <IcMediaOff />}
+              </button>
+              <button type="button" onClick={handleMike}>
+                {isMike ? <IcMike /> : <IcMikeOff />}
+              </button>
+              <button type="button" onClick={handleSpeaker}>
+                {isSpeaker ? <IcSpeaker /> : <IcSpeakerOff />}
+              </button>
+            </StSettings>
+          </div>
+          <StStudyroomBtnWrapper>
+            <button type="button">
+              <IcIssue />
             </button>
-            <button type="button" onClick={handleMike}>
-              {isMike ? <IcMike /> : <IcMikeOff />}
+            <button type="button">
+              <IcGallery />
             </button>
-            <button type="button" onClick={handleSpeaker}>
-              {isSpeaker ? <IcSpeaker /> : <IcSpeakerOff />}
-            </button>
-          </StSettings>
+          </StStudyroomBtnWrapper>
         </StSettingWrapper>
         <StMediaWrapper>
           {videoStreams.map((stream) => (
@@ -536,7 +547,7 @@ const StSettings = styled.section`
   gap: 0.8rem;
 
   & > button {
-    padding: 1.8rem 0 0.7rem 0;
+    padding: 0.6rem 0;
     color: ${({ theme }) => theme.colors.White};
     ${({ theme }) => theme.fonts.Body0};
   }
@@ -657,9 +668,19 @@ const StChatInput = styled.input`
 
 const StCoreTimeBtnWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  gap: 2rem;
 
-  padding-top: 2rem;
+  padding-top: 3rem;
+`;
+
+const StStudyroomBtnWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+
+  width: fit-content;
 `;
 
 const StExitButton = styled.button`

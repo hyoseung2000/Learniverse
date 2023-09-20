@@ -9,9 +9,11 @@ import IcConfirm from './ic_confirm.svg';
 import IcCoreChar from './ic_core_char.svg';
 import IcDeleteTag from './ic_delete_tag.svg';
 import IcFigma from './ic_figma.svg';
+import IcGallery from './ic_gallery.svg';
 import IcGDrive from './ic_gdrive.svg';
 import IcGithub from './ic_github.svg';
 import IcGraylineLogo from './ic_gray_line.svg';
+import IcIssue from './ic_Issue.svg';
 import IcIssueLogo from './ic_issue_logo.svg';
 import IcLine from './ic_line.svg';
 import IcLoginBtn from './ic_login_btn.svg';
@@ -80,4 +82,6 @@ export {
   IcMikeOff,
   IcSpeakerOff,
   IcCoreChar,
+  IcGallery,
+  IcIssue,
 };

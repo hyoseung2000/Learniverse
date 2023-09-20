@@ -20,6 +20,7 @@ export default Timer;
 const StTimeWrapper = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
 
   width: fit-content;
 
@@ -28,5 +29,9 @@ const StTimeWrapper = styled.div`
 
     color: ${({ theme }) => theme.colors.Orange2};
     ${({ theme }) => theme.fonts.Head0};
+  }
+
+  & > svg {
+    width: 4.4rem;
   }
 `;
