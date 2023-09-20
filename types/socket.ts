@@ -17,12 +17,9 @@ export interface RoomInfo {
 }
 
 export interface PeersInfo {
-  id: number;
-  name: string;
-  transports: Map<string, any>;
-  consumers: Map<string, any>;
-  producers: Map<string, any>;
-  produceTypes: Map<string, string>;
+  producer_id: string;
+  produce_name: string;
+  produce_types: string;
 }
 
 export interface ProducerList {
