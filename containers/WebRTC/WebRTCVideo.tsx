@@ -1,8 +1,10 @@
 /* eslint-disable jsx-a11y/media-has-caption */
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { styled } from 'styled-components';
 
+import { getProfile } from '@/apis/profile';
 import { IcCoreChar } from '@/public/assets/icons';
+import { ProfileInfo } from '@/types/member';
 
 import { getPresignedUrl, putFile } from '../../apis/coretime';
 
@@ -22,11 +24,13 @@ const WebRTCVideo = ({
   onClick,
 }: WebRTCVideoProps) => {
   const viewRef = useRef<HTMLVideoElement>(null);
+  const [nickname, setNickname] = useState<string>('');
 
-  useEffect(() => {
-    if (!viewRef.current) return;
-    viewRef.current.srcObject = mediaStream || null;
-  }, [mediaStream]);
+  const getName = async (member_id: string) => {
+    const profile: ProfileInfo = await getProfile(Number(member_id));
+    console.log(profile.nickname);
+    setNickname(profile.nickname);
+  };
 
   const captureAndSaveVideoFrame = () => {
     if (!viewRef.current) return;
@@ -70,6 +74,15 @@ const WebRTCVideo = ({
     }
   };
 
+  useEffect(() => {
+    if (!viewRef.current) return;
+    viewRef.current.srcObject = mediaStream || null;
+  }, [mediaStream]);
+
+  useEffect(() => {
+    getName(memberId);
+  }, [memberId]);
+
   return (
     <StVideoWrapper>
       <StVideo
@@ -85,7 +98,7 @@ const WebRTCVideo = ({
         playsInline
       />
       <IcCoreChar />
-      <StName>{memberId}</StName>
+      <StName>{nickname}</StName>
       {/* <button type="button" onClick={handleUploadImage}>
         Save Image
       </button> */}

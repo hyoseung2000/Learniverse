@@ -16,6 +16,7 @@ import { useRecoilValue } from 'recoil';
 import io from 'socket.io-client';
 import { styled } from 'styled-components';
 
+import { getProfile } from '@/apis/profile';
 import { TimeProvider, Timer } from '@/components/Coretime/Timer';
 import usePushNotification from '@/hooks/usePushNotification';
 import {
@@ -29,6 +30,7 @@ import {
   IcSpeakerOff,
 } from '@/public/assets/icons';
 import { memberIdState } from '@/recoil/atom';
+import { ProfileInfo } from '@/types/member';
 import {
   ChattingInfo,
   ConsumeInfo,
@@ -68,6 +70,12 @@ const WebRTCContainer = () => {
   const [isMedia, setIsMedia] = useState(true);
   const [isMike, setIsMike] = useState(true);
   const [isSpeaker, setIsSpeaker] = useState(true);
+
+  // const getName = async (memberId: string) => {
+  //   const profile: ProfileInfo = await getProfile(Number(memberId));
+  //   console.log(profile.nickname);
+  //   return profile.nickname;
+  // };
 
   const consumeProducers = async (producers: ProducerList[]) => {
     const consumePromises = producers.map((producer) => {
