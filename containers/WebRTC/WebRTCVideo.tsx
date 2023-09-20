@@ -2,6 +2,8 @@
 import { useEffect, useRef } from 'react';
 import { styled } from 'styled-components';
 
+import { IcCoreChar } from '@/public/assets/icons';
+
 import { getPresignedUrl, putFile } from '../../apis/coretime';
 
 interface WebRTCVideoProps {
@@ -82,9 +84,11 @@ const WebRTCVideo = ({
         autoPlay
         playsInline
       />
-      <button type="button" onClick={handleUploadImage}>
+      <IcCoreChar />
+      <StName>{memberId}</StName>
+      {/* <button type="button" onClick={handleUploadImage}>
         Save Image
-      </button>
+      </button> */}
     </StVideoWrapper>
   );
 };
@@ -92,10 +96,8 @@ const WebRTCVideo = ({
 export default WebRTCVideo;
 
 const StVideoWrapper = styled.div`
+  position: relative;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
 
   & > button {
     width: 60%;
@@ -106,6 +108,7 @@ const StVideoWrapper = styled.div`
     ${({ theme }) => theme.fonts.Title3};
   }
 `;
+
 const StVideo = styled.video`
   min-width: 30rem;
   max-width: 30rem;
@@ -114,4 +117,22 @@ const StVideo = styled.video`
 
   background-color: ${({ theme }) => theme.colors.Gray4};
   border-radius: 1rem;
+`;
+
+const StName = styled.div`
+  z-index: 1;
+  position: absolute;
+  left: 0;
+  bottom: 1rem;
+
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem 0 1rem;
+
+  width: fit-content;
+  height: 2rem;
+
+  border-radius: 0 1rem 1rem 0;
+  background-color: ${({ theme }) => theme.colors.Yellow2};
+  ${({ theme }) => theme.fonts.Body4};
 `;
