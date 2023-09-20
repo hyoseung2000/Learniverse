@@ -1,4 +1,4 @@
-import { PostStudyRoomInfo } from '@/types/studyroom';
+import { EditStudyRoomInfo, PostStudyRoomInfo } from '@/types/studyroom';
 
 import { client } from './axios';
 
@@ -11,7 +11,25 @@ export const createRoom = async (postRoomData: PostStudyRoomInfo) => {
     throw err;
   }
 };
-
+export const getEditRoomInfo = async (roomId: number) => {
+  try {
+    const { data } = await client.get(`/room/modify/info?roomId=${roomId}`);
+    console.log(data.data);
+    return data.data.info;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+export const postEditRoom = async (editRoomData: EditStudyRoomInfo) => {
+  try {
+    const { data } = await client.post('/room/update', editRoomData);
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
 export const getRoomList = async (memberId: number) => {
   try {
     const { data } = await client.get(`/room/list?memberId=${memberId}`);

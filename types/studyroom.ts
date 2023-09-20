@@ -15,11 +15,20 @@ export interface StudyRoomInfo {
   roomId: number;
   roomName: string;
   roomIntro: string;
-  hashtags: string[];
+  roomHashtags: string[];
   roomCategory: string;
   roomCount: number;
   roomLimit: number;
   isMember: string;
+}
+
+export interface EditStudyRoomInfo {
+  roomId: number;
+  roomName: string;
+  roomCategory: number;
+  roomIntro: string;
+  roomLimit: number;
+  roomHashtags: string[];
 }
 
 export interface PostStudyRoomInfo {

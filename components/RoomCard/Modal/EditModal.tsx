@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { styled } from 'styled-components';
 
-import { createRoom } from '@/apis/roomList';
+import { getEditRoomInfo, postEditRoom } from '@/apis/roomList';
 import { IcAddTag, IcDeleteTag } from '@/public/assets/icons';
-import { encodedUrlState, memberIdState } from '@/recoil/atom';
-import { PostStudyRoomInfo } from '@/types/studyroom';
+import { EditStudyRoomInfo, PostStudyRoomInfo } from '@/types/studyroom';
 
 import { CancelButton, ConfirmButton } from '../../Common/Button';
 import { LargeModal } from '../../Common/Modal';
@@ -23,27 +21,36 @@ const EditModal = ({
   handleConfirm,
   handleCancel,
 }: EditModalProps) => {
+  const [originalInfo, setOriginalInfo] = useState<PostStudyRoomInfo>();
+  const [editRoomInfo, setEditRoomInfo] = useState<EditStudyRoomInfo>();
+
   const [studyName, setStudyName] = useState('');
   const [category, setCategory] = useState(5);
   const [hashtag, setHashtag] = useState('');
   const [hashtagList, setHashtagList] = useState<string[]>([]);
   const [member, setMember] = useState(2);
   const [introduction, setIntroduction] = useState('');
-  const [addRoomInfo, setAddRoomInfo] = useState<PostStudyRoomInfo>();
-  const setEncodedUrl = useSetRecoilState(encodedUrlState);
-  const memberId = useRecoilValue(memberIdState);
 
-  const initInfo = () => {
-    setStudyName('');
-    setCategory(5);
-    setHashtag('');
-    setHashtagList([]);
-    setMember(2);
-    setIntroduction('');
-    setAddRoomInfo(undefined);
+  const getEditData = async () => {
+    const editInfo = await getEditRoomInfo(roomId);
+    setOriginalInfo(editInfo);
   };
 
-  const handleAddRoom = async () => {
+  const editStudyroom = async () => {
+    if (editRoomInfo) await postEditRoom(editRoomInfo);
+  };
+
+  const initInfo = () => {
+    if (originalInfo) {
+      setStudyName(originalInfo.roomName);
+      setCategory(originalInfo.roomCategory);
+      setHashtagList(originalInfo.roomHashtags);
+      setMember(originalInfo.roomLimit);
+      setIntroduction(originalInfo.roomIntro!);
+    }
+  };
+
+  const handleEditRoom = async () => {
     if (!studyName || hashtagList.length === 0) {
       alert('스터디명, 해시태그 입력은 필수입니다.');
       return;
@@ -52,10 +59,8 @@ const EditModal = ({
       alert('스터디룸 정원은 최소 2명 ~ 최대 5명입니다');
       return;
     }
-    const url = addRoomInfo ? await createRoom(addRoomInfo) : '';
-    setEncodedUrl(url);
+    editStudyroom();
     handleConfirm();
-    initInfo();
   };
 
   const handleHashtag = () => {
@@ -69,8 +74,15 @@ const EditModal = ({
   };
 
   useEffect(() => {
-    setAddRoomInfo({
-      memberId,
+    if (isShowing) {
+      getEditData();
+      initInfo();
+    }
+  }, [isShowing]);
+
+  useEffect(() => {
+    setEditRoomInfo({
+      roomId,
       roomName: studyName,
       roomCategory: category,
       roomIntro: introduction,
@@ -181,7 +193,7 @@ const EditModal = ({
           </StIntro>
 
           <StBtnWrapper>
-            <ConfirmButton btnName="만들기" onClick={handleAddRoom} />
+            <ConfirmButton btnName="수정하기" onClick={handleEditRoom} />
             <CancelButton
               btnName="취소"
               onClick={() => {

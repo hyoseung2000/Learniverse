@@ -24,7 +24,7 @@ const StudyroomCard = ({
     roomId,
     roomName,
     roomIntro,
-    hashtags,
+    roomHashtags,
     roomCategory,
     roomCount,
     roomLimit,
@@ -56,7 +56,7 @@ const StudyroomCard = ({
         </StIconWrapper>
         <StRoomName>{roomName}</StRoomName>
         <StHashtags>
-          {hashtags.map((hashtag) => (
+          {roomHashtags.map((hashtag) => (
             <li key={hashtag}>#{hashtag}</li>
           ))}
         </StHashtags>
