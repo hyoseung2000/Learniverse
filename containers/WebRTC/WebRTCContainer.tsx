@@ -17,7 +17,9 @@ import io from 'socket.io-client';
 import { styled } from 'styled-components';
 
 import { getProfile } from '@/apis/profile';
+import Gallery from '@/components/Coretime/Gallery/Gallery';
 import { TimeProvider, Timer } from '@/components/Coretime/Timer';
+import useModal from '@/hooks/useModal';
 import usePushNotification from '@/hooks/usePushNotification';
 import {
   IcGallery,
@@ -70,6 +72,8 @@ const WebRTCContainer = () => {
   const [isMedia, setIsMedia] = useState(true);
   const [isMike, setIsMike] = useState(true);
   const [isSpeaker, setIsSpeaker] = useState(true);
+
+  const gallery = useModal();
 
   // const getName = async (memberId: string) => {
   //   const profile: ProfileInfo = await getProfile(Number(memberId));
@@ -466,7 +470,7 @@ const WebRTCContainer = () => {
             <button type="button">
               <IcIssue />
             </button>
-            <button type="button">
+            <button type="button" onClick={gallery.toggle}>
               <IcGallery />
             </button>
           </StStudyroomBtnWrapper>
@@ -525,6 +529,9 @@ const WebRTCContainer = () => {
           <StExitButton type="button">코어타임 나가기</StExitButton>
         </StCoreTimeBtnWrapper>
       </StCoretimeInfoWrapper>
+      <StGalleryModalWrapper $showing={gallery.isShowing}>
+        <Gallery isShowing={gallery.isShowing} handleCancel={gallery.toggle} />
+      </StGalleryModalWrapper>
     </StWebRTCContainerWrapper>
   );
 };
@@ -702,4 +709,20 @@ const StExitButton = styled.button`
 
   color: ${({ theme }) => theme.colors.White};
   ${({ theme }) => theme.fonts.Title2};
+`;
+
+const StGalleryModalWrapper = styled.div<{ $showing: boolean }>`
+  display: ${({ $showing }) => ($showing ? 'block' : 'none')};
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+
+  justify-content: center;
+  align-items: center;
+
+  width: 100vw;
+  height: 100vh;
+
+  background-color: rgba(0, 0, 0, 0.5);
 `;
