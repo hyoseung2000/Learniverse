@@ -15,7 +15,9 @@ const RegisterWorkspaceModal = ({ isShowing, handleCancel }: Props) => {
   const [FigmaURL, setFigmaURL] = useState('');
   const [GDriveURL, setGDriveURL] = useState('');
 
-  const handleRegWS = () => {};
+  const handleRegWS = () => {
+    console.log('워크스페이스 생성 및 수정');
+  };
 
   return (
     isShowing && (
