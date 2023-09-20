@@ -60,14 +60,14 @@ const HomeContainer = () => {
     }
   }, []);
 
-  useEffect(() => {
-    const addMoons = async () => {
-      const res = await addMoon(memberId, totalMoonScore);
-      if (res === 400) return null;
-      return res;
-    };
-    addMoons();
-  }, [moonScore]);
+  // useEffect(() => {
+  //   const addMoons = async () => {
+  //     const res = await addMoon(memberId, totalMoonScore);
+  //     if (res === 400) return null;
+  //     return res;
+  //   };
+  //   addMoons();
+  // }, [moonScore]);
 
   return (
     <StHomeContainer>
