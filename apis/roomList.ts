@@ -14,7 +14,6 @@ export const createRoom = async (postRoomData: PostStudyRoomInfo) => {
 export const getEditRoomInfo = async (roomId: number) => {
   try {
     const { data } = await client.get(`/room/modify/info?roomId=${roomId}`);
-    console.log(data.data);
     return data.data.info;
   } catch (err) {
     console.error(err);

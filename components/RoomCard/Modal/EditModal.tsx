@@ -76,9 +76,12 @@ const EditModal = ({
   useEffect(() => {
     if (isShowing) {
       getEditData();
-      initInfo();
     }
   }, [isShowing]);
+
+  useEffect(() => {
+    initInfo();
+  }, [originalInfo]);
 
   useEffect(() => {
     setEditRoomInfo({
