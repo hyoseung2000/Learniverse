@@ -8,6 +8,7 @@ import { memberIdState } from '@/recoil/atom';
 import { StudyRoomInfo } from '@/types/studyroom';
 
 import { ManageModal } from '../RoomCard/Modal';
+import EditModal from '../RoomCard/Modal/EditModal';
 import StudyroomCard from '../RoomCard/StudyroomCard';
 
 interface MyPageStudyRoomListProps {
@@ -35,6 +36,11 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
     manage.toggle();
   };
 
+  const handleEdit = async (curRoomId: number) => {
+    setRoomId(curRoomId);
+    edit.toggle();
+  };
+
   useEffect(() => {
     getAllRoom();
   }, [isLeader]);
@@ -49,13 +55,9 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
               roomData={room}
               roomType={isLeader ? 'leader' : 'apply'}
               handleManage={
-                isLeader
-                  ? () => {
-                      handleManage(room.roomId);
-                    }
-                  : undefined
+                isLeader ? () => handleManage(room.roomId) : undefined
               }
-              handleEdit={isLeader ? edit.toggle : undefined}
+              handleEdit={isLeader ? () => handleEdit(room.roomId) : undefined}
             />
           ))}
       </StMyPageRoomListWrapper>
@@ -67,6 +69,14 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
           handleCancel={manage.toggle}
         />
       </StManageModalWrapper>
+      <StEditModalWrapper $showing={edit.isShowing}>
+        <EditModal
+          roomId={roomId}
+          isShowing={edit.isShowing}
+          handleConfirm={edit.toggle}
+          handleCancel={edit.toggle}
+        />
+      </StEditModalWrapper>
     </StMyPageWrapper>
   );
 };
@@ -104,3 +114,5 @@ const StManageModalWrapper = styled.div<{ $showing: boolean }>`
 
   background-color: rgba(0, 0, 0, 0.5);
 `;
+
+const StEditModalWrapper = styled(StManageModalWrapper)``;
