@@ -20,6 +20,7 @@ import { TimeProvider, Timer } from '@/components/Coretime/Timer';
 import useModal from '@/hooks/useModal';
 import usePushNotification from '@/hooks/usePushNotification';
 import {
+  IcChar,
   IcGallery,
   IcIssue,
   IcMedia,
@@ -50,6 +51,14 @@ import WebRTCVideo from './WebRTCVideo';
 
 const MEDIA_SERVER_URL = process.env.NEXT_PUBLIC_MEDIA_IP;
 
+// const MEMBER = [
+//   { id: '1', name: '어쩌거고ㅇㅇㅇㅇㅇㅇ' },
+//   { id: '2', name: '1어쩌거고ㅇㅇㅇㅇㅇ' },
+//   { id: '3', name: '2어쩌거고ㅇㅇㅇㅇㅇ' },
+//   { id: '4', name: '3어쩌거고ㅇㅇㅇㅇㅇ' },
+//   { id: '5', name: '4어쩌거고ㅇㅇㅇㅇㅇ' },
+// ];
+
 const WebRTCContainer = () => {
   const router = useRouter();
   const { room_id } = router.query;
@@ -76,7 +85,6 @@ const WebRTCContainer = () => {
 
   // const getName = async (memberId: string) => {
   //   const profile: ProfileInfo = await getProfile(Number(memberId));
-  //   console.log(profile.nickname);
   //   return profile.nickname;
   // };
 
@@ -172,9 +180,10 @@ const WebRTCContainer = () => {
     const formatData = peerList.peers.slice(0, -2);
     await consumeProducers(formatData);
 
-    const peers: RoomPeerInfo = await socket.request('getRoomPeerInfo');
+    const peers: RoomPeerInfo[] = await socket.request('getRoomPeerInfo');
     console.log('4-1. getRoomPeerInfo', peers);
-    setCurMembers((prev) => [...prev, peers]);
+    setCurMembers(peers);
+    console.log(curMembers);
 
     socket.on('connect_error', (error: any) => {
       console.error('socket connection error:', error.message);
@@ -400,6 +409,10 @@ const WebRTCContainer = () => {
     initSockets();
   }, [curDevice]);
 
+  // useEffect(() => {
+  //   initSockets();
+  // }, [curMembers]);
+
   useEffect(() => {
     if (pushNotification) {
       pushNotification.fireNotification('스크린이 캡처되었습니다!', {
@@ -464,6 +477,17 @@ const WebRTCContainer = () => {
         ))}
       </StMediaContainer>
       <StCoretimeInfoWrapper>
+        <StMemberWrapper>
+          <h3>현재 접속 중</h3>
+          <StMembers>
+            {curMembers.map((member) => (
+              <StMember key={member.id}>
+                <IcChar />
+                <span>{member.name}</span>
+              </StMember>
+            ))}
+          </StMembers>
+        </StMemberWrapper>
         <StChattingWrapper>
           <h3>코어타임 채팅</h3>
           <StChattings>
@@ -567,6 +591,30 @@ const StChattingWrapper = styled.div`
     padding: 0 1rem 1rem 2rem;
 
     ${({ theme }) => theme.fonts.Title1};
+    color: ${({ theme }) => theme.colors.White};
+  }
+`;
+
+const StMemberWrapper = styled(StChattingWrapper)`
+  height: fit-content;
+  margin-bottom: 2.4rem;
+`;
+
+const StMembers = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  row-gap: 1rem;
+
+  padding: 1rem 1rem 0 1rem;
+`;
+
+const StMember = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  & > span {
+    ${({ theme }) => theme.fonts.Title5};
     color: ${({ theme }) => theme.colors.White};
   }
 `;
