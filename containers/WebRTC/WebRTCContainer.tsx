@@ -40,6 +40,7 @@ import {
   CustomSocket,
   JoinInfo,
   MediaType,
+  NewProducerInfo,
   PeersInfo,
   RoomInfo,
   RoomPeerInfo,
@@ -52,14 +53,6 @@ import WebRTCVideo from './WebRTCVideo';
 
 const MEDIA_SERVER_URL = process.env.NEXT_PUBLIC_MEDIA_IP;
 
-// const MEMBER = [
-//   { id: '1', name: '어쩌거고ㅇㅇㅇㅇㅇㅇ' },
-//   { id: '2', name: '1어쩌거고ㅇㅇㅇㅇㅇ' },
-//   { id: '3', name: '2어쩌거고ㅇㅇㅇㅇㅇ' },
-//   { id: '4', name: '3어쩌거고ㅇㅇㅇㅇㅇ' },
-//   { id: '5', name: '4어쩌거고ㅇㅇㅇㅇㅇ' },
-// ];
-
 const WebRTCContainer = () => {
   const router = useRouter();
   const { room_id } = router.query;
@@ -71,6 +64,7 @@ const WebRTCContainer = () => {
   const [socket, setSocket] = useState<CustomSocket | null>(null);
   const [curDevice, setCurDevice] = useState<Device>();
   const [curProducer, setCurProducer] = useState<string>();
+  const [curPeerList, setCurPeerList] = useState<PeersInfo[]>([]);
   const [curMembers, setCurMembers] = useState<RoomPeerInfo[]>([]);
   const [videoStreams, setVideoStreams] = useState<ConsumeInfo[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
@@ -101,8 +95,8 @@ const WebRTCContainer = () => {
 
   const consumeProducers = async (producers: PeersInfo[]) => {
     const consumePromises = producers.map((producer) => {
-      const { producer_id, produce_type } = producer;
-      return consume(producer_id, produce_type).catch((error) =>
+      const { producer_id, produce_name, produce_type } = producer;
+      return consume(producer_id, produce_name, produce_type).catch((error) =>
         console.error(`Error while consuming producer ${producer_id}:`, error),
       );
     });
@@ -188,31 +182,28 @@ const WebRTCContainer = () => {
 
     const peerList: RoomInfo = await socket.request('getRoomInfo');
     console.log('4-1. peerList', peerList);
+    setCurPeerList(peerList.peers);
     const formatData = peerList.peers.slice(0, -2);
     await consumeProducers(formatData);
 
     const peers: RoomPeerInfo[] = await socket.request('getRoomPeerInfo');
     console.log('4-1. getRoomPeerInfo', peers);
-
     const peersWithNickNames = await Promise.all(
       peers.map((peer) => addNickNameToPeer(peer)),
     );
-
     setCurMembers(peersWithNickNames);
-    console.log(curMembers);
 
     socket.on('connect_error', (error: any) => {
       console.error('socket connection error:', error.message);
     });
     socket.on('newProducers', async (data: PeersInfo[]) => {
       console.log('4. New producers (consumeList)', data);
-      const newMemberNickName = await getNickName(data[0].producer_id);
+      const newMemberNickName = await getNickName(data[0].produce_name);
       const newMember = {
         id: data[0].producer_id,
         name: data[0].produce_name,
         nickname: newMemberNickName,
       };
-
       setCurMembers((prev) => [...prev, newMember]);
       await consumeProducers(data);
     });
@@ -284,10 +275,12 @@ const WebRTCContainer = () => {
 
   const addStream = (
     newStream: MediaStream,
+    nickname: string,
     producerId: string,
     type: string,
   ) => {
     const curStream: ConsumeInfo = {
+      nickname,
       producer_id: producerId,
       stream: newStream,
     };
@@ -308,12 +301,14 @@ const WebRTCContainer = () => {
       if (!curDevice || !socket || !socket.request) return;
 
       let stream: MediaStream;
+      const nickname = await getNickName(curName!);
+      console.log(curName, nickname);
       if (type === 'screenType') {
         stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-        addStream(stream, socket.id, 'video');
+        addStream(stream, nickname, socket.id, 'video'); // producer_id로 수정 필요
       } else {
         stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        addStream(stream, socket.id, 'audio');
+        addStream(stream, nickname, socket.id, 'audio');
       }
 
       const track =
@@ -334,6 +329,7 @@ const WebRTCContainer = () => {
 
   const consume = async (
     producerId: string,
+    producerName: string,
     produceType: string,
   ): Promise<void> => {
     try {
@@ -359,10 +355,17 @@ const WebRTCContainer = () => {
       const stream = new MediaStream();
       stream.addTrack(consumer.track);
 
+      const nickname = await getNickName(producerName);
+      addStream(
+        new MediaStream([consumer.track]),
+        nickname,
+        producerId,
+        produceType,
+      );
+
       // consumer.on('transportclose', () => {
       //   console.log('Consumer transport closed');
       // });
-      addStream(new MediaStream([consumer.track]), producerId, produceType);
     } catch (error) {
       console.error('Error consuming:', error);
     }
@@ -478,7 +481,7 @@ const WebRTCContainer = () => {
           {videoStreams.map((stream) => (
             <WebRTCVideo
               roomId={curRoomId!}
-              memberId={curName!}
+              nickname={stream.nickname}
               key={stream.producer_id}
               mediaStream={stream.stream}
               isSelected={selectedVideo === stream.producer_id}

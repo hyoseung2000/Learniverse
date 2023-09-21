@@ -1,15 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { styled } from 'styled-components';
 
-import { getProfile } from '@/apis/profile';
 import { IcCoreChar } from '@/public/assets/icons';
-import { ProfileInfo } from '@/types/member';
 
 import { getPresignedUrl, putFile } from '../../apis/coretime';
 
 interface WebRTCVideoProps {
   roomId: string;
-  memberId: string;
+  nickname: string;
   mediaStream: MediaStream | undefined;
   isSelected: boolean;
   onClick: () => void;
@@ -17,18 +15,12 @@ interface WebRTCVideoProps {
 
 const WebRTCVideo = ({
   roomId,
-  memberId,
+  nickname,
   mediaStream,
   isSelected,
   onClick,
 }: WebRTCVideoProps) => {
   const viewRef = useRef<HTMLVideoElement>(null);
-  const [nickname, setNickname] = useState<string>('');
-
-  const getName = async (member_id: string) => {
-    const profile: ProfileInfo = await getProfile(Number(member_id));
-    setNickname(profile.nickname);
-  };
 
   const captureAndSaveVideoFrame = () => {
     if (!viewRef.current) return null;
@@ -54,7 +46,7 @@ const WebRTCVideo = ({
     }
 
     const blob = new Blob([ab], { type: mimeString });
-    const file = new File([blob], `${roomId}-${memberId}.png`, {
+    const file = new File([blob], `${roomId}-${nickname}.png`, {
       type: mimeString,
     });
 
@@ -74,10 +66,6 @@ const WebRTCVideo = ({
     if (!viewRef.current) return;
     viewRef.current.srcObject = mediaStream || null;
   }, [mediaStream]);
-
-  useEffect(() => {
-    getName(memberId);
-  }, [memberId]);
 
   return (
     <StVideoWrapper>

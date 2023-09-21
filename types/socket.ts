@@ -49,6 +49,7 @@ export interface ConsumerId {
 }
 
 export interface ConsumeInfo {
+  nickname: string;
   producer_id: string;
   stream: MediaStream;
 }
