@@ -3,7 +3,7 @@ import io, { Socket } from 'socket.io-client';
 
 import { CustomSocket } from '@/types/socket';
 
-export const useSocketConnection = (curRoomId: string) => {
+const useSocketConnection = (curRoomId: string) => {
   const [socket, setSocket] = useState<CustomSocket | null>(null);
 
   const socketPromise = (curSocket: typeof Socket) => {
@@ -34,3 +34,5 @@ export const useSocketConnection = (curRoomId: string) => {
 
   return socket;
 };
+
+export default useSocketConnection;

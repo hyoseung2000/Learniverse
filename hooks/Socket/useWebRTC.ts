@@ -31,7 +31,7 @@ import {
   handleNewProducers,
 } from './socketHandlers';
 
-export const useWebRTC = (
+const useWebRTC = (
   curRoomId: string,
   curName: string,
   socket: CustomSocket,
@@ -350,3 +350,5 @@ export const useWebRTC = (
     addChattingList,
   };
 };
+
+export default useWebRTC;

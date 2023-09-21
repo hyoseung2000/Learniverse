@@ -1,12 +1,8 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { useState } from 'react';
 
 import { ConsumeInfo } from '@/types/socket';
 
-type UseVideoSelectorType = [
-  string | null,
-  Dispatch<SetStateAction<string | null>>,
-  (stream: ConsumeInfo) => void,
-];
+type UseVideoSelectorType = [string | null, (stream: ConsumeInfo) => void];
 
 const useVideoSelector = (): UseVideoSelectorType => {
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
@@ -17,7 +13,7 @@ const useVideoSelector = (): UseVideoSelectorType => {
     );
   };
 
-  return [selectedVideo, setSelectedVideo, handleSelectVideo];
+  return [selectedVideo, handleSelectVideo];
 };
 
 export default useVideoSelector;

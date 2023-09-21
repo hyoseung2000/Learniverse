@@ -17,16 +17,16 @@ import {
 } from '@/components/Coretime/Setting';
 import { TimeProvider, Timer } from '@/components/Coretime/Timer';
 import { WebRTCAudio, WebRTCVideo } from '@/components/Coretime/WebRTCMedia';
-import useChatHandler from '@/hooks/Socket/useChatHandler';
-import { useSocketConnection } from '@/hooks/Socket/useSocketConnection';
-import useVideoSelector from '@/hooks/Socket/useVideoSelector';
-import { useWebRTC } from '@/hooks/Socket/useWebRTC';
+import {
+  useChatHandler,
+  useSocketConnection,
+  useVideoSelector,
+  useWebRTC,
+} from '@/hooks/Socket';
 import useModal from '@/hooks/useModal';
 import { usePushNotification } from '@/hooks/usePushNotification';
 import useToggle from '@/hooks/useToggle';
 import { memberIdState } from '@/recoil/atom';
-import { ChattingInfo, ConsumeInfo } from '@/types/socket';
-import { getTime } from '@/utils/getTime';
 
 const WebRTCContainer = () => {
   const router = useRouter();
@@ -50,8 +50,7 @@ const WebRTCContainer = () => {
   const [isMedia, handleMedia] = useToggle();
   const [isMike, handleMike] = useToggle();
   const [isSpeaker, handleSpeaker] = useToggle();
-  const [selectedVideo, setSelectedVideo, handleSelectVideo] =
-    useVideoSelector();
+  const [selectedVideo, handleSelectVideo] = useVideoSelector();
   const [chatting, setChatting, handleSendChatting] = useChatHandler(
     curSocket!,
     addChattingList,
