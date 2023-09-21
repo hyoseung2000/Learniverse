@@ -1,12 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Device } from 'mediasoup-client';
 import {
   Consumer,
-  Producer,
   RtpCapabilities,
   Transport,
   UnsupportedError,
@@ -61,8 +58,8 @@ const WebRTCContainer = () => {
   const [curRoomId, setRoomId] = useState<string>();
   const pushNotification = usePushNotification();
 
-  const [device, setDevice] = useState<Device>();
   const [socket, setSocket] = useState<CustomSocket | null>(null);
+  const [curDevice, setCurDevice] = useState<Device>();
   const [curProducer, setCurProducer] = useState<string>();
   const [curMembers, setCurMembers] = useState<RoomPeerInfo[]>([]);
   const [videoStreams, setVideoStreams] = useState<ConsumeInfo[]>([]);
@@ -114,11 +111,11 @@ const WebRTCContainer = () => {
     console.log('1. socket connect', socketConnection);
   };
 
-  const createRoom = async (room_id: string) => {
+  const createRoom = async (roomId: string) => {
     if (!socket || !socket.request) return;
     try {
       await socket.request('createRoom', {
-        room_id,
+        room_id: roomId,
       });
     } catch (err) {
       console.error('Create room error:', err);
@@ -127,12 +124,12 @@ const WebRTCContainer = () => {
   };
 
   const loadDevice = async (routerRtpCapabilities: RtpCapabilities) => {
-    let curDevice;
+    let device;
     try {
-      curDevice = new Device();
-      await curDevice.load({ routerRtpCapabilities });
-      setDevice(curDevice);
-      console.log('3. device 로딩 ', curDevice);
+      device = new Device();
+      await device.load({ routerRtpCapabilities });
+      setCurDevice(device);
+      console.log('3. device 로딩 ', device);
     } catch (error) {
       if (error instanceof UnsupportedError) {
         console.error('Browser not supported');
@@ -141,22 +138,22 @@ const WebRTCContainer = () => {
       }
       return null;
     }
-    return curDevice;
+    return device;
   };
 
-  const join = async (room_id: string, name: string) => {
+  const join = async (roomId: string, nickName: string) => {
     if (!socket || !socket.request) return;
     try {
       const socketJoin: JoinInfo = await socket.request('join', {
-        room_id,
-        name,
+        room_id: roomId,
+        name: nickName,
       });
       console.log('2. Joined to room', socketJoin);
 
       const data = await socket.request('getRouterRtpCapabilities');
       await loadDevice(data);
 
-      if (device) {
+      if (curDevice) {
         socket.emit('getProducers');
       }
     } catch (err) {
@@ -275,7 +272,7 @@ const WebRTCContainer = () => {
 
   const produce = async (type: MediaType, memberId: string): Promise<void> => {
     try {
-      if (!device || !socket || !socket.request) return;
+      if (!curDevice || !socket || !socket.request) return;
 
       let stream: MediaStream;
       if (type === 'screenType') {
@@ -291,7 +288,7 @@ const WebRTCContainer = () => {
           ? stream.getAudioTracks()[0]
           : stream.getVideoTracks()[0];
 
-      const producerTransport = await createTransport(device, 'produce');
+      const producerTransport = await createTransport(curDevice, 'produce');
       const producer = await producerTransport.produce({ track });
 
       producer.on('trackended', () => {
@@ -307,10 +304,10 @@ const WebRTCContainer = () => {
     produceType: string,
   ): Promise<void> => {
     try {
-      if (!device || !socket || !socket.request) return;
+      if (!curDevice || !socket || !socket.request) return;
 
-      const consumerTransport = await createTransport(device, 'consume');
-      const { rtpCapabilities } = device;
+      const consumerTransport = await createTransport(curDevice, 'consume');
+      const { rtpCapabilities } = curDevice;
 
       const data = await socket.request('consume', {
         producerId,
@@ -401,7 +398,7 @@ const WebRTCContainer = () => {
 
   useEffect(() => {
     initSockets();
-  }, [device]);
+  }, [curDevice]);
 
   useEffect(() => {
     if (pushNotification) {
@@ -470,8 +467,10 @@ const WebRTCContainer = () => {
         <StChattingWrapper>
           <h3>코어타임 채팅</h3>
           <StChattings>
-            {chattingList.map((chattings, index) => (
-              <StChatting key={index}>
+            {chattingList.map((chattings) => (
+              <StChatting
+                key={`${chattings.name}-${chattings.message}-${chattings.time}`}
+              >
                 <span>{chattings.name}</span>
                 <p>{chattings.message}</p>
                 <time>{chattings.time}</time>
