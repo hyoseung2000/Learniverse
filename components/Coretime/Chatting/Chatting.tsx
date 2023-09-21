@@ -6,7 +6,7 @@ interface ChattingsProps {
   chattingList: ChattingInfo[];
 }
 
-const Chattings = ({ chattingList }: ChattingsProps) => {
+const Chatting = ({ chattingList }: ChattingsProps) => {
   return (
     <>
       <h3>코어타임 채팅</h3>
@@ -25,7 +25,7 @@ const Chattings = ({ chattingList }: ChattingsProps) => {
   );
 };
 
-export default Chattings;
+export default Chatting;
 
 const StChattings = styled.div`
   display: flex;

@@ -7,7 +7,7 @@ interface MembersProps {
   curMembers: RoomPeerInfo[];
 }
 
-const Members = ({ curMembers }: MembersProps) => (
+const Member = ({ curMembers }: MembersProps) => (
   <StMemberWrapper>
     <h3>현재 접속 중</h3>
     <StMembers>
@@ -21,7 +21,7 @@ const Members = ({ curMembers }: MembersProps) => (
   </StMemberWrapper>
 );
 
-export default Members;
+export default Member;
 
 const StMemberWrapper = styled.div`
   position: relative;

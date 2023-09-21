@@ -15,15 +15,15 @@ import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 import { getProfile } from '@/apis/profile';
-import { Chattings } from '@/components/Coretime/Chattings';
+import { Chatting } from '@/components/Coretime/Chatting';
 import Gallery from '@/components/Coretime/Gallery/Gallery';
-import { Members } from '@/components/Coretime/Members';
+import { Member } from '@/components/Coretime/Member';
 import {
   MediaBtn,
   MikeBtn,
   SpeakerBtn,
   StudyroomBtn,
-} from '@/components/Coretime/Settings';
+} from '@/components/Coretime/Setting';
 import { TimeProvider, Timer } from '@/components/Coretime/Timer';
 import { WebRTCAudio, WebRTCVideo } from '@/components/Coretime/WebRTCMedia';
 import useModal from '@/hooks/useModal';
@@ -453,9 +453,9 @@ const WebRTCContainer = () => {
         ))}
       </StMediaContainer>
       <StCoretimeInfoWrapper>
-        <Members curMembers={curMembers} />
+        <Member curMembers={curMembers} />
         <StChattingWrapper>
-          <Chattings chattingList={chattingList} />
+          <Chatting chattingList={chattingList} />
           <StChatInputWrapper>
             <StChatInput
               type="text"
