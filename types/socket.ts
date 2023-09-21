@@ -19,7 +19,7 @@ export interface RoomInfo {
 export interface PeersInfo {
   producer_id: string;
   produce_name: string;
-  produce_types: string;
+  produce_type: string;
 }
 
 export interface ProducerList {

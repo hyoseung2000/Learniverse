@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -40,7 +41,7 @@ import {
   CustomSocket,
   JoinInfo,
   MediaType,
-  ProducerList,
+  PeersInfo,
   RoomInfo,
 } from '@/types/socket';
 import { getTime } from '@/utils/getTime';
@@ -81,7 +82,7 @@ const WebRTCContainer = () => {
   //   return profile.nickname;
   // };
 
-  const consumeProducers = async (producers: ProducerList[]) => {
+  const consumeProducers = async (producers: PeersInfo[]) => {
     const consumePromises = producers.map((producer) => {
       const { producer_id, produce_type } = producer;
       return consume(producer_id, produce_type).catch((error) =>
@@ -171,16 +172,18 @@ const WebRTCContainer = () => {
 
     const peerList: RoomInfo = await socket.request('getRoomInfo');
     console.log('4-1. peerList', peerList);
+    const formatData = peerList.peers.slice(0, -2);
+    await consumeProducers(formatData);
 
     socket.on('connect_error', (error: any) => {
       console.error('socket connection error:', error.message);
     });
-    socket.on('existedProducers', async (data: ProducerList[]) => {
-      console.log('4-2. existedProducers (consumeList)', data);
-      const formatData = data.slice(0, -2);
-      await consumeProducers(formatData);
-    });
-    socket.on('newProducers', async (data: ProducerList[]) => {
+    // socket.on('existedProducers', async (data: PeersInfo[]) => {
+    //   console.log('4-2. existedProducers (consumeList)', data);
+    //   const formatData = data.slice(0, -2);
+    //   await consumeProducers(formatData);
+    // });
+    socket.on('newProducers', async (data: PeersInfo[]) => {
       console.log('4. New producers (consumeList)', data);
       await consumeProducers(data);
     });
