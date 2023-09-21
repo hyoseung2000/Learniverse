@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/media-has-caption */
 import { useEffect, useRef, useState } from 'react';
 import { styled } from 'styled-components';
 
@@ -32,7 +31,7 @@ const WebRTCVideo = ({
   };
 
   const captureAndSaveVideoFrame = () => {
-    if (!viewRef.current) return;
+    if (!viewRef.current) return null;
 
     const canvas = document.createElement('canvas');
     canvas.width = viewRef.current.videoWidth;
@@ -50,8 +49,7 @@ const WebRTCVideo = ({
     const ab = new ArrayBuffer(byteString.length);
     const ia = new Uint8Array(ab);
 
-    // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < byteString.length; i++) {
+    for (let i = 0; i < byteString.length; i += 1) {
       ia[i] = byteString.charCodeAt(i);
     }
 
@@ -60,10 +58,10 @@ const WebRTCVideo = ({
       type: mimeString,
     });
 
-    // eslint-disable-next-line consistent-return
     return file; // 생성된 File 객체를 반환
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleUploadImage = async () => {
     const capturedImage = captureAndSaveVideoFrame();
     const url = await getPresignedUrl();
