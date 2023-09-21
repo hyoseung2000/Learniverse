@@ -2,8 +2,9 @@ import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { addMoon } from '@/apis/profile';
+// import { addMoon } from '@/apis/profile';
 import { Home } from '@/components/Home';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { memberIdState, moonScoreState, todayState } from '@/recoil/atom';
 import { totalMoonScoreSelector } from '@/recoil/selector';
 import getToday from '@/utils/getToday';
@@ -12,7 +13,7 @@ const HomeContainer = () => {
   const totalMoonScore = useRecoilValue(totalMoonScoreSelector);
   const [moonScore, setMoonScore] = useRecoilState(moonScoreState);
   const [lastDay, setLastDay] = useRecoilState(todayState);
-  const memberId = useRecoilValue(memberIdState);
+  // const memberId = useRecoilValue(memberIdState);
 
   const isMax = () => {
     return totalMoonScore >= 4;
