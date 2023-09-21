@@ -12,7 +12,6 @@ import {
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import io from 'socket.io-client';
 import { styled } from 'styled-components';
 
 import { getProfile } from '@/apis/profile';
@@ -21,6 +20,7 @@ import { TimeProvider, Timer } from '@/components/Coretime/Timer';
 import { WebRTCAudio, WebRTCVideo } from '@/components/Coretime/WebRTCMedia';
 import useModal from '@/hooks/useModal';
 import usePushNotification from '@/hooks/usePushNotification';
+import { useSocketConnection } from '@/hooks/useSocketConnection';
 import {
   IcChar,
   IcGallery,
@@ -57,7 +57,7 @@ const WebRTCContainer = () => {
   const [curRoomId, setRoomId] = useState<string>();
   const pushNotification = usePushNotification();
 
-  const [socket, setSocket] = useState<CustomSocket | null>(null);
+  // const [socket, setSocket] = useState<CustomSocket | null>(null);
   const [curDevice, setCurDevice] = useState<Device>();
   const [curProducer, setCurProducer] = useState<string>();
   const [curPeerList, setCurPeerList] = useState<PeersInfo[]>([]);
@@ -74,6 +74,8 @@ const WebRTCContainer = () => {
   const [isSpeaker, setIsSpeaker] = useState(true);
 
   const gallery = useModal();
+
+  const socket = useSocketConnection(curRoomId!);
 
   const getNickName = async (memberId: string) => {
     const profile: ProfileInfo = await getProfile(Number(memberId));
@@ -108,20 +110,6 @@ const WebRTCContainer = () => {
     } catch (error) {
       console.error('Error in creating or joining the room:', error);
     }
-  };
-
-  const connect = async () => {
-    if (!curName || !curRoomId) return;
-    const socketConnection: CustomSocket = await io(
-      process.env.NEXT_PUBLIC_MEDIA_IP!,
-      {
-        transports: ['websocket', 'polling', 'flashsocket'],
-        secure: true,
-      },
-    );
-    socketConnection.request = await socketPromise(socketConnection);
-    setSocket(socketConnection);
-    console.log('1. socket connect', socketConnection);
   };
 
   const createRoom = async (roomId: string) => {
@@ -416,11 +404,11 @@ const WebRTCContainer = () => {
     }
   }, [name, room_id]);
 
-  useEffect(() => {
-    if (curRoomId) {
-      connect();
-    }
-  }, [curRoomId]);
+  // useEffect(() => {
+  //   if (curRoomId) {
+  //     connect();
+  //   }
+  // }, [curRoomId]);
 
   useEffect(() => {
     enterRoom();
@@ -429,10 +417,6 @@ const WebRTCContainer = () => {
   useEffect(() => {
     initSockets();
   }, [curDevice]);
-
-  // useEffect(() => {
-  //   initSockets();
-  // }, [curMembers]);
 
   useEffect(() => {
     if (pushNotification) {
