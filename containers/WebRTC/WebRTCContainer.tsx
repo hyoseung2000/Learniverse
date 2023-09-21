@@ -16,29 +16,24 @@ import { styled } from 'styled-components';
 
 import { getProfile } from '@/apis/profile';
 import Gallery from '@/components/Coretime/Gallery/Gallery';
+import {
+  MediaBtn,
+  MikeBtn,
+  SpeakerBtn,
+  StudyroomBtn,
+} from '@/components/Coretime/Settings';
 import { TimeProvider, Timer } from '@/components/Coretime/Timer';
 import { WebRTCAudio, WebRTCVideo } from '@/components/Coretime/WebRTCMedia';
 import useModal from '@/hooks/useModal';
 import usePushNotification from '@/hooks/usePushNotification';
 import { useSocketConnection } from '@/hooks/useSocketConnection';
-import {
-  IcChar,
-  IcGallery,
-  IcIssue,
-  IcMedia,
-  IcMediaOff,
-  IcMike,
-  IcMikeOff,
-  IcSpeaker,
-  IcSpeakerOff,
-} from '@/public/assets/icons';
+import { IcChar } from '@/public/assets/icons';
 import { memberIdState } from '@/recoil/atom';
 import { ProfileInfo } from '@/types/member';
 import {
   ChattingInfo,
   ConsumeInfo,
   ConsumerId,
-  CustomSocket,
   JoinInfo,
   MediaType,
   PeersInfo,
@@ -46,8 +41,6 @@ import {
   RoomPeerInfo,
 } from '@/types/socket';
 import { getTime } from '@/utils/getTime';
-
-import socketPromise from './socketPromise';
 
 const WebRTCContainer = () => {
   const router = useRouter();
@@ -57,7 +50,7 @@ const WebRTCContainer = () => {
   const [curRoomId, setRoomId] = useState<string>();
   const pushNotification = usePushNotification();
 
-  // const [socket, setSocket] = useState<CustomSocket | null>(null);
+  const socket = useSocketConnection(curRoomId!);
   const [curDevice, setCurDevice] = useState<Device>();
   const [curProducer, setCurProducer] = useState<string>();
   const [curPeerList, setCurPeerList] = useState<PeersInfo[]>([]);
@@ -74,8 +67,6 @@ const WebRTCContainer = () => {
   const [isSpeaker, setIsSpeaker] = useState(true);
 
   const gallery = useModal();
-
-  const socket = useSocketConnection(curRoomId!);
 
   const getNickName = async (memberId: string) => {
     const profile: ProfileInfo = await getProfile(Number(memberId));
@@ -388,27 +379,18 @@ const WebRTCContainer = () => {
   const handleMedia = () => {
     setIsMedia((prevState) => !prevState);
   };
-
-  const handleMike = async () => {
+  const handleMike = () => {
     setIsMike((prevState) => !prevState);
   };
-
-  const handleSpeaker = async () => {
+  const handleSpeaker = () => {
     setIsSpeaker((prevState) => !prevState);
   };
-
   useEffect(() => {
     if (name && room_id) {
       setCurName(name as unknown as string);
       setRoomId(room_id as string);
     }
   }, [name, room_id]);
-
-  // useEffect(() => {
-  //   if (curRoomId) {
-  //     connect();
-  //   }
-  // }, [curRoomId]);
 
   useEffect(() => {
     enterRoom();
@@ -430,29 +412,17 @@ const WebRTCContainer = () => {
     <StWebRTCContainerWrapper>
       <StMediaContainer>
         <StSettingWrapper>
-          <div>
+          <StSettingBtnWrapper>
             <TimeProvider>
               <Timer />
             </TimeProvider>
-            <StSettings>
-              <button type="button" onClick={handleMedia}>
-                {isMedia ? <IcMedia /> : <IcMediaOff />}
-              </button>
-              <button type="button" onClick={handleMike}>
-                {isMike ? <IcMike /> : <IcMikeOff />}
-              </button>
-              <button type="button" onClick={handleSpeaker}>
-                {isSpeaker ? <IcSpeaker /> : <IcSpeakerOff />}
-              </button>
-            </StSettings>
-          </div>
+            <MediaBtn isMedia={isMedia} handleMedia={handleMedia} />
+            <MikeBtn isMike={isMike} handleMike={handleMike} />
+            <SpeakerBtn isSpeaker={isSpeaker} handleSpeaker={handleSpeaker} />
+          </StSettingBtnWrapper>
           <StStudyroomBtnWrapper>
-            <button type="button">
-              <IcIssue />
-            </button>
-            <button type="button" onClick={gallery.toggle}>
-              <IcGallery />
-            </button>
+            <StudyroomBtn name="issue" handleClick={gallery.toggle} />
+            <StudyroomBtn name="gallery" handleClick={gallery.toggle} />
           </StStudyroomBtnWrapper>
         </StSettingWrapper>
         <StMediaWrapper>
@@ -550,16 +520,7 @@ const StSettingWrapper = styled.div`
   justify-content: space-between;
 `;
 
-const StSettings = styled.section`
-  display: flex;
-  gap: 0.8rem;
-
-  & > button {
-    padding: 0.6rem 0;
-    color: ${({ theme }) => theme.colors.White};
-    ${({ theme }) => theme.fonts.Body0};
-  }
-`;
+const StSettingBtnWrapper = styled.div``;
 
 const StMediaWrapper = styled.section`
   display: grid;
