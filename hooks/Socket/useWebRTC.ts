@@ -284,6 +284,10 @@ export const useWebRTC = (
     }
   };
 
+  const addChattingList = (chat: ChattingInfo) => {
+    setChattingList((prev) => [...prev, chat]);
+  };
+
   const closeProducer = () => {
     // if (curProducer) {
     //   curProducer.close();
@@ -344,5 +348,6 @@ export const useWebRTC = (
     videoStreams,
     audioStreams,
     chattingList,
+    addChattingList,
   };
 };

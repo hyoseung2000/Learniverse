@@ -42,11 +42,11 @@ const WebRTCContainer = () => {
     videoStreams,
     audioStreams,
     chattingList,
+    addChattingList,
   } = useWebRTC(curRoomId!, curName!, curSocket!);
 
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [chatting, setChatting] = useState<string>('');
-  // const [chattingList, setChattingList] = useState<ChattingInfo[]>([]);
 
   const [isMedia, setIsMedia] = useState(true);
   const [isMike, setIsMike] = useState(true);
@@ -63,8 +63,7 @@ const WebRTCContainer = () => {
       message: chatting,
       time: getTime(new Date()),
     };
-
-    // setChattingList((prev) => [...prev, sentChat]);
+    addChattingList(sentChat);
     setChatting('');
   };
 
