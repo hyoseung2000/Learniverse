@@ -17,10 +17,10 @@ import {
 } from '@/components/Coretime/Setting';
 import { TimeProvider, Timer } from '@/components/Coretime/Timer';
 import { WebRTCAudio, WebRTCVideo } from '@/components/Coretime/WebRTCMedia';
+import { useSocketConnection } from '@/hooks/Socket/useSocketConnection';
+import { useWebRTC } from '@/hooks/Socket/useWebRTC';
 import useModal from '@/hooks/useModal';
 import { usePushNotification } from '@/hooks/usePushNotification';
-import { useSocketConnection } from '@/hooks/useSocketConnection';
-import { useWebRTC } from '@/hooks/useWebRTC';
 import { memberIdState } from '@/recoil/atom';
 import { ChattingInfo } from '@/types/socket';
 import { getTime } from '@/utils/getTime';
@@ -29,10 +29,11 @@ const WebRTCContainer = () => {
   const router = useRouter();
   const { room_id } = router.query;
   const name = useRecoilValue(memberIdState);
+
   const [curName, setCurName] = useState<string>();
   const [curRoomId, setRoomId] = useState<string>();
+  const curSocket = useSocketConnection(curRoomId!);
 
-  const socket = useSocketConnection(curRoomId!);
   const {
     curMembers,
     curDevice,
@@ -41,7 +42,7 @@ const WebRTCContainer = () => {
     videoStreams,
     audioStreams,
     chattingList,
-  } = useWebRTC(curRoomId!, curName!, socket!);
+  } = useWebRTC(curRoomId!, curName!, curSocket!);
 
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [chatting, setChatting] = useState<string>('');
@@ -55,8 +56,8 @@ const WebRTCContainer = () => {
   const pushNotification = usePushNotification();
 
   const handleSendChatting = () => {
-    if (!socket) return;
-    socket.emit('message', chatting);
+    if (!curSocket) return;
+    curSocket.emit('message', chatting);
     const sentChat: ChattingInfo = {
       name: name.toString(),
       message: chatting,

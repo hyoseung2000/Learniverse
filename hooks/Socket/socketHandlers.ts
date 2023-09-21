@@ -6,7 +6,7 @@ import {
   RoomPeerInfo,
 } from '@/types/socket';
 
-import { getNickName } from './getNicknames';
+import { getNickName } from '../../utils/getNicknames';
 
 export const handleConnectError = (error: any) => {
   console.error('socket connection error:', error.message);

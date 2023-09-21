@@ -22,7 +22,7 @@ import {
   RoomPeerInfo,
 } from '@/types/socket';
 
-import { addNickNameToPeer, getNickName } from './getNicknames';
+import { addNickNameToPeer, getNickName } from '../../utils/getNicknames';
 import {
   handleConnectError,
   handleConsumerClosed,
