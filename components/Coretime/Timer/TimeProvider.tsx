@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 import TimeContext from './TimeContext';
 
-const TIMER = 100;
+const TIMER = 6000;
 
 interface TimeProviderProps {
   children: React.ReactNode;

@@ -2,7 +2,7 @@
 /* eslint-disable no-useless-return */
 import { useRef } from 'react';
 
-const usePushNotification = () => {
+export const usePushNotification = () => {
   const notificationRef = useRef<Notification | null>(null);
 
   // Notification이 지원되지 않는 브라우저가 있을 수 있기 때문에, 이를 대비해 Early return 문을 걸어준다.
@@ -61,5 +61,3 @@ const usePushNotification = () => {
 
   return { fireNotification, closeNotification };
 };
-
-export default usePushNotification;

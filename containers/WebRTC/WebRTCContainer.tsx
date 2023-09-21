@@ -1,20 +1,11 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Device } from 'mediasoup-client';
-import {
-  Consumer,
-  RtpCapabilities,
-  Transport,
-  UnsupportedError,
-} from 'mediasoup-client/lib/types';
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { getProfile } from '@/apis/profile';
 import { Chatting } from '@/components/Coretime/Chatting';
 import Gallery from '@/components/Coretime/Gallery/Gallery';
 import { Member } from '@/components/Coretime/Member';
@@ -27,20 +18,11 @@ import {
 import { TimeProvider, Timer } from '@/components/Coretime/Timer';
 import { WebRTCAudio, WebRTCVideo } from '@/components/Coretime/WebRTCMedia';
 import useModal from '@/hooks/useModal';
-import usePushNotification from '@/hooks/usePushNotification';
+import { usePushNotification } from '@/hooks/usePushNotification';
 import { useSocketConnection } from '@/hooks/useSocketConnection';
+import { useWebRTC } from '@/hooks/useWebRTC';
 import { memberIdState } from '@/recoil/atom';
-import { ProfileInfo } from '@/types/member';
-import {
-  ChattingInfo,
-  ConsumeInfo,
-  ConsumerId,
-  JoinInfo,
-  MediaType,
-  PeersInfo,
-  RoomInfo,
-  RoomPeerInfo,
-} from '@/types/socket';
+import { ChattingInfo } from '@/types/socket';
 import { getTime } from '@/utils/getTime';
 
 const WebRTCContainer = () => {
@@ -49,331 +31,39 @@ const WebRTCContainer = () => {
   const name = useRecoilValue(memberIdState);
   const [curName, setCurName] = useState<string>();
   const [curRoomId, setRoomId] = useState<string>();
-  const pushNotification = usePushNotification();
 
   const socket = useSocketConnection(curRoomId!);
-  const [curDevice, setCurDevice] = useState<Device>();
-  const [curProducer, setCurProducer] = useState<string>();
-  const [curPeerList, setCurPeerList] = useState<PeersInfo[]>([]);
-  const [curMembers, setCurMembers] = useState<RoomPeerInfo[]>([]);
+  const {
+    curMembers,
+    curDevice,
+    curProducer,
+    curPeerList,
+    videoStreams,
+    audioStreams,
+    chattingList,
+  } = useWebRTC(curRoomId!, curName!, socket!);
 
-  const [videoStreams, setVideoStreams] = useState<ConsumeInfo[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
-  const [audioStreams, setAudioStreams] = useState<ConsumeInfo[]>([]);
   const [chatting, setChatting] = useState<string>('');
-  const [chattingList, setChattingList] = useState<ChattingInfo[]>([]);
+  // const [chattingList, setChattingList] = useState<ChattingInfo[]>([]);
 
   const [isMedia, setIsMedia] = useState(true);
   const [isMike, setIsMike] = useState(true);
   const [isSpeaker, setIsSpeaker] = useState(true);
 
   const gallery = useModal();
-
-  const getNickName = async (memberId: string) => {
-    const profile: ProfileInfo = await getProfile(Number(memberId));
-    return profile.nickname;
-  };
-
-  const addNickNameToPeer = async (
-    peer: RoomPeerInfo,
-  ): Promise<RoomPeerInfo> => {
-    const nickname = await getNickName(peer.name);
-    return {
-      ...peer,
-      nickname,
-    };
-  };
-
-  const consumeProducers = async (producers: PeersInfo[]) => {
-    const consumePromises = producers.map((producer) => {
-      const { producer_id, produce_name, produce_type } = producer;
-      return consume(producer_id, produce_name, produce_type).catch((error) =>
-        console.error(`Error while consuming producer ${producer_id}:`, error),
-      );
-    });
-    await Promise.all(consumePromises);
-  };
-
-  const enterRoom = async () => {
-    if (!socket || !curRoomId || !curName) return;
-    try {
-      await createRoom(curRoomId);
-      await join(curRoomId, curName);
-    } catch (error) {
-      console.error('Error in creating or joining the room:', error);
-    }
-  };
-
-  const createRoom = async (roomId: string) => {
-    if (!socket || !socket.request) return;
-    try {
-      await socket.request('createRoom', {
-        room_id: roomId,
-      });
-    } catch (err) {
-      console.error('Create room error:', err);
-    }
-    console.log('1-1. createRoom');
-  };
-
-  const loadDevice = async (routerRtpCapabilities: RtpCapabilities) => {
-    let device;
-    try {
-      device = new Device();
-      await device.load({ routerRtpCapabilities });
-      setCurDevice(device);
-      console.log('3. device 로딩 ', device);
-    } catch (error) {
-      if (error instanceof UnsupportedError) {
-        console.error('Browser not supported');
-      } else {
-        console.error(error);
-      }
-      return null;
-    }
-    return device;
-  };
-
-  const join = async (roomId: string, nickName: string) => {
-    if (!socket || !socket.request) return;
-    try {
-      const socketJoin: JoinInfo = await socket.request('join', {
-        room_id: roomId,
-        name: nickName,
-      });
-      console.log('2. Joined to room', socketJoin);
-
-      const data = await socket.request('getRouterRtpCapabilities');
-      await loadDevice(data);
-
-      if (curDevice) {
-        socket.emit('getProducers');
-      }
-    } catch (err) {
-      console.error('Join error:', err);
-    }
-  };
-
-  const initSockets = async () => {
-    if (!socket || !socket.request || !curName) return;
-
-    await produce('screenType', curName);
-    await produce('audioType', curName);
-
-    const peerList: RoomInfo = await socket.request('getRoomInfo');
-    console.log('4-1. peerList', peerList);
-    setCurPeerList(peerList.peers);
-    const formatData = peerList.peers.slice(0, -2);
-    await consumeProducers(formatData);
-
-    const peers: RoomPeerInfo[] = await socket.request('getRoomPeerInfo');
-    console.log('4-1. getRoomPeerInfo', peers);
-    const peersWithNickNames = await Promise.all(
-      peers.map((peer) => addNickNameToPeer(peer)),
-    );
-    setCurMembers(peersWithNickNames);
-
-    socket.on('connect_error', (error: any) => {
-      console.error('socket connection error:', error.message);
-    });
-    socket.on('newProducers', async (data: PeersInfo[]) => {
-      console.log('4. New producers (consumeList)', data);
-      const newMemberNickName = await getNickName(data[0].produce_name);
-      const newMember = {
-        id: data[0].producer_id,
-        name: data[0].produce_name,
-        nickname: newMemberNickName,
-      };
-      setCurMembers((prev) => [...prev, newMember]);
-      await consumeProducers(data);
-    });
-    socket.on('message', (data: ChattingInfo) => {
-      setChattingList((prev) => [...prev, data]);
-    });
-    socket.on('consumerClosed', (data: ConsumerId) => {
-      removeStream(data.consumer_id);
-    });
-    socket.on('disconnect', () => {
-      router.push('/home');
-    });
-  };
-
-  const createTransport = async (
-    device: Device,
-    direction: 'produce' | 'consume',
-  ): Promise<Transport> => {
-    if (!socket || !socket.request) throw new Error('Socket not initialized');
-
-    const data = await socket.request('createWebRtcTransport', {
-      forceTcp: false,
-      rtpCapabilities:
-        direction === 'produce' ? device.rtpCapabilities : undefined,
-    });
-    if (data.error) {
-      console.error(data.error);
-      throw new Error(data.error);
-    }
-
-    const transport =
-      direction === 'produce'
-        ? device.createSendTransport(data)
-        : device.createRecvTransport(data);
-
-    transport.on('connect', async ({ dtlsParameters }, callback, errback) => {
-      try {
-        if (!socket.request) return;
-        await socket.request('connectTransport', {
-          transport_id: transport.id,
-          dtlsParameters,
-        });
-        callback();
-      } catch (err) {
-        errback(err as Error);
-      }
-    });
-    if (direction === 'produce') {
-      transport.on(
-        'produce',
-        async ({ kind, rtpParameters }, callback, errback) => {
-          try {
-            if (!socket.request) return;
-            const producerId = await socket.request('produce', {
-              producerTransportId: transport.id,
-              kind,
-              rtpParameters,
-            });
-            callback({ id: producerId.producer_id });
-            setCurProducer(producerId.producer_id);
-          } catch (err) {
-            errback(err as Error);
-          }
-        },
-      );
-    }
-    return transport;
-  };
-
-  const addStream = (
-    newStream: MediaStream,
-    nickname: string,
-    producerId: string,
-    type: string,
-  ) => {
-    const curStream: ConsumeInfo = {
-      nickname,
-      producer_id: producerId,
-      stream: newStream,
-    };
-    if (type === 'video')
-      setVideoStreams((prevStreams) => [...prevStreams, curStream]);
-    if (type === 'audio')
-      setAudioStreams((prevStreams) => [...prevStreams, curStream]);
-  };
-
-  const produce = async (type: MediaType, memberId: string): Promise<void> => {
-    try {
-      if (!curDevice || !socket || !socket.request) return;
-
-      let stream: MediaStream;
-      const nickname = await getNickName(curName!);
-      console.log(curName, nickname);
-      if (type === 'screenType') {
-        stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-        addStream(stream, nickname, socket.id, 'video'); // producer_id로 수정 필요
-      } else {
-        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        addStream(stream, nickname, socket.id, 'audio');
-      }
-
-      const track =
-        type === 'audioType'
-          ? stream.getAudioTracks()[0]
-          : stream.getVideoTracks()[0];
-
-      const producerTransport = await createTransport(curDevice, 'produce');
-      const producer = await producerTransport.produce({ track });
-
-      producer.on('trackended', () => {
-        closeProducer();
-      });
-    } catch (error) {
-      console.error(`Error producing ${type}:`, error);
-    }
-  };
-
-  const consume = async (
-    producerId: string,
-    producerName: string,
-    produceType: string,
-  ): Promise<void> => {
-    try {
-      if (!curDevice || !socket || !socket.request) return;
-
-      const consumerTransport = await createTransport(curDevice, 'consume');
-      const { rtpCapabilities } = curDevice;
-
-      const data = await socket.request('consume', {
-        producerId,
-        consumerTransportId: consumerTransport.id,
-        rtpCapabilities,
-      });
-      const { id, kind, rtpParameters } = data;
-
-      const consumer: Consumer = await consumerTransport.consume({
-        id,
-        producerId,
-        kind,
-        rtpParameters,
-      });
-
-      const stream = new MediaStream();
-      stream.addTrack(consumer.track);
-
-      const nickname = await getNickName(producerName);
-      addStream(
-        new MediaStream([consumer.track]),
-        nickname,
-        producerId,
-        produceType,
-      );
-
-      // consumer.on('transportclose', () => {
-      //   console.log('Consumer transport closed');
-      // });
-    } catch (error) {
-      console.error('Error consuming:', error);
-    }
-  };
-
-  const closeProducer = () => {
-    // if (curProducer) {
-    //   curProducer.close();
-    //   setCurProducer(undefined);
-    // }
-  };
-
-  const removeStream = (producer_id: string) => {
-    const filteredAudioStreams: ConsumeInfo[] = audioStreams.filter(
-      (stream) => stream.producer_id !== producer_id,
-    );
-    const filteredVideoStreams: ConsumeInfo[] = videoStreams.filter(
-      (stream) => stream.producer_id !== producer_id,
-    );
-    setAudioStreams(filteredAudioStreams);
-    setVideoStreams(filteredVideoStreams);
-  };
+  const pushNotification = usePushNotification();
 
   const handleSendChatting = () => {
     if (!socket) return;
     socket.emit('message', chatting);
-
     const sentChat: ChattingInfo = {
       name: name.toString(),
       message: chatting,
       time: getTime(new Date()),
     };
 
-    setChattingList((prev) => [...prev, sentChat]);
+    // setChattingList((prev) => [...prev, sentChat]);
     setChatting('');
   };
 
@@ -386,20 +76,13 @@ const WebRTCContainer = () => {
   const handleSpeaker = () => {
     setIsSpeaker((prevState) => !prevState);
   };
+
   useEffect(() => {
     if (name && room_id) {
       setCurName(name as unknown as string);
       setRoomId(room_id as string);
     }
   }, [name, room_id]);
-
-  useEffect(() => {
-    enterRoom();
-  }, [socket, curRoomId, curName]);
-
-  useEffect(() => {
-    initSockets();
-  }, [curDevice]);
 
   useEffect(() => {
     if (pushNotification) {
