@@ -15,7 +15,9 @@ import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 import { getProfile } from '@/apis/profile';
+import { Chattings } from '@/components/Coretime/Chattings';
 import Gallery from '@/components/Coretime/Gallery/Gallery';
+import { Members } from '@/components/Coretime/Members';
 import {
   MediaBtn,
   MikeBtn,
@@ -27,7 +29,6 @@ import { WebRTCAudio, WebRTCVideo } from '@/components/Coretime/WebRTCMedia';
 import useModal from '@/hooks/useModal';
 import usePushNotification from '@/hooks/usePushNotification';
 import { useSocketConnection } from '@/hooks/useSocketConnection';
-import { IcChar } from '@/public/assets/icons';
 import { memberIdState } from '@/recoil/atom';
 import { ProfileInfo } from '@/types/member';
 import {
@@ -452,30 +453,9 @@ const WebRTCContainer = () => {
         ))}
       </StMediaContainer>
       <StCoretimeInfoWrapper>
-        <StMemberWrapper>
-          <h3>현재 접속 중</h3>
-          <StMembers>
-            {curMembers.map((member) => (
-              <StMember key={member.id}>
-                <IcChar />
-                <span>{member.nickname}</span>
-              </StMember>
-            ))}
-          </StMembers>
-        </StMemberWrapper>
+        <Members curMembers={curMembers} />
         <StChattingWrapper>
-          <h3>코어타임 채팅</h3>
-          <StChattings>
-            {chattingList.map((chattings) => (
-              <StChatting
-                key={`${chattings.name}-${chattings.message}-${chattings.time}`}
-              >
-                <span>{chattings.name}</span>
-                <p>{chattings.message}</p>
-                <time>{chattings.time}</time>
-              </StChatting>
-            ))}
-          </StChattings>
+          <Chattings chattingList={chattingList} />
           <StChatInputWrapper>
             <StChatInput
               type="text"
@@ -558,77 +538,6 @@ const StChattingWrapper = styled.div`
 
     ${({ theme }) => theme.fonts.Title1};
     color: ${({ theme }) => theme.colors.White};
-  }
-`;
-
-const StMemberWrapper = styled(StChattingWrapper)`
-  height: fit-content;
-  margin-bottom: 2.4rem;
-`;
-
-const StMembers = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  row-gap: 1rem;
-
-  padding: 1rem 1rem 0 1rem;
-`;
-
-const StMember = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-
-  & > span {
-    ${({ theme }) => theme.fonts.Title5};
-    color: ${({ theme }) => theme.colors.White};
-  }
-`;
-
-const StChattings = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-
-  width: 100%;
-  height: 80%;
-  overflow-y: scroll;
-
-  border-radius: 1rem;
-
-  & > :last-child {
-    margin-bottom: 2rem;
-  }
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-`;
-
-const StChatting = styled.div`
-  display: grid;
-  grid-template-columns: 2fr 7fr 1fr;
-
-  width: 100%;
-  height: fit-content;
-  padding: 1rem;
-  box-sizing: border-box;
-
-  border-radius: 1rem;
-  background-color: ${({ theme }) => theme.colors.White};
-
-  & > span {
-    ${({ theme }) => theme.fonts.Body4};
-    color: ${({ theme }) => theme.colors.SkyBlue};
-  }
-  & > p {
-    ${({ theme }) => theme.fonts.Body4};
-  }
-  & > time {
-    ${({ theme }) => theme.fonts.Body8};
-    color: ${({ theme }) => theme.colors.Gray2};
   }
 `;
 
