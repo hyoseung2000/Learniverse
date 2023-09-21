@@ -17,10 +17,13 @@ import {
 } from '@/components/Coretime/Setting';
 import { TimeProvider, Timer } from '@/components/Coretime/Timer';
 import { WebRTCAudio, WebRTCVideo } from '@/components/Coretime/WebRTCMedia';
+import useChatHandler from '@/hooks/Socket/useChatHandler';
 import { useSocketConnection } from '@/hooks/Socket/useSocketConnection';
+import useVideoSelector from '@/hooks/Socket/useVideoSelector';
 import { useWebRTC } from '@/hooks/Socket/useWebRTC';
 import useModal from '@/hooks/useModal';
 import { usePushNotification } from '@/hooks/usePushNotification';
+import useToggle from '@/hooks/useToggle';
 import { memberIdState } from '@/recoil/atom';
 import { ChattingInfo, ConsumeInfo } from '@/types/socket';
 import { getTime } from '@/utils/getTime';
@@ -44,42 +47,19 @@ const WebRTCContainer = () => {
     addChattingList,
   } = useWebRTC(curRoomId!, curName!, curSocket!);
 
-  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
-  const [chatting, setChatting] = useState<string>('');
-
-  const [isMedia, setIsMedia] = useState(true);
-  const [isMike, setIsMike] = useState(true);
-  const [isSpeaker, setIsSpeaker] = useState(true);
+  const [isMedia, handleMedia] = useToggle();
+  const [isMike, handleMike] = useToggle();
+  const [isSpeaker, handleSpeaker] = useToggle();
+  const [selectedVideo, setSelectedVideo, handleSelectVideo] =
+    useVideoSelector();
+  const [chatting, setChatting, handleSendChatting] = useChatHandler(
+    curSocket!,
+    addChattingList,
+    name,
+  );
 
   const gallery = useModal();
   const pushNotification = usePushNotification();
-
-  const handleSendChatting = () => {
-    if (!curSocket) return;
-    curSocket.emit('message', chatting);
-    const sentChat: ChattingInfo = {
-      name: name.toString(),
-      message: chatting,
-      time: getTime(new Date()),
-    };
-    addChattingList(sentChat);
-    setChatting('');
-  };
-
-  const handleMedia = () => {
-    setIsMedia((prevState) => !prevState);
-  };
-  const handleMike = () => {
-    setIsMike((prevState) => !prevState);
-  };
-  const handleSpeaker = () => {
-    setIsSpeaker((prevState) => !prevState);
-  };
-  const handleSelectVideo = (stream: ConsumeInfo) => {
-    setSelectedVideo(
-      selectedVideo === stream.producer_id ? null : stream.producer_id,
-    );
-  };
 
   useEffect(() => {
     if (name && room_id) {
