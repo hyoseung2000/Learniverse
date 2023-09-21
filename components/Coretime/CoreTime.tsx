@@ -1,6 +1,5 @@
 import { styled } from 'styled-components';
 
-import Media from './Media';
 import { TimeProvider, Timer } from './Timer';
 
 const CoreTime = () => {
@@ -10,7 +9,6 @@ const CoreTime = () => {
         <TimeProvider>
           <Timer />
         </TimeProvider>
-        <Media />
       </StCoreMainWrapper>
     </StCoreTimeWrapper>
   );

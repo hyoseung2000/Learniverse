@@ -18,6 +18,7 @@ import { styled } from 'styled-components';
 import { getProfile } from '@/apis/profile';
 import Gallery from '@/components/Coretime/Gallery/Gallery';
 import { TimeProvider, Timer } from '@/components/Coretime/Timer';
+import { WebRTCAudio, WebRTCVideo } from '@/components/Coretime/WebRTCMedia';
 import useModal from '@/hooks/useModal';
 import usePushNotification from '@/hooks/usePushNotification';
 import {
@@ -40,7 +41,6 @@ import {
   CustomSocket,
   JoinInfo,
   MediaType,
-  NewProducerInfo,
   PeersInfo,
   RoomInfo,
   RoomPeerInfo,
@@ -48,10 +48,6 @@ import {
 import { getTime } from '@/utils/getTime';
 
 import socketPromise from './socketPromise';
-import WebRTCAudio from './WebRTCAudio';
-import WebRTCVideo from './WebRTCVideo';
-
-const MEDIA_SERVER_URL = process.env.NEXT_PUBLIC_MEDIA_IP;
 
 const WebRTCContainer = () => {
   const router = useRouter();
@@ -66,6 +62,7 @@ const WebRTCContainer = () => {
   const [curProducer, setCurProducer] = useState<string>();
   const [curPeerList, setCurPeerList] = useState<PeersInfo[]>([]);
   const [curMembers, setCurMembers] = useState<RoomPeerInfo[]>([]);
+
   const [videoStreams, setVideoStreams] = useState<ConsumeInfo[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [audioStreams, setAudioStreams] = useState<ConsumeInfo[]>([]);
@@ -115,10 +112,13 @@ const WebRTCContainer = () => {
 
   const connect = async () => {
     if (!curName || !curRoomId) return;
-    const socketConnection: CustomSocket = await io(MEDIA_SERVER_URL!, {
-      transports: ['websocket', 'polling', 'flashsocket'],
-      secure: true,
-    });
+    const socketConnection: CustomSocket = await io(
+      process.env.NEXT_PUBLIC_MEDIA_IP!,
+      {
+        transports: ['websocket', 'polling', 'flashsocket'],
+        secure: true,
+      },
+    );
     socketConnection.request = await socketPromise(socketConnection);
     setSocket(socketConnection);
     console.log('1. socket connect', socketConnection);
@@ -284,16 +284,10 @@ const WebRTCContainer = () => {
       producer_id: producerId,
       stream: newStream,
     };
-    switch (type) {
-      case 'video':
-        setVideoStreams((prevStreams) => [...prevStreams, curStream]);
-        break;
-      case 'audio':
-        setAudioStreams((prevStreams) => [...prevStreams, curStream]);
-        break;
-      default:
-        break;
-    }
+    if (type === 'video')
+      setVideoStreams((prevStreams) => [...prevStreams, curStream]);
+    if (type === 'audio')
+      setAudioStreams((prevStreams) => [...prevStreams, curStream]);
   };
 
   const produce = async (type: MediaType, memberId: string): Promise<void> => {
@@ -480,9 +474,9 @@ const WebRTCContainer = () => {
         <StMediaWrapper>
           {videoStreams.map((stream) => (
             <WebRTCVideo
+              key={stream.producer_id}
               roomId={curRoomId!}
               nickname={stream.nickname}
-              key={stream.producer_id}
               mediaStream={stream.stream}
               isSelected={selectedVideo === stream.producer_id}
               onClick={() =>

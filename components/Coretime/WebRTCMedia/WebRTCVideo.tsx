@@ -1,9 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { styled } from 'styled-components';
 
+import { getPresignedUrl, putFile } from '@/apis/coretime';
 import { IcCoreChar } from '@/public/assets/icons';
-
-import { getPresignedUrl, putFile } from '../../apis/coretime';
 
 interface WebRTCVideoProps {
   roomId: string;
@@ -32,10 +31,7 @@ const WebRTCVideo = ({
     const ctx = canvas.getContext('2d');
     ctx!.drawImage(viewRef.current, 0, 0, canvas.width, canvas.height);
 
-    // 캔버스로부터 Data URL을 생성
     const imageURL = canvas.toDataURL('image/png');
-
-    // Data URL을 Blob으로 변환
     const byteString = atob(imageURL.split(',')[1]);
     const mimeString = imageURL.split(',')[0].split(':')[1].split(';')[0];
     const ab = new ArrayBuffer(byteString.length);
@@ -50,7 +46,7 @@ const WebRTCVideo = ({
       type: mimeString,
     });
 
-    return file; // 생성된 File 객체를 반환
+    return file;
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
