@@ -10,8 +10,6 @@ import {
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-import { getProfile } from '@/apis/profile';
-import { ProfileInfo } from '@/types/member';
 import {
   ChattingInfo,
   ConsumeInfo,
@@ -23,6 +21,15 @@ import {
   RoomInfo,
   RoomPeerInfo,
 } from '@/types/socket';
+
+import { addNickNameToPeer, getNickName } from './getNicknames';
+import {
+  handleConnectError,
+  handleConsumerClosed,
+  handleDisconnect,
+  handleMessage,
+  handleNewProducers,
+} from './socketHandlers';
 
 export const useWebRTC = (
   curRoomId: string,
@@ -39,21 +46,6 @@ export const useWebRTC = (
   const [videoStreams, setVideoStreams] = useState<ConsumeInfo[]>([]);
   const [audioStreams, setAudioStreams] = useState<ConsumeInfo[]>([]);
   const [chattingList, setChattingList] = useState<ChattingInfo[]>([]);
-
-  const getNickName = async (memberId: string) => {
-    const profile: ProfileInfo = await getProfile(Number(memberId));
-    return profile.nickname;
-  };
-
-  const addNickNameToPeer = async (
-    peer: RoomPeerInfo,
-  ): Promise<RoomPeerInfo> => {
-    const nickname = await getNickName(peer.name);
-    return {
-      ...peer,
-      nickname,
-    };
-  };
 
   const createRoom = async (roomId: string) => {
     if (!socket || !socket.request) return;
@@ -133,30 +125,6 @@ export const useWebRTC = (
       peers.map((peer) => addNickNameToPeer(peer)),
     );
     setCurMembers(peersWithNickNames);
-
-    socket.on('connect_error', (error: any) => {
-      console.error('socket connection error:', error.message);
-    });
-    socket.on('newProducers', async (data: PeersInfo[]) => {
-      console.log('4. New producers (consumeList)', data);
-      const newMemberNickName = await getNickName(data[0].produce_name);
-      const newMember = {
-        id: data[0].producer_id,
-        name: data[0].produce_name,
-        nickname: newMemberNickName,
-      };
-      setCurMembers((prev) => [...prev, newMember]);
-      await consumeProducers(data);
-    });
-    socket.on('message', (data: ChattingInfo) => {
-      setChattingList((prev) => [...prev, data]);
-    });
-    socket.on('consumerClosed', (data: ConsumerId) => {
-      removeStream(data.consumer_id);
-    });
-    socket.on('disconnect', () => {
-      router.push('/home');
-    });
   };
 
   const consumeProducers = async (producers: PeersInfo[]) => {
@@ -333,6 +301,32 @@ export const useWebRTC = (
     setAudioStreams(filteredAudioStreams);
     setVideoStreams(filteredVideoStreams);
   };
+
+  useEffect(() => {
+    if (socket) {
+      socket.on('connect_error', handleConnectError);
+      socket.on('newProducers', (data: PeersInfo[]) =>
+        handleNewProducers(data, consumeProducers, setCurMembers),
+      );
+      socket.on('message', (data: ChattingInfo) =>
+        handleMessage(data, setChattingList),
+      );
+      socket.on('consumerClosed', (data: ConsumerId) =>
+        handleConsumerClosed(data, removeStream),
+      );
+      socket.on('disconnect', () => handleDisconnect(router));
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('connect_error', handleConnectError);
+        socket.off('newProducers');
+        socket.off('message');
+        socket.off('consumerClosed');
+        socket.off('disconnect');
+      }
+    };
+  }, [socket]);
 
   useEffect(() => {
     enterRoom();

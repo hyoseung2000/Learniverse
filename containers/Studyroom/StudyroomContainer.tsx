@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { styled } from 'styled-components';
 
 import { Studyroom } from '@/components/Studyroom';
-import usePushNotification from '@/hooks/usePushNotification';
+import { usePushNotification } from '@/hooks/usePushNotification';
 
 const StudyroomContainer = () => {
   const pushNotification = usePushNotification();
