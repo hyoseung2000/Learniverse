@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -83,10 +84,20 @@ const WebRTCContainer = () => {
 
   const gallery = useModal();
 
-  // const getName = async (memberId: string) => {
-  //   const profile: ProfileInfo = await getProfile(Number(memberId));
-  //   return profile.nickname;
-  // };
+  const getNickName = async (memberId: string) => {
+    const profile: ProfileInfo = await getProfile(Number(memberId));
+    return profile.nickname;
+  };
+
+  const addNickNameToPeer = async (
+    peer: RoomPeerInfo,
+  ): Promise<RoomPeerInfo> => {
+    const nickname = await getNickName(peer.name);
+    return {
+      ...peer,
+      nickname,
+    };
+  };
 
   const consumeProducers = async (producers: PeersInfo[]) => {
     const consumePromises = producers.map((producer) => {
@@ -182,7 +193,12 @@ const WebRTCContainer = () => {
 
     const peers: RoomPeerInfo[] = await socket.request('getRoomPeerInfo');
     console.log('4-1. getRoomPeerInfo', peers);
-    setCurMembers(peers);
+
+    const peersWithNickNames = await Promise.all(
+      peers.map((peer) => addNickNameToPeer(peer)),
+    );
+
+    setCurMembers(peersWithNickNames);
     console.log(curMembers);
 
     socket.on('connect_error', (error: any) => {
@@ -190,6 +206,14 @@ const WebRTCContainer = () => {
     });
     socket.on('newProducers', async (data: PeersInfo[]) => {
       console.log('4. New producers (consumeList)', data);
+      const newMemberNickName = await getNickName(data[0].producer_id);
+      const newMember = {
+        id: data[0].producer_id,
+        name: data[0].produce_name,
+        nickname: newMemberNickName,
+      };
+
+      setCurMembers((prev) => [...prev, newMember]);
       await consumeProducers(data);
     });
     socket.on('message', (data: ChattingInfo) => {
@@ -483,7 +507,7 @@ const WebRTCContainer = () => {
             {curMembers.map((member) => (
               <StMember key={member.id}>
                 <IcChar />
-                <span>{member.name}</span>
+                <span>{member.nickname}</span>
               </StMember>
             ))}
           </StMembers>

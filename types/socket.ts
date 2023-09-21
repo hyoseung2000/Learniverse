@@ -5,6 +5,10 @@ type SocketType = typeof Socket;
 
 export type MediaType = 'audioType' | 'videoType' | 'screenType';
 
+export interface CustomSocket extends SocketType {
+  request?: (event: string, data?: any) => Promise<any>;
+}
+
 export interface JoinInfo {
   id: string;
   peers: PeersInfo[];
@@ -25,16 +29,13 @@ export interface PeersInfo {
 export interface RoomPeerInfo {
   id: string;
   name: string;
+  nickname?: string;
 }
 
 export interface ProducerList {
   produce_type: string;
   producer_id: string;
   producer_socket_id?: string;
-}
-
-export interface CustomSocket extends SocketType {
-  request?: (event: string, data?: any) => Promise<any>;
 }
 
 export interface ChattingInfo {
