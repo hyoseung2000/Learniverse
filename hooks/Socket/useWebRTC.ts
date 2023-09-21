@@ -170,6 +170,7 @@ export const useWebRTC = (
         errback(err as Error);
       }
     });
+
     if (direction === 'produce') {
       transport.on(
         'produce',
@@ -214,20 +215,19 @@ export const useWebRTC = (
       if (!curDevice || !socket || !socket.request) return;
 
       let stream: MediaStream;
+      let track;
       const nickname = await getNickName(curName!);
-      console.log(curName, nickname);
+
       if (type === 'screenType') {
         stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
         addStream(stream, nickname, socket.id, 'video'); // producer_id로 수정 필요
-      } else {
+        [track] = stream.getVideoTracks();
+      }
+      if (type === 'audioType') {
         stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         addStream(stream, nickname, socket.id, 'audio');
+        [track] = stream.getAudioTracks();
       }
-
-      const track =
-        type === 'audioType'
-          ? stream.getAudioTracks()[0]
-          : stream.getVideoTracks()[0];
 
       const producerTransport = await createTransport(curDevice, 'produce');
       const producer = await producerTransport.produce({ track });
@@ -320,7 +320,6 @@ export const useWebRTC = (
       );
       socket.on('disconnect', () => handleDisconnect(router));
     }
-
     return () => {
       if (socket) {
         socket.off('connect_error', handleConnectError);

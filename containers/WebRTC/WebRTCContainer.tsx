@@ -22,7 +22,7 @@ import { useWebRTC } from '@/hooks/Socket/useWebRTC';
 import useModal from '@/hooks/useModal';
 import { usePushNotification } from '@/hooks/usePushNotification';
 import { memberIdState } from '@/recoil/atom';
-import { ChattingInfo } from '@/types/socket';
+import { ChattingInfo, ConsumeInfo } from '@/types/socket';
 import { getTime } from '@/utils/getTime';
 
 const WebRTCContainer = () => {
@@ -33,7 +33,6 @@ const WebRTCContainer = () => {
   const [curName, setCurName] = useState<string>();
   const [curRoomId, setRoomId] = useState<string>();
   const curSocket = useSocketConnection(curRoomId!);
-
   const {
     curMembers,
     curDevice,
@@ -76,10 +75,15 @@ const WebRTCContainer = () => {
   const handleSpeaker = () => {
     setIsSpeaker((prevState) => !prevState);
   };
+  const handleSelectVideo = (stream: ConsumeInfo) => {
+    setSelectedVideo(
+      selectedVideo === stream.producer_id ? null : stream.producer_id,
+    );
+  };
 
   useEffect(() => {
     if (name && room_id) {
-      setCurName(name as unknown as string);
+      setCurName(name.toString());
       setRoomId(room_id as string);
     }
   }, [name, room_id]);
@@ -117,23 +121,17 @@ const WebRTCContainer = () => {
               nickname={stream.nickname}
               mediaStream={stream.stream}
               isSelected={selectedVideo === stream.producer_id}
-              onClick={() =>
-                setSelectedVideo(
-                  selectedVideo === stream.producer_id
-                    ? null
-                    : stream.producer_id,
-                )
-              }
+              onClick={() => handleSelectVideo(stream)}
+            />
+          ))}
+          {audioStreams.map((stream) => (
+            <WebRTCAudio
+              key={stream.producer_id}
+              mediaStream={stream.stream}
+              ismuted={!isSpeaker}
             />
           ))}
         </StMediaWrapper>
-        {audioStreams.map((stream) => (
-          <WebRTCAudio
-            key={stream.producer_id}
-            mediaStream={stream.stream}
-            ismuted={!isSpeaker}
-          />
-        ))}
       </StMediaContainer>
       <StCoretimeInfoWrapper>
         <Member curMembers={curMembers} />
