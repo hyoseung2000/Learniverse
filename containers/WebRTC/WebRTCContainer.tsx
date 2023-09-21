@@ -43,6 +43,7 @@ import {
   MediaType,
   PeersInfo,
   RoomInfo,
+  RoomPeerInfo,
 } from '@/types/socket';
 import { getTime } from '@/utils/getTime';
 
@@ -63,7 +64,7 @@ const WebRTCContainer = () => {
   const [device, setDevice] = useState<Device>();
   const [socket, setSocket] = useState<CustomSocket | null>(null);
   const [curProducer, setCurProducer] = useState<string>();
-  // const [curMembers, setCurMembers] = useState<string[]>([]);
+  const [curMembers, setCurMembers] = useState<RoomPeerInfo[]>([]);
   const [videoStreams, setVideoStreams] = useState<ConsumeInfo[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [audioStreams, setAudioStreams] = useState<ConsumeInfo[]>([]);
@@ -168,21 +169,19 @@ const WebRTCContainer = () => {
 
     await produce('screenType', curName);
     await produce('audioType', curName);
-    socket.emit('getOriginProducers');
 
     const peerList: RoomInfo = await socket.request('getRoomInfo');
     console.log('4-1. peerList', peerList);
     const formatData = peerList.peers.slice(0, -2);
     await consumeProducers(formatData);
 
+    const peers: RoomPeerInfo = await socket.request('getRoomPeerInfo');
+    console.log('4-1. getRoomPeerInfo', peers);
+    setCurMembers((prev) => [...prev, peers]);
+
     socket.on('connect_error', (error: any) => {
       console.error('socket connection error:', error.message);
     });
-    // socket.on('existedProducers', async (data: PeersInfo[]) => {
-    //   console.log('4-2. existedProducers (consumeList)', data);
-    //   const formatData = data.slice(0, -2);
-    //   await consumeProducers(formatData);
-    // });
     socket.on('newProducers', async (data: PeersInfo[]) => {
       console.log('4. New producers (consumeList)', data);
       await consumeProducers(data);

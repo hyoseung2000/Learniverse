@@ -22,6 +22,11 @@ export interface PeersInfo {
   produce_type: string;
 }
 
+export interface RoomPeerInfo {
+  id: string;
+  name: string;
+}
+
 export interface ProducerList {
   produce_type: string;
   producer_id: string;
