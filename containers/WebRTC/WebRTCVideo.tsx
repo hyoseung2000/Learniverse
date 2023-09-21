@@ -28,7 +28,6 @@ const WebRTCVideo = ({
 
   const getName = async (member_id: string) => {
     const profile: ProfileInfo = await getProfile(Number(member_id));
-    console.log(profile.nickname);
     setNickname(profile.nickname);
   };
 
@@ -68,7 +67,6 @@ const WebRTCVideo = ({
   const handleUploadImage = async () => {
     const capturedImage = captureAndSaveVideoFrame();
     const url = await getPresignedUrl();
-    console.log(url);
     if (capturedImage) {
       await putFile(url, capturedImage);
     }

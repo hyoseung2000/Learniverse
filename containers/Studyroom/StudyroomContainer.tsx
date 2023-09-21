@@ -8,8 +8,7 @@ const StudyroomContainer = () => {
   const pushNotification = usePushNotification();
 
   const askPermission = async () => {
-    const permission = await window.Notification.requestPermission();
-    console.log(permission);
+    await window.Notification.requestPermission();
   };
 
   useEffect(() => {

@@ -27,7 +27,6 @@ const ApplyContainer = ({ url }: ApplyContainerProps) => {
 
   const decodeId = async () => {
     const decodedUrl = await decodeRoomId(url);
-    console.log(decodedUrl);
     setRoomId(decodedUrl);
   };
 

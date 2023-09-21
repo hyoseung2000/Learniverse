@@ -19,7 +19,6 @@ const HomeContainer = () => {
   };
 
   const addFirstAccess = () => {
-    console.log('today');
     if (isMax() || moonScore.isFirstAccess >= 1) return;
     setMoonScore((prevMoonScore) => ({
       ...prevMoonScore,

@@ -158,7 +158,7 @@ const WebRTCContainer = () => {
         socket.emit('getProducers');
       }
     } catch (err) {
-      console.log('Join error:', err);
+      console.error('Join error:', err);
     }
   };
 
@@ -170,13 +170,13 @@ const WebRTCContainer = () => {
     socket.emit('getOriginProducers');
 
     const peerList: RoomInfo = await socket.request('getRoomInfo');
-    console.log(peerList);
+    console.log('4-1. peerList', peerList);
 
     socket.on('connect_error', (error: any) => {
-      console.log('socket connection error:', error.message);
+      console.error('socket connection error:', error.message);
     });
     socket.on('existedProducers', async (data: ProducerList[]) => {
-      console.log('4-1. existedProducers (consumeList)', data);
+      console.log('4-2. existedProducers (consumeList)', data);
       const formatData = data.slice(0, -2);
       await consumeProducers(formatData);
     });
@@ -186,14 +186,12 @@ const WebRTCContainer = () => {
     });
     socket.on('message', (data: ChattingInfo) => {
       setChattingList((prev) => [...prev, data]);
-      console.log('New message:', data);
     });
     socket.on('consumerClosed', (data: ConsumerId) => {
-      console.log('Closing consumer:', data.consumer_id);
       removeStream(data.consumer_id);
     });
     socket.on('disconnect', () => {
-      router.push('/webrtcroom');
+      router.push('/home');
     });
   };
 
@@ -230,19 +228,6 @@ const WebRTCContainer = () => {
         errback(err as Error);
       }
     });
-    transport.on('connectionstatechange', (state) => {
-      switch (state) {
-        case 'connected':
-          console.log(`${direction} transport connected`);
-          break;
-        case 'failed':
-          console.log(`${direction} transport Error`);
-          // transport.close();
-          break;
-        default:
-          break;
-      }
-    });
     if (direction === 'produce') {
       transport.on(
         'produce',
@@ -255,7 +240,6 @@ const WebRTCContainer = () => {
               rtpParameters,
             });
             callback({ id: producerId.producer_id });
-            console.log(producerId.producer_id);
             setCurProducer(producerId.producer_id);
           } catch (err) {
             errback(err as Error);
@@ -285,16 +269,7 @@ const WebRTCContainer = () => {
       default:
         break;
     }
-    console.log(curStream, videoStreams, audioStreams);
   };
-
-  useEffect(() => {
-    console.log('Updated videoStreams:', videoStreams);
-  }, [videoStreams]);
-
-  useEffect(() => {
-    console.log('Updated audioStreams:', audioStreams);
-  }, [audioStreams]);
 
   const produce = async (type: MediaType, memberId: string): Promise<void> => {
     try {
@@ -315,15 +290,11 @@ const WebRTCContainer = () => {
           : stream.getVideoTracks()[0];
 
       const producerTransport = await createTransport(device, 'produce');
-
       const producer = await producerTransport.produce({ track });
 
       producer.on('trackended', () => {
         closeProducer();
-        console.log('Track ended');
       });
-
-      console.log(`Producing ${type} for member: ${memberId}`);
     } catch (error) {
       console.error(`Error producing ${type}:`, error);
     }
@@ -355,12 +326,10 @@ const WebRTCContainer = () => {
 
       const stream = new MediaStream();
       stream.addTrack(consumer.track);
-      // console.log(consumer.track.muted);
 
       // consumer.on('transportclose', () => {
       //   console.log('Consumer transport closed');
       // });
-      console.log(`Consumed media from producerId: ${producerId}`);
       addStream(new MediaStream([consumer.track]), producerId, produceType);
     } catch (error) {
       console.error('Error consuming:', error);
@@ -375,17 +344,14 @@ const WebRTCContainer = () => {
   };
 
   const removeStream = (producer_id: string) => {
-    console.log(producer_id, audioStreams, videoStreams);
-
-    // const filteredAudioStreams: ConsumeInfo[] = audioStreams.filter(
-    //   (stream) => stream.producer_id !== producer_id,
-    // );
-    // const filteredVideoStreams: ConsumeInfo[] = videoStreams.filter(
-    //   (stream) => stream.producer_id !== producer_id,
-    // );
-
-    // setAudioStreams(filteredAudioStreams);
-    // setVideoStreams(filteredVideoStreams);
+    const filteredAudioStreams: ConsumeInfo[] = audioStreams.filter(
+      (stream) => stream.producer_id !== producer_id,
+    );
+    const filteredVideoStreams: ConsumeInfo[] = videoStreams.filter(
+      (stream) => stream.producer_id !== producer_id,
+    );
+    setAudioStreams(filteredAudioStreams);
+    setVideoStreams(filteredVideoStreams);
   };
 
   const handleSendChatting = () => {
@@ -404,8 +370,6 @@ const WebRTCContainer = () => {
 
   const handleMedia = () => {
     setIsMedia((prevState) => !prevState);
-    // if (!socket) return;
-    // socket.emit('producerClosed', curProducer);
   };
 
   const handleMike = async () => {
@@ -418,7 +382,6 @@ const WebRTCContainer = () => {
 
   useEffect(() => {
     if (name && room_id) {
-      console.log('name:', name, 'room_id:', room_id);
       setCurName(name as unknown as string);
       setRoomId(room_id as string);
     }
@@ -444,7 +407,7 @@ const WebRTCContainer = () => {
         body: '60초 이내에 전송해주세요!',
       });
     }
-  });
+  }, []);
 
   return (
     <StWebRTCContainerWrapper>

@@ -15,7 +15,6 @@ export const getRoomInfo = async (roomId: number, memberId: number) => {
     const { data } = await client.get(
       `/room/info?roomId=${roomId}&memberId=${memberId}`,
     );
-    console.log(data.data);
     return data.data.rooms;
   } catch (err) {
     console.error(err);
@@ -25,7 +24,6 @@ export const getRoomInfo = async (roomId: number, memberId: number) => {
 
 export const applyRoom = async (roomId: number, memberId: number) => {
   try {
-    console.log(roomId, memberId);
     const { data } = await client.post(`/room/member/apply`, {
       roomId,
       memberId,
