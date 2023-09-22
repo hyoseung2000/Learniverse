@@ -10,6 +10,7 @@ import {
 
 import { getNickName } from '../../utils/getNicknames';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const handleConnectError = (error: any) => {
   console.error('socket connection error:', error.message);
 };
@@ -20,13 +21,22 @@ export const handleNewProducers = async (
   setCurMembers: React.Dispatch<React.SetStateAction<RoomPeerInfo[]>>,
 ) => {
   console.log('4. New producers (consumeList)', data);
+
+  const newMemberId = data[0].producer_user_id;
   const newMemberNickName = await getNickName(data[0].producer_user_name);
-  const newMember = {
-    id: data[0].producer_user_id,
-    name: data[0].producer_user_name,
-    nickname: newMemberNickName,
-  };
-  setCurMembers((prev) => [...prev, newMember]);
+
+  setCurMembers((prev) => {
+    if (prev.some((member) => member.id === newMemberId)) {
+      return prev;
+    }
+    const newMember = {
+      id: newMemberId,
+      name: data[0].producer_user_name,
+      nickname: newMemberNickName,
+    };
+    return [...prev, newMember];
+  });
+
   await consumeProducers(data);
 };
 

@@ -129,8 +129,8 @@ const useWebRTC = (
 
   const consumeProducers = async (producers: PeersInfo[]) => {
     const consumePromises = producers.map((producer) => {
-      const { producer_id, producer_user_id, producer_type } = producer;
-      return consume(producer_id, producer_user_id, producer_type).catch(
+      const { producer_id, producer_user_name, producer_type } = producer;
+      return consume(producer_id, producer_user_name, producer_type).catch(
         (error) =>
           console.error(
             `Error while consuming producer ${producer_id}:`,
