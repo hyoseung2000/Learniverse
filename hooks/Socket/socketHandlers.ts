@@ -22,6 +22,8 @@ export const handleNewProducers = async (
 ) => {
   console.log('4. New producers (consumeList)', data);
 
+  await consumeProducers(data);
+
   const newMemberId = data[0].producer_user_id;
   const newMemberNickName = await getNickName(data[0].producer_user_name);
 
@@ -36,8 +38,6 @@ export const handleNewProducers = async (
     };
     return [...prev, newMember];
   });
-
-  await consumeProducers(data);
 };
 
 export const handleMessage = async (

@@ -28,7 +28,6 @@ import {
   handleConsumerClosed,
   handleDisconnect,
   handleMessage,
-  handleNewProducers,
 } from './socketHandlers';
 
 const useWebRTC = (
@@ -42,6 +41,7 @@ const useWebRTC = (
   const [curDevice, setCurDevice] = useState<Device>();
   const [curProducer, setCurProducer] = useState<string>();
   const [curPeerList, setCurPeerList] = useState<PeersInfo[]>([]);
+  const [isDeviceLoaded, setIsDeviceLoaded] = useState(false);
 
   const [videoStreams, setVideoStreams] = useState<ConsumeInfo[]>([]);
   const [audioStreams, setAudioStreams] = useState<ConsumeInfo[]>([]);
@@ -65,6 +65,7 @@ const useWebRTC = (
       device = new Device();
       await device.load({ routerRtpCapabilities });
       setCurDevice(device);
+      setIsDeviceLoaded(true);
       console.log('3. device 로딩 ', device);
     } catch (error) {
       if (error instanceof UnsupportedError) {
@@ -128,14 +129,30 @@ const useWebRTC = (
   };
 
   const consumeProducers = async (producers: PeersInfo[]) => {
+    if (!socket || !socket.request) return;
+    console.log(curDevice, 'consumeProducers', producers);
+
+    if (!curDevice) {
+      const data = await socket.request('getRouterRtpCapabilities');
+      const device = await loadDevice(data);
+      setCurDevice(device!);
+      await consumeWithDevice(device!, producers);
+    } else {
+      await consumeWithDevice(curDevice, producers);
+    }
+  };
+
+  const consumeWithDevice = async (device: Device, producers: PeersInfo[]) => {
     const consumePromises = producers.map((producer) => {
       const { producer_id, producer_user_name, producer_type } = producer;
-      return consume(producer_id, producer_user_name, producer_type).catch(
-        (error) =>
-          console.error(
-            `Error while consuming producer ${producer_id}:`,
-            error,
-          ),
+      console.log(producer_id, producer_user_name, producer_type);
+      return consume(
+        device,
+        producer_id,
+        producer_user_name,
+        producer_type,
+      ).catch((error) =>
+        console.error(`Error while consuming producer ${producer_id}:`, error),
       );
     });
     await Promise.all(consumePromises);
@@ -245,19 +262,22 @@ const useWebRTC = (
   };
 
   const consume = async (
+    device: Device,
     producerId: string,
     producerName: string,
     produceType: string,
   ): Promise<void> => {
     try {
-      if (!curDevice || !socket || !socket.request) return;
-
-      const consumerTransport = await createTransport(curDevice, 'consume');
-      const { rtpCapabilities } = curDevice;
+      console.log(device, socket, socket.request);
+      if (!socket || !socket.request) return;
+      console.log('consume', producerId, producerName, produceType);
+      const consumerTransport = await createTransport(device, 'consume');
+      const { rtpCapabilities } = device;
 
       const data = await socket.request('consume', {
-        producerId,
         consumerTransportId: consumerTransport.id,
+        producerId,
+        producerName,
         rtpCapabilities,
       });
       const { id, kind, rtpParameters } = data;
@@ -273,6 +293,7 @@ const useWebRTC = (
       stream.addTrack(consumer.track);
 
       const nickname = await getNickName(producerName);
+      console.log('stream', stream, nickname);
       addStream(
         new MediaStream([consumer.track]),
         nickname,
@@ -320,9 +341,27 @@ const useWebRTC = (
   useEffect(() => {
     if (socket) {
       socket.on('connect_error', handleConnectError);
-      socket.on('newProducers', (data: PeersInfo[]) =>
-        handleNewProducers(data, consumeProducers, setCurMembers),
-      );
+      socket.on('newProducers', async (data: PeersInfo[]) => {
+        console.log('4. New producers (consumeList)', data);
+
+        await consumeProducers(data);
+
+        const newMemberId = data[0].producer_user_id;
+        const newMemberNickName = await getNickName(data[0].producer_user_name);
+
+        setCurMembers((prev) => {
+          if (prev.some((member) => member.id === newMemberId)) {
+            return prev;
+          }
+          const newMember = {
+            id: newMemberId,
+            name: data[0].producer_user_name,
+            nickname: newMemberNickName,
+          };
+          return [...prev, newMember];
+        });
+      });
+
       socket.on('message', async (data: ChattingInfo) => {
         handleMessage(data, setChattingList);
       });
@@ -344,11 +383,12 @@ const useWebRTC = (
 
   useEffect(() => {
     enterRoom();
+    initSockets();
   }, [socket, curRoomId, curName]);
 
   useEffect(() => {
     initSockets();
-  }, [curDevice]);
+  }, [isDeviceLoaded]);
 
   return {
     curMembers,
