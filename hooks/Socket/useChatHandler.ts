@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 
 import { ChattingInfo, CustomSocket } from '@/types/socket';
+import { getNickName } from '@/utils/getNicknames';
 import { getTime } from '@/utils/getTime';
 
 type UseChatHandlerReturnType = [
@@ -16,12 +17,19 @@ const useChatHandler = (
 ): UseChatHandlerReturnType => {
   const [chatting, setChatting] = useState<string>('');
 
-  const handleSendChatting = () => {
+  const getUserNickname = async (memberId: string) => {
+    const nickname = await getNickName(memberId);
+    return nickname;
+  };
+
+  const handleSendChatting = async () => {
     if (!curSocket) return;
 
     curSocket.emit('message', chatting);
+
+    const userNick = await getUserNickname(name.toString());
     const sentChat: ChattingInfo = {
-      name: name.toString(),
+      name: userNick,
       message: chatting,
       time: getTime(new Date()),
     };

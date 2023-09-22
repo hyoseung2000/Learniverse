@@ -320,14 +320,12 @@ const useWebRTC = (
   useEffect(() => {
     if (socket) {
       socket.on('connect_error', handleConnectError);
-      socket.on(
-        'newProducers',
-        (data: any) => console.log(data),
-        // handleNewProducers(data, consumeProducers, setCurMembers),
+      socket.on('newProducers', (data: PeersInfo[]) =>
+        handleNewProducers(data, consumeProducers, setCurMembers),
       );
-      socket.on('message', (data: ChattingInfo) =>
-        handleMessage(data, setChattingList),
-      );
+      socket.on('message', async (data: ChattingInfo) => {
+        handleMessage(data, setChattingList);
+      });
       socket.on('consumerClosed', (data: ConsumerId) =>
         handleConsumerClosed(data, removeStream),
       );

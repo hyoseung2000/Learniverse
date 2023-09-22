@@ -1,4 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { NextRouter } from 'next/router';
+import { Dispatch, SetStateAction } from 'react';
+
 import {
   ChattingInfo,
   ConsumerId,
@@ -28,14 +30,26 @@ export const handleNewProducers = async (
   await consumeProducers(data);
 };
 
-export const handleMessage = (data: ChattingInfo, setChattingList: any) => {
-  setChattingList((prev: ChattingInfo[]) => [...prev, data]);
+export const handleMessage = async (
+  data: ChattingInfo,
+  setChattingList: Dispatch<SetStateAction<ChattingInfo[]>>,
+) => {
+  const nickname = await getNickName(data.name.toString());
+  const dataWithNickname = {
+    name: nickname,
+    message: data.message,
+    time: data.time,
+  };
+  setChattingList((prev: ChattingInfo[]) => [...prev, dataWithNickname]);
 };
 
-export const handleConsumerClosed = (data: ConsumerId, removeStream: any) => {
+export const handleConsumerClosed = (
+  data: ConsumerId,
+  removeStream: (producer_id: string) => void,
+) => {
   removeStream(data.consumer_id);
 };
 
-export const handleDisconnect = (router: any) => {
+export const handleDisconnect = (router: NextRouter) => {
   router.push('/home');
 };
