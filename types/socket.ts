@@ -21,35 +21,30 @@ export interface RoomInfo {
 }
 
 export interface PeersInfo {
-  producer_id: string;
-  produce_name: string;
-  produce_type: string;
+  producer_id: string; // producer id
+  producer_type: string; // video or audio
+  producer_user_id: string; // socket id
+  producer_user_name: string; // memeber id
 }
 
 export interface RoomPeerInfo {
-  id: string;
-  name: string;
-  nickname?: string;
-}
-
-export interface ProducerList {
-  produce_type: string;
-  producer_id: string;
-  producer_socket_id?: string;
+  id: string; // socket id
+  name: string; // memeber id
+  nickname?: string; // memeber nickname
 }
 
 export interface ChattingInfo {
-  name: string;
-  message: string;
-  time: string;
+  name: string; // member id
+  message: string; // chatting message
+  time: string; // chatting time
 }
 
 export interface ConsumerId {
-  consumer_id: string;
+  consumer_id: string; // consumer id
 }
 
 export interface ConsumeInfo {
-  nickname: string;
-  producer_id: string;
-  stream: MediaStream;
+  nickname: string; // memeber nickname
+  producer_id: string; // producer id
+  stream: MediaStream; // stream (video or audio)
 }

@@ -33,6 +33,7 @@ const WebRTCContainer = () => {
     audioStreams,
     chattingList,
     addChattingList,
+    // handleCloseProducer,
   } = useWebRTC(curRoomId!, curName!, curSocket!);
 
   const [isMedia, handleMedia] = useToggle();
@@ -46,6 +47,11 @@ const WebRTCContainer = () => {
   );
   const gallery = useModal();
   const pushNotification = usePushNotification();
+
+  const handleTurnOffMedia = async () => {
+    // await handleCloseProducer(producerId);
+    handleMedia();
+  };
 
   useEffect(() => {
     if (name && room_id) {
@@ -66,7 +72,7 @@ const WebRTCContainer = () => {
     <WebRTCLayout
       curRoomId={curRoomId!}
       isMedia={isMedia}
-      handleMedia={handleMedia}
+      handleMedia={handleTurnOffMedia}
       isMike={isMike}
       handleMike={handleMike}
       isSpeaker={isSpeaker}

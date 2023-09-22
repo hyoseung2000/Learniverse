@@ -129,9 +129,13 @@ const useWebRTC = (
 
   const consumeProducers = async (producers: PeersInfo[]) => {
     const consumePromises = producers.map((producer) => {
-      const { producer_id, produce_name, produce_type } = producer;
-      return consume(producer_id, produce_name, produce_type).catch((error) =>
-        console.error(`Error while consuming producer ${producer_id}:`, error),
+      const { producer_id, producer_user_id, producer_type } = producer;
+      return consume(producer_id, producer_user_id, producer_type).catch(
+        (error) =>
+          console.error(
+            `Error while consuming producer ${producer_id}:`,
+            error,
+          ),
       );
     });
     await Promise.all(consumePromises);
@@ -295,6 +299,13 @@ const useWebRTC = (
     // }
   };
 
+  const handleCloseProducer = async (producerId: string) => {
+    if (!socket.request) return;
+    await socket.request('producerClosed', {
+      producer_id: producerId,
+    });
+  };
+
   const removeStream = (producer_id: string) => {
     const filteredAudioStreams: ConsumeInfo[] = audioStreams.filter(
       (stream) => stream.producer_id !== producer_id,
@@ -348,6 +359,7 @@ const useWebRTC = (
     audioStreams,
     chattingList,
     addChattingList,
+    handleCloseProducer,
   };
 };
 
