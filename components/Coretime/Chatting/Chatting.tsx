@@ -1,12 +1,30 @@
+import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
 import { ChattingInfo } from '@/types/socket';
+
+import { getNickName } from '../../../utils/getNicknames';
 
 interface ChattingsProps {
   chattingList: ChattingInfo[];
 }
 
 const Chatting = ({ chattingList }: ChattingsProps) => {
+  const [nicknames, setNicknames] = useState<Map<string, string>>(new Map());
+
+  useEffect(() => {
+    const fetchNicknames = async () => {
+      const newNicknames = new Map();
+      for (const chatting of chattingList) {
+        const nickname = await getNickName(chatting.name);
+        newNicknames.set(chatting.name, nickname);
+      }
+      setNicknames(newNicknames);
+    };
+
+    fetchNicknames();
+  }, [chattingList]);
+
   return (
     <>
       <h3>코어타임 채팅</h3>
@@ -15,7 +33,7 @@ const Chatting = ({ chattingList }: ChattingsProps) => {
           <StChatting
             key={`${chattings.name}-${chattings.message}-${chattings.time}`}
           >
-            <span>{chattings.name}</span>
+            <span>{nicknames.get(chattings.name)}</span>
             <p>{chattings.message}</p>
             <time>{chattings.time}</time>
           </StChatting>

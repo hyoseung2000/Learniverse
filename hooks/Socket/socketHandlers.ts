@@ -18,10 +18,10 @@ export const handleNewProducers = async (
   setCurMembers: React.Dispatch<React.SetStateAction<RoomPeerInfo[]>>,
 ) => {
   console.log('4. New producers (consumeList)', data);
-  const newMemberNickName = await getNickName(data[0].produce_name);
+  const newMemberNickName = await getNickName(data[0].producer_user_name);
   const newMember = {
-    id: data[0].producer_id,
-    name: data[0].produce_name,
+    id: data[0].producer_user_id,
+    name: data[0].producer_user_name,
     nickname: newMemberNickName,
   };
   setCurMembers((prev) => [...prev, newMember]);
