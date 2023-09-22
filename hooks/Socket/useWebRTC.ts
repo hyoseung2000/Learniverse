@@ -28,6 +28,7 @@ import {
   handleConsumerClosed,
   handleDisconnect,
   handleMessage,
+  handleNewProducers,
 } from './socketHandlers';
 
 const useWebRTC = (
@@ -130,7 +131,6 @@ const useWebRTC = (
 
   const consumeProducers = async (producers: PeersInfo[]) => {
     if (!socket || !socket.request) return;
-    console.log(curDevice, 'consumeProducers', producers);
 
     if (!curDevice) {
       const data = await socket.request('getRouterRtpCapabilities');
@@ -145,7 +145,6 @@ const useWebRTC = (
   const consumeWithDevice = async (device: Device, producers: PeersInfo[]) => {
     const consumePromises = producers.map((producer) => {
       const { producer_id, producer_user_name, producer_type } = producer;
-      console.log(producer_id, producer_user_name, producer_type);
       return consume(
         device,
         producer_id,
@@ -268,9 +267,7 @@ const useWebRTC = (
     produceType: string,
   ): Promise<void> => {
     try {
-      console.log(device, socket, socket.request);
       if (!socket || !socket.request) return;
-      console.log('consume', producerId, producerName, produceType);
       const consumerTransport = await createTransport(device, 'consume');
       const { rtpCapabilities } = device;
 
@@ -293,7 +290,6 @@ const useWebRTC = (
       stream.addTrack(consumer.track);
 
       const nickname = await getNickName(producerName);
-      console.log('stream', stream, nickname);
       addStream(
         new MediaStream([consumer.track]),
         nickname,
@@ -342,26 +338,8 @@ const useWebRTC = (
     if (socket) {
       socket.on('connect_error', handleConnectError);
       socket.on('newProducers', async (data: PeersInfo[]) => {
-        console.log('4. New producers (consumeList)', data);
-
-        await consumeProducers(data);
-
-        const newMemberId = data[0].producer_user_id;
-        const newMemberNickName = await getNickName(data[0].producer_user_name);
-
-        setCurMembers((prev) => {
-          if (prev.some((member) => member.id === newMemberId)) {
-            return prev;
-          }
-          const newMember = {
-            id: newMemberId,
-            name: data[0].producer_user_name,
-            nickname: newMemberNickName,
-          };
-          return [...prev, newMember];
-        });
+        handleNewProducers(data, consumeProducers, setCurMembers);
       });
-
       socket.on('message', async (data: ChattingInfo) => {
         handleMessage(data, setChattingList);
       });

@@ -2,18 +2,11 @@ import { styled } from 'styled-components';
 
 import { ChattingInfo } from '@/types/socket';
 
-// import { getNickName } from '../../../utils/getNicknames';
-
 interface ChattingsProps {
   chattingList: ChattingInfo[];
 }
 
 const Chatting = ({ chattingList }: ChattingsProps) => {
-  // const getUserNickname = async (memberId: string) => {
-  //   const nickname = await getNickName(memberId);
-  //   return nickname;
-  // };
-
   return (
     <>
       <h3>코어타임 채팅</h3>

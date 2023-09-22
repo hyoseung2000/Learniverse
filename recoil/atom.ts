@@ -1,4 +1,3 @@
-import { Device } from 'mediasoup-client';
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
@@ -34,10 +33,4 @@ export const moonScoreState = atom<MoonScoreInfo>({
 export const todayState = atom<string>({
   key: `today`,
   default: getToday(),
-});
-
-export const deviceState = atom<Device>({
-  key: `device`,
-  default: undefined,
-  effects_UNSTABLE: [persistAtom],
 });
