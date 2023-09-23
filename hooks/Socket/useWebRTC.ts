@@ -335,10 +335,6 @@ const useWebRTC = (
         id,
         produceType,
       );
-
-      // consumer.on('transportclose', () => {
-      //   console.log('Consumer transport closed');
-      // });
     } catch (error) {
       console.error('Error consuming:', error);
     }
@@ -349,11 +345,15 @@ const useWebRTC = (
   };
 
   const handleCloseProducer = async (producerId: string) => {
-    console.log('handleCloseProducer', producerId);
+    console.log('Closing Producer : ', producerId);
     removeStream(producerId);
     await socket.emit('producerClosed', {
       producer_id: producerId,
     });
+  };
+
+  const handleExitRoom = async () => {
+    await socket.emit('exitRoom');
   };
 
   useEffect(() => {
@@ -400,6 +400,7 @@ const useWebRTC = (
     chattingList,
     addChattingList,
     handleCloseProducer,
+    handleExitRoom,
   };
 };
 

@@ -34,6 +34,7 @@ interface WebRTCLayoutProps {
   handleSelectVideo: (stream: ConsumeInfo) => void;
   chattingList: ChattingInfo[];
   handleSendChatting: () => void;
+  handleExitRoom: () => void;
   gallery: UseModalReturnType;
 }
 
@@ -55,6 +56,7 @@ const WebRTCLayout = ({
   handleSelectVideo,
   chattingList,
   handleSendChatting,
+  handleExitRoom,
   gallery,
 }: WebRTCLayoutProps) => {
   const [isSending, setIsSending] = useState(false);
@@ -126,7 +128,9 @@ const WebRTCLayout = ({
           </StChatInputWrapper>
         </StChattingWrapper>
         <StCoreTimeBtnWrapper>
-          <StExitButton type="button">코어타임 나가기</StExitButton>
+          <StExitButton type="button" onClick={handleExitRoom}>
+            코어타임 나가기
+          </StExitButton>
         </StCoreTimeBtnWrapper>
       </StCoretimeInfoWrapper>
       <StGalleryModalWrapper $showing={gallery.isShowing}>

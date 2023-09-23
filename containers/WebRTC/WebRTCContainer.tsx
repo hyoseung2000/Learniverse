@@ -36,6 +36,7 @@ const WebRTCContainer = () => {
     chattingList,
     addChattingList,
     handleCloseProducer,
+    handleExitRoom,
   } = useWebRTC(curRoomId!, curName!, curSocket!);
 
   const [isMedia, handleMedia] = useToggle();
@@ -124,6 +125,7 @@ const WebRTCContainer = () => {
       handleSelectVideo={handleSelectVideo}
       chattingList={chattingList}
       handleSendChatting={handleSendChatting}
+      handleExitRoom={handleExitRoom}
       gallery={gallery}
     />
   );
