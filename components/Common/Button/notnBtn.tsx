@@ -2,10 +2,14 @@ import { styled } from 'styled-components';
 
 import { IcNotion } from '@/public/assets/icons';
 
-const NotnBtn = () => {
+interface Props {
+  handleClick: (key: number) => void;
+}
+
+const NotnBtn = ({ handleClick }: Props) => {
   return (
     <StIconBtnWrapper>
-      <IcNotion />
+      <IcNotion onClick={handleClick} />
     </StIconBtnWrapper>
   );
 };

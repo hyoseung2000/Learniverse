@@ -2,10 +2,14 @@ import { styled } from 'styled-components';
 
 import { IcGDrive } from '@/public/assets/icons';
 
-const GdriveBtn = () => {
+interface Props {
+  handleClick: (key: number) => void;
+}
+
+const GdriveBtn = ({ handleClick }: Props) => {
   return (
     <StIconBtnWrapper>
-      <IcGDrive />
+      <IcGDrive onClick={handleClick} />
     </StIconBtnWrapper>
   );
 };

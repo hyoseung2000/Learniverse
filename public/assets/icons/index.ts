@@ -5,6 +5,7 @@ import IcChar from './ic_char.svg';
 import IcCharacterCheck from './ic_character_check.svg';
 import IcCharacterDot from './ic_character_dot.svg';
 import IcCharacterSpeaker from './ic_character_speaker.svg';
+import IcCharacterX from './ic_character_x.svg';
 import IcConfirm from './ic_confirm.svg';
 import IcCoreChar from './ic_core_char.svg';
 import IcDeleteTag from './ic_delete_tag.svg';
@@ -84,4 +85,5 @@ export {
   IcCoreChar,
   IcGallery,
   IcIssue,
+  IcCharacterX,
 };
