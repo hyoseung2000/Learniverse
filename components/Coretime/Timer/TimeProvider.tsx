@@ -26,7 +26,6 @@ const TimeProvider: React.FC<TimeProviderProps> = ({
   useEffect(() => {
     const diff = Math.floor((endTime.getTime() - new Date().getTime()) / 1000);
     const timeLeft = Number.isNaN(Number(diff)) ? 3600 : diff;
-    console.log(timeLeft);
     setSeconds(timeLeft);
   }, [coreEndTime]);
 
