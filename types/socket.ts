@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { RtpParameters } from 'mediasoup-client/lib/RtpParameters';
 import { Socket } from 'socket.io-client';
 
 type SocketType = typeof Socket;
@@ -45,6 +46,16 @@ export interface ConsumerId {
 
 export interface ConsumeInfo {
   nickname: string; // memeber nickname
-  producer_id: string; // producer id
+  consumer_id: string; // consumer_id (or socket id)
   stream: MediaStream; // stream (video or audio)
+}
+
+export interface ConsumerInfo {
+  producerId: string; // producer id
+  producerName: string; // memeber id
+  id: string; // consumer id
+  kind: 'video' | 'audio';
+  rtpParameters: RtpParameters;
+  type: string;
+  producerPaused: boolean;
 }

@@ -14,6 +14,7 @@ import {
   ChattingInfo,
   ConsumeInfo,
   ConsumerId,
+  ConsumerInfo,
   CustomSocket,
   JoinInfo,
   MediaType,
@@ -216,18 +217,38 @@ const useWebRTC = (
   const addStream = (
     newStream: MediaStream,
     nickname: string,
-    producerId: string,
+    consumerId: string,
     type: string,
   ) => {
     const curStream: ConsumeInfo = {
       nickname,
-      producer_id: producerId,
+      consumer_id: consumerId,
       stream: newStream,
     };
     if (type === 'video')
       setVideoStreams((prevStreams) => [...prevStreams, curStream]);
     if (type === 'audio')
       setAudioStreams((prevStreams) => [...prevStreams, curStream]);
+  };
+
+  const removeStream = (consumer_id: string) => {
+    console.log(consumer_id, audioStreams, videoStreams);
+
+    setVideoStreams((prevStreams) =>
+      prevStreams.filter((stream) => stream.consumer_id !== consumer_id),
+    );
+    setAudioStreams((prevStreams) =>
+      prevStreams.filter((stream) => stream.consumer_id !== consumer_id),
+    );
+
+    // const filteredAudioStreams: ConsumeInfo[] = audioStreams.filter(
+    //   (stream) => stream.producer_id !== producer_id,
+    // );
+    // const filteredVideoStreams: ConsumeInfo[] = videoStreams.filter(
+    //   (stream) => stream.producer_id !== producer_id,
+    // );
+    // setAudioStreams(filteredAudioStreams);
+    // setVideoStreams(filteredVideoStreams);
   };
 
   const produce = async (type: MediaType): Promise<void> => {
@@ -262,8 +283,8 @@ const useWebRTC = (
 
   const consume = async (
     device: Device,
-    producerId: string,
-    producerName: string,
+    curProducerId: string,
+    curProducerName: string,
     produceType: string,
   ): Promise<void> => {
     try {
@@ -273,11 +294,23 @@ const useWebRTC = (
 
       const data = await socket.request('consume', {
         consumerTransportId: consumerTransport.id,
-        producerId,
-        producerName,
+        producerId: curProducerId,
+        producerName: curProducerName,
         rtpCapabilities,
       });
-      const { id, kind, rtpParameters } = data;
+
+      const {
+        producerId,
+        producerName,
+        id,
+        kind,
+        rtpParameters,
+        type,
+        producerPaused,
+      }: ConsumerInfo = data;
+
+      console.log(data, type, producerPaused);
+      console.log(typeof kind, typeof type, typeof producerPaused);
 
       const consumer: Consumer = await consumerTransport.consume({
         id,
@@ -290,12 +323,7 @@ const useWebRTC = (
       stream.addTrack(consumer.track);
 
       const nickname = await getNickName(producerName);
-      addStream(
-        new MediaStream([consumer.track]),
-        nickname,
-        producerId,
-        produceType,
-      );
+      addStream(new MediaStream([consumer.track]), nickname, id, produceType);
 
       // consumer.on('transportclose', () => {
       //   console.log('Consumer transport closed');
@@ -317,21 +345,10 @@ const useWebRTC = (
   };
 
   const handleCloseProducer = async (producerId: string) => {
-    if (!socket.request) return;
-    await socket.request('producerClosed', {
+    console.log('handleCloseProducer', producerId);
+    await socket.emit('producerClosed', {
       producer_id: producerId,
     });
-  };
-
-  const removeStream = (producer_id: string) => {
-    const filteredAudioStreams: ConsumeInfo[] = audioStreams.filter(
-      (stream) => stream.producer_id !== producer_id,
-    );
-    const filteredVideoStreams: ConsumeInfo[] = videoStreams.filter(
-      (stream) => stream.producer_id !== producer_id,
-    );
-    setAudioStreams(filteredAudioStreams);
-    setVideoStreams(filteredVideoStreams);
   };
 
   useEffect(() => {
@@ -343,6 +360,9 @@ const useWebRTC = (
       socket.on('message', async (data: ChattingInfo) => {
         handleMessage(data, setChattingList);
       });
+      // socket.on('consumerClosed', (consumer_id: string) => {
+      //   console.log('Closing consumer:', consumer_id);
+      // });
       socket.on('consumerClosed', (data: ConsumerId) =>
         handleConsumerClosed(data, removeStream),
       );

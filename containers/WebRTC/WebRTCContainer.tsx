@@ -28,12 +28,12 @@ const WebRTCContainer = () => {
     curMembers,
     // curDevice,
     // curProducer,
-    // curPeerList,
+    curPeerList,
     videoStreams,
     audioStreams,
     chattingList,
     addChattingList,
-    // handleCloseProducer,
+    handleCloseProducer,
   } = useWebRTC(curRoomId!, curName!, curSocket!);
 
   const [isMedia, handleMedia] = useToggle();
@@ -49,7 +49,18 @@ const WebRTCContainer = () => {
   const pushNotification = usePushNotification();
 
   const handleTurnOffMedia = async () => {
-    // await handleCloseProducer(producerId);
+    console.log(curName, curPeerList);
+    const foundPeer = curPeerList.find(
+      (peer) =>
+        peer.producer_type === 'video' && peer.producer_user_name === curName,
+    );
+    if (foundPeer) {
+      console.log(foundPeer.producer_id);
+      await handleCloseProducer(foundPeer.producer_id);
+    } else {
+      console.log('No match found');
+    }
+
     handleMedia();
   };
 

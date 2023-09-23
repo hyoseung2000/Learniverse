@@ -55,6 +55,8 @@ const WebRTCLayout = ({
   handleSendChatting,
   gallery,
 }: WebRTCLayoutProps) => {
+  console.log('videoStreams', videoStreams);
+  console.log('audioStreams', audioStreams);
   return (
     <StWebRTCContainerWrapper>
       <StMediaContainer>
@@ -75,17 +77,17 @@ const WebRTCLayout = ({
         <StMediaWrapper>
           {videoStreams.map((stream) => (
             <WebRTCVideo
-              key={stream.producer_id}
+              key={stream.consumer_id}
               roomId={curRoomId!}
               nickname={stream.nickname}
               mediaStream={stream.stream}
-              isSelected={selectedVideo === stream.producer_id}
+              isSelected={selectedVideo === stream.consumer_id}
               onClick={() => handleSelectVideo(stream)}
             />
           ))}
           {audioStreams.map((stream) => (
             <WebRTCAudio
-              key={stream.producer_id}
+              key={stream.consumer_id}
               mediaStream={stream.stream}
               ismuted={!isSpeaker}
             />
