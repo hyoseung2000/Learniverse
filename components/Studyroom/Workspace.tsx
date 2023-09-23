@@ -1,23 +1,46 @@
 import { styled } from 'styled-components';
 
+import useModal from '@/hooks/useModal';
 import { IcPlusBtn } from '@/public/assets/icons';
 
 import { FigmaBtn, GDriveBtn, GithbBtn, NotnBtn } from '../Common/Button';
+import RegisterWorkspaceModal from './Modal/RegisterWorkspaceModal';
 
 const WorkSpace = () => {
+  // const [workSpace, setWorkSpace] = useState([]);
+  const register = useModal();
+
+  const handleOpen = () => {
+    register.toggle();
+  };
+
+  const handleWSAddress = () => {
+    window.open(
+      'https://www.notion.so/000208/Learniverse-3f06d9d94f3a4540a036c1070926c8ef',
+    );
+  };
+
   return (
-    <StWorkspaceWrapper>
-      <StTitleWrapper>
-        <h2>워크 스페이스</h2>
-        <IcPlusBtn />
-      </StTitleWrapper>
-      <Workspace>
-        <NotnBtn />
-        <GDriveBtn />
-        <GithbBtn />
-        <FigmaBtn />
-      </Workspace>
-    </StWorkspaceWrapper>
+    <>
+      <StWorkspaceWrapper>
+        <StTitleWrapper>
+          <h2>워크 스페이스</h2>
+          <IcPlusBtn type="button" onClick={handleOpen} />
+        </StTitleWrapper>
+        <Workspace>
+          <NotnBtn key={0} handleClick={handleWSAddress} />
+          <GDriveBtn key={1} handleClick={handleWSAddress} />
+          <GithbBtn key={2} handleClick={handleWSAddress} />
+          <FigmaBtn key={3} handleClick={handleWSAddress} />
+        </Workspace>
+      </StWorkspaceWrapper>
+      <StRegModalWrapper $showing={register.isShowing}>
+        <RegisterWorkspaceModal
+          isShowing={register.isShowing}
+          handleCancel={register.toggle}
+        />
+      </StRegModalWrapper>
+    </>
   );
 };
 
@@ -35,6 +58,8 @@ const StTitleWrapper = styled.div`
     color: ${({ theme }) => theme.colors.White};
     ${({ theme }) => theme.fonts.Title1};
   }
+
+  cursor: pointer;
 `;
 
 const Workspace = styled.div`
@@ -48,4 +73,20 @@ const Workspace = styled.div`
   align-items: center;
 
   margin-top: 3.1rem;
+`;
+
+const StRegModalWrapper = styled.div<{ $showing: boolean }>`
+  display: ${({ $showing }) => ($showing ? 'block' : 'none')};
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+
+  justify-content: center;
+  align-items: center;
+
+  width: 100vw;
+  height: 100vh;
+
+  background-color: rgba(0, 0, 0, 0.5);
 `;

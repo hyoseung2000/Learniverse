@@ -36,3 +36,14 @@ export const applyRoom = async (roomId: number, memberId: number) => {
     throw err;
   }
 };
+
+export const getCoretimeList = async (roomId: number) => {
+  try {
+    const { data } = await client.get(`/room/core/list?roomId=${roomId}`);
+    console.log(data.data);
+    return data.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};

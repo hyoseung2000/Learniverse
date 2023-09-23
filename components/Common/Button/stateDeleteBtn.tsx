@@ -2,11 +2,12 @@ import { styled } from 'styled-components';
 
 interface Props {
   btnName: string;
+  handleClick: () => void;
 }
 
-const StateDeleteBtn = ({ btnName }: Props) => {
+const StateDeleteBtn = ({ btnName, handleClick }: Props) => {
   return (
-    <StStateBtnWrapper>
+    <StStateBtnWrapper onClick={handleClick}>
       <p>{btnName}</p>
     </StStateBtnWrapper>
   );

@@ -34,3 +34,24 @@ export interface PostStudyRoomInfo {
   room_google_drive?: string;
   room_figma?: string;
 }
+
+export interface CoreTimeListInfo {
+  cores: CoreTimeInfo[];
+}
+
+export interface CoreTimeInfo {
+  coreTimeId: number;
+  roomId: number;
+  coreStartTime: Date;
+  coreEndTime: Date;
+  captureNum: number;
+  isCore: boolean;
+}
+
+export interface PostCoreTimeInfo {
+  roomId: number;
+  coreStartTime: Date;
+  coreHour: number;
+  coreMinute: number;
+  captureNum: number;
+}
