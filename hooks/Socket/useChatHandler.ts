@@ -12,15 +12,10 @@ type UseChatHandlerReturnType = [
 
 const useChatHandler = (
   curSocket: CustomSocket,
+  curNickname: string,
   addChattingList: (chat: ChattingInfo) => void,
-  name: number,
 ): UseChatHandlerReturnType => {
   const [chatting, setChatting] = useState<string>('');
-
-  const getUserNickname = async (memberId: string) => {
-    const nickname = await getNickName(memberId);
-    return nickname;
-  };
 
   const handleSendChatting = async (): Promise<void> => {
     return new Promise<void>(async (resolve, reject) => {
@@ -31,9 +26,8 @@ const useChatHandler = (
 
       curSocket.emit('message', chatting);
 
-      const userNick = await getUserNickname(name.toString());
       const sentChat: ChattingInfo = {
-        name: userNick,
+        name: curNickname,
         message: chatting,
         time: getTime(new Date()),
       };

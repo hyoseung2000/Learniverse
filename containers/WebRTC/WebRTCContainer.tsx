@@ -13,6 +13,7 @@ import useModal from '@/hooks/useModal';
 import { usePushNotification } from '@/hooks/usePushNotification';
 import useToggle from '@/hooks/useToggle';
 import { memberIdState } from '@/recoil/atom';
+import { getNickName } from '@/utils/getNicknames';
 
 import WebRTCLayout from './WebRTCLayout';
 
@@ -21,6 +22,7 @@ const WebRTCContainer = () => {
   const { room_id } = router.query;
   const name = useRecoilValue(memberIdState);
   const [curName, setCurName] = useState<string>();
+  const [curNickname, setCurNickname] = useState('');
   const [curRoomId, setRoomId] = useState<string>();
 
   const curSocket = useSocketConnection(curRoomId!);
@@ -28,8 +30,7 @@ const WebRTCContainer = () => {
     produce,
     curMembers,
     // curDevice,
-    // curProducer,
-    curPeerList,
+    // curPeerList,
     videoStreams,
     audioStreams,
     chattingList,
@@ -43,11 +44,16 @@ const WebRTCContainer = () => {
   const [selectedVideo, handleSelectVideo] = useVideoSelector();
   const [chatting, setChatting, handleSendChatting] = useChatHandler(
     curSocket!,
+    curNickname!,
     addChattingList,
-    name,
   );
   const gallery = useModal();
   const pushNotification = usePushNotification();
+
+  const setNickname = async () => {
+    const nickname = await getNickName(curName!);
+    setCurNickname(nickname);
+  };
 
   const handleTurnOff = async (type: string) => {
     const medias = type === 'video' ? videoStreams : audioStreams;
@@ -86,6 +92,12 @@ const WebRTCContainer = () => {
   }, [name, room_id]);
 
   useEffect(() => {
+    if (curName) {
+      setNickname();
+    }
+  }, [curName]);
+
+  useEffect(() => {
     if (pushNotification) {
       pushNotification.fireNotification('스크린이 캡처되었습니다!', {
         body: '60초 이내에 전송해주세요!',
@@ -95,6 +107,7 @@ const WebRTCContainer = () => {
 
   return (
     <WebRTCLayout
+      curNickname={curNickname!}
       curRoomId={curRoomId!}
       isMedia={isMedia}
       handleMedia={handleMediaToggle}

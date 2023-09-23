@@ -41,7 +41,6 @@ const useWebRTC = (
 
   const [curMembers, setCurMembers] = useState<RoomPeerInfo[]>([]);
   const [curDevice, setCurDevice] = useState<Device>();
-  const [curProducer, setCurProducer] = useState<string>();
   const [curPeerList, setCurPeerList] = useState<PeersInfo[]>([]);
   const [isDeviceLoaded, setIsDeviceLoaded] = useState(false);
 
@@ -204,7 +203,6 @@ const useWebRTC = (
               rtpParameters,
             });
             callback({ id: producerId.producer_id });
-            setCurProducer(producerId.producer_id);
           } catch (err) {
             errback(err as Error);
           }
@@ -254,7 +252,6 @@ const useWebRTC = (
       const producerTransport = await createTransport(curDevice, 'produce');
       const producer = await producerTransport.produce({ track });
 
-      console.log(producer);
       addStream(
         stream,
         nickname,
@@ -351,13 +348,6 @@ const useWebRTC = (
     setChattingList((prev) => [...prev, chat]);
   };
 
-  // const closeProducer = () => {
-  // if (curProducer) {
-  //   curProducer.close();
-  //   setCurProducer(undefined);
-  // }
-  // };
-
   const handleCloseProducer = async (producerId: string) => {
     console.log('handleCloseProducer', producerId);
     removeStream(producerId);
@@ -404,7 +394,6 @@ const useWebRTC = (
     produce,
     curMembers,
     curDevice,
-    curProducer,
     curPeerList,
     videoStreams,
     audioStreams,
