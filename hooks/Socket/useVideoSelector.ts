@@ -9,7 +9,7 @@ const useVideoSelector = (): UseVideoSelectorType => {
 
   const handleSelectVideo = (stream: ConsumeInfo) => {
     setSelectedVideo(
-      selectedVideo === stream.producer_id ? null : stream.producer_id,
+      selectedVideo === stream.consumer_id ? null : stream.consumer_id,
     );
   };
 

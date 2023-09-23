@@ -242,7 +242,6 @@ const useWebRTC = (
 
   const produce = async (type: MediaType): Promise<void> => {
     try {
-      console.log(curDevice, socket.request);
       if (!curDevice || !socket || !socket.request) return;
 
       let stream: MediaStream;
