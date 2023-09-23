@@ -217,11 +217,13 @@ const useWebRTC = (
   const addStream = (
     newStream: MediaStream,
     nickname: string,
+    name: string,
     consumerId: string,
     type: string,
   ) => {
     const curStream: ConsumeInfo = {
       nickname,
+      name,
       consumer_id: consumerId,
       stream: newStream,
     };
@@ -252,9 +254,11 @@ const useWebRTC = (
       const producerTransport = await createTransport(curDevice, 'produce');
       const producer = await producerTransport.produce({ track });
 
+      console.log(producer);
       addStream(
         stream,
         nickname,
+        curName,
         producer.id,
         type === 'screenType' ? 'video' : 'audio',
       );
@@ -327,7 +331,13 @@ const useWebRTC = (
       stream.addTrack(consumer.track);
 
       const nickname = await getNickName(producerName);
-      addStream(new MediaStream([consumer.track]), nickname, id, produceType);
+      addStream(
+        new MediaStream([consumer.track]),
+        nickname,
+        producerName,
+        id,
+        produceType,
+      );
 
       // consumer.on('transportclose', () => {
       //   console.log('Consumer transport closed');

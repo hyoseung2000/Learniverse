@@ -46,7 +46,8 @@ export interface ConsumerId {
 
 export interface ConsumeInfo {
   nickname: string; // memeber nickname
-  consumer_id: string; // consumer_id (or socket id)
+  name: string; // memeber id
+  consumer_id: string; // consumer_id
   stream: MediaStream; // stream (video or audio)
 }
 

@@ -49,13 +49,11 @@ const WebRTCContainer = () => {
   const gallery = useModal();
   const pushNotification = usePushNotification();
 
-  const handleTurnOffMedia = async (type: string) => {
-    const foundPeer = curPeerList.find(
-      (peer) =>
-        peer.producer_type === type && peer.producer_user_name === curName,
-    );
+  const handleTurnOff = async (type: string) => {
+    const medias = type === 'video' ? videoStreams : audioStreams;
+    const foundPeer = medias.find((media) => media.name === curName);
     if (foundPeer) {
-      await handleCloseProducer(foundPeer.producer_id);
+      await handleCloseProducer(foundPeer.consumer_id);
     } else {
       console.log('No match found');
     }
@@ -63,7 +61,7 @@ const WebRTCContainer = () => {
 
   const handleMediaToggle = async () => {
     if (isMedia) {
-      await handleTurnOffMedia('video');
+      await handleTurnOff('video');
     } else {
       await produce('screenType');
     }
@@ -71,8 +69,9 @@ const WebRTCContainer = () => {
   };
 
   const handleMikeToggle = async () => {
-    if (isMedia) {
-      await handleTurnOffMedia('audio');
+    console.log(isMike);
+    if (isMike) {
+      await handleTurnOff('audio');
     } else {
       await produce('audioType');
     }
