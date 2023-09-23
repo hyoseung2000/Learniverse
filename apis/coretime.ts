@@ -1,6 +1,8 @@
+import axios from 'axios';
+
 import { PostCoreTimeInfo } from '@/types/studyroom';
 
-import { client } from './axios';
+import { client, media } from './axios';
 
 export const createCoretime = async (postCoreTimeData: PostCoreTimeInfo) => {
   try {
@@ -35,5 +37,25 @@ export const getCoretimeID = async (roomId: number) => {
   } catch (err) {
     console.error(err);
     throw err;
+  }
+};
+
+export const getPresignedUrl = async () => {
+  try {
+    const data = await media.get('/presigned-url');
+    return data.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+// eslint-disable-next-line consistent-return
+export const putFile = async (presignedUrl: string, file: File) => {
+  try {
+    const data = await axios.put(`${presignedUrl}`, file);
+    return data;
+  } catch (error) {
+    console.error(error);
   }
 };

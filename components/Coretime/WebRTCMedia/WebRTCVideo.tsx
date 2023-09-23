@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { styled } from 'styled-components';
 
-import { getPresignedUrl, putFile } from '@/apis/coretime';
+import { getPresignedUrl, putFile } from '@/apis/coreTime';
 import { IcCoreChar } from '@/public/assets/icons';
 
 interface WebRTCVideoProps {
