@@ -17,6 +17,7 @@ import { UseModalReturnType } from '@/hooks/useModal';
 import { ChattingInfo, ConsumeInfo, RoomPeerInfo } from '@/types/socket';
 
 interface WebRTCLayoutProps {
+  coreEndTime: Date;
   curNickname: string;
   curRoomId: string;
   isMedia: boolean;
@@ -39,6 +40,7 @@ interface WebRTCLayoutProps {
 }
 
 const WebRTCLayout = ({
+  coreEndTime,
   curNickname,
   curRoomId,
   isMedia,
@@ -74,7 +76,7 @@ const WebRTCLayout = ({
       <StMediaContainer>
         <StSettingWrapper>
           <StSettingBtnWrapper>
-            <TimeProvider>
+            <TimeProvider coreEndTime={coreEndTime}>
               <Timer />
             </TimeProvider>
             <MediaBtn isMedia={isMedia} handleMedia={handleMedia} />

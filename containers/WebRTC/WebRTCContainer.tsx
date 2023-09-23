@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
+import { getCoreEndtime } from '@/apis/coretimes';
 import {
   useChatHandler,
   useSocketConnection,
@@ -21,9 +22,11 @@ const WebRTCContainer = () => {
   const router = useRouter();
   const { room_id } = router.query;
   const name = useRecoilValue(memberIdState);
+
   const [curName, setCurName] = useState<string>();
   const [curNickname, setCurNickname] = useState('');
   const [curRoomId, setRoomId] = useState<string>();
+  const [curCoreEndTime, setCurCoreEndTime] = useState<Date>();
 
   const curSocket = useSocketConnection(curRoomId!);
   const {
@@ -50,6 +53,11 @@ const WebRTCContainer = () => {
   );
   const gallery = useModal();
   const pushNotification = usePushNotification();
+
+  const setCoreEndTime = async () => {
+    const coreEndTime = await getCoreEndtime(Number(curRoomId));
+    setCurCoreEndTime(coreEndTime);
+  };
 
   const setNickname = async () => {
     const nickname = await getNickName(curName!);
@@ -99,6 +107,12 @@ const WebRTCContainer = () => {
   }, [curName]);
 
   useEffect(() => {
+    if (curRoomId) {
+      setCoreEndTime();
+    }
+  }, [curRoomId]);
+
+  useEffect(() => {
     if (pushNotification) {
       pushNotification.fireNotification('스크린이 캡처되었습니다!', {
         body: '60초 이내에 전송해주세요!',
@@ -108,6 +122,7 @@ const WebRTCContainer = () => {
 
   return (
     <WebRTCLayout
+      coreEndTime={curCoreEndTime!}
       curNickname={curNickname!}
       curRoomId={curRoomId!}
       isMedia={isMedia}
