@@ -241,47 +241,53 @@ const useWebRTC = (
   };
 
   const produce = async (type: MediaType): Promise<void> => {
+    if (!curDevice || !socket || !socket.request) return;
+
     try {
-      if (!curDevice || !socket || !socket.request) return;
-
-      let stream: MediaStream;
-      let track;
       const nickname = await getNickName(curName!);
+      const stream = await getMediaStream(type);
+      if (!stream) return;
 
-      if (type === 'screenType') {
-        stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-        [track] = stream.getVideoTracks();
-        const producerTransport = await createTransport(curDevice, 'produce');
-        const producer = await producerTransport.produce({ track });
-        addStream(stream, nickname, producer.id, 'video');
-        console.log(producer);
-      }
-      if (type === 'audioType') {
-        stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        [track] = stream.getAudioTracks();
-        const producerTransport = await createTransport(curDevice, 'produce');
-        const producer = await producerTransport.produce({ track });
-        addStream(stream, nickname, producer.id, 'audio');
-        console.log(producer);
-      }
+      const track = getTrack(stream, type);
+      const producerTransport = await createTransport(curDevice, 'produce');
+      const producer = await producerTransport.produce({ track });
 
-      // const producerTransport = await createTransport(curDevice, 'produce');
-      // const producer = await producerTransport.produce({ track });
-
-      // console.log(producer);
-      // if (type === 'screenType') {
-      //   addStream(stream, nickname, producer.id, 'video'); // producer_id로 수정 필요
-      // }
-      // if (type === 'audioType') {
-      //   addStream(stream, nickname, producer.id, 'audio');
-      // }
-
-      // producer.on('trackended', () => {
-      //   closeProducer();
-      // });
+      addStream(
+        stream,
+        nickname,
+        producer.id,
+        type === 'screenType' ? 'video' : 'audio',
+      );
     } catch (error) {
       console.error(`Error producing ${type}:`, error);
     }
+  };
+
+  const getMediaStream = async (
+    type: MediaType,
+  ): Promise<MediaStream | null> => {
+    try {
+      if (type === 'screenType') {
+        return await navigator.mediaDevices.getDisplayMedia({ video: true });
+      }
+      if (type === 'audioType') {
+        return await navigator.mediaDevices.getUserMedia({ audio: true });
+      }
+      return null;
+    } catch (error) {
+      console.error(`Error getting ${type} media stream:`, error);
+      return null;
+    }
+  };
+
+  const getTrack = (stream: MediaStream, type: MediaType) => {
+    if (type === 'screenType') {
+      return stream.getVideoTracks()[0];
+    }
+    if (type === 'audioType') {
+      return stream.getAudioTracks()[0];
+    }
+    throw new Error(`Unknown media type: ${type}`);
   };
 
   const consume = async (
