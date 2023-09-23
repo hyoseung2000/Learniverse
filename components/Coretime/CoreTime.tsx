@@ -6,9 +6,9 @@ const CoreTime = () => {
   return (
     <StCoreTimeWrapper>
       <StCoreMainWrapper>
-        <TimeProvider>
+        {/* <TimeProvider>
           <Timer />
-        </TimeProvider>
+        </TimeProvider> */}
       </StCoreMainWrapper>
     </StCoreTimeWrapper>
   );
