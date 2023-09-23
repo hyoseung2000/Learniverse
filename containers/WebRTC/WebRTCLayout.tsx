@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { styled } from 'styled-components';
 
 import { Chatting } from '@/components/Coretime/Chatting';
@@ -55,6 +55,16 @@ const WebRTCLayout = ({
   handleSendChatting,
   gallery,
 }: WebRTCLayoutProps) => {
+  const [isSending, setIsSending] = useState(false);
+
+  const handleChatSend = async () => {
+    if (isSending) return;
+
+    setIsSending(true);
+    await handleSendChatting();
+    setIsSending(false);
+  };
+
   return (
     <StWebRTCContainerWrapper>
       <StMediaContainer>
@@ -102,6 +112,11 @@ const WebRTCLayout = ({
               placeholder="메시지를 입력하세요."
               value={chatting || ''}
               onChange={(e) => setChatting(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && chatting.trim()) {
+                  handleChatSend();
+                }
+              }}
             />
             <button type="button" onClick={handleSendChatting}>
               전송

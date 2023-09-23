@@ -22,19 +22,25 @@ const useChatHandler = (
     return nickname;
   };
 
-  const handleSendChatting = async () => {
-    if (!curSocket) return;
+  const handleSendChatting = async (): Promise<void> => {
+    return new Promise<void>(async (resolve, reject) => {
+      if (!curSocket || !chatting) {
+        reject(new Error('Socket not available or no message provided.'));
+        return;
+      }
 
-    curSocket.emit('message', chatting);
+      curSocket.emit('message', chatting);
 
-    const userNick = await getUserNickname(name.toString());
-    const sentChat: ChattingInfo = {
-      name: userNick,
-      message: chatting,
-      time: getTime(new Date()),
-    };
-    addChattingList(sentChat);
-    setChatting('');
+      const userNick = await getUserNickname(name.toString());
+      const sentChat: ChattingInfo = {
+        name: userNick,
+        message: chatting,
+        time: getTime(new Date()),
+      };
+      addChattingList(sentChat);
+      setChatting('');
+      resolve();
+    });
   };
 
   return [chatting, setChatting, handleSendChatting];
