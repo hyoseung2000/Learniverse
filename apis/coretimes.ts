@@ -40,6 +40,18 @@ export const getCoretimeID = async (roomId: number) => {
   }
 };
 
+export const getCoreEndtime = async (coreTimeId: number) => {
+  try {
+    const { data } = await client.get(
+      `/room/core/endTime?coreTimeId=${coreTimeId}`,
+    );
+    return data.data.coreEndDTime;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
 export const getPresignedUrl = async () => {
   try {
     const data = await media.get('/presigned-url');

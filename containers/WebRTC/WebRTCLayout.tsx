@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { styled } from 'styled-components';
 
 import { Chatting } from '@/components/Coretime/Chatting';
@@ -17,6 +17,8 @@ import { UseModalReturnType } from '@/hooks/useModal';
 import { ChattingInfo, ConsumeInfo, RoomPeerInfo } from '@/types/socket';
 
 interface WebRTCLayoutProps {
+  coreEndTime: Date;
+  curNickname: string;
   curRoomId: string;
   isMedia: boolean;
   handleMedia: () => void;
@@ -33,10 +35,13 @@ interface WebRTCLayoutProps {
   handleSelectVideo: (stream: ConsumeInfo) => void;
   chattingList: ChattingInfo[];
   handleSendChatting: () => void;
+  handleExitRoom: () => void;
   gallery: UseModalReturnType;
 }
 
 const WebRTCLayout = ({
+  coreEndTime,
+  curNickname,
   curRoomId,
   isMedia,
   handleMedia,
@@ -53,14 +58,25 @@ const WebRTCLayout = ({
   handleSelectVideo,
   chattingList,
   handleSendChatting,
+  handleExitRoom,
   gallery,
 }: WebRTCLayoutProps) => {
+  const [isSending, setIsSending] = useState(false);
+
+  const handleChatSend = async () => {
+    if (isSending) return;
+
+    setIsSending(true);
+    await handleSendChatting();
+    setIsSending(false);
+  };
+
   return (
     <StWebRTCContainerWrapper>
       <StMediaContainer>
         <StSettingWrapper>
           <StSettingBtnWrapper>
-            <TimeProvider>
+            <TimeProvider coreEndTime={coreEndTime}>
               <Timer />
             </TimeProvider>
             <MediaBtn isMedia={isMedia} handleMedia={handleMedia} />
@@ -95,13 +111,18 @@ const WebRTCLayout = ({
       <StCoretimeInfoWrapper>
         <Member curMembers={curMembers} />
         <StChattingWrapper>
-          <Chatting chattingList={chattingList} />
+          <Chatting curNickname={curNickname} chattingList={chattingList} />
           <StChatInputWrapper>
             <StChatInput
               type="text"
               placeholder="메시지를 입력하세요."
               value={chatting || ''}
               onChange={(e) => setChatting(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && chatting.trim()) {
+                  handleChatSend();
+                }
+              }}
             />
             <button type="button" onClick={handleSendChatting}>
               전송
@@ -109,7 +130,9 @@ const WebRTCLayout = ({
           </StChatInputWrapper>
         </StChattingWrapper>
         <StCoreTimeBtnWrapper>
-          <StExitButton type="button">코어타임 나가기</StExitButton>
+          <StExitButton type="button" onClick={handleExitRoom}>
+            코어타임 나가기
+          </StExitButton>
         </StCoreTimeBtnWrapper>
       </StCoretimeInfoWrapper>
       <StGalleryModalWrapper $showing={gallery.isShowing}>

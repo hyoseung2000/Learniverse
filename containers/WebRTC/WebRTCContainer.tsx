@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
+import { getCoreEndtime } from '@/apis/coretimes';
 import {
   useChatHandler,
   useSocketConnection,
@@ -13,6 +14,7 @@ import useModal from '@/hooks/useModal';
 import { usePushNotification } from '@/hooks/usePushNotification';
 import useToggle from '@/hooks/useToggle';
 import { memberIdState } from '@/recoil/atom';
+import { getNickName } from '@/utils/getNicknames';
 
 import WebRTCLayout from './WebRTCLayout';
 
@@ -20,21 +22,24 @@ const WebRTCContainer = () => {
   const router = useRouter();
   const { room_id } = router.query;
   const name = useRecoilValue(memberIdState);
+
   const [curName, setCurName] = useState<string>();
+  const [curNickname, setCurNickname] = useState('');
   const [curRoomId, setRoomId] = useState<string>();
+  const [curCoreEndTime, setCurCoreEndTime] = useState<Date>();
 
   const curSocket = useSocketConnection(curRoomId!);
   const {
     produce,
     curMembers,
     // curDevice,
-    // curProducer,
-    curPeerList,
+    // curPeerList,
     videoStreams,
     audioStreams,
     chattingList,
     addChattingList,
     handleCloseProducer,
+    handleExitRoom,
   } = useWebRTC(curRoomId!, curName!, curSocket!);
 
   const [isMedia, handleMedia] = useToggle();
@@ -43,19 +48,27 @@ const WebRTCContainer = () => {
   const [selectedVideo, handleSelectVideo] = useVideoSelector();
   const [chatting, setChatting, handleSendChatting] = useChatHandler(
     curSocket!,
+    curNickname!,
     addChattingList,
-    name,
   );
   const gallery = useModal();
   const pushNotification = usePushNotification();
 
-  const handleTurnOffMedia = async (type: string) => {
-    const foundPeer = curPeerList.find(
-      (peer) =>
-        peer.producer_type === type && peer.producer_user_name === curName,
-    );
+  const setCoreEndTime = async () => {
+    const coreEndTime = await getCoreEndtime(Number(curRoomId));
+    setCurCoreEndTime(coreEndTime);
+  };
+
+  const setNickname = async () => {
+    const nickname = await getNickName(curName!);
+    setCurNickname(nickname);
+  };
+
+  const handleTurnOff = async (type: string) => {
+    const medias = type === 'video' ? videoStreams : audioStreams;
+    const foundPeer = medias.find((media) => media.name === curName);
     if (foundPeer) {
-      await handleCloseProducer(foundPeer.producer_id);
+      await handleCloseProducer(foundPeer.consumer_id);
     } else {
       console.log('No match found');
     }
@@ -63,7 +76,7 @@ const WebRTCContainer = () => {
 
   const handleMediaToggle = async () => {
     if (isMedia) {
-      await handleTurnOffMedia('video');
+      await handleTurnOff('video');
     } else {
       await produce('screenType');
     }
@@ -71,8 +84,9 @@ const WebRTCContainer = () => {
   };
 
   const handleMikeToggle = async () => {
-    if (isMedia) {
-      await handleTurnOffMedia('audio');
+    console.log(isMike);
+    if (isMike) {
+      await handleTurnOff('audio');
     } else {
       await produce('audioType');
     }
@@ -87,6 +101,18 @@ const WebRTCContainer = () => {
   }, [name, room_id]);
 
   useEffect(() => {
+    if (curName) {
+      setNickname();
+    }
+  }, [curName]);
+
+  useEffect(() => {
+    if (curRoomId) {
+      setCoreEndTime();
+    }
+  }, [curRoomId]);
+
+  useEffect(() => {
     if (pushNotification) {
       pushNotification.fireNotification('스크린이 캡처되었습니다!', {
         body: '60초 이내에 전송해주세요!',
@@ -96,6 +122,8 @@ const WebRTCContainer = () => {
 
   return (
     <WebRTCLayout
+      coreEndTime={curCoreEndTime!}
+      curNickname={curNickname!}
       curRoomId={curRoomId!}
       isMedia={isMedia}
       handleMedia={handleMediaToggle}
@@ -112,6 +140,7 @@ const WebRTCContainer = () => {
       handleSelectVideo={handleSelectVideo}
       chattingList={chattingList}
       handleSendChatting={handleSendChatting}
+      handleExitRoom={handleExitRoom}
       gallery={gallery}
     />
   );

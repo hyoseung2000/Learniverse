@@ -1,19 +1,30 @@
+import React, { useEffect, useRef } from 'react';
 import { styled } from 'styled-components';
 
 import { ChattingInfo } from '@/types/socket';
 
 interface ChattingsProps {
+  curNickname: string;
   chattingList: ChattingInfo[];
 }
 
-const Chatting = ({ chattingList }: ChattingsProps) => {
+const Chatting = ({ curNickname, chattingList }: ChattingsProps) => {
+  const chatRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
+  }, [chattingList]);
+
   return (
     <>
       <h3>코어타임 채팅</h3>
-      <StChattings>
+      <StChattings ref={chatRef}>
         {chattingList.map((chattings) => (
           <StChatting
             key={`${chattings.name}-${chattings.message}-${chattings.time}`}
+            $iscurrentUser={curNickname === chattings.name}
           >
             <span>{chattings.name}</span>
             <p>{chattings.message}</p>
@@ -49,7 +60,7 @@ const StChattings = styled.div`
   -ms-overflow-style: none;
 `;
 
-const StChatting = styled.div`
+const StChatting = styled.div<{ $iscurrentUser?: boolean }>`
   display: grid;
   grid-template-columns: 2fr 7fr 1fr;
 
@@ -63,7 +74,8 @@ const StChatting = styled.div`
 
   & > span {
     ${({ theme }) => theme.fonts.Body4};
-    color: ${({ theme }) => theme.colors.SkyBlue};
+    color: ${({ theme, $iscurrentUser }) =>
+      $iscurrentUser ? theme.colors.Blue : theme.colors.SkyBlue};
   }
   & > p {
     ${({ theme }) => theme.fonts.Body4};

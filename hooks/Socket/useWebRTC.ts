@@ -41,7 +41,6 @@ const useWebRTC = (
 
   const [curMembers, setCurMembers] = useState<RoomPeerInfo[]>([]);
   const [curDevice, setCurDevice] = useState<Device>();
-  const [curProducer, setCurProducer] = useState<string>();
   const [curPeerList, setCurPeerList] = useState<PeersInfo[]>([]);
   const [isDeviceLoaded, setIsDeviceLoaded] = useState(false);
 
@@ -204,7 +203,6 @@ const useWebRTC = (
               rtpParameters,
             });
             callback({ id: producerId.producer_id });
-            setCurProducer(producerId.producer_id);
           } catch (err) {
             errback(err as Error);
           }
@@ -217,11 +215,13 @@ const useWebRTC = (
   const addStream = (
     newStream: MediaStream,
     nickname: string,
+    name: string,
     consumerId: string,
     type: string,
   ) => {
     const curStream: ConsumeInfo = {
       nickname,
+      name,
       consumer_id: consumerId,
       stream: newStream,
     };
@@ -255,6 +255,7 @@ const useWebRTC = (
       addStream(
         stream,
         nickname,
+        curName,
         producer.id,
         type === 'screenType' ? 'video' : 'audio',
       );
@@ -327,11 +328,13 @@ const useWebRTC = (
       stream.addTrack(consumer.track);
 
       const nickname = await getNickName(producerName);
-      addStream(new MediaStream([consumer.track]), nickname, id, produceType);
-
-      // consumer.on('transportclose', () => {
-      //   console.log('Consumer transport closed');
-      // });
+      addStream(
+        new MediaStream([consumer.track]),
+        nickname,
+        producerName,
+        id,
+        produceType,
+      );
     } catch (error) {
       console.error('Error consuming:', error);
     }
@@ -341,19 +344,16 @@ const useWebRTC = (
     setChattingList((prev) => [...prev, chat]);
   };
 
-  // const closeProducer = () => {
-  // if (curProducer) {
-  //   curProducer.close();
-  //   setCurProducer(undefined);
-  // }
-  // };
-
   const handleCloseProducer = async (producerId: string) => {
-    console.log('handleCloseProducer', producerId);
+    console.log('Closing Producer : ', producerId);
     removeStream(producerId);
     await socket.emit('producerClosed', {
       producer_id: producerId,
     });
+  };
+
+  const handleExitRoom = async () => {
+    await socket.emit('exitRoom');
   };
 
   useEffect(() => {
@@ -394,13 +394,13 @@ const useWebRTC = (
     produce,
     curMembers,
     curDevice,
-    curProducer,
     curPeerList,
     videoStreams,
     audioStreams,
     chattingList,
     addChattingList,
     handleCloseProducer,
+    handleExitRoom,
   };
 };
 
