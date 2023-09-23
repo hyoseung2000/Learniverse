@@ -5,7 +5,7 @@ import TimeContext from './TimeContext';
 
 interface TimeProviderProps {
   children: React.ReactNode;
-  coreEndTime: string; // Explicitly specify this as a string.
+  coreEndTime: Date;
 }
 
 const TimeProvider: React.FC<TimeProviderProps> = ({
@@ -25,7 +25,7 @@ const TimeProvider: React.FC<TimeProviderProps> = ({
 
   useEffect(() => {
     const diff = Math.floor((endTime.getTime() - new Date().getTime()) / 1000);
-    const timeLeft = isNaN(diff) ? 3600 : diff;
+    const timeLeft = Number.isNaN(Number(diff)) ? 3600 : diff;
     console.log(timeLeft);
     setSeconds(timeLeft);
   }, [coreEndTime]);
