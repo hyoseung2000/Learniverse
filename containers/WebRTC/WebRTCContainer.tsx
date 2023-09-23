@@ -49,13 +49,11 @@ const WebRTCContainer = () => {
   const pushNotification = usePushNotification();
 
   const handleTurnOffMedia = async () => {
-    console.log(curName, curPeerList);
     const foundPeer = curPeerList.find(
       (peer) =>
         peer.producer_type === 'video' && peer.producer_user_name === curName,
     );
     if (foundPeer) {
-      console.log(foundPeer.producer_id);
       await handleCloseProducer(foundPeer.producer_id);
     } else {
       console.log('No match found');

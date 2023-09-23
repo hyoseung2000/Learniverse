@@ -261,21 +261,35 @@ const useWebRTC = (
 
       if (type === 'screenType') {
         stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-        addStream(stream, nickname, socket.id, 'video'); // producer_id로 수정 필요
         [track] = stream.getVideoTracks();
+        const producerTransport = await createTransport(curDevice, 'produce');
+        const producer = await producerTransport.produce({ track });
+        addStream(stream, nickname, producer.id, 'video');
+        console.log(producer);
       }
       if (type === 'audioType') {
         stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        addStream(stream, nickname, socket.id, 'audio');
         [track] = stream.getAudioTracks();
+        const producerTransport = await createTransport(curDevice, 'produce');
+        const producer = await producerTransport.produce({ track });
+        addStream(stream, nickname, producer.id, 'audio');
+        console.log(producer);
       }
 
-      const producerTransport = await createTransport(curDevice, 'produce');
-      const producer = await producerTransport.produce({ track });
+      // const producerTransport = await createTransport(curDevice, 'produce');
+      // const producer = await producerTransport.produce({ track });
 
-      producer.on('trackended', () => {
-        closeProducer();
-      });
+      // console.log(producer);
+      // if (type === 'screenType') {
+      //   addStream(stream, nickname, producer.id, 'video'); // producer_id로 수정 필요
+      // }
+      // if (type === 'audioType') {
+      //   addStream(stream, nickname, producer.id, 'audio');
+      // }
+
+      // producer.on('trackended', () => {
+      //   closeProducer();
+      // });
     } catch (error) {
       console.error(`Error producing ${type}:`, error);
     }
@@ -309,9 +323,6 @@ const useWebRTC = (
         producerPaused,
       }: ConsumerInfo = data;
 
-      console.log(data, type, producerPaused);
-      console.log(typeof kind, typeof type, typeof producerPaused);
-
       const consumer: Consumer = await consumerTransport.consume({
         id,
         producerId,
@@ -337,15 +348,16 @@ const useWebRTC = (
     setChattingList((prev) => [...prev, chat]);
   };
 
-  const closeProducer = () => {
-    // if (curProducer) {
-    //   curProducer.close();
-    //   setCurProducer(undefined);
-    // }
-  };
+  // const closeProducer = () => {
+  // if (curProducer) {
+  //   curProducer.close();
+  //   setCurProducer(undefined);
+  // }
+  // };
 
   const handleCloseProducer = async (producerId: string) => {
     console.log('handleCloseProducer', producerId);
+    removeStream(producerId);
     await socket.emit('producerClosed', {
       producer_id: producerId,
     });
@@ -360,9 +372,6 @@ const useWebRTC = (
       socket.on('message', async (data: ChattingInfo) => {
         handleMessage(data, setChattingList);
       });
-      // socket.on('consumerClosed', (consumer_id: string) => {
-      //   console.log('Closing consumer:', consumer_id);
-      // });
       socket.on('consumerClosed', (data: ConsumerId) =>
         handleConsumerClosed(data, removeStream),
       );
