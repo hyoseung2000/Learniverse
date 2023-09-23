@@ -55,8 +55,6 @@ const WebRTCLayout = ({
   handleSendChatting,
   gallery,
 }: WebRTCLayoutProps) => {
-  console.log('videoStreams', videoStreams);
-  console.log('audioStreams', audioStreams);
   return (
     <StWebRTCContainerWrapper>
       <StMediaContainer>

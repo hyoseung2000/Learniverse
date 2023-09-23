@@ -232,27 +232,17 @@ const useWebRTC = (
   };
 
   const removeStream = (consumer_id: string) => {
-    console.log(consumer_id, audioStreams, videoStreams);
-
     setVideoStreams((prevStreams) =>
       prevStreams.filter((stream) => stream.consumer_id !== consumer_id),
     );
     setAudioStreams((prevStreams) =>
       prevStreams.filter((stream) => stream.consumer_id !== consumer_id),
     );
-
-    // const filteredAudioStreams: ConsumeInfo[] = audioStreams.filter(
-    //   (stream) => stream.producer_id !== producer_id,
-    // );
-    // const filteredVideoStreams: ConsumeInfo[] = videoStreams.filter(
-    //   (stream) => stream.producer_id !== producer_id,
-    // );
-    // setAudioStreams(filteredAudioStreams);
-    // setVideoStreams(filteredVideoStreams);
   };
 
   const produce = async (type: MediaType): Promise<void> => {
     try {
+      console.log(curDevice, socket.request);
       if (!curDevice || !socket || !socket.request) return;
 
       let stream: MediaStream;
@@ -319,8 +309,6 @@ const useWebRTC = (
         id,
         kind,
         rtpParameters,
-        type,
-        producerPaused,
       }: ConsumerInfo = data;
 
       const consumer: Consumer = await consumerTransport.consume({
@@ -398,6 +386,7 @@ const useWebRTC = (
   }, [isDeviceLoaded]);
 
   return {
+    produce,
     curMembers,
     curDevice,
     curProducer,

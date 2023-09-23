@@ -25,6 +25,7 @@ const WebRTCContainer = () => {
 
   const curSocket = useSocketConnection(curRoomId!);
   const {
+    produce,
     curMembers,
     // curDevice,
     // curProducer,
@@ -58,7 +59,14 @@ const WebRTCContainer = () => {
     } else {
       console.log('No match found');
     }
+  };
 
+  const handleMediaToggle = async () => {
+    if (isMedia) {
+      await handleTurnOffMedia();
+    } else {
+      await produce('screenType');
+    }
     handleMedia();
   };
 
@@ -81,7 +89,7 @@ const WebRTCContainer = () => {
     <WebRTCLayout
       curRoomId={curRoomId!}
       isMedia={isMedia}
-      handleMedia={handleTurnOffMedia}
+      handleMedia={handleMediaToggle}
       isMike={isMike}
       handleMike={handleMike}
       isSpeaker={isSpeaker}
