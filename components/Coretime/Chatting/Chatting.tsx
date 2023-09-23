@@ -1,3 +1,4 @@
+import React, { useEffect, useRef } from 'react';
 import { styled } from 'styled-components';
 
 import { ChattingInfo } from '@/types/socket';
@@ -7,10 +8,18 @@ interface ChattingsProps {
 }
 
 const Chatting = ({ chattingList }: ChattingsProps) => {
+  const chatRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
+  }, [chattingList]);
+
   return (
     <>
       <h3>코어타임 채팅</h3>
-      <StChattings>
+      <StChattings ref={chatRef}>
         {chattingList.map((chattings) => (
           <StChatting
             key={`${chattings.name}-${chattings.message}-${chattings.time}`}
