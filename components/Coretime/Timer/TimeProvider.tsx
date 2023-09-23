@@ -21,10 +21,14 @@ const TimeProvider: React.FC<TimeProviderProps> = ({
   const differenceInSeconds = Math.floor(
     (endTime.getTime() - currentTime.getTime()) / 1000,
   );
-  const [seconds, setSeconds] = useState(() => {
+  const [seconds, setSeconds] = useState<number>(100);
+
+  useEffect(() => {
     const diff = Math.floor((endTime.getTime() - new Date().getTime()) / 1000);
-    return isNaN(diff) ? 1000 : diff;
-  });
+    const timeLeft = isNaN(diff) ? 3600 : diff;
+    console.log(timeLeft);
+    setSeconds(timeLeft);
+  }, [coreEndTime]);
 
   useEffect(() => {
     const timer = setInterval(() => {
