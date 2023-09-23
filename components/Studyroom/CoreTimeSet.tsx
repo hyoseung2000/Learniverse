@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
-import { getCoretimeID } from '@/apis/coreTime';
+import { getCoretimeID } from '@/apis/coretimes';
 import { getCoretimeList } from '@/apis/studyroom';
 import useModal from '@/hooks/useModal';
 import { IcPlusBtn } from '@/public/assets/icons';

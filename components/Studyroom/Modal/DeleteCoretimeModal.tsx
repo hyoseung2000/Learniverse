@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-import { DeleteCoretime } from '@/apis/coreTime';
+import { DeleteCoretime } from '@/apis/coretimes';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { SmallModal } from '@/components/Common/Modal';
 import { IcCharacterX } from '@/public/assets/icons';
