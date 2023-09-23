@@ -1,30 +1,45 @@
 import 'react-datepicker/dist/react-datepicker.css';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { styled } from 'styled-components';
 
+import { createCoretime } from '@/apis/coreTime';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { SmallModal } from '@/components/Common/Modal';
+import useModal from '@/hooks/useModal';
+import { PostCoreTimeInfo } from '@/types/studyroom';
+
+import CompleteCreateCoreModal from './CompleteCreateCoreModal';
 
 interface Props {
   isShowing: boolean;
+  handleCreate: () => void;
   handleCancel: () => void;
 }
 
-const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
+const CreateCoretimeModal = ({
+  isShowing,
+  handleCreate,
+  handleCancel,
+}: Props) => {
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [coreHour, setCoreHour] = useState<number>(1);
   const [coreMin, setCoreMin] = useState<number>(30);
   const [captureNum, setCaptureNum] = useState<number>(0);
+  const [coreTimeInfo, setCoreTimeInfo] = useState<PostCoreTimeInfo>();
 
-  const handleCreateCtime = () => {
-    console.log(coreHour, coreMin);
+  const complete = useModal();
+
+  const handleCreateCtime = async () => {
     if (
       (coreHour === 0 && coreMin === 0) ||
       (coreHour === 24 && coreMin === 30)
     ) {
       alert('코어타임은 최소 30분 - 최대 24시간 내로 지정하세요.');
+    } else {
+      await createCoretime(coreTimeInfo!);
+      handleCreate();
     }
   };
   const handleHourChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,67 +67,85 @@ const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
     }
   };
 
+  useEffect(() => {
+    setCoreTimeInfo({
+      roomId: 1,
+      coreStartTime: startDate,
+      coreHour,
+      coreMinute: coreMin,
+      captureNum,
+    });
+  }, [startDate, coreHour, coreMin, captureNum]);
+
   return (
     isShowing && (
-      <SmallModal title="코어타임 등록하기" isShowing={isShowing}>
-        <StCoretimeModalWrapper>
-          <StInputWrapper>
-            <StDate>
-              <p>진행 날짜</p>
-              <CustomDatePicker
-                dateFormat="yyyy.MM.dd HH:mm"
-                selected={startDate}
-                minDate={new Date()}
-                showTimeSelect
-                onChange={(date: Date) => setStartDate(date)}
-              />
-            </StDate>
-            <StTime>
-              <p>진행 시간</p>
-              <div>
+      <>
+        <SmallModal title="코어타임 등록하기" isShowing={isShowing}>
+          <StCoretimeModalWrapper>
+            <StInputWrapper>
+              <StDate>
+                <p>진행 날짜</p>
+                <CustomDatePicker
+                  dateFormat="yyyy.MM.dd HH:mm"
+                  selected={startDate}
+                  minDate={new Date()}
+                  showTimeSelect
+                  onChange={(date: Date) => setStartDate(date)}
+                />
+              </StDate>
+              <StTime>
+                <p>진행 시간</p>
+                <div>
+                  <input
+                    type="number"
+                    min="0"
+                    max="24"
+                    value={coreHour}
+                    onChange={handleHourChange}
+                  />
+                  <p>시간</p>
+                  <input
+                    type="number"
+                    min="0"
+                    max="30"
+                    step="30"
+                    value={coreMin}
+                    onChange={handleMinChange}
+                  />
+                  <p>분</p>
+                </div>
+              </StTime>
+              <StCapture>
+                <p>랜덤 캡처</p>
                 <input
                   type="number"
                   min="0"
-                  max="24"
-                  value={coreHour}
-                  onChange={handleHourChange}
+                  max="5"
+                  value={captureNum}
+                  onChange={handleCaptureChange}
                 />
-                <p>시간</p>
-                <input
-                  type="number"
-                  min="0"
-                  max="30"
-                  step="30"
-                  value={coreMin}
-                  onChange={handleMinChange}
-                />
-                <p>분</p>
-              </div>
-            </StTime>
-            <StCapture>
-              <p>랜덤 캡처</p>
-              <input
-                type="number"
-                min="0"
-                max="5"
-                value={captureNum}
-                onChange={handleCaptureChange}
-              />
-              <p>번</p>
-            </StCapture>
-          </StInputWrapper>
+                <p>번</p>
+              </StCapture>
+            </StInputWrapper>
 
-          <StBtnWrapper>
-            <ConfirmButton btnName="등록하기" onClick={handleCreateCtime} />
-            <CancelButton
-              btnName="취소"
-              onClick={() => {
-                handleCancel();
-              }}
-            />
-          </StBtnWrapper>
-        </StCoretimeModalWrapper>
-      </SmallModal>
+            <StBtnWrapper>
+              <ConfirmButton btnName="등록하기" onClick={handleCreateCtime} />
+              <CancelButton
+                btnName="취소"
+                onClick={() => {
+                  handleCancel();
+                }}
+              />
+            </StBtnWrapper>
+          </StCoretimeModalWrapper>
+        </SmallModal>
+        <StCompleteModalWrapper $showing={complete.isShowing}>
+          <CompleteCreateCoreModal
+            isShowing={complete.isShowing}
+            handleCancel={complete.toggle}
+          />
+        </StCompleteModalWrapper>
+      </>
     )
   );
 };
@@ -223,4 +256,20 @@ const StCapture = styled.div`
 const StBtnWrapper = styled.div`
   display: flex;
   gap: 1rem;
+`;
+
+const StCompleteModalWrapper = styled.div<{ $showing: boolean }>`
+  display: ${({ $showing }) => ($showing ? 'block' : 'none')};
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+
+  justify-content: center;
+  align-items: center;
+
+  width: 100vw;
+  height: 100vh;
+
+  background-color: rgba(0, 0, 0, 0.5);
 `;
