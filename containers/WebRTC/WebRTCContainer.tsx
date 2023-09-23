@@ -49,10 +49,10 @@ const WebRTCContainer = () => {
   const gallery = useModal();
   const pushNotification = usePushNotification();
 
-  const handleTurnOffMedia = async () => {
+  const handleTurnOffMedia = async (type: string) => {
     const foundPeer = curPeerList.find(
       (peer) =>
-        peer.producer_type === 'video' && peer.producer_user_name === curName,
+        peer.producer_type === type && peer.producer_user_name === curName,
     );
     if (foundPeer) {
       await handleCloseProducer(foundPeer.producer_id);
@@ -63,11 +63,20 @@ const WebRTCContainer = () => {
 
   const handleMediaToggle = async () => {
     if (isMedia) {
-      await handleTurnOffMedia();
+      await handleTurnOffMedia('video');
     } else {
       await produce('screenType');
     }
     handleMedia();
+  };
+
+  const handleMikeToggle = async () => {
+    if (isMedia) {
+      await handleTurnOffMedia('audio');
+    } else {
+      await produce('audioType');
+    }
+    handleMike();
   };
 
   useEffect(() => {
@@ -91,7 +100,7 @@ const WebRTCContainer = () => {
       isMedia={isMedia}
       handleMedia={handleMediaToggle}
       isMike={isMike}
-      handleMike={handleMike}
+      handleMike={handleMikeToggle}
       isSpeaker={isSpeaker}
       handleSpeaker={handleSpeaker}
       selectedVideo={selectedVideo}
