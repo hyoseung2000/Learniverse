@@ -64,3 +64,18 @@ export interface PostCoreTimeInfo {
   coreMinute: number;
   captureNum: number;
 }
+
+export interface WorkSpaceInfo {
+  roomGitOrg: string;
+  roomNotion: string;
+  roomGoogleDrive: string;
+  roomFigma: string;
+}
+
+export interface PostWorkSpaceInfo {
+  roomId: number;
+  roomGitOrg?: string;
+  roomNotion?: string;
+  roomGoogleDrive?: string;
+  roomFigma?: string;
+}

@@ -1,3 +1,5 @@
+import { PostWorkSpaceInfo } from '@/types/studyroom';
+
 import { client } from './axios';
 
 export const decodeRoomId = async (encodedUrl: string) => {
@@ -38,6 +40,32 @@ export const applyRoom = async (roomId: number, memberId: number) => {
 export const getCoretimeList = async (roomId: number) => {
   try {
     const { data } = await client.get(`/room/core/list?roomId=${roomId}`);
+    console.log(data.data);
+    return data.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const postWorkspace = async (PostWorkSpaceData: PostWorkSpaceInfo) => {
+  try {
+    console.log(PostWorkSpaceData);
+    const { data } = await client.post(
+      `/room/workspace/update`,
+      PostWorkSpaceData,
+    );
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const getStudyroomWorkSpace = async (roomId: number) => {
+  try {
+    const { data } = await client.get(`/room/info/workspace?roomId=${roomId}`);
     console.log(data.data);
     return data.data;
   } catch (err) {

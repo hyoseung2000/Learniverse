@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
+import { getStudyroomWorkSpace, postWorkspace } from '@/apis/studyroom';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { LargeModal } from '@/components/Common/Modal';
+import { PostWorkSpaceInfo, WorkSpaceInfo } from '@/types/studyroom';
 
 interface Props {
   isShowing: boolean;
@@ -14,10 +16,37 @@ const RegisterWorkspaceModal = ({ isShowing, handleCancel }: Props) => {
   const [GithubURL, setGithubURL] = useState('');
   const [FigmaURL, setFigmaURL] = useState('');
   const [GDriveURL, setGDriveURL] = useState('');
+  const [workSpaceData, setWorkSpaceData] = useState<PostWorkSpaceInfo>();
+  const roomId = 1;
 
-  const handleRegWS = () => {
+  const handleRegWS = async () => {
     console.log('워크스페이스 생성 및 수정');
+    await postWorkspace(workSpaceData!);
   };
+
+  const getWorkSpace = async () => {
+    const WSInfo: WorkSpaceInfo = await getStudyroomWorkSpace(roomId);
+    const { roomGitOrg, roomNotion, roomGoogleDrive, roomFigma } = WSInfo;
+
+    setNotnURL(roomNotion ? roomNotion.toString() : '');
+    setGithubURL(roomGitOrg ? roomGitOrg.toString() : '');
+    setFigmaURL(roomFigma ? roomFigma.toString() : '');
+    setGDriveURL(roomGoogleDrive ? roomGoogleDrive.toString() : '');
+  };
+
+  useEffect(() => {
+    getWorkSpace();
+  }, []);
+
+  useEffect(() => {
+    setWorkSpaceData({
+      roomId: 1,
+      roomGitOrg: GithubURL,
+      roomNotion: NotnURL,
+      roomGoogleDrive: GDriveURL,
+      roomFigma: FigmaURL,
+    });
+  }, [GithubURL, NotnURL, GDriveURL, FigmaURL]);
 
   return (
     isShowing && (
@@ -30,7 +59,7 @@ const RegisterWorkspaceModal = ({ isShowing, handleCancel }: Props) => {
                 type="url"
                 value={NotnURL}
                 pattern="https?://www.notion.so/.+"
-                placeholder="url을 입력하세요."
+                placeholder="https://www.notion.so/로 시작하는 url을 입력하세요."
                 onChange={(e) => {
                   setNotnURL(e.target.value);
                 }}
@@ -42,7 +71,7 @@ const RegisterWorkspaceModal = ({ isShowing, handleCancel }: Props) => {
                 type="url"
                 value={GithubURL}
                 pattern="https?://github.com/.+"
-                placeholder="url을 입력하세요."
+                placeholder="https://github.com/로 시작하는 url을 입력하세요."
                 onChange={(e) => {
                   setGithubURL(e.target.value);
                 }}
@@ -54,7 +83,7 @@ const RegisterWorkspaceModal = ({ isShowing, handleCancel }: Props) => {
                 type="url"
                 value={FigmaURL}
                 pattern="https?://www.figma.com/.+"
-                placeholder="url을 입력하세요."
+                placeholder="https://www.figma.com/로 시작하는 url을 입력하세요."
                 onChange={(e) => {
                   setFigmaURL(e.target.value);
                 }}
@@ -66,7 +95,7 @@ const RegisterWorkspaceModal = ({ isShowing, handleCancel }: Props) => {
                 type="url"
                 value={GDriveURL}
                 pattern="https?://drive.google.com/.+"
-                placeholder="url을 입력하세요."
+                placeholder="https://drive.google.com/로 시작하는 url을 입력하세요."
                 onChange={(e) => {
                   setGDriveURL(e.target.value);
                 }}
