@@ -7,7 +7,7 @@ interface GalleryModalProps {
   handleCancel: () => void;
 }
 
-const Gallery = ({ isShowing, handleCancel }: GalleryModalProps) => {
+const GalleryModal = ({ isShowing, handleCancel }: GalleryModalProps) => {
   return (
     isShowing && (
       <LargeModal title="랜덤 캡처 화면 갤러리" isShowing={isShowing}>
@@ -22,7 +22,7 @@ const Gallery = ({ isShowing, handleCancel }: GalleryModalProps) => {
   );
 };
 
-export default Gallery;
+export default GalleryModal;
 
 const StGrlleryWrapper = styled.div`
   display: flex;

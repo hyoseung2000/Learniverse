@@ -3,9 +3,13 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { styled } from 'styled-components';
 
 import { Chatting } from '@/components/Coretime/Chatting';
-import Gallery from '@/components/Coretime/Gallery/Gallery';
+import GalleryModal from '@/components/Coretime/Gallery/GalleryModal';
 import { Member } from '@/components/Coretime/Member';
-import { CaptureModal, ExitCoretimeModal } from '@/components/Coretime/Modal';
+import {
+  CaptureCompleteModal,
+  CaptureModal,
+  ExitCoretimeModal,
+} from '@/components/Coretime/Modal';
 import {
   MediaBtn,
   MikeBtn,
@@ -65,6 +69,7 @@ const WebRTCLayout = ({
   const gallery = useModal();
   const exit = useModal();
   const capture = useModal();
+  const captureComplete = useModal();
 
   const handleChatSend = async () => {
     if (isSending) return;
@@ -72,6 +77,12 @@ const WebRTCLayout = ({
     setIsSending(true);
     await handleSendChatting();
     setIsSending(false);
+  };
+
+  const handleSubmit = () => {
+    // 이미지 전송
+    capture.toggle();
+    captureComplete.toggle();
   };
 
   return (
@@ -140,7 +151,10 @@ const WebRTCLayout = ({
         </StCoreTimeBtnWrapper>
       </StCoretimeInfoWrapper>
       <StModalWrapper $showing={gallery.isShowing}>
-        <Gallery isShowing={gallery.isShowing} handleCancel={gallery.toggle} />
+        <GalleryModal
+          isShowing={gallery.isShowing}
+          handleCancel={gallery.toggle}
+        />
       </StModalWrapper>
       <StModalWrapper $showing={exit.isShowing}>
         <ExitCoretimeModal
@@ -152,8 +166,14 @@ const WebRTCLayout = ({
       <StModalWrapper $showing={capture.isShowing}>
         <CaptureModal
           isShowing={capture.isShowing}
-          handleSubmit={handleExitRoom}
+          handleSubmit={handleSubmit}
           handleCancel={capture.toggle}
+        />
+      </StModalWrapper>
+      <StModalWrapper $showing={captureComplete.isShowing}>
+        <CaptureCompleteModal
+          isShowing={captureComplete.isShowing}
+          handleConfirm={captureComplete.toggle}
         />
       </StModalWrapper>
     </StWebRTCContainerWrapper>
