@@ -10,7 +10,6 @@ import {
   useVideoSelector,
   useWebRTC,
 } from '@/hooks/Socket';
-import useModal from '@/hooks/useModal';
 import { usePushNotification } from '@/hooks/usePushNotification';
 import useToggle from '@/hooks/useToggle';
 import { memberIdState } from '@/recoil/atom';
@@ -51,7 +50,6 @@ const WebRTCContainer = () => {
     curNickname!,
     addChattingList,
   );
-  const gallery = useModal();
   const pushNotification = usePushNotification();
 
   const setCoreEndTime = async () => {
@@ -141,7 +139,6 @@ const WebRTCContainer = () => {
       chattingList={chattingList}
       handleSendChatting={handleSendChatting}
       handleExitRoom={handleExitRoom}
-      gallery={gallery}
     />
   );
 };

@@ -5,6 +5,7 @@ import { styled } from 'styled-components';
 import { Chatting } from '@/components/Coretime/Chatting';
 import Gallery from '@/components/Coretime/Gallery/Gallery';
 import { Member } from '@/components/Coretime/Member';
+import { ExitCoretimeModal } from '@/components/Coretime/Modal';
 import {
   MediaBtn,
   MikeBtn,
@@ -13,7 +14,7 @@ import {
 } from '@/components/Coretime/Setting';
 import { TimeProvider, Timer } from '@/components/Coretime/Timer';
 import { WebRTCAudio, WebRTCVideo } from '@/components/Coretime/WebRTCMedia';
-import { UseModalReturnType } from '@/hooks/useModal';
+import useModal from '@/hooks/useModal';
 import { ChattingInfo, ConsumeInfo, RoomPeerInfo } from '@/types/socket';
 
 interface WebRTCLayoutProps {
@@ -36,7 +37,6 @@ interface WebRTCLayoutProps {
   chattingList: ChattingInfo[];
   handleSendChatting: () => void;
   handleExitRoom: () => void;
-  gallery: UseModalReturnType;
 }
 
 const WebRTCLayout = ({
@@ -59,9 +59,11 @@ const WebRTCLayout = ({
   chattingList,
   handleSendChatting,
   handleExitRoom,
-  gallery,
 }: WebRTCLayoutProps) => {
   const [isSending, setIsSending] = useState(false);
+
+  const gallery = useModal();
+  const exit = useModal();
 
   const handleChatSend = async () => {
     if (isSending) return;
@@ -131,13 +133,20 @@ const WebRTCLayout = ({
           </StChatInputWrapper>
         </StChattingWrapper>
         <StCoreTimeBtnWrapper>
-          <StExitButton type="button" onClick={handleExitRoom}>
+          <StExitButton type="button" onClick={exit.toggle}>
             코어타임 나가기
           </StExitButton>
         </StCoreTimeBtnWrapper>
       </StCoretimeInfoWrapper>
       <StGalleryModalWrapper $showing={gallery.isShowing}>
         <Gallery isShowing={gallery.isShowing} handleCancel={gallery.toggle} />
+      </StGalleryModalWrapper>
+      <StGalleryModalWrapper $showing={exit.isShowing}>
+        <ExitCoretimeModal
+          isShowing={exit.isShowing}
+          handleExit={handleExitRoom}
+          handleCancel={exit.toggle}
+        />
       </StGalleryModalWrapper>
     </StWebRTCContainerWrapper>
   );
