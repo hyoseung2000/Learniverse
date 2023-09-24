@@ -32,6 +32,9 @@ const CreateCoretimeModal = ({
   const complete = useModal();
 
   const handleCreateCtime = async () => {
+    if (startDate.getMinutes() !== 30 && startDate.getMinutes() !== 0) {
+      alert('시작시간은 30분 단위로 지정하세요.');
+    }
     if (
       (coreHour === 0 && coreMin === 0) ||
       (coreHour === 24 && coreMin === 30)

@@ -124,23 +124,6 @@ const StCoretableWrapper = styled.div`
 
   background: ${({ theme }) => theme.colors.LightGray2};
   border-radius: 1.2rem;
-
-  & > div {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-
-    margin-top: 0.6rem;
-    margin-bottom: 0.6rem;
-
-    & > p {
-      color: ${({ theme }) => theme.colors.Learniverse_BG};
-      ${({ theme }) => theme.fonts.Title5};
-    }
-  }
-  & > hr {
-    border-color: ${({ theme }) => theme.colors.Gray3};
-  }
 `;
 
 const StCoreBtn = styled.button`
