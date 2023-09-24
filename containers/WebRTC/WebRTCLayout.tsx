@@ -138,16 +138,16 @@ const WebRTCLayout = ({
           </StExitButton>
         </StCoreTimeBtnWrapper>
       </StCoretimeInfoWrapper>
-      <StGalleryModalWrapper $showing={gallery.isShowing}>
+      <StModalWrapper $showing={gallery.isShowing}>
         <Gallery isShowing={gallery.isShowing} handleCancel={gallery.toggle} />
-      </StGalleryModalWrapper>
-      <StGalleryModalWrapper $showing={exit.isShowing}>
+      </StModalWrapper>
+      <StModalWrapper $showing={exit.isShowing}>
         <ExitCoretimeModal
           isShowing={exit.isShowing}
           handleExit={handleExitRoom}
           handleCancel={exit.toggle}
         />
-      </StGalleryModalWrapper>
+      </StModalWrapper>
     </StWebRTCContainerWrapper>
   );
 };
@@ -271,7 +271,7 @@ const StExitButton = styled.button`
   ${({ theme }) => theme.fonts.Title2};
 `;
 
-const StGalleryModalWrapper = styled.div<{ $showing: boolean }>`
+const StModalWrapper = styled.div<{ $showing: boolean }>`
   display: ${({ $showing }) => ($showing ? 'block' : 'none')};
   position: fixed;
   top: 0;

@@ -354,6 +354,7 @@ const useWebRTC = (
 
   const handleExitRoom = async () => {
     await socket.emit('exitRoom');
+    router.back();
   };
 
   useEffect(() => {
