@@ -118,8 +118,9 @@ const WebRTCLayout = ({
               placeholder="메시지를 입력하세요."
               value={chatting || ''}
               onChange={(e) => setChatting(e.target.value)}
-              onKeyDown={(e) => {
+              onKeyUp={(e) => {
                 if (e.key === 'Enter' && chatting.trim()) {
+                  e.preventDefault();
                   handleChatSend();
                 }
               }}
