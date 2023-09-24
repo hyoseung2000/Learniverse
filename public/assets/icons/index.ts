@@ -1,6 +1,9 @@
 import IcAddStudyRoom from './ic_add_studyroom_btn.svg';
 import IcAddTag from './ic_add_tag.svg';
 import IcCancel from './ic_cancel.svg';
+import IcCaptureModal from './ic_capture_modal.svg';
+import IcCaptureTimer from './ic_capture_timer.svg';
+import IcCaptureWarning from './ic_capture_warning.svg';
 import IcChar from './ic_char.svg';
 import IcCharacterCheck from './ic_character_check.svg';
 import IcCharacterDot from './ic_character_dot.svg';
@@ -43,6 +46,8 @@ import IcTimer from './ic_timer.svg';
 import IcTracker from './ic_tracker.svg';
 
 export {
+  IcCaptureTimer,
+  IcCaptureWarning,
   IcConfirm,
   IcCancel,
   IcProfileImage,
@@ -66,6 +71,7 @@ export {
   IcLoginBtn,
   IcRoomLogo,
   IcIssueLogo,
+  IcCaptureModal,
   IcLine,
   IcGraylineLogo,
   IcPlusBtn,

@@ -5,7 +5,7 @@ import { styled } from 'styled-components';
 import { Chatting } from '@/components/Coretime/Chatting';
 import Gallery from '@/components/Coretime/Gallery/Gallery';
 import { Member } from '@/components/Coretime/Member';
-import { ExitCoretimeModal } from '@/components/Coretime/Modal';
+import { CaptureModal, ExitCoretimeModal } from '@/components/Coretime/Modal';
 import {
   MediaBtn,
   MikeBtn,
@@ -64,6 +64,7 @@ const WebRTCLayout = ({
 
   const gallery = useModal();
   const exit = useModal();
+  const capture = useModal();
 
   const handleChatSend = async () => {
     if (isSending) return;
@@ -146,6 +147,13 @@ const WebRTCLayout = ({
           isShowing={exit.isShowing}
           handleExit={handleExitRoom}
           handleCancel={exit.toggle}
+        />
+      </StModalWrapper>
+      <StModalWrapper $showing={capture.isShowing}>
+        <CaptureModal
+          isShowing={capture.isShowing}
+          handleSubmit={handleExitRoom}
+          handleCancel={capture.toggle}
         />
       </StModalWrapper>
     </StWebRTCContainerWrapper>
@@ -272,7 +280,7 @@ const StExitButton = styled.button`
 `;
 
 const StModalWrapper = styled.div<{ $showing: boolean }>`
-  display: ${({ $showing }) => ($showing ? 'block' : 'none')};
+  display: ${({ $showing }) => ($showing ? 'flex' : 'none')};
   position: fixed;
   top: 0;
   left: 0;
