@@ -6,8 +6,9 @@ import { MyStudyroomList } from '../RoomList';
 const Home = () => {
   const alarmGrant = () => {
     Notification.requestPermission().then((permission) => {
+      if (permission !== 'granted') return console.log(permission);
       console.log(permission);
-      if (permission !== 'granted') return null;
+      return permission;
     });
   };
 
