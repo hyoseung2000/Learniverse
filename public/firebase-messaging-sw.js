@@ -20,6 +20,29 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
 
+getToken(messaging, {
+  vapidKey:
+    'BCTvCftz5TdxagdC1ewKCGxDnyveMrQ0jnMg-coHt6BvVCsbncEDtB0r7S3kfFq4kgn_kgTQX7H-5c2OANEEHCQ',
+})
+  .then((currentToken) => {
+    if (currentToken) {
+      // Send the token to your server and update the UI if necessary
+      console.log('currentToken', currentToken);
+    } else {
+      // Show permission request UI
+      console.log(
+        'No registration token available. Request permission to generate one.',
+      );
+    }
+  })
+  .catch((err) => {
+    console.log('An error occurred while retrieving token. ', err);
+  });
+
+onMessage(messaging, (payload) => {
+  console.log('Message received. ', payload);
+});
+
 onBackgroundMessage(messaging, (payload) => {
   console.log(
     '[firebase-messaging-sw.js] Received background message ',

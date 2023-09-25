@@ -1,13 +1,22 @@
 import { styled } from 'styled-components';
 
+import { PurpleButton } from '../Common/Button';
 import { MyStudyroomList } from '../RoomList';
 
 const Home = () => {
+  const alarmGrant = () => {
+    Notification.requestPermission().then((permission) => {
+      console.log(permission);
+      if (permission !== 'granted') return null;
+    });
+  };
+
   return (
     <SwHomeWrapper>
       <h1>
         나의 스터디룸에서 코딩해요, <span>LearniVerse</span>
       </h1>
+      <PurpleButton btnName="푸시알림 허용" handleClick={alarmGrant} />
       <MyStudyroomList />
     </SwHomeWrapper>
   );
