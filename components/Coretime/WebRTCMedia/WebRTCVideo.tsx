@@ -61,7 +61,6 @@ const WebRTCVideo = ({
     };
 
     const url: string = await getPresignedUrl(captureData.fileName);
-    console.log(url);
     if (capturedImage) {
       await putFile(url, capturedImage);
     }
