@@ -1,11 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { styled } from 'styled-components';
 
-import { getCapture, putFile } from '@/apis/coretimes';
+import { createCapture, getPresignedUrl, putFile } from '@/apis/coretimes';
 import { IcCoreChar } from '@/public/assets/icons';
 
 interface WebRTCVideoProps {
   roomId: string;
+  memberId: string;
   nickname: string;
   mediaStream: MediaStream | undefined;
   isSelected: boolean;
@@ -14,6 +15,7 @@ interface WebRTCVideoProps {
 
 const WebRTCVideo = ({
   roomId,
+  memberId,
   nickname,
   mediaStream,
   isSelected,
@@ -52,10 +54,20 @@ const WebRTCVideo = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleUploadImage = async () => {
     const capturedImage = captureAndSaveVideoFrame();
-    const url = await getCapture(roomId);
+    const captureData = {
+      coreTimeId: roomId,
+      memberId,
+      fileName: `coretime-${roomId}-${nickname}.png`,
+    };
+
+    const url: string = await getPresignedUrl(captureData.fileName);
+    console.log(url);
     if (capturedImage) {
-      // await putFile(url, capturedImage);
+      await putFile(url, capturedImage);
     }
+
+    const capture = await createCapture(captureData);
+    console.log(capture);
   };
 
   useEffect(() => {

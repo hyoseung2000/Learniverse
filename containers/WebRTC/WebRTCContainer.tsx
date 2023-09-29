@@ -123,6 +123,7 @@ const WebRTCContainer = () => {
       coreEndTime={curCoreEndTime!}
       curNickname={curNickname!}
       curRoomId={curRoomId!}
+      curMemberId={curName!}
       isMedia={isMedia}
       handleMedia={handleMediaToggle}
       isMike={isMike}

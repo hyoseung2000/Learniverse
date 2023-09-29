@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+import { CaptureInfo, FileNameInfo } from '@/types/socket';
 import { PostCoreTimeInfo } from '@/types/studyroom';
 
 import { client, media } from './axios';
@@ -52,6 +53,28 @@ export const getCoreEndtime = async (coreTimeId: number) => {
   }
 };
 
+export const getPresignedUrl = async (fileName: string) => {
+  try {
+    const data = await media.get(`/presigned-url?fileName=${fileName}`);
+    console.log(data);
+    return data.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const createCapture = async (captureInfo: CaptureInfo) => {
+  try {
+    const data = await media.post(`/createCapture`, captureInfo);
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
 export const getCapture = async (coretimeId: string) => {
   try {
     const data = await media.get(`/getCapture?coretimeId=${coretimeId}`);
@@ -66,7 +89,7 @@ export const getCapture = async (coretimeId: string) => {
 // eslint-disable-next-line consistent-return
 export const putFile = async (presignedUrl: string, file: File) => {
   try {
-    const data = await axios.put(`${presignedUrl}`, file);
+    const data = await axios.put(presignedUrl, file);
     return data;
   } catch (error) {
     console.error(error);

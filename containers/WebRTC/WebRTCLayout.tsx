@@ -25,6 +25,7 @@ interface WebRTCLayoutProps {
   coreEndTime: Date;
   curNickname: string;
   curRoomId: string;
+  curMemberId: string;
   isMedia: boolean;
   handleMedia: () => void;
   isMike: boolean;
@@ -47,6 +48,7 @@ const WebRTCLayout = ({
   coreEndTime,
   curNickname,
   curRoomId,
+  curMemberId,
   isMedia,
   handleMedia,
   isMike,
@@ -107,6 +109,7 @@ const WebRTCLayout = ({
             <WebRTCVideo
               key={stream.consumer_id}
               roomId={curRoomId!}
+              memberId={curMemberId!}
               nickname={stream.nickname}
               mediaStream={stream.stream}
               isSelected={selectedVideo === stream.consumer_id}
