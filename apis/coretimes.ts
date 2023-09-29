@@ -52,10 +52,11 @@ export const getCoreEndtime = async (coreTimeId: number) => {
   }
 };
 
-export const getPresignedUrl = async () => {
+export const getCapture = async (coretimeId: string) => {
   try {
-    const data = await media.get('/presigned-url');
-    return data.data;
+    const data = await media.get(`/getCapture?coretimeId=${coretimeId}`);
+    console.log(data);
+    return data;
   } catch (err) {
     console.error(err);
     throw err;

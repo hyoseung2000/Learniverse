@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { styled } from 'styled-components';
 
-import { getPresignedUrl, putFile } from '@/apis/coretimes';
+import { getCapture, putFile } from '@/apis/coretimes';
 import { IcCoreChar } from '@/public/assets/icons';
 
 interface WebRTCVideoProps {
@@ -52,9 +52,9 @@ const WebRTCVideo = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleUploadImage = async () => {
     const capturedImage = captureAndSaveVideoFrame();
-    const url = await getPresignedUrl();
+    const url = await getCapture(roomId);
     if (capturedImage) {
-      await putFile(url, capturedImage);
+      // await putFile(url, capturedImage);
     }
   };
 
@@ -79,9 +79,9 @@ const WebRTCVideo = ({
       />
       <IcCoreChar />
       <StName>{nickname}</StName>
-      {/* <button type="button" onClick={handleUploadImage}>
+      <button type="button" onClick={handleUploadImage}>
         Save Image
-      </button> */}
+      </button>
     </StVideoWrapper>
   );
 };
