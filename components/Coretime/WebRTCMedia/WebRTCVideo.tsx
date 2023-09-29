@@ -3,6 +3,7 @@ import { styled } from 'styled-components';
 
 import { createCapture, getPresignedUrl, putFile } from '@/apis/coretimes';
 import { IcCoreChar } from '@/public/assets/icons';
+import { formatMMSS } from '@/utils/getMituteAndSecond';
 
 interface WebRTCVideoProps {
   roomId: string;
@@ -50,14 +51,15 @@ const WebRTCVideo = ({
 
     return file;
   };
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleUploadImage = async () => {
     const capturedImage = captureAndSaveVideoFrame();
+    const now = new Date();
+
     const captureData = {
       coreTimeId: roomId,
       memberId,
-      fileName: `coretime-${roomId}-${nickname}.png`,
+      fileName: `coretime-${roomId}-${nickname}-${formatMMSS(now)}.png`,
     };
 
     const url: string = await getPresignedUrl(captureData.fileName);

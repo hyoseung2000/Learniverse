@@ -155,6 +155,7 @@ const WebRTCLayout = ({
       </StCoretimeInfoWrapper>
       <StModalWrapper $showing={gallery.isShowing}>
         <GalleryModal
+          curRoomId={curRoomId!}
           isShowing={gallery.isShowing}
           handleCancel={gallery.toggle}
         />

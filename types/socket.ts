@@ -61,12 +61,14 @@ export interface ConsumerInfo {
   producerPaused: boolean;
 }
 
-export interface FileNameInfo {
-  fileName: string;
-}
-
 export interface CaptureInfo {
   coreTimeId: string;
   memberId: string;
   fileName: string;
+}
+
+export interface ImageListInfo {
+  memberId: string;
+  fileLink: string;
+  createdTime: string;
 }

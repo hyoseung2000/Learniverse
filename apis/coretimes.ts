@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { CaptureInfo, FileNameInfo } from '@/types/socket';
+import { CaptureInfo } from '@/types/socket';
 import { PostCoreTimeInfo } from '@/types/studyroom';
 
 import { client, media } from './axios';
@@ -87,9 +87,9 @@ export const createCapture = async (captureInfo: CaptureInfo) => {
 
 export const getCapture = async (coretimeId: string) => {
   try {
-    const data = await media.get(`/getCapture?coretimeId=${coretimeId}`);
-    console.log(data);
-    return data;
+    const data = await media.get(`/getCapture?coreTimeId=${coretimeId}`);
+    console.log(data.data);
+    return data.data;
   } catch (err) {
     console.error(err);
     throw err;
