@@ -1,7 +1,6 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 
 import { ChattingInfo, CustomSocket } from '@/types/socket';
-import { getNickName } from '@/utils/getNicknames';
 import { getTime } from '@/utils/getTime';
 
 type UseChatHandlerReturnType = [

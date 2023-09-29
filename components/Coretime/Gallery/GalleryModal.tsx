@@ -5,6 +5,7 @@ import { getCapture } from '@/apis/coretimes';
 import { LargeModal } from '@/components/Common/Modal';
 import { ImageListInfo } from '@/types/socket';
 import { formatMMSSString } from '@/utils/getMituteAndSecond';
+import { getNickName } from '@/utils/getNicknames';
 
 interface GalleryModalProps {
   curRoomId: string;
@@ -20,6 +21,9 @@ const GalleryModal = ({
   const [galleryImages, setGalleryImages] = useState<ImageListInfo[] | null>(
     null,
   );
+  const [formattedGalleryImages, setFormattedGalleryImages] = useState<
+    ImageListInfo[] | null
+  >(null);
 
   const removeDuplicateFile = (images: ImageListInfo[]): ImageListInfo[] => {
     const uniqueLinks = new Set<string>();
@@ -35,13 +39,18 @@ const GalleryModal = ({
   const getGalleryData = async () => {
     const images = await getCapture(curRoomId);
     const filteredImages = removeDuplicateFile(images);
-    console.log(filteredImages);
 
-    setGalleryImages(filteredImages);
+    const updatedImages = await Promise.all(
+      filteredImages.map(async (image) => {
+        const nickname = await getNickName(image.memberId);
+        return { ...image, nickname };
+      }),
+    );
+
+    setGalleryImages(updatedImages);
   };
 
   useEffect(() => {
-    console.log(galleryImages);
     if (isShowing) getGalleryData();
   }, [isShowing]);
 
@@ -53,7 +62,7 @@ const GalleryModal = ({
             <>
               {galleryImages.map((image) => (
                 <StImageWrapper key={`${image.memberId}-${image.createdTime}`}>
-                  <p>{image.memberId}</p>
+                  <p>{image.nickname}</p>
                   <p>{formatMMSSString(image.createdTime)}</p>
                   <img src={image.fileLink} alt="capture" />
                 </StImageWrapper>
@@ -84,7 +93,9 @@ const StGrlleryWrapper = styled.div`
 
 const StImageWrapper = styled.div`
   & > img {
-    width: 30rem;
-    height: 20rem;
+    width: 25rem;
+    height: 14rem;
+
+    border-radius: 0.8rem;
   }
 `;

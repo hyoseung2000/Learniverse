@@ -71,4 +71,5 @@ export interface ImageListInfo {
   memberId: string;
   fileLink: string;
   createdTime: string;
+  nickname?: string;
 }
