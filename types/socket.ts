@@ -68,7 +68,7 @@ export interface CaptureInfo {
 }
 
 export interface ImageListInfo {
-  memberId: string;
+  memberId: number;
   fileLink: string;
   createdTime: string;
   nickname?: string;

@@ -17,7 +17,7 @@ const useChatHandler = (
   const [chatting, setChatting] = useState<string>('');
 
   const handleSendChatting = async (): Promise<void> => {
-    return new Promise<void>(async (resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       if (!curSocket || !chatting) {
         reject(new Error('Socket not available or no message provided.'));
         return;

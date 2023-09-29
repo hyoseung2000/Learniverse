@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 import { getCapture } from '@/apis/coretimes';
 import { LargeModal } from '@/components/Common/Modal';
 import { ImageListInfo } from '@/types/socket';
-import { formatMMSSString } from '@/utils/getMituteAndSecond';
+import { formatHHMMSS } from '@/utils/getFormattedTime';
 import { getNickName } from '@/utils/getNicknames';
+
+import { memberIdState } from '../../../recoil/atom';
 
 interface GalleryModalProps {
   curRoomId: string;
@@ -21,6 +24,7 @@ const GalleryModal = ({
   const [galleryImages, setGalleryImages] = useState<ImageListInfo[] | null>(
     null,
   );
+  const curMemberId = useRecoilValue(memberIdState);
 
   const removeDuplicateFile = (images: ImageListInfo[]): ImageListInfo[] => {
     const uniqueLinks = new Set<string>();
@@ -39,7 +43,7 @@ const GalleryModal = ({
 
     const updatedImages = await Promise.all(
       filteredImages.map(async (image) => {
-        const nickname = await getNickName(image.memberId);
+        const nickname = await getNickName(image.memberId.toString());
         return { ...image, nickname };
       }),
     );
@@ -61,10 +65,13 @@ const GalleryModal = ({
           {galleryImages && (
             <>
               {galleryImages.map((image) => (
-                <StImageWrapper key={`${image.memberId}-${image.createdTime}`}>
+                <StImageWrapper
+                  key={`${image.memberId}-${image.createdTime}`}
+                  $iscurrentuser={image.memberId === Number(curMemberId)}
+                >
                   <p>
                     {image.nickname}
-                    <span>{formatMMSSString(image.createdTime)}</span>
+                    <span>{formatHHMMSS(image.createdTime)}</span>
                   </p>
                   <img src={image.fileLink} alt="capture" />
                 </StImageWrapper>
@@ -100,7 +107,7 @@ const StGrlleryWrapper = styled.div`
   box-sizing: border-box;
 `;
 
-const StImageWrapper = styled.div`
+const StImageWrapper = styled.div<{ $iscurrentuser: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -114,7 +121,7 @@ const StImageWrapper = styled.div`
 
     color: ${({ theme }) => theme.colors.Gray1};
     ${({ theme }) => theme.fonts.Title4};
-    text-align: left;
+    text-align: ${({ $iscurrentuser }) => ($iscurrentuser ? 'right' : 'left')};
 
     & > span {
       padding-left: 1rem;

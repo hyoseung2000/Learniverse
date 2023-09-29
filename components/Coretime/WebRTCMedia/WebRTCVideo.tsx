@@ -3,7 +3,7 @@ import { styled } from 'styled-components';
 
 import { createCapture, getPresignedUrl, putFile } from '@/apis/coretimes';
 import { IcCoreChar } from '@/public/assets/icons';
-import { formatMMSS } from '@/utils/getMituteAndSecond';
+import { formatHHMMSS } from '@/utils/getFormattedTime';
 
 interface WebRTCVideoProps {
   roomId: string;
@@ -59,7 +59,9 @@ const WebRTCVideo = ({
     const captureData = {
       coreTimeId: roomId,
       memberId,
-      fileName: `coretime-${roomId}-${nickname}-${formatMMSS(now)}.png`,
+      fileName: `coretime-${roomId}-${nickname}-${formatHHMMSS(
+        now.toString(),
+      )}.png`,
     };
 
     const url: string = await getPresignedUrl(captureData.fileName);
