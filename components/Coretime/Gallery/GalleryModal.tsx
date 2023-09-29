@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
@@ -73,7 +74,13 @@ const GalleryModal = ({
                     {image.nickname}
                     <span>{formatHHMMSS(image.createdTime)}</span>
                   </p>
-                  <img src={image.fileLink} alt="capture" />
+                  {/* <img src={image.fileLink} alt="capture" /> */}
+                  <Image
+                    src={image.fileLink}
+                    alt="capture"
+                    width={438}
+                    height={274}
+                  />
                 </StImageWrapper>
               ))}
             </>
@@ -134,6 +141,5 @@ const StImageWrapper = styled.div<{ $iscurrentuser: boolean }>`
     width: 100%;
 
     border-radius: 0.8rem;
-    text-align: center;
   }
 `;

@@ -24,6 +24,12 @@ const configs = {
         port: '',
         pathname: '/u/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'learniverse-bucket.s3.us-east-2.amazonaws.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };
