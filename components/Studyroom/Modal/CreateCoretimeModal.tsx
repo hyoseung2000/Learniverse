@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { styled } from 'styled-components';
 
-import { createCoretime } from '@/apis/coretimes';
+import { createCaptureTime, createCoretime } from '@/apis/coretimes';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { SmallModal } from '@/components/Common/Modal';
 import useModal from '@/hooks/useModal';
@@ -38,7 +38,19 @@ const CreateCoretimeModal = ({
     ) {
       alert('코어타임은 최소 30분 - 최대 24시간 내로 지정하세요.');
     } else {
-      await createCoretime(coreTimeInfo!);
+      const createRes = await createCoretime(coreTimeInfo!);
+      if (createRes.status === 201) {
+        const captureTimeData = {
+          coreTimeId: 1,
+          startTime: startDate,
+          endTime: new Date(startDate.getTime() + 10 * 60 * 1000), // 10분 뒤 종료
+          captureCount: captureNum,
+          tokens: [
+            'cA0lYyFYP-UXBYC6oFjvKA:APA91bEixoUnuUbrpjuqTgv_edbSljMGaotD-6pU8uc44uT8P2Ei-9qYSObtW2_TyJLqWmVJGZ34OLZWLv2_uMXqa5cGrWvcEtROOdx5QzpMP4ZH2DR4Gr7nunHL7SvIHkBQCRWVIGp-',
+          ],
+        };
+        await createCaptureTime(captureTimeData);
+      }
       handleCreate();
     }
   };
