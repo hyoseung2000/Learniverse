@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { CaptureInfo } from '@/types/capture';
+import { CaptureInfo, CreateCaptureTimeInfo } from '@/types/capture';
 import { PostCoreTimeInfo } from '@/types/studyroom';
 
 import { client, media } from './axios';
@@ -47,6 +47,32 @@ export const getCoreEndtime = async (coreTimeId: number) => {
       `/room/core/endTime?coreTimeId=${coreTimeId}`,
     );
     return data.data.coreEndTime;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const createCaptureTime = async (
+  createCaptureTimeInfo: CreateCaptureTimeInfo,
+) => {
+  try {
+    const { data } = await client.post(`/createCapture`, createCaptureTimeInfo);
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const getCaptureTime = async (coreTimeId: number) => {
+  try {
+    const { data } = await client.get(
+      `/getCaptureTime?coreTimeId=${coreTimeId}`,
+    );
+    console.log(data);
+    return data;
   } catch (err) {
     console.error(err);
     throw err;

@@ -11,8 +11,17 @@ export interface ImageListInfo {
   nickname?: string;
 }
 
-export interface CaptureTimeInfo {
-  coreTimeId: string;
-  memberId: string;
-  fileName: string;
+export interface CreateCaptureTimeInfo {
+  coreTimeId: number;
+  startTime: Date;
+  endTime: Date;
+  captureCount: number;
+  tokens: string[];
+}
+
+export interface GetCaptureTimeInfo {
+  _id: string;
+  coreTimeId: number;
+  captureTime: Date;
+  __v: number;
 }
