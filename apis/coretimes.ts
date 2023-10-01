@@ -57,7 +57,10 @@ export const createCaptureTime = async (
   createCaptureTimeInfo: CreateCaptureTimeInfo,
 ) => {
   try {
-    const { data } = await client.post(`/createCapture`, createCaptureTimeInfo);
+    const { data } = await media.post(
+      `/createCaptureTime`,
+      createCaptureTimeInfo,
+    );
     console.log(data);
     return data;
   } catch (err) {
@@ -68,9 +71,20 @@ export const createCaptureTime = async (
 
 export const getCaptureTime = async (coreTimeId: number) => {
   try {
-    const { data } = await client.get(
+    const { data } = await media.get(
       `/getCaptureTime?coreTimeId=${coreTimeId}`,
     );
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const getServerTime = async () => {
+  try {
+    const { data } = await media.get('/getServerTime');
     console.log(data);
     return data;
   } catch (err) {

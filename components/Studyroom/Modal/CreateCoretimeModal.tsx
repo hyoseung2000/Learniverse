@@ -4,7 +4,11 @@ import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { styled } from 'styled-components';
 
-import { createCaptureTime, createCoretime } from '@/apis/coretimes';
+import {
+  createCaptureTime,
+  createCoretime,
+  getServerTime,
+} from '@/apis/coretimes';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { SmallModal } from '@/components/Common/Modal';
 import useModal from '@/hooks/useModal';
@@ -40,15 +44,20 @@ const CreateCoretimeModal = ({
     } else {
       const createRes = await createCoretime(coreTimeInfo!);
       if (createRes.status === 201) {
+        const serverTimeString = await getServerTime();
+        const serverTime = new Date(serverTimeString);
+        const serverStartTime = new Date(serverTime.getTime() + 10 * 60 * 1000);
+        const serverEndTime = new Date(serverTime.getTime() + 20 * 60 * 1000);
         const captureTimeData = {
           coreTimeId: 1,
-          startTime: startDate,
-          endTime: new Date(startDate.getTime() + 10 * 60 * 1000), // 10분 뒤 종료
+          startTime: serverStartTime,
+          endTime: serverEndTime,
           captureCount: captureNum,
           tokens: [
             'cA0lYyFYP-UXBYC6oFjvKA:APA91bEixoUnuUbrpjuqTgv_edbSljMGaotD-6pU8uc44uT8P2Ei-9qYSObtW2_TyJLqWmVJGZ34OLZWLv2_uMXqa5cGrWvcEtROOdx5QzpMP4ZH2DR4Gr7nunHL7SvIHkBQCRWVIGp-',
           ],
         };
+        console.log(captureTimeData);
         await createCaptureTime(captureTimeData);
       }
       handleCreate();
