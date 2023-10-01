@@ -35,6 +35,17 @@ const CreateCoretimeModal = ({
 
   const complete = useModal();
 
+  function toUTC(date: Date): Date {
+    return new Date(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate(),
+      date.getUTCHours(),
+      date.getUTCMinutes(),
+      date.getUTCSeconds(),
+    );
+  }
+
   const handleCreateCtime = async () => {
     if (
       (coreHour === 0 && coreMin === 0) ||
@@ -46,12 +57,17 @@ const CreateCoretimeModal = ({
       if (createRes.status === 201) {
         const serverTimeString = await getServerTime();
         const serverTime = new Date(serverTimeString);
+
         const serverStartTime = new Date(serverTime.getTime() + 10 * 60 * 1000);
         const serverEndTime = new Date(serverTime.getTime() + 20 * 60 * 1000);
+
+        const serverStartTimeUTC = toUTC(serverStartTime);
+        const serverEndTimeUTC = toUTC(serverEndTime);
+
         const captureTimeData = {
           coreTimeId: 1,
-          startTime: serverStartTime,
-          endTime: serverEndTime,
+          startTime: serverStartTimeUTC,
+          endTime: serverEndTimeUTC,
           captureCount: captureNum,
           tokens: [
             'cA0lYyFYP-UXBYC6oFjvKA:APA91bEixoUnuUbrpjuqTgv_edbSljMGaotD-6pU8uc44uT8P2Ei-9qYSObtW2_TyJLqWmVJGZ34OLZWLv2_uMXqa5cGrWvcEtROOdx5QzpMP4ZH2DR4Gr7nunHL7SvIHkBQCRWVIGp-',
