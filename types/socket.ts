@@ -60,16 +60,3 @@ export interface ConsumerInfo {
   type: string;
   producerPaused: boolean;
 }
-
-export interface CaptureInfo {
-  coreTimeId: string;
-  memberId: string;
-  fileName: string;
-}
-
-export interface ImageListInfo {
-  memberId: number;
-  fileLink: string;
-  createdTime: string;
-  nickname?: string;
-}

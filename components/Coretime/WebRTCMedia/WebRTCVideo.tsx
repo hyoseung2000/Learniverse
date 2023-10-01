@@ -57,8 +57,8 @@ const WebRTCVideo = ({
     const now = new Date();
 
     const captureData = {
-      coreTimeId: roomId,
-      memberId,
+      coreTimeId: Number(roomId),
+      memberId: Number(memberId),
       fileName: `coretime-${roomId}-${nickname}-${formatHHMMSS(
         now.toString(),
       )}.png`,

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { CaptureInfo } from '@/types/socket';
+import { CaptureInfo } from '@/types/capture';
 import { PostCoreTimeInfo } from '@/types/studyroom';
 
 import { client, media } from './axios';
