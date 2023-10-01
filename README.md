@@ -69,8 +69,8 @@
 <h2> 🛠 기술스택 </h2>
 
 <div align="center"> 
-
-![LearniVerse (2)](https://github.com/Team-Learniverse/Learniverse-FrontEnd/assets/73213437/d01e0d50-e89b-4a13-886f-ea670360022f)
+  
+![LearniVerse (4)](https://github.com/Team-Learniverse/Learniverse-FrontEnd/assets/73213437/3d3f2a2e-8522-4f93-87cb-5bb038a20059)
 
 <br />
 
