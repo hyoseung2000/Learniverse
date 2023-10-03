@@ -1,6 +1,6 @@
 import { EditStudyRoomInfo, PostStudyRoomInfo } from '@/types/studyroom';
 
-import { client } from './axios';
+import { ai, client } from './axios';
 
 export const createRoom = async (postRoomData: PostStudyRoomInfo) => {
   try {
@@ -88,6 +88,7 @@ export const getApplyRoomList = async (memberId: number) => {
     throw err;
   }
 };
+
 export const searchHashtag = async (hashtag: string, memberId: number) => {
   try {
     const { data } = await client.get(
@@ -95,6 +96,17 @@ export const searchHashtag = async (hashtag: string, memberId: number) => {
     );
     console.log(data.data);
     return data.data.rooms;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const recommendRoomList = async (memberId: number) => {
+  try {
+    const { data } = await ai.get(`/recommendRoom?memberId=${memberId}`);
+    console.log(data);
+    return data;
   } catch (err) {
     console.error(err);
     throw err;

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { searchHashtag } from '@/apis/roomList';
+import { recommendRoomList, searchHashtag } from '@/apis/roomList';
 import { applyRoom } from '@/apis/studyroom';
 import {
   StContentWrapper,
@@ -40,8 +40,8 @@ const Search = () => {
     applyCompleteModal.toggle();
   };
 
-  const handleRecommend = () => {
-    console.log('스터디 추천 : 2차 데모 이후 개발');
+  const handleRecommend = async () => {
+    const recommned = await recommendRoomList(curMemberId);
   };
   return (
     <StSearchWrapper>
