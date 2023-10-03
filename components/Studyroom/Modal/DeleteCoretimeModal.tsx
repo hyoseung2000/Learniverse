@@ -23,6 +23,7 @@ const DeleteCoretimeModal = ({
   const handleDeleteCoretime = async () => {
     console.log(coreTimeId);
     await DeleteCoretime(coreTimeId);
+    handleCancel();
   };
 
   return (
@@ -65,7 +66,7 @@ const StDeleteModalWrapper = styled.div`
 
 const StCommentWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 
   width: 100%;
   margin: 1rem;

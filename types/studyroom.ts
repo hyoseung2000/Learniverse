@@ -79,3 +79,37 @@ export interface PostWorkSpaceInfo {
   roomGoogleDrive?: string;
   roomFigma?: string;
 }
+
+export interface PostNoticeInfo {
+  memberId: number;
+  roomId: number;
+  title: string;
+  content: string;
+}
+
+export interface NoticeListInfo {
+  notices: NoticeInfo[];
+}
+
+export interface NoticeInfo {
+  memberId: number;
+  boardId: number;
+  title: string;
+  content: string;
+}
+
+export interface IssueListInfo {
+  issues: IssurInfo[];
+}
+
+export interface IssueInfo {}
+
+export interface PostIssueInfo {
+  roomId: number;
+  memberId: number;
+  issueTitle: string;
+  issueDescription: string;
+  issueGitOwner: string;
+  issueGitRepo: string;
+  gitFileName: string;
+}

@@ -46,17 +46,20 @@ const StStudyroomWrapper = styled.main`
 `;
 
 const StTopWrapper = styled.div`
+  justify-content: center;
   display: flex;
-  justify-content: space-around;
+  gap: 1rem;
 `;
 const StBottomWrapper = styled.div`
+  justify-content: center;
   display: flex;
-  justify-content: space-around;
+  gap: 1rem;
 `;
 
 const StIssueWrapper = styled.div`
-  flex-grow: 3;
   margin: 1.4rem;
+  height: 25.6rem;
+  width: 51.8rem;
 
   border-radius: 2rem;
   background: linear-gradient(
@@ -67,8 +70,9 @@ const StIssueWrapper = styled.div`
 `;
 
 const StWorkspaceWrapper = styled.div`
-  flex-grow: 1;
   margin: 1.4rem;
+  height: 25.6rem;
+  width: 24.5rem;
 
   border-radius: 2rem;
   background: linear-gradient(
@@ -79,8 +83,9 @@ const StWorkspaceWrapper = styled.div`
 `;
 
 const StNoticeWrapper = styled.div`
-  flex-grow: 5;
   margin: 1.4rem;
+  width: 79.8rem;
+  height: 33.4rem;
 
   border-radius: 2rem;
   background: linear-gradient(
@@ -91,8 +96,9 @@ const StNoticeWrapper = styled.div`
 `;
 
 const StMembersWrapper = styled.div`
-  flex-grow: 4.5;
   margin: 1.4rem;
+  height: 25.6rem;
+  width: 41.8rem;
 
   border-radius: 2rem;
   background: linear-gradient(
@@ -103,8 +109,9 @@ const StMembersWrapper = styled.div`
 `;
 
 const StCoretimeWrapper = styled.div`
-  flex-grow: 2;
   margin: 1.4rem;
+  height: 33.4rem;
+  width: 41.8rem;
 
   & > h1 {
     color: ${({ theme }) => theme.colors.White};
@@ -118,63 +125,3 @@ const StCoretimeWrapper = styled.div`
     rgba(238, 238, 250, 0.03) 100%
   );
 `;
-
-// const StStudyMainWrapper = styled.section`
-//   width: 60%;
-
-//   display: flex;
-//   flex-direction: column;
-
-//   padding-top: 2.588rem;
-//   box-sizing: border-box;
-
-//   & > h2 {
-//     color: ${({ theme }) => theme.colors.White};
-//     ${({ theme }) => theme.fonts.Head1};
-//   }
-// `;
-
-// const StWorkspaceWrapper = styled.div`
-//   padding-top: 2.3rem;
-
-//   position: relative;
-
-//   display: flex;
-//   flex-direction: column;
-
-//   & > h2 {
-//     display: flex;
-//     align-items: center;
-//     gap: 4.4rem;
-
-//     color: ${({ theme }) => theme.colors.White};
-//     ${({ theme }) => theme.fonts.Head1};
-//   }
-
-//   & > svg {
-//     position: absolute;
-//     left: 25rem;
-//     top: 0.4rem;
-//   }
-
-//   & > div {
-//     padding-top: 2.3rem;
-
-//     & > p {
-//       color: ${({ theme }) => theme.colors.White};
-//       ${({ theme }) => theme.fonts.Title5};
-//     }
-//   }
-// `;
-
-// const StBtnWrapper = styled.div`
-//   position: relative;
-
-//   display: flex;
-//   justify-content: space-between;
-// `;
-
-// const StWorkSpace = styled.div`
-//   display: flex;
-//   align-items: center;
-// `;

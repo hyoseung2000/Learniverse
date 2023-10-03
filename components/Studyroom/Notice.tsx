@@ -1,65 +1,116 @@
+import { useEffect, useRef, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { IcSend } from '@/public/assets/icons';
+import { getNoticeList } from '@/apis/studyroom';
+import useModal from '@/hooks/useModal';
+import { IcPlusBtn } from '@/public/assets/icons';
+import { roomIdState } from '@/recoil/atom';
+import { NoticeInfo } from '@/types/studyroom';
+
+import CreateNoticeModal from './Modal/CreateNoticeModal';
+import NoticeCard from './NoticeCard';
 
 const Notice = () => {
+  const roomID = useRecoilValue(roomIdState);
+  const noticeRef = useRef<HTMLDivElement>(null);
+
+  const create = useModal();
+  const [noticeList, setNoticeList] = useState<NoticeInfo[]>();
+
+  const getNotices = async () => {
+    const noticeInfo = await getNoticeList(roomID);
+    console.log(noticeInfo);
+
+    setNoticeList(noticeInfo);
+  };
+
+  const handleOpen = () => {
+    create.toggle();
+  };
+
+  useEffect(() => {
+    getNotices();
+  }, []);
+
+  // useEffect(() => {
+  //   if (noticeRef.current) {
+  //     noticeRef.current.scrollTop = noticeRef.current.scrollHeight;
+  //   }
+  // }, [noticeList]);
+
   return (
-    <StNoticeWrapper>
-      <h1>스터디룸 공지</h1>
-      <StComent>
-        <h2>이번주 공지</h2>
-        <p>이번주 코어타임 무조건 필참입니다!!!</p>
-      </StComent>
-      <StInput>
-        <IcSend />
-      </StInput>
-    </StNoticeWrapper>
+    <>
+      <StNoticeWrapper>
+        <StTitleWrapper>
+          <h1>스터디룸 공지</h1>
+          <IcPlusBtn type="button" onClick={handleOpen} />
+        </StTitleWrapper>
+        <StComent ref={noticeRef}>
+          {noticeList &&
+            noticeList.map((notice) => (
+              <NoticeCard key={notice.boardId} noticeInfo={notice} />
+            ))}
+        </StComent>
+      </StNoticeWrapper>
+      <StCreateModalWrapper $showing={create.isShowing}>
+        <CreateNoticeModal
+          isShowing={create.isShowing}
+          handleCancel={create.toggle}
+        />
+      </StCreateModalWrapper>
+    </>
   );
 };
 
 export default Notice;
 
 const StNoticeWrapper = styled.div`
-  margin: 1.8rem 1.8rem 0 1.8rem;
+  margin: 2rem;
   position: relative;
 
   & > h1 {
     color: ${({ theme }) => theme.colors.White};
-    ${({ theme }) => theme.fonts.Head1};
+    ${({ theme }) => theme.fonts.Title1};
+  }
+`;
+
+const StTitleWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  & > h1 {
+    color: ${({ theme }) => theme.colors.White};
+    ${({ theme }) => theme.fonts.Title1};
   }
 `;
 
 const StComent = styled.div`
-  padding: 1rem;
-  margin-top: 2.4rem;
+  height: 23.6rem;
+  margin: 2.4rem 0;
 
-  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 
-  & > h2 {
-    color: ${({ theme }) => theme.colors.Learniverse_BG};
-    ${({ theme }) => theme.fonts.Title3};
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    display: none;
   }
-  & > p {
-    color: ${({ theme }) => theme.colors.Learniverse_BG};
-    ${({ theme }) => theme.fonts.Title5};
-  }
-
-  background: ${({ theme }) => theme.colors.LightGray2};
 `;
 
-const StInput = styled.div`
-  width: 100%;
-  height: 5rem;
-  margin-top: 5rem;
+const StCreateModalWrapper = styled.div<{ $showing: boolean }>`
+  display: ${({ $showing }) => ($showing ? 'block' : 'none')};
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
 
-  position: relative;
+  justify-content: center;
+  align-items: center;
 
-  border-radius: 1rem;
-  background: ${({ theme }) => theme.colors.LightGray2};
+  width: 100vw;
+  height: 100vh;
 
-  & > svg {
-    position: absolute;
-    right: 1.3rem;
-    bottom: 1.5rem;
-  }
+  background-color: rgba(0, 0, 0, 0.5);
 `;

@@ -1,7 +1,9 @@
 import { useRouter } from 'next/router';
+import { useSetRecoilState } from 'recoil';
 import { styled } from 'styled-components';
 
 import { IcPlanet } from '@/public/assets/icons';
+import { roomIdState } from '@/recoil/atom';
 import { StudyRoomInfo } from '@/types/studyroom';
 import { getCategoryColor } from '@/utils/getCategoryColor';
 
@@ -43,7 +45,10 @@ const StudyroomCard = ({
   const showManagementButtons = roomType === 'leader';
   const showStatus = roomType === 'apply';
 
+  const setroomID = useSetRecoilState(roomIdState);
+
   const handleGotoRoom = () => {
+    setroomID(roomId);
     router.push(`/studyroom/${roomId}`);
   };
 

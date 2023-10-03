@@ -22,7 +22,7 @@ const StStateBtnWrapper = styled.button`
   border-radius: 30rem;
 
   & > p {
-    color: ${({ theme }) => theme.colors.White};
+    color: ${({ theme }) => theme.colors.Learniverse_BG};
     ${({ theme }) => theme.fonts.Body4};
   }
 `;

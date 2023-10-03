@@ -25,10 +25,9 @@ const CoreTimeCard = ({ coretime, isCoreId }: Props) => {
     <>
       <StCoretimeWrapper>
         <StContent>
-          <p>
-            {changeDateFormat(coreStartTime.toString())} -{' '}
-            {changeDateFormat(coreEndTime.toString())}
-          </p>
+          <p>{changeDateFormat(coreStartTime.toString())}</p>
+          <p> - </p>
+          <p>{changeDateFormat(coreEndTime.toString())}</p>
           {isCoreId === coreTimeId ? (
             <StateBtn btnName="진행중" />
           ) : (
@@ -49,14 +48,17 @@ const CoreTimeCard = ({ coretime, isCoreId }: Props) => {
 
 export default CoreTimeCard;
 
-const StCoretimeWrapper = styled.div``;
+const StCoretimeWrapper = styled.div`
+  background: ${({ theme }) => theme.colors.LightGray2};
+  border-radius: 1.2rem;
+`;
+
 const StContent = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
 
-  margin-top: 0.6rem;
-  margin-bottom: 0.6rem;
+  margin: 0.6rem 1rem;
 
   & > p {
     color: ${({ theme }) => theme.colors.Learniverse_BG};

@@ -1,4 +1,8 @@
-import { PostWorkSpaceInfo } from '@/types/studyroom';
+import {
+  PostIssueInfo,
+  PostNoticeInfo,
+  PostWorkSpaceInfo,
+} from '@/types/studyroom';
 
 import { client } from './axios';
 
@@ -50,7 +54,6 @@ export const getCoretimeList = async (roomId: number) => {
 
 export const postWorkspace = async (PostWorkSpaceData: PostWorkSpaceInfo) => {
   try {
-    console.log(PostWorkSpaceData);
     const { data } = await client.post(
       `/room/workspace/update`,
       PostWorkSpaceData,
@@ -68,6 +71,74 @@ export const getStudyroomWorkSpace = async (roomId: number) => {
     const { data } = await client.get(`/room/info/workspace?roomId=${roomId}`);
     console.log(data.data);
     return data.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const getStudyroomName = async (roomId: number) => {
+  try {
+    const { data } = await client.get(`room/info/roomName?roomId=${roomId}`);
+    return data.data;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+export const postNotice = async (PostNoticeData: PostNoticeInfo) => {
+  try {
+    const { data } = await client.post(`/room/board/create`, PostNoticeData);
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const getNoticeList = async (roomId: number) => {
+  try {
+    const { data } = await client.get(`/room/boards?roomId=${roomId}`);
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const DeleteNotice = async (boardId: number) => {
+  try {
+    const { data } = await client.delete(
+      `/room/board/delete?boardId=${boardId}`,
+    );
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const CreateIssue = async (PostIssueData: PostIssueInfo) => {
+  try {
+    console.log(PostIssueData);
+    const { data } = await client.post(`/room/issue/create`, PostIssueData);
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const getIssueList = async (roomId: number) => {
+  try {
+    const { data } = await client.get(`room/issues?roomId=${roomId}`);
+    console.log(data);
+    return data;
   } catch (err) {
     console.error(err);
     throw err;

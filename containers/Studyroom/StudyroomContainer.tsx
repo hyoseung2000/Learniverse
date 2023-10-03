@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useEffect } from 'react';
 import { styled } from 'styled-components';
 

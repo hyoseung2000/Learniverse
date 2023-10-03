@@ -2,32 +2,30 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
+import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 import { createCoretime } from '@/apis/coretimes';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { SmallModal } from '@/components/Common/Modal';
 import useModal from '@/hooks/useModal';
+import { roomIdState } from '@/recoil/atom';
 import { PostCoreTimeInfo } from '@/types/studyroom';
 
 import CompleteCreateCoreModal from './CompleteCreateCoreModal';
 
 interface Props {
   isShowing: boolean;
-  handleCreate: () => void;
   handleCancel: () => void;
 }
 
-const CreateCoretimeModal = ({
-  isShowing,
-  handleCreate,
-  handleCancel,
-}: Props) => {
+const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [coreHr, setCoreHr] = useState<number>(1);
   const [coreMin, setCoreMin] = useState<number>(30);
   const [capture, setCapture] = useState<number>(0);
   const [coreTimeInfo, setCoreTimeInfo] = useState<PostCoreTimeInfo>();
+  const roomID = useRecoilValue(roomIdState);
 
   const complete = useModal();
 
@@ -39,7 +37,7 @@ const CreateCoretimeModal = ({
       alert('코어타임은 최소 30분 - 최대 24시간 내로 지정하세요.');
     } else {
       await createCoretime(coreTimeInfo!);
-      handleCreate();
+      handleCancel();
     }
   };
   const handleHourChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -69,7 +67,7 @@ const CreateCoretimeModal = ({
 
   useEffect(() => {
     setCoreTimeInfo({
-      roomId: 1,
+      roomId: roomID,
       coreStartTime: startDate,
       coreHour: coreHr,
       coreMinute: coreMin,

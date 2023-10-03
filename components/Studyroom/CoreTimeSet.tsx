@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable prettier/prettier */
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 import { getCoretimeID } from '@/apis/coretimes';
 import { getCoretimeList } from '@/apis/studyroom';
 import useModal from '@/hooks/useModal';
 import { IcPlusBtn } from '@/public/assets/icons';
+import { roomIdState } from '@/recoil/atom';
 import { CoreTimeInfo } from '@/types/studyroom';
 
 import CoreTimeCard from './CoretimeCard';
@@ -15,11 +16,10 @@ import CreateCoretimeModal from './Modal/CreateCoretimeModal';
 
 const CoreTimeSet = () => {
   const router = useRouter();
-  // const room_id = 'room1';
-  const room_id = 1;
+  const coreRef = useRef<HTMLDivElement>(null);
+  const room_id = useRecoilValue(roomIdState);
 
   const create = useModal();
-  const complete = useModal();
 
   const [coreTimeList, setCoreTimeList] = useState<CoreTimeInfo[]>();
   const [isCoreTime, setIsCoreTime] = useState<boolean>();
@@ -36,20 +36,12 @@ const CoreTimeSet = () => {
       setNowCoreId(coreID);
     }
 
-    console.log(cores);
-    console.log(isCore);
-
     setCoreTimeList(cores);
     setIsCoreTime(isCore);
   };
 
   const handleOpen = () => {
     create.toggle();
-  };
-
-  const handleCompleteOpen = () => {
-    create.toggle();
-    complete.toggle();
   };
 
   const handleAttend = () => {
@@ -63,6 +55,12 @@ const CoreTimeSet = () => {
     getCoretimes();
   }, []);
 
+  // useEffect(() => {
+  //   if (coreRef.current) {
+  //     coreRef.current.scrollTop = coreRef.current.scrollHeight;
+  //   }
+  // }, [coreTimeList]);
+
   return (
     <>
       <StCoretimeWrapper>
@@ -70,7 +68,7 @@ const CoreTimeSet = () => {
           <h1>코어타임</h1>
           <IcPlusBtn type="button" onClick={handleOpen} />
         </StTitleWrapper>
-        <StCoretableWrapper>
+        <StCoretableWrapper ref={coreRef}>
           {coreTimeList &&
             coreTimeList.map((core) => (
               <CoreTimeCard
@@ -87,7 +85,6 @@ const CoreTimeSet = () => {
       <StCreateModalWrapper $showing={create.isShowing}>
         <CreateCoretimeModal
           isShowing={create.isShowing}
-          handleCreate={handleCompleteOpen}
           handleCancel={create.toggle}
         />
       </StCreateModalWrapper>
@@ -98,37 +95,45 @@ const CoreTimeSet = () => {
 export default CoreTimeSet;
 
 const StCoretimeWrapper = styled.div`
-  margin: 3.3rem;
+  margin: 2rem 3rem;
 
   display: flex;
   flex-direction: column;
 `;
+
 const StTitleWrapper = styled.div`
   display: flex;
   justify-content: space-between;
 
   & > h1 {
     color: ${({ theme }) => theme.colors.White};
-    ${({ theme }) => theme.fonts.Head1};
+    ${({ theme }) => theme.fonts.Title1};
   }
 
   cursor: pointer;
 `;
 const StCoretableWrapper = styled.div`
   width: 100%;
-
-  margin: 2.3rem 0 4rem 0;
+  height: 16rem;
+  margin: 2rem 0 0 0;
 
   display: flex;
   flex-direction: column;
+  gap: 1rem;
 
-  background: ${({ theme }) => theme.colors.LightGray2};
-  border-radius: 1.2rem;
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const StCoreBtn = styled.button`
   width: 100%;
   height: 5.6rem;
+  margin-top: 3rem;
+
+  position: relative;
+  bottom: 1rem;
 
   border-radius: 2.5rem;
 
@@ -139,7 +144,8 @@ const StCoreBtn = styled.button`
 
   background: ${({ theme, disabled }) =>
     disabled ? theme.colors.Gray3 : theme.colors.Purple3};
-  box-shadow: 2.47864px 4.33762px 3.71796px 1.23932px rgba(0, 0, 0, 0.15),
+  box-shadow:
+    2.47864px 4.33762px 3.71796px 1.23932px rgba(0, 0, 0, 0.15),
     0.61966px 1.23932px 7.43592px 4.33762px rgba(153, 153, 153, 0.3) inset,
     0.61966px 1.23932px 8.67524px 4.33762px rgba(255, 255, 255, 0.15) inset;
 

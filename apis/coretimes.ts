@@ -11,8 +11,12 @@ export const createCoretime = async (postCoreTimeData: PostCoreTimeInfo) => {
     console.log(data);
     return data;
   } catch (err) {
-    console.error(err);
-    throw err;
+    if (axios.isAxiosError(err))
+      if (err.response?.status === 422) {
+        // console.error(err);
+        alert('중복된 코어타임 시간을 입력하였습니다.');
+      }
+    return err;
   }
 };
 

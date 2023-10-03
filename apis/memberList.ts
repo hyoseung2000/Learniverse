@@ -37,3 +37,14 @@ export const RejectMember = async (roomId: number, memberId: number) => {
     throw err;
   }
 };
+
+export const getRoomMembers = async (roomId: number) => {
+  try {
+    const { data } = await client.get(`room/member/list?roomId=${roomId}`);
+    console.log(data.data.members);
+    return data.data.members;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};

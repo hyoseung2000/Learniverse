@@ -8,3 +8,4 @@ export { default as GithbBtn } from './githbBtn';
 export { default as FigmaBtn } from './figmaBtn';
 export { default as GDriveBtn } from './gdriveBtn';
 export { default as StateDeleteBtn } from './stateDeleteBtn';
+export { default as DeleteButton } from './DeleteButton';

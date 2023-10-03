@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 import { getStudyroomWorkSpace, postWorkspace } from '@/apis/studyroom';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { LargeModal } from '@/components/Common/Modal';
+import { roomIdState } from '@/recoil/atom';
 import { PostWorkSpaceInfo, WorkSpaceInfo } from '@/types/studyroom';
 
 interface Props {
@@ -17,15 +19,16 @@ const RegisterWorkspaceModal = ({ isShowing, handleCancel }: Props) => {
   const [FigmaURL, setFigmaURL] = useState('');
   const [GDriveURL, setGDriveURL] = useState('');
   const [workSpaceData, setWorkSpaceData] = useState<PostWorkSpaceInfo>();
-  const roomId = 1;
+  const roomID = useRecoilValue(roomIdState);
 
   const handleRegWS = async () => {
     console.log('워크스페이스 생성 및 수정');
     await postWorkspace(workSpaceData!);
+    handleCancel();
   };
 
   const getWorkSpace = async () => {
-    const WSInfo: WorkSpaceInfo = await getStudyroomWorkSpace(roomId);
+    const WSInfo: WorkSpaceInfo = await getStudyroomWorkSpace(roomID);
     const { roomGitOrg, roomNotion, roomGoogleDrive, roomFigma } = WSInfo;
 
     setNotnURL(roomNotion ? roomNotion.toString() : '');
@@ -40,7 +43,7 @@ const RegisterWorkspaceModal = ({ isShowing, handleCancel }: Props) => {
 
   useEffect(() => {
     setWorkSpaceData({
-      roomId: 1,
+      roomId: roomID,
       roomGitOrg: GithubURL,
       roomNotion: NotnURL,
       roomGoogleDrive: GDriveURL,
@@ -108,6 +111,7 @@ const RegisterWorkspaceModal = ({ isShowing, handleCancel }: Props) => {
             <CancelButton
               btnName="취소"
               onClick={() => {
+                getWorkSpace();
                 handleCancel();
               }}
             />

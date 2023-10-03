@@ -1,9 +1,13 @@
-/* eslint-disable prettier/prettier */
 import { Dispatch, SetStateAction, useState } from 'react';
 import { styled } from 'styled-components';
 
 import { Chatting } from '@/components/Coretime/Chatting';
 import Gallery from '@/components/Coretime/Gallery/Gallery';
+import {
+  CreateIssueModal,
+  DiscussIssueModal,
+  IssueModal,
+} from '@/components/Coretime/Issue';
 import { Member } from '@/components/Coretime/Member';
 import {
   MediaBtn,
@@ -13,7 +17,7 @@ import {
 } from '@/components/Coretime/Setting';
 import { TimeProvider, Timer } from '@/components/Coretime/Timer';
 import { WebRTCAudio, WebRTCVideo } from '@/components/Coretime/WebRTCMedia';
-import { UseModalReturnType } from '@/hooks/useModal';
+import useModal, { UseModalReturnType } from '@/hooks/useModal';
 import { ChattingInfo, ConsumeInfo, RoomPeerInfo } from '@/types/socket';
 
 interface WebRTCLayoutProps {
@@ -37,6 +41,7 @@ interface WebRTCLayoutProps {
   handleSendChatting: () => void;
   handleExitRoom: () => void;
   gallery: UseModalReturnType;
+  issue: UseModalReturnType;
 }
 
 const WebRTCLayout = ({
@@ -60,8 +65,11 @@ const WebRTCLayout = ({
   handleSendChatting,
   handleExitRoom,
   gallery,
+  issue,
 }: WebRTCLayoutProps) => {
   const [isSending, setIsSending] = useState(false);
+  const cIssue = useModal();
+  const discuss = useModal();
 
   const handleChatSend = async () => {
     if (isSending) return;
@@ -69,6 +77,16 @@ const WebRTCLayout = ({
     setIsSending(true);
     await handleSendChatting();
     setIsSending(false);
+  };
+
+  const handleCreateIssue = () => {
+    issue.toggle();
+    cIssue.toggle();
+  };
+
+  const handleDiscuss = () => {
+    issue.toggle();
+    discuss.toggle();
   };
 
   return (
@@ -84,7 +102,7 @@ const WebRTCLayout = ({
             <SpeakerBtn isSpeaker={isSpeaker} handleSpeaker={handleSpeaker} />
           </StSettingBtnWrapper>
           <StStudyroomBtnWrapper>
-            <StudyroomBtn name="issue" handleClick={gallery.toggle} />
+            <StudyroomBtn name="issue" handleClick={issue.toggle} />
             <StudyroomBtn name="gallery" handleClick={gallery.toggle} />
           </StStudyroomBtnWrapper>
         </StSettingWrapper>
@@ -138,6 +156,26 @@ const WebRTCLayout = ({
       <StGalleryModalWrapper $showing={gallery.isShowing}>
         <Gallery isShowing={gallery.isShowing} handleCancel={gallery.toggle} />
       </StGalleryModalWrapper>
+      <StIssueModalWrapper $showing={issue.isShowing}>
+        <IssueModal
+          isShowing={issue.isShowing}
+          handleClick={handleDiscuss}
+          handleCreate={handleCreateIssue}
+          handleCancel={issue.toggle}
+        />
+      </StIssueModalWrapper>
+      <StCreateIssueModalWrapper $showing={cIssue.isShowing}>
+        <CreateIssueModal
+          isShowing={cIssue.isShowing}
+          handleCancel={cIssue.toggle}
+        />
+      </StCreateIssueModalWrapper>
+      <StDiscussIssueModalWrapper $showing={discuss.isShowing}>
+        <DiscussIssueModal
+          isShowing={discuss.isShowing}
+          handleCancel={discuss.toggle}
+        />
+      </StDiscussIssueModalWrapper>
     </StWebRTCContainerWrapper>
   );
 };
@@ -253,7 +291,8 @@ const StExitButton = styled.button`
 
   border-radius: 100rem;
   background-color: ${({ theme }) => theme.colors.Purple3};
-  box-shadow: 2.47864px 4.33762px 3.71796px 1.23932px rgba(0, 0, 0, 0.15),
+  box-shadow:
+    2.47864px 4.33762px 3.71796px 1.23932px rgba(0, 0, 0, 0.15),
     0.61966px 1.23932px 7.43592px 4.33762px rgba(153, 153, 153, 0.3) inset,
     0.61966px 1.23932px 8.67524px 4.33762px rgba(255, 255, 255, 0.15) inset;
 
@@ -262,6 +301,54 @@ const StExitButton = styled.button`
 `;
 
 const StGalleryModalWrapper = styled.div<{ $showing: boolean }>`
+  display: ${({ $showing }) => ($showing ? 'block' : 'none')};
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+
+  justify-content: center;
+  align-items: center;
+
+  width: 100vw;
+  height: 100vh;
+
+  background-color: rgba(0, 0, 0, 0.5);
+`;
+
+const StIssueModalWrapper = styled.div<{ $showing: boolean }>`
+  display: ${({ $showing }) => ($showing ? 'block' : 'none')};
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+
+  justify-content: center;
+  align-items: center;
+
+  width: 100vw;
+  height: 100vh;
+
+  background-color: rgba(0, 0, 0, 0.5);
+`;
+
+const StCreateIssueModalWrapper = styled.div<{ $showing: boolean }>`
+  display: ${({ $showing }) => ($showing ? 'block' : 'none')};
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+
+  justify-content: center;
+  align-items: center;
+
+  width: 100vw;
+  height: 100vh;
+
+  background-color: rgba(0, 0, 0, 0.5);
+`;
+
+const StDiscussIssueModalWrapper = styled.div<{ $showing: boolean }>`
   display: ${({ $showing }) => ($showing ? 'block' : 'none')};
   position: fixed;
   top: 0;
