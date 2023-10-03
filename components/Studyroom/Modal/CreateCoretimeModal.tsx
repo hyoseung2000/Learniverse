@@ -4,11 +4,7 @@ import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { styled } from 'styled-components';
 
-import {
-  createCaptureTime,
-  createCoretime,
-  getServerTime,
-} from '@/apis/coretimes';
+import { createCaptureTime, createCoretime } from '@/apis/coretimes';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { SmallModal } from '@/components/Common/Modal';
 import useModal from '@/hooks/useModal';
@@ -35,16 +31,16 @@ const CreateCoretimeModal = ({
 
   const complete = useModal();
 
-  function toUTC(date: Date): Date {
-    return new Date(
-      date.getUTCFullYear(),
-      date.getUTCMonth(),
-      date.getUTCDate(),
-      date.getUTCHours(),
-      date.getUTCMinutes(),
-      date.getUTCSeconds(),
-    );
-  }
+  // function toUTC(date: Date): Date {
+  //   return new Date(
+  //     date.getUTCFullYear(),
+  //     date.getUTCMonth(),
+  //     date.getUTCDate(),
+  //     date.getUTCHours(),
+  //     date.getUTCMinutes(),
+  //     date.getUTCSeconds(),
+  //   );
+  // }
 
   const handleCreateCtime = async () => {
     if (
@@ -55,22 +51,27 @@ const CreateCoretimeModal = ({
     } else {
       const createRes = await createCoretime(coreTimeInfo!);
       if (createRes.status === 201) {
-        const serverTimeString = await getServerTime();
-        const serverTime = new Date(serverTimeString);
+        // const serverTimeString = await getServerTime();
+        // const serverTime = new Date(serverTimeString);
 
-        const serverStartTime = new Date(serverTime.getTime() + 10 * 60 * 1000);
-        const serverEndTime = new Date(serverTime.getTime() + 20 * 60 * 1000);
+        // const serverStartTime = new Date(serverTime.getTime() + 10 * 60 * 1000);
+        // const serverEndTime = new Date(serverTime.getTime() + 20 * 60 * 1000);
 
-        const serverStartTimeUTC = toUTC(serverStartTime);
-        const serverEndTimeUTC = toUTC(serverEndTime);
+        // const serverStartTimeUTC = toUTC(serverStartTime);
+        // const serverEndTimeUTC = toUTC(serverEndTime);
+
+        const endDate = new Date(startDate);
+        endDate.setHours(startDate.getHours() + coreHour);
+        endDate.setMinutes(startDate.getMinutes() + coreMin);
 
         const captureTimeData = {
           coreTimeId: 1,
-          startTime: serverStartTimeUTC,
-          endTime: serverEndTimeUTC,
+          startTime: startDate,
+          endTime: endDate,
           captureCount: captureNum,
           tokens: [
-            'cA0lYyFYP-UXBYC6oFjvKA:APA91bEixoUnuUbrpjuqTgv_edbSljMGaotD-6pU8uc44uT8P2Ei-9qYSObtW2_TyJLqWmVJGZ34OLZWLv2_uMXqa5cGrWvcEtROOdx5QzpMP4ZH2DR4Gr7nunHL7SvIHkBQCRWVIGp-',
+            'eVrKRLsBljH6ZgXIRyV3D-:APA91bHB0y1xhyvUoEGOhFOhcxQe7WwhmUBRmV_bYuQaFXTkIFiqG-xELi-TsKAWnaKh3tw2QV-Yp8nqZq2Z377i2DdcmSdu0R_sP6sIMgQTK74IK_gDlq5SvWxI8swdNGS0NBQ2h8_6',
+            'eVrKRLsBljH6ZgXIRyV3D-:APA91bHVZVQDiAOo2A0kRtpdsPqvLs0gSzqMY1q4wuqq5CnNxVUnQCuRovUXGwxbAB0ULLSze37fbW8PlDDM_dE4mVL5a3S-XFmiYFWUyJorupseHD502zkH0bvOD7LnXM8YX-_Sh6Kx',
           ],
         };
         console.log(captureTimeData);

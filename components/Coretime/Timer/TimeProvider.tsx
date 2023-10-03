@@ -15,7 +15,7 @@ const TimeProvider: React.FC<TimeProviderProps> = ({
   const router = useRouter();
 
   const endTime = new Date(coreEndTime);
-  endTime.setHours(endTime.getHours() + 9);
+  // endTime.setHours(endTime.getHours() + 9);
 
   const currentTime = new Date();
   const differenceInSeconds = Math.floor(
