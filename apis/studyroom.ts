@@ -144,3 +144,14 @@ export const getIssueList = async (roomId: number) => {
     throw err;
   }
 };
+
+export const getIssueInfo = async (issueId: number) => {
+  try {
+    const { data } = await client.get(`/room/issue?issueId=${issueId}`);
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};

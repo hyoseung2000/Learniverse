@@ -99,17 +99,26 @@ export interface NoticeInfo {
 }
 
 export interface IssueListInfo {
-  issues: IssurInfo[];
+  issues: IssueInfo[];
 }
 
-export interface IssueInfo {}
+export interface IssueInfo {
+  issueId: number;
+  memberId: number;
+  roomId: number;
+  issueTitle: string;
+  issueDescription: string;
+  issueGitUrl: string;
+  gitFileName: string;
+  gitCode: string;
+  createdDate: Date;
+}
 
 export interface PostIssueInfo {
   roomId: number;
   memberId: number;
   issueTitle: string;
   issueDescription: string;
-  issueGitOwner: string;
-  issueGitRepo: string;
+  issueGitUrl: string;
   gitFileName: string;
 }

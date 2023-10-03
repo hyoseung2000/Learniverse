@@ -9,9 +9,10 @@ interface Props {
   coderef: RefObject<AceEditor>;
   code: string;
   index: number;
+  handleHighlight: () => void;
 }
 
-const CommentCard = ({ coderef, code, index }: Props) => {
+const CommentCard = ({ coderef, code, index, handleHighlight }: Props) => {
   const isWriter = true;
 
   const handleModify = () => {
@@ -25,7 +26,7 @@ const CommentCard = ({ coderef, code, index }: Props) => {
   };
 
   return (
-    <StComment>
+    <StComment onClick={handleHighlight}>
       <IcChar />
       <div>
         <h3>유지니</h3>

@@ -8,15 +8,11 @@ import 'ace-builds/src-noconflict/theme-tomorrow';
 // import { Range } from 'ace-builds/src-noconflict/ace';
 import { useEffect, useRef, useState } from 'react';
 import AceEditor from 'react-ace';
-import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { getIssueInfo } from '@/apis/studyroom';
 import { StateDeleteBtn } from '@/components/Common/Button';
 import { SquareModal } from '@/components/Common/Modal';
 import { IcDiscussLogo } from '@/public/assets/icons';
-import { issueIdState } from '@/recoil/atom';
-import { IssueInfo } from '@/types/studyroom';
 
 // import { memberIdState } from '@/recoil/atom';
 import CommentCard from './CommentCard';
@@ -31,10 +27,10 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
     window.open(`https://github.com/`, `cpplovelove`);
   };
   // const MemberId = useRecoilValue(memberIdState);
-  const issueId = useRecoilValue(issueIdState);
+  // const issueId = useRecoilValue(issueIdState);
   const codeRef = useRef<AceEditor>(null);
 
-  const [issueData, setissueData] = useState<IssueInfo>();
+  // const [issueData, setissueData] = useState<IssueInfo>();
   const [isComment, setIsComment] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
   const [suggestCode, setSuggestCode] = useState<string>('');
@@ -45,11 +41,11 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   const code =
     'const useToggle = (): UseToggleReturnType => {\n const [toggle, setToggle] = useState(true);\n const handleToggle = () => {\n setToggle((prevState) => !prevState);\n };\n return [toggle, handleToggle];\n};';
 
-  const getIssueData = async () => {
-    const issueInfo = await getIssueInfo(issueId);
-    console.log(issueInfo);
-    setissueData(issueInfo);
-  };
+  // const getIssueData = async () => {
+  //   const issueInfo = await getIssueInfo(issueId);
+  //   console.log(issueInfo);
+  //   setissueData(issueInfo);
+  // };
 
   const handleCreateInput = () => {
     if (codeRef.current) {
@@ -84,7 +80,6 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
 
   useEffect(() => {
     setIsSubmit(true);
-    getIssueData();
   }, []);
 
   useEffect(() => {}, [isComment]);

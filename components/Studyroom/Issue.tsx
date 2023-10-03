@@ -49,6 +49,7 @@ const Issue = () => {
           {issueList &&
             issueList.map((issue: IssueInfo) => (
               <IssueCard
+                core={false}
                 key={issue.issueId}
                 handleDiscuss={handleDiscuss}
                 issueInfo={issue}
