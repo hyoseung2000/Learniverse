@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { styled } from 'styled-components';
 
-import { createCapture, getPresignedUrl, putFile } from '@/apis/coretimes';
+import { getPresignedUrl } from '@/apis/alarm';
+import { createCapture, putFile } from '@/apis/coretimes';
 import { IcCoreChar } from '@/public/assets/icons';
 import { formatHHMMSS } from '@/utils/getFormattedTime';
 
