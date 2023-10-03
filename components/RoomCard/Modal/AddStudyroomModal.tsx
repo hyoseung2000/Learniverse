@@ -35,8 +35,6 @@ const AddStudyroomModal = ({
   const setEncodedUrl = useSetRecoilState(encodedUrlState);
   const memberId = useRecoilValue(memberIdState);
 
-  console.log(selectedLanguages);
-
   const getLanguageData = async () => {
     const languageData = await getLanguages();
     setLanguages(languageData);

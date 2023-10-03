@@ -1,7 +1,9 @@
 /* eslint-disable prettier/prettier */
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
+import { getPresignedUrl } from '@/apis/alarm';
+import { createCapture, putFile } from '@/apis/coretimes';
 import { Chatting } from '@/components/Coretime/Chatting';
 import GalleryModal from '@/components/Coretime/Gallery/GalleryModal';
 import { Member } from '@/components/Coretime/Member';
@@ -20,8 +22,10 @@ import { TimeProvider, Timer } from '@/components/Coretime/Timer';
 import { WebRTCAudio, WebRTCVideo } from '@/components/Coretime/WebRTCMedia';
 import useModal from '@/hooks/useModal';
 import { ChattingInfo, ConsumeInfo, RoomPeerInfo } from '@/types/socket';
+import { formatHHMMSS } from '@/utils/getFormattedTime';
 
 interface WebRTCLayoutProps {
+  isCaptureTime: boolean;
   coreEndTime: Date;
   curNickname: string;
   curRoomId: string;
@@ -45,6 +49,7 @@ interface WebRTCLayoutProps {
 }
 
 const WebRTCLayout = ({
+  isCaptureTime,
   coreEndTime,
   curNickname,
   curRoomId,
@@ -67,6 +72,9 @@ const WebRTCLayout = ({
   handleExitRoom,
 }: WebRTCLayoutProps) => {
   const [isSending, setIsSending] = useState(false);
+  const [capturedImageFile, setCapturedImageFile] = useState<
+    File | undefined
+  >();
 
   const gallery = useModal();
   const exit = useModal();
@@ -81,11 +89,36 @@ const WebRTCLayout = ({
     setIsSending(false);
   };
 
+  const handleUploadImage = async () => {
+    const now = new Date();
+
+    const captureData = {
+      coreTimeId: Number(curRoomId),
+      memberId: Number(curMemberId),
+      fileName: `coretime-${curRoomId}-${curNickname}-${formatHHMMSS(
+        now.toString(),
+      )}.png`,
+    };
+
+    const url: string = await getPresignedUrl(captureData.fileName);
+    if (capturedImageFile) {
+      await putFile(url, capturedImageFile);
+    }
+
+    const captureImg = await createCapture(captureData);
+    console.log(captureImg);
+  };
+
   const handleSubmit = () => {
     // 이미지 전송
+    handleUploadImage();
     capture.toggle();
     captureComplete.toggle();
   };
+
+  useEffect(() => {
+    capture.toggle();
+  }, [isCaptureTime]);
 
   return (
     <StWebRTCContainerWrapper>
@@ -112,6 +145,8 @@ const WebRTCLayout = ({
               memberId={curMemberId!}
               nickname={stream.nickname}
               mediaStream={stream.stream}
+              isCaptureTime={isCaptureTime}
+              setCapturedImageFile={setCapturedImageFile}
               isSelected={selectedVideo === stream.consumer_id}
               onClick={() => handleSelectVideo(stream)}
             />
@@ -170,6 +205,7 @@ const WebRTCLayout = ({
       <StModalWrapper $showing={capture.isShowing}>
         <CaptureModal
           isShowing={capture.isShowing}
+          imageFile={capturedImageFile!}
           handleSubmit={handleSubmit}
           handleCancel={capture.toggle}
         />

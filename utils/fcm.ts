@@ -1,11 +1,6 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: 'AIzaSyDjK6isLBGownY7C1AEA6n05-hjpZEleEo',
   authDomain: 'learniverse-b34d9.firebaseapp.com',
@@ -17,7 +12,7 @@ const firebaseConfig = {
 };
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const messaging = getMessaging();
 
 getToken(messaging, {
   vapidKey:
@@ -41,7 +36,7 @@ getToken(messaging, {
     // ...
   });
 
-//포그라운드 메시지 수신
+// 포그라운드 메시지 수신
 onMessage(messaging, (payload) => {
   console.log('Message received. ', payload);
   // ...

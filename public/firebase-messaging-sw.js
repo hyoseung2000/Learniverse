@@ -24,3 +24,19 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging(app);
+
+messaging.onBackgroundMessage(messaging, (payload) => {
+  console.log(
+    '[firebase-messaging-sw.js] Received background message ',
+    payload,
+  );
+
+  // Customize notification here
+  const notificationTitle = '[Background] 스크린이 캡처되었습니다!';
+  const notificationOptions = {
+    body: payload,
+    icon: '/public/favicon-32x32.png',
+  };
+
+  self.registration.showNotification(notificationTitle, notificationOptions);
+});

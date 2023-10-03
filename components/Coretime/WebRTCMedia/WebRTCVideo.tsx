@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import { styled } from 'styled-components';
 
 import { getPresignedUrl } from '@/apis/alarm';
@@ -12,6 +12,8 @@ interface WebRTCVideoProps {
   nickname: string;
   mediaStream: MediaStream | undefined;
   isSelected: boolean;
+  isCaptureTime: boolean;
+  setCapturedImageFile: Dispatch<SetStateAction<File | undefined>>;
   onClick: () => void;
 }
 
@@ -21,6 +23,8 @@ const WebRTCVideo = ({
   nickname,
   mediaStream,
   isSelected,
+  isCaptureTime,
+  setCapturedImageFile,
   onClick,
 }: WebRTCVideoProps) => {
   const viewRef = useRef<HTMLVideoElement>(null);
@@ -50,6 +54,7 @@ const WebRTCVideo = ({
       type: mimeString,
     });
 
+    setCapturedImageFile(file);
     return file;
   };
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -78,6 +83,10 @@ const WebRTCVideo = ({
     if (!viewRef.current) return;
     viewRef.current.srcObject = mediaStream || null;
   }, [mediaStream]);
+
+  useEffect(() => {
+    captureAndSaveVideoFrame();
+  }, [isCaptureTime]);
 
   return (
     <StVideoWrapper>

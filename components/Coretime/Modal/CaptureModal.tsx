@@ -9,12 +9,14 @@ import {
 
 interface ExitCoretimeModallProps {
   isShowing: boolean;
+  imageFile: File;
   handleSubmit: () => void;
   handleCancel: () => void;
 }
 
 const CaptureModal = ({
   isShowing,
+  imageFile,
   handleSubmit,
   handleCancel,
 }: ExitCoretimeModallProps) => {
@@ -29,7 +31,11 @@ const CaptureModal = ({
           </p>
           <p>열심히 공부한 화면을 다른사람과 공유해보세요!</p>
         </StContentWrapper>
-        <StImage />
+        <StImage>
+          {imageFile && (
+            <img src={URL.createObjectURL(imageFile)} alt="Captured" />
+          )}
+        </StImage>
         <StBtnWrapper>
           <ConfirmButton btnName="전송" onClick={handleSubmit} />
           <CancelButton btnName="취소" onClick={handleCancel} />
@@ -78,6 +84,11 @@ const StImage = styled.div`
   height: 21.4rem;
 
   background-color: ${({ theme }) => theme.colors.Black};
+
+  & > img {
+    width: 100%;
+    height: 100%;
+  }
 `;
 
 const StContentWrapper = styled.div`
