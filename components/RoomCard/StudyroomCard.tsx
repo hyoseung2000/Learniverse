@@ -1,13 +1,19 @@
 import { useRouter } from 'next/router';
+import { Dispatch, SetStateAction } from 'react';
+import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { IcPlanet, IcStar } from '@/public/assets/icons';
+import { pinRoom } from '@/apis/roomList';
+import { IcPlanet, IcStar, IcStarPinned } from '@/public/assets/icons';
+import { memberIdState } from '@/recoil/atom';
 import { StudyRoomInfo } from '@/types/studyroom';
 import { getCategoryColor } from '@/utils/getCategoryColor';
 
 interface StudyroomCardProps {
   roomData: StudyRoomInfo;
   roomType?: string;
+  isPinned: boolean;
+  setPinChange: Dispatch<SetStateAction<boolean>>;
   handleApply?: () => void;
   handleManage?: () => void;
   handleEdit?: () => void;
@@ -16,6 +22,8 @@ interface StudyroomCardProps {
 const StudyroomCard = ({
   roomData,
   roomType,
+  isPinned,
+  setPinChange,
   handleApply,
   handleManage,
   handleEdit,
@@ -32,6 +40,7 @@ const StudyroomCard = ({
   } = roomData;
 
   const router = useRouter();
+  const memberId = useRecoilValue(memberIdState);
   const planetColor = getCategoryColor(roomCategory);
 
   const isMemberApproved = isMember === '승인' || isMember === '팀장';
@@ -43,6 +52,11 @@ const StudyroomCard = ({
   const showManagementButtons = roomType === 'leader';
   const showStatus = roomType === 'apply';
 
+  const handlePin = async () => {
+    await pinRoom(roomId, memberId);
+    setPinChange((prev) => !prev);
+  };
+
   const handleGotoRoom = () => {
     router.push(`/studyroom/${roomId}`);
   };
@@ -50,8 +64,8 @@ const StudyroomCard = ({
   return (
     <StCardWrapper>
       <StStudyroomCardWrapper>
-        <StStarWrapper>
-          <IcStar />
+        <StStarWrapper onClick={handlePin}>
+          {isPinned ? <IcStarPinned /> : <IcStar />}
         </StStarWrapper>
         <StIconWrapper $planetColor={planetColor}>
           {roomId}

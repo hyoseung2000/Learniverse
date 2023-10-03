@@ -5,25 +5,28 @@ import { styled } from 'styled-components';
 
 import { getMyRoomList } from '@/apis/roomList';
 import { memberIdState } from '@/recoil/atom';
-import { StudyRoomInfo } from '@/types/studyroom';
+import { StudyRoomInfo, StudyRoomListInfo } from '@/types/studyroom';
 
 import { PurpleButton } from '../Common/Button';
 import AddStudyroom from '../RoomCard/AddStudyroom';
 import StudyroomCard from '../RoomCard/StudyroomCard';
 
 const MyStudyroomList = () => {
+  const [pinnedRoomList, setPinnedRoomList] = useState<StudyRoomInfo[]>();
   const [myRoomList, setMyRoomList] = useState<StudyRoomInfo[]>();
   const router = useRouter();
   const memberId = useRecoilValue(memberIdState);
+  const [pinChange, setPinChange] = useState(false);
 
   const getMyStudyRoom = async () => {
-    const rooms = await getMyRoomList(memberId);
-    setMyRoomList(rooms);
+    const rooms: StudyRoomListInfo = await getMyRoomList(memberId);
+    setPinnedRoomList(rooms.pinRooms);
+    setMyRoomList(rooms.rooms);
   };
 
   useEffect(() => {
     getMyStudyRoom();
-  }, []);
+  }, [pinChange]);
 
   return (
     <StStudyroomListWrapper>
@@ -38,9 +41,23 @@ const MyStudyroomList = () => {
       </StHomeTitle>
       <StStudyroomList>
         <AddStudyroom />
+        {pinnedRoomList &&
+          pinnedRoomList.map((room) => (
+            <StudyroomCard
+              key={room.roomId}
+              roomData={room}
+              isPinned
+              setPinChange={setPinChange}
+            />
+          ))}
         {myRoomList &&
           myRoomList.map((room) => (
-            <StudyroomCard key={room.roomId} roomData={room} />
+            <StudyroomCard
+              key={room.roomId}
+              roomData={room}
+              isPinned={false}
+              setPinChange={setPinChange}
+            />
           ))}
       </StStudyroomList>
     </StStudyroomListWrapper>
