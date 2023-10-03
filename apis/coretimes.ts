@@ -10,7 +10,7 @@ export const createCoretime = async (postCoreTimeData: PostCoreTimeInfo) => {
     console.log(postCoreTimeData);
     const { data } = await client.post(`/room/core/create`, postCoreTimeData);
     console.log(data);
-    return data;
+    return data.data;
   } catch (err) {
     console.error(err);
     throw err;

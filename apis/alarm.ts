@@ -2,9 +2,12 @@ import { CreateCaptureTimeInfo } from '@/types/capture';
 
 import { client, media } from './axios';
 
-export const createToken = async () => {
+export const createToken = async (memberId: number, token: string) => {
   try {
-    const { data } = await client.post(`/createCaptureTime`);
+    const { data } = await client.post(`/room/alarm/createToken`, {
+      memberId,
+      token,
+    });
     console.log(data);
     return data;
   } catch (err) {
@@ -17,7 +20,6 @@ export const createCaptureTime = async (
   createCaptureTimeInfo: CreateCaptureTimeInfo,
 ) => {
   try {
-    console.log(createCaptureTimeInfo);
     const { data } = await media.post(
       `/createCaptureTime`,
       createCaptureTimeInfo,

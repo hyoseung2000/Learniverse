@@ -9,7 +9,7 @@ import { createCoretime } from '@/apis/coretimes';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { SmallModal } from '@/components/Common/Modal';
 import useModal from '@/hooks/useModal';
-import { PostCoreTimeInfo } from '@/types/studyroom';
+import { CoreTimeIdInfo, PostCoreTimeInfo } from '@/types/studyroom';
 
 import CompleteCreateCoreModal from './CompleteCreateCoreModal';
 
@@ -32,17 +32,6 @@ const CreateCoretimeModal = ({
 
   const complete = useModal();
 
-  // function toUTC(date: Date): Date {
-  //   return new Date(
-  //     date.getUTCFullYear(),
-  //     date.getUTCMonth(),
-  //     date.getUTCDate(),
-  //     date.getUTCHours(),
-  //     date.getUTCMinutes(),
-  //     date.getUTCSeconds(),
-  //   );
-  // }
-
   const handleCreateCtime = async () => {
     if (
       (coreHour === 0 && coreMin === 0) ||
@@ -50,23 +39,16 @@ const CreateCoretimeModal = ({
     ) {
       alert('코어타임은 최소 30분 - 최대 24시간 내로 지정하세요.');
     } else {
-      const createRes = await createCoretime(coreTimeInfo!);
-      if (createRes.status === 201) {
-        // const serverTimeString = await getServerTime();
-        // const serverTime = new Date(serverTimeString);
-
-        // const serverStartTime = new Date(serverTime.getTime() + 10 * 60 * 1000);
-        // const serverEndTime = new Date(serverTime.getTime() + 20 * 60 * 1000);
-
-        // const serverStartTimeUTC = toUTC(serverStartTime);
-        // const serverEndTimeUTC = toUTC(serverEndTime);
-
+      const { coreTimeId }: CoreTimeIdInfo = await createCoretime(
+        coreTimeInfo!,
+      );
+      if (coreTimeId) {
         const endDate = new Date(startDate);
         endDate.setHours(startDate.getHours() + coreHour);
         endDate.setMinutes(startDate.getMinutes() + coreMin);
 
         const captureTimeData = {
-          coreTimeId: 68,
+          coreTimeId,
           startTime: startDate,
           endTime: endDate,
           captureCount: captureNum,

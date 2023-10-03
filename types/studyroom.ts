@@ -59,6 +59,10 @@ export interface CoreTimeInfo {
   isCore: boolean;
 }
 
+export interface CoreTimeIdInfo {
+  coreTimeId: number;
+}
+
 export interface PostCoreTimeInfo {
   roomId: number;
   coreStartTime: Date;

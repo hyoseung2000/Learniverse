@@ -78,8 +78,10 @@ const AddStudyroomModal = ({
   };
 
   useEffect(() => {
-    getLanguageData();
-  }, []);
+    if (isShowing) {
+      getLanguageData();
+    }
+  }, [isShowing]);
 
   useEffect(() => {
     setAddRoomInfo({

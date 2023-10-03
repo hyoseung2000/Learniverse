@@ -41,7 +41,7 @@ const Search = () => {
   };
 
   const handleRecommend = async () => {
-    const recommned = await recommendRoomList(curMemberId);
+    const recommend = await recommendRoomList(curMemberId);
   };
   return (
     <StSearchWrapper>
