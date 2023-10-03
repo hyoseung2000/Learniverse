@@ -28,6 +28,7 @@ export const applyRoom = async (roomId: number, memberId: number) => {
       roomId,
       memberId,
     });
+    console.log(data);
     return data;
   } catch (err) {
     console.error(err);

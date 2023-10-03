@@ -49,7 +49,6 @@ const StudyroomCard = ({
   // const isMemberNotApproved = isMember === '대기' || isMember === '거절';
   const canJoinRoom =
     isMemberApproved || (isMember === null && roomLimit > roomCount);
-  const buttonText = handleApply ? '참여' : '입장';
 
   const showManagementButtons = roomType === 'leader';
   const showStatus = roomType === 'apply';
@@ -86,13 +85,19 @@ const StudyroomCard = ({
             정원
             <span> {roomCount}</span> / {roomLimit}명
           </StLimit>
-          <StJoin
-            type="button"
-            disabled={!canJoinRoom}
-            onClick={handleApply || handleGotoRoom}
-          >
-            {buttonText}
-          </StJoin>
+          {isMember === null ? (
+            <StJoin type="button" onClick={handleApply}>
+              참여
+            </StJoin>
+          ) : (
+            <StEnter
+              type="button"
+              disabled={!canJoinRoom}
+              onClick={handleGotoRoom}
+            >
+              입장
+            </StEnter>
+          )}
         </StJoinWrapper>
       </StStudyroomCardWrapper>
       {showManagementButtons && (
@@ -227,7 +232,7 @@ const StLimit = styled.p`
   }
 `;
 
-const StJoin = styled.button`
+const StEnter = styled.button`
   padding: 0.2rem 0.7rem;
 
   border-radius: 0.4rem;
@@ -238,6 +243,11 @@ const StJoin = styled.button`
   ${({ theme }) => theme.fonts.Body8};
 
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+`;
+
+const StJoin = styled(StEnter)`
+  background-color: ${({ theme }) => theme.colors.Purple4};
+  color: ${({ theme }) => theme.colors.White};
 `;
 
 const StBtnWrapper = styled.div`
