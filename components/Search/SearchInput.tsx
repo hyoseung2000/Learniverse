@@ -20,6 +20,11 @@ const SearchInput = ({ handleSearch }: SearchInputProps) => {
     if (!searchInput) return;
     handleSearch(searchInput);
   };
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      onSearch();
+    }
+  };
   return (
     <StSearchInputWrapper>
       <StRadioWrapper>
@@ -52,6 +57,7 @@ const SearchInput = ({ handleSearch }: SearchInputProps) => {
           name="search"
           value={searchInput}
           onChange={handleSearchInputChange}
+          onKeyPress={handleKeyPress}
           placeholder="방 이름 또는 해시태그를 입력해주세요."
         />
         <StIconWrapper>
