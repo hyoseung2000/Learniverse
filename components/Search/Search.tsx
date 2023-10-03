@@ -3,6 +3,7 @@ import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 import { searchHashtag } from '@/apis/roomList';
+import { applyRoom } from '@/apis/studyroom';
 import { memberIdState } from '@/recoil/atom';
 import { StudyRoomInfo } from '@/types/studyroom';
 
@@ -14,10 +15,16 @@ import SearchInput from './SearchInput';
 const Search = () => {
   const curMemberId = useRecoilValue(memberIdState);
   const [searchResult, setSearchResult] = useState<StudyRoomInfo[]>();
+  const [searched, setSearched] = useState(false);
 
   const handleSearch = async (searchInput: string) => {
+    setSearched(true);
     const result = await searchHashtag(searchInput, curMemberId);
     setSearchResult(result);
+  };
+
+  const handleApply = async (roomId: number) => {
+    await applyRoom(roomId, curMemberId);
   };
 
   const handleRecommend = () => {
@@ -32,13 +39,19 @@ const Search = () => {
         handleClick={handleRecommend}
       />
       <StRoomListWrapper>
-        {searchResult && searchResult.length > 0 ? (
-          searchResult.map((room) => (
-            <StudyroomCard key={room.roomId} roomData={room} />
-          ))
-        ) : (
-          <p>검색 결과가 없습니다.</p>
-        )}
+        {searchResult && searchResult.length > 0
+          ? searchResult.map((room) => (
+              <StudyroomCard
+                key={room.roomId}
+                roomData={room}
+                handleApply={
+                  room.isMember === null
+                    ? () => handleApply(room.roomId)
+                    : undefined
+                }
+              />
+            ))
+          : searched && <p>검색 결과가 없습니다.</p>}
       </StRoomListWrapper>
     </StSearchWrapper>
   );
