@@ -17,6 +17,7 @@ const SearchInput = ({ handleSearch }: SearchInputProps) => {
     setSearchInputInput(e.target.value);
   };
   const onSearch = () => {
+    if (!searchInput) return;
     handleSearch(searchInput);
   };
   return (
@@ -56,7 +57,7 @@ const SearchInput = ({ handleSearch }: SearchInputProps) => {
         <StIconWrapper>
           <IcSearch />
           <button type="button" onClick={onSearch}>
-            버튼
+            search
           </button>
         </StIconWrapper>
       </StInputWrapper>
@@ -152,20 +153,22 @@ const StInputWrapper = styled.div`
       outline: none;
     }
   }
-  & > button {
-    z-index: 1;
-
-    width: 7.3rem;
-    height: 7.3rem;
-    margin-top: 0.2rem;
-    margin-left: 1.6rem;
-
-    border-radius: 5rem;
-  }
 `;
 
 const StIconWrapper = styled.div`
   position: absolute;
   top: 0;
   left: 0;
+
+  & > button {
+    position: absolute;
+    top: 0.2rem;
+    right: 0.4rem;
+
+    width: 7.3rem;
+    height: 7.3rem;
+
+    border-radius: 50%;
+    opacity: 0;
+  }
 `;

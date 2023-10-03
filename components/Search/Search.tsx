@@ -32,12 +32,12 @@ const Search = () => {
         handleClick={handleRecommend}
       />
       <StRoomListWrapper>
-        {searchResult ? (
+        {searchResult && searchResult.length > 0 ? (
           searchResult.map((room) => (
             <StudyroomCard key={room.roomId} roomData={room} />
           ))
         ) : (
-          <p>없음</p>
+          <p>검색 결과가 없습니다.</p>
         )}
       </StRoomListWrapper>
     </StSearchWrapper>
@@ -64,4 +64,16 @@ const StSearchWrapper = styled.section`
   }
 `;
 
-const StRoomListWrapper = styled(StMyPageRoomListWrapper)``;
+const StRoomListWrapper = styled(StMyPageRoomListWrapper)`
+  position: relative;
+  & > p {
+    position: absolute;
+    top: 10rem;
+    left: -7rem;
+
+    width: 23rem;
+
+    color: ${({ theme }) => theme.colors.White};
+    ${({ theme }) => theme.fonts.Body0};
+  }
+`;
