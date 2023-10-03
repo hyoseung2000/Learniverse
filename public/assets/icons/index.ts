@@ -19,6 +19,7 @@ import IcGithub from './ic_github.svg';
 import IcGraylineLogo from './ic_gray_line.svg';
 import IcIssue from './ic_issue.svg';
 import IcIssueLogo from './ic_issue_logo.svg';
+import IcLanguages from './ic_languages.svg';
 import IcLine from './ic_line.svg';
 import IcLoginBtn from './ic_login_btn.svg';
 import IcLogo from './ic_logo.svg';
@@ -96,4 +97,5 @@ export {
   IcCharacterX,
   IcStar,
   IcStarPinned,
+  IcLanguages,
 };

@@ -46,3 +46,13 @@ export const getCoretimeList = async (roomId: number) => {
     throw err;
   }
 };
+
+export const getLanguages = async () => {
+  try {
+    const { data } = await client.get('/room/languages');
+    return data.data.languages;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};

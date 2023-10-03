@@ -36,6 +36,7 @@ export interface PostStudyRoomInfo {
   memberId: number;
   roomName: string;
   roomCategory: number;
+  roomLanguages?: string[];
   roomIntro?: string;
   roomLimit: number;
   roomHashtags: string[];
