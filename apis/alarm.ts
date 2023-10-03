@@ -17,6 +17,7 @@ export const createCaptureTime = async (
   createCaptureTimeInfo: CreateCaptureTimeInfo,
 ) => {
   try {
+    console.log(createCaptureTimeInfo);
     const { data } = await media.post(
       `/createCaptureTime`,
       createCaptureTimeInfo,

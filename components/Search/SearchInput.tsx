@@ -50,11 +50,12 @@ const SearchInput = () => {
           onChange={handleSearchInputChange}
           placeholder="방 이름 또는 해시태그를 입력해주세요."
         />
-        <button type="button" onClick={handleSearch}>
-          <StIconWrapper>
-            <IcSearch />
-          </StIconWrapper>
-        </button>
+        <StIconWrapper>
+          <IcSearch />
+          <button type="button" onClick={handleSearch}>
+            버튼
+          </button>
+        </StIconWrapper>
       </StInputWrapper>
     </StSearchInputWrapper>
   );
@@ -132,6 +133,8 @@ const StInputWrapper = styled.div`
     z-index: 1;
 
     width: 80%;
+    height: 6.6rem;
+    margin-top: 0.3rem;
     margin-left: 3rem;
     padding-left: 1rem;
 
