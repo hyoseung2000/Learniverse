@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { styled } from 'styled-components';
 
-import { IcPlanet } from '@/public/assets/icons';
+import { IcPlanet, IcStar } from '@/public/assets/icons';
 import { StudyRoomInfo } from '@/types/studyroom';
 import { getCategoryColor } from '@/utils/getCategoryColor';
 
@@ -50,6 +50,9 @@ const StudyroomCard = ({
   return (
     <StCardWrapper>
       <StStudyroomCardWrapper>
+        <StStarWrapper>
+          <IcStar />
+        </StStarWrapper>
         <StIconWrapper $planetColor={planetColor}>
           {roomId}
           <IcPlanet />
@@ -102,6 +105,7 @@ const StCardWrapper = styled.div`
 `;
 
 const StStudyroomCardWrapper = styled.article`
+  position: relative;
   display: flex;
   flex-direction: column;
 
@@ -115,8 +119,14 @@ const StStudyroomCardWrapper = styled.article`
   background: ${({ theme }) => theme.colors.White};
   color: ${({ theme }) => theme.colors.Gray1};
   ${({ theme }) => theme.fonts.Title5};
+`;
 
-  /* cursor: pointer; */
+const StStarWrapper = styled.div`
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+
+  cursor: pointer;
 `;
 
 const StIconWrapper = styled.div<{ $planetColor: string }>`

@@ -42,6 +42,8 @@ import IcSearch from './ic_search.svg';
 import IcSend from './ic_send.svg';
 import IcSpeaker from './ic_speaker.svg';
 import IcSpeakerOff from './ic_speaker_off.svg';
+import IcStar from './ic_star.svg';
+import IcStarPinned from './ic_star_pinned.svg';
 import IcTimer from './ic_timer.svg';
 import IcTracker from './ic_tracker.svg';
 
@@ -92,4 +94,6 @@ export {
   IcGallery,
   IcIssue,
   IcCharacterX,
+  IcStar,
+  IcStarPinned,
 };
