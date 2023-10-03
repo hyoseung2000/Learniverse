@@ -121,7 +121,7 @@ export const StMyPageRoomListWrapper = styled.section`
   margin-bottom: 8rem;
 `;
 
-const StManageModalWrapper = styled.div<{ $showing: boolean }>`
+export const StManageModalWrapper = styled.div<{ $showing: boolean }>`
   display: ${({ $showing }) => ($showing ? 'block' : 'none')};
   position: fixed;
   top: 0;
