@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
@@ -9,6 +10,7 @@ import {
 
 interface ExitCoretimeModallProps {
   isShowing: boolean;
+  setShowing: (showing: boolean) => void;
   imageFile: File;
   handleSubmit: () => void;
   handleCancel: () => void;
@@ -16,10 +18,26 @@ interface ExitCoretimeModallProps {
 
 const CaptureModal = ({
   isShowing,
+  setShowing,
   imageFile,
   handleSubmit,
   handleCancel,
 }: ExitCoretimeModallProps) => {
+  const [remainingTime, setRemainingTime] = useState<number>(10);
+
+  useEffect(() => {
+    if (isShowing && remainingTime > 0) {
+      const timer = setTimeout(() => {
+        setRemainingTime(remainingTime - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+    if (remainingTime === 0) {
+      setShowing(false);
+      setRemainingTime(10);
+    }
+  }, [isShowing, remainingTime]);
+
   return (
     isShowing && (
       <StCaptureModalWrapper>
@@ -42,7 +60,7 @@ const CaptureModal = ({
         </StBtnWrapper>
         <StTime>
           <p>
-            <IcCaptureTimer /> 전송까지 남은 시간 : 21초
+            <IcCaptureTimer /> 전송까지 남은 시간 : {remainingTime}초
           </p>
         </StTime>
       </StCaptureModalWrapper>

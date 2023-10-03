@@ -114,6 +114,7 @@ const WebRTCLayout = ({
     handleUploadImage();
     capture.toggle();
     captureComplete.toggle();
+    setCapturedImageFile(undefined);
   };
 
   useEffect(() => {
@@ -205,6 +206,7 @@ const WebRTCLayout = ({
       <StModalWrapper $showing={capture.isShowing}>
         <CaptureModal
           isShowing={capture.isShowing}
+          setShowing={capture.setShowing}
           imageFile={capturedImageFile!}
           handleSubmit={handleSubmit}
           handleCancel={capture.toggle}
