@@ -48,7 +48,7 @@ export const pinRoom = async (roomId: number, memberId: number) => {
 export const getRoomList = async (memberId: number) => {
   try {
     const { data } = await client.get(`/room/list?memberId=${memberId}`);
-    return data.data.rooms;
+    return data.data;
   } catch (err) {
     console.error(err);
     throw err;

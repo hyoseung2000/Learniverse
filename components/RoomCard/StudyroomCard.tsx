@@ -12,8 +12,9 @@ import { getCategoryColor } from '@/utils/getCategoryColor';
 interface StudyroomCardProps {
   roomData: StudyRoomInfo;
   roomType?: string;
-  isPinned: boolean;
-  setPinChange: Dispatch<SetStateAction<boolean>>;
+  isPinned?: boolean;
+  isMyroom?: boolean;
+  setPinChange?: Dispatch<SetStateAction<boolean>>;
   handleApply?: () => void;
   handleManage?: () => void;
   handleEdit?: () => void;
@@ -23,6 +24,7 @@ const StudyroomCard = ({
   roomData,
   roomType,
   isPinned,
+  isMyroom,
   setPinChange,
   handleApply,
   handleManage,
@@ -54,7 +56,7 @@ const StudyroomCard = ({
 
   const handlePin = async () => {
     await pinRoom(roomId, memberId);
-    setPinChange((prev) => !prev);
+    if (setPinChange) setPinChange((prev) => !prev);
   };
 
   const handleGotoRoom = () => {
@@ -65,7 +67,7 @@ const StudyroomCard = ({
     <StCardWrapper>
       <StStudyroomCardWrapper>
         <StStarWrapper onClick={handlePin}>
-          {isPinned ? <IcStarPinned /> : <IcStar />}
+          {isMyroom && (isPinned ? <IcStarPinned /> : <IcStar />)}
         </StStarWrapper>
         <StIconWrapper $planetColor={planetColor}>
           {roomId}

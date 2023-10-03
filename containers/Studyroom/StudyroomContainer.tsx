@@ -14,20 +14,19 @@ const StudyroomContainer = () => {
     if (permission !== 'granted') return;
 
     const firebaseApp = initializeApp({
-      apiKey: 'AIzaSyA88Fvimx5-5b5FkFP4iOCODcM7OUTRBAo',
-      authDomain: 'learniverse-649f9.firebaseapp.com',
-      projectId: 'learniverse-649f9',
-      storageBucket: 'learniverse-649f9.appspot.com',
-      messagingSenderId: '965172005133',
-      appId: '1:965172005133:web:796a9283ed296d398bc844',
-      measurementId: 'G-1QLQ4JJSH0',
+      apiKey: 'AIzaSyDjK6isLBGownY7C1AEA6n05-hjpZEleEo',
+      authDomain: 'learniverse-b34d9.firebaseapp.com',
+      projectId: 'learniverse-b34d9',
+      storageBucket: 'learniverse-b34d9.appspot.com',
+      messagingSenderId: '605501909741',
+      appId: '1:605501909741:web:e9a496058fa8b1812bbae4',
+      measurementId: 'G-PKVGVW8D2X',
     });
-
     const messaging = getMessaging(firebaseApp);
 
     getToken(messaging, {
       vapidKey:
-        'BCTvCftz5TdxagdC1ewKCGxDnyveMrQ0jnMg-coHt6BvVCsbncEDtB0r7S3kfFq4kgn_kgTQX7H-5c2OANEEHCQ',
+        'BFkKBCZ5O4qmyCwm50Aks7sRmMYJzF2wJ8FZCHNLXDLjVxMDEQJFZ_4U5I6uDBF1zXiRHChNAeeDWrTg2m0eL_k',
     })
       .then((currentToken) => {
         if (currentToken) {

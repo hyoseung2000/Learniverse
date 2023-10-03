@@ -66,13 +66,12 @@ const CreateCoretimeModal = ({
         endDate.setMinutes(startDate.getMinutes() + coreMin);
 
         const captureTimeData = {
-          coreTimeId: 1,
+          coreTimeId: 68,
           startTime: startDate,
           endTime: endDate,
           captureCount: captureNum,
           tokens: [
-            'eVrKRLsBljH6ZgXIRyV3D-:APA91bHB0y1xhyvUoEGOhFOhcxQe7WwhmUBRmV_bYuQaFXTkIFiqG-xELi-TsKAWnaKh3tw2QV-Yp8nqZq2Z377i2DdcmSdu0R_sP6sIMgQTK74IK_gDlq5SvWxI8swdNGS0NBQ2h8_6',
-            'eVrKRLsBljH6ZgXIRyV3D-:APA91bHVZVQDiAOo2A0kRtpdsPqvLs0gSzqMY1q4wuqq5CnNxVUnQCuRovUXGwxbAB0ULLSze37fbW8PlDDM_dE4mVL5a3S-XFmiYFWUyJorupseHD502zkH0bvOD7LnXM8YX-_Sh6Kx',
+            'fTx0U1rNI7q4puzp2YlRze:APA91bHy2L9PGMzkg1Yxb0wcl81phUNhrHRZi58uy451inAh0lMPjGvfwwzotR2B1QFtyLK6xPuzIJfaoMGSBWiDEc88w2NAGi-M3lbWCgYuPxg-AWxq91PnEHMRtXR5W67Anb0gnAxl',
           ],
         };
         console.log(captureTimeData);

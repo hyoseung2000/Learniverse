@@ -47,6 +47,7 @@ const MyStudyroomList = () => {
               key={room.roomId}
               roomData={room}
               isPinned
+              isMyroom
               setPinChange={setPinChange}
             />
           ))}
@@ -56,6 +57,7 @@ const MyStudyroomList = () => {
               key={room.roomId}
               roomData={room}
               isPinned={false}
+              isMyroom
               setPinChange={setPinChange}
             />
           ))}

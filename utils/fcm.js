@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app';
-import { getMessaging } from 'firebase/messaging';
+import { getAnalytics } from 'firebase/analytics';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -15,10 +15,9 @@ const firebaseConfig = {
   appId: '1:605501909741:web:e9a496058fa8b1812bbae4',
   measurementId: 'G-PKVGVW8D2X',
 };
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const messaging = getMessaging(app);
+const analytics = getAnalytics(app);
 
 getToken(messaging, {
   vapidKey:
