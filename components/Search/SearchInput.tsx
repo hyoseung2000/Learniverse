@@ -4,7 +4,7 @@ import { styled } from 'styled-components';
 import { IcSearch } from '@/public/assets/icons';
 
 const SearchInput = () => {
-  const [selectedInput, setSelectedInput] = useState(0);
+  const [selectedInput, setSelectedInput] = useState(1);
   const [searchInput, setSearchInputInput] = useState('');
 
   const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
