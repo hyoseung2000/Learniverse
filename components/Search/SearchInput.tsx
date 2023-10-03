@@ -3,7 +3,10 @@ import { styled } from 'styled-components';
 
 import { IcSearch } from '@/public/assets/icons';
 
-const SearchInput = () => {
+interface SearchInputProps {
+  handleSearch: (searchInput: string) => Promise<void>;
+}
+const SearchInput = ({ handleSearch }: SearchInputProps) => {
   const [selectedInput, setSelectedInput] = useState(1);
   const [searchInput, setSearchInputInput] = useState('');
 
@@ -13,8 +16,8 @@ const SearchInput = () => {
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInputInput(e.target.value);
   };
-  const handleSearch = () => {
-    console.log('검색 : 2차 데모 이후 개발');
+  const onSearch = () => {
+    handleSearch(searchInput);
   };
   return (
     <StSearchInputWrapper>
@@ -52,7 +55,7 @@ const SearchInput = () => {
         />
         <StIconWrapper>
           <IcSearch />
-          <button type="button" onClick={handleSearch}>
+          <button type="button" onClick={onSearch}>
             버튼
           </button>
         </StIconWrapper>
@@ -135,7 +138,6 @@ const StInputWrapper = styled.div`
     width: 80%;
     height: 6.6rem;
     margin-top: 0.3rem;
-    margin-left: 3rem;
     padding-left: 1rem;
 
     background: none;

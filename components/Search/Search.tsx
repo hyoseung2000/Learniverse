@@ -1,22 +1,45 @@
+import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
+import { searchHashtag } from '@/apis/roomList';
+import { memberIdState } from '@/recoil/atom';
+import { StudyRoomInfo } from '@/types/studyroom';
+
 import { PurpleButton } from '../Common/Button';
-import { AllStudyroomList } from '../RoomList';
+import { StudyroomCard } from '../RoomCard';
+import { StMyPageRoomListWrapper } from '../RoomList/MyPageStudyRoomList';
 import SearchInput from './SearchInput';
 
 const Search = () => {
+  const curMemberId = useRecoilValue(memberIdState);
+  const [searchResult, setSearchResult] = useState<StudyRoomInfo[]>();
+
+  const handleSearch = async (searchInput: string) => {
+    const result = await searchHashtag(searchInput, curMemberId);
+    setSearchResult(result);
+  };
+
   const handleRecommend = () => {
     console.log('스터디 추천 : 2차 데모 이후 개발');
   };
   return (
     <StSearchWrapper>
       <h1>스터디 검색</h1>
-      <SearchInput />
+      <SearchInput handleSearch={handleSearch} />
       <PurpleButton
         btnName="✨ 나와 맞는 스터디 추천받기"
         handleClick={handleRecommend}
       />
-      <AllStudyroomList />
+      <StRoomListWrapper>
+        {searchResult ? (
+          searchResult.map((room) => (
+            <StudyroomCard key={room.roomId} roomData={room} />
+          ))
+        ) : (
+          <p>없음</p>
+        )}
+      </StRoomListWrapper>
     </StSearchWrapper>
   );
 };
@@ -40,3 +63,5 @@ const StSearchWrapper = styled.section`
     -webkit-text-fill-color: transparent;
   }
 `;
+
+const StRoomListWrapper = styled(StMyPageRoomListWrapper)``;

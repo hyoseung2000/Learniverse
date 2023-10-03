@@ -110,7 +110,7 @@ const StMyPageWrapper = styled.section`
   justify-content: center;
 `;
 
-const StMyPageRoomListWrapper = styled.section`
+export const StMyPageRoomListWrapper = styled.section`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 1.5rem;

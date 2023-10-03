@@ -88,3 +88,15 @@ export const getApplyRoomList = async (memberId: number) => {
     throw err;
   }
 };
+export const searchHashtag = async (hashtag: string, memberId: number) => {
+  try {
+    const { data } = await client.get(
+      `/room/search/hashtag?hashtag=${hashtag}&memberId=${memberId}`,
+    );
+    console.log(data.data);
+    return data.data.rooms;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
