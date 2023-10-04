@@ -1,4 +1,5 @@
 import {
+  PostDiscussInfo,
   PostIssueInfo,
   PostNoticeInfo,
   PostWorkSpaceInfo,
@@ -55,7 +56,6 @@ export const applyRoom = async (roomId: number, memberId: number) => {
 export const getCoretimeList = async (roomId: number) => {
   try {
     const { data } = await client.get(`/room/core/list?roomId=${roomId}`);
-    console.log(data.data);
     return data.data;
   } catch (err) {
     console.error(err);
@@ -80,7 +80,6 @@ export const postWorkspace = async (PostWorkSpaceData: PostWorkSpaceInfo) => {
 export const getStudyroomWorkSpace = async (roomId: number) => {
   try {
     const { data } = await client.get(`/room/info/workspace?roomId=${roomId}`);
-    console.log(data.data);
     return data.data;
   } catch (err) {
     console.error(err);
@@ -112,7 +111,6 @@ export const postNotice = async (PostNoticeData: PostNoticeInfo) => {
 export const getNoticeList = async (roomId: number) => {
   try {
     const { data } = await client.get(`/room/boards?roomId=${roomId}`);
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
@@ -135,7 +133,6 @@ export const DeleteNotice = async (boardId: number) => {
 
 export const CreateIssue = async (PostIssueData: PostIssueInfo) => {
   try {
-    console.log(PostIssueData);
     const { data } = await client.post(`/room/issue/create`, PostIssueData);
     console.log(data);
     return data;
@@ -148,7 +145,6 @@ export const CreateIssue = async (PostIssueData: PostIssueInfo) => {
 export const getIssueList = async (roomId: number) => {
   try {
     const { data } = await client.get(`room/issues?roomId=${roomId}`);
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
@@ -159,6 +155,42 @@ export const getIssueList = async (roomId: number) => {
 export const getIssueInfo = async (issueId: number) => {
   try {
     const { data } = await client.get(`/room/issue?issueId=${issueId}`);
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const getDiscussions = async (issueId: number) => {
+  try {
+    const { data } = await client.get(`room/discussions?issueId=${issueId}`);
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const postDiscuss = async (PostDiscussData: PostDiscussInfo) => {
+  try {
+    const { data } = await client.post(
+      `room/discussion/create`,
+      PostDiscussData,
+    );
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const deleteIssue = async (issueId: number) => {
+  try {
+    const { data } = await client.post(`room/issue/update`, {
+      issueId,
+    });
     console.log(data);
     return data;
   } catch (err) {

@@ -7,14 +7,12 @@ import { client, media } from './axios';
 
 export const createCoretime = async (postCoreTimeData: PostCoreTimeInfo) => {
   try {
-    console.log(postCoreTimeData);
     const { data } = await client.post(`/room/core/create`, postCoreTimeData);
     console.log(data);
     return data.data;
   } catch (err) {
     if (axios.isAxiosError(err))
       if (err.response?.status === 422) {
-        // console.error(err);
         alert('중복된 코어타임 시간을 입력하였습니다.');
       }
     return err;
@@ -37,7 +35,6 @@ export const DeleteCoretime = async (coreTimeId: number) => {
 export const getCoretimeID = async (roomId: number) => {
   try {
     const { data } = await client.get(`/room/core/id?roomId=${roomId}`);
-    console.log(data.data.coreTimeId);
     return data.data.coreTimeId;
   } catch (err) {
     console.error(err);

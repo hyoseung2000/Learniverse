@@ -38,9 +38,11 @@ export const todayState = atom<string>({
 export const roomIdState = atom<number>({
   key: `roomId`,
   default: 1,
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const issueIdState = atom<number>({
   key: `issueId`,
   default: 1,
+  effects_UNSTABLE: [persistAtom],
 });
