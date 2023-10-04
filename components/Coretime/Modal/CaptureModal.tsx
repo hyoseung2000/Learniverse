@@ -23,11 +23,13 @@ const CaptureModal = ({
   handleSubmit,
   handleCancel,
 }: ExitCoretimeModallProps) => {
-  const [remainingTime, setRemainingTime] = useState<number>(10);
+  const [remainingTime, setRemainingTime] = useState<number>(60);
 
   useEffect(() => {
+    let timer: NodeJS.Timeout;
+
     if (isShowing && remainingTime > 0) {
-      const timer = setTimeout(() => {
+      timer = setTimeout(() => {
         setRemainingTime(remainingTime - 1);
       }, 1000);
       return () => clearTimeout(timer);
@@ -36,6 +38,10 @@ const CaptureModal = ({
       setShowing(false);
       setRemainingTime(10);
     }
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
   }, [isShowing, remainingTime]);
 
   return (
