@@ -21,7 +21,6 @@ const Issue = () => {
 
   const getIssues = async () => {
     const issueInfo = await getIssueList(roomID);
-    console.log(issueInfo);
 
     setIssueList(issueInfo);
   };
@@ -47,14 +46,17 @@ const Issue = () => {
         </StTitleWrapper>
         <StIssue>
           {issueList &&
-            issueList.map((issue: IssueInfo) => (
-              <IssueCard
-                core={false}
-                key={issue.issueId}
-                handleDiscuss={handleDiscuss}
-                issueInfo={issue}
-              />
-            ))}
+            issueList.map(
+              (issue: IssueInfo) =>
+                issue.issueOpen && (
+                  <IssueCard
+                    core={false}
+                    key={issue.issueId}
+                    handleDiscuss={handleDiscuss}
+                    issueInfo={issue}
+                  />
+                ),
+            )}
         </StIssue>
       </StIsuueWrapper>
       <StCreateIssueModalWrapper $showing={cIssue.isShowing}>
