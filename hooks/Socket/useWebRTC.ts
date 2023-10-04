@@ -27,7 +27,6 @@ import { addNickNameToPeer, getNickName } from '../../utils/getNicknames';
 import {
   handleConnectError,
   handleConsumerClosed,
-  handleDisconnect,
   handleMessage,
   handleNewProducers,
 } from './socketHandlers';
@@ -387,7 +386,6 @@ const useWebRTC = (
           console.log(data);
           router.push('/home');
         }
-        // handleDisconnect(router);
       });
     }
     return () => {

@@ -46,7 +46,7 @@ const Issue = () => {
           <IcPlusBtn type="button" onClick={handleOpenIssue} />
         </StTitleWrapper>
         <StIssue>
-          {/* {issueList &&
+          {issueList &&
             issueList.map((issue: IssueInfo) => (
               <IssueCard
                 core={false}
@@ -54,7 +54,7 @@ const Issue = () => {
                 handleDiscuss={handleDiscuss}
                 issueInfo={issue}
               />
-            ))} */}
+            ))}
         </StIssue>
       </StIsuueWrapper>
       <StCreateIssueModalWrapper $showing={cIssue.isShowing}>

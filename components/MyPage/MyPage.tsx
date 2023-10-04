@@ -23,19 +23,12 @@ import { MyPageStudyRoomList } from '../RoomList';
 const MyPage = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [isLeader, setIsLeader] = useState(true);
-  // const [profile, setProfile] = useState<ProfileInfo>();
   const [moons, setMoons] = useState<MoonInfo[]>([]);
   const [moonScores, setMoonScores] = useState<number[]>([]);
   const [isMoon, setIsMoon] = useState(false);
   const memberId = useRecoilValue(memberIdState);
 
-  const { profile } = useGetMemberProfile(memberId);
-  console.log(profile);
-
-  // const getProfileData = async () => {
-  //   const profileData = await getProfile(memberId);
-  //   setProfile(profileData);
-  // };
+  const { imgUrl, nickname } = useGetMemberProfile(memberId);
 
   const getMoonData = async () => {
     const moonData = await getMoon(memberId);
@@ -76,7 +69,6 @@ const MyPage = () => {
   };
 
   useEffect(() => {
-    // getProfileData();
     getMoonData();
     getMoonScores();
   }, [isMoon]);
@@ -89,17 +81,17 @@ const MyPage = () => {
     <StMyPageWrapper>
       <h2>마이페이지</h2>
       <StMyInfo>
-        {profile && (
+        {imgUrl && nickname && (
           <StProfile>
             <IcProfileImage />
             <Image
               className="githubImage"
-              src={profile.imageUrl}
+              src={imgUrl}
               alt="profile"
               width={77}
               height={70}
             />
-            <p>{profile.nickname}</p>
+            <p>{nickname}</p>
           </StProfile>
         )}
         <StMoon>

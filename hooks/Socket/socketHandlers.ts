@@ -1,4 +1,3 @@
-import { NextRouter } from 'next/router';
 import { Dispatch, SetStateAction } from 'react';
 
 import {
@@ -60,10 +59,3 @@ export const handleConsumerClosed = (
   console.log('Closing Consumer : ', data);
   removeStream(data.consumer_id);
 };
-
-// export const handleDisconnect = (router: NextRouter) => {
-//   // socket.request('removeCaptureAlert', { memberId: socket.name }, (data) => {
-//   //   console.log(data)
-//   // })
-//   router.push('/home');
-// };

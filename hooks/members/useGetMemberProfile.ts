@@ -11,7 +11,8 @@ const useGetMemberProfile = (memberId: number) => {
   );
 
   return {
-    profile: data?.data?.member,
+    imgUrl: data?.data?.member.imageUrl,
+    nickname: data?.data?.member.nickname,
     isLoading,
     isError: error,
   };
