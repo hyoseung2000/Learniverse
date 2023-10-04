@@ -1,23 +1,77 @@
+import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
+import { getStudyroomWorkSpace } from '@/apis/studyroom';
 import useModal from '@/hooks/useModal';
 import { IcPlusBtn } from '@/public/assets/icons';
+import { roomIdState } from '@/recoil/atom';
+import { WorkSpaceInfo } from '@/types/studyroom';
 
 import { FigmaBtn, GDriveBtn, GithbBtn, NotnBtn } from '../Common/Button';
 import RegisterWorkspaceModal from './Modal/RegisterWorkspaceModal';
 
 const WorkSpace = () => {
-  // const [workSpace, setWorkSpace] = useState([]);
   const register = useModal();
+
+  const [NotnURL, setNotnURL] = useState('');
+  const [GithubURL, setGithubURL] = useState('');
+  const [FigmaURL, setFigmaURL] = useState('');
+  const [GDriveURL, setGDriveURL] = useState('');
+
+  const roomID = useRecoilValue(roomIdState);
+
+  const getWorkSpace = async () => {
+    const WSInfo: WorkSpaceInfo = await getStudyroomWorkSpace(roomID);
+    const { roomGitOrg, roomNotion, roomGoogleDrive, roomFigma } = WSInfo;
+
+    setNotnURL(roomNotion ? roomNotion.toString() : '');
+    setGithubURL(roomGitOrg ? roomGitOrg.toString() : '');
+    setFigmaURL(roomFigma ? roomFigma.toString() : '');
+    setGDriveURL(roomGoogleDrive ? roomGoogleDrive.toString() : '');
+  };
+
+  useEffect(() => {
+    getWorkSpace();
+  }, []);
 
   const handleOpen = () => {
     register.toggle();
   };
 
-  const handleWSAddress = () => {
-    window.open(
-      'https://www.notion.so/000208/Learniverse-3f06d9d94f3a4540a036c1070926c8ef',
-    );
+  const handleWSAddress = (key: string) => {
+    switch (key) {
+      case 'notion':
+        if (NotnURL !== '') {
+          window.open(NotnURL);
+        } else {
+          alert('url을 등록해주세요.');
+        }
+        break;
+      case 'gdrive':
+        if (GDriveURL !== '') {
+          console.log(GDriveURL);
+        } else {
+          alert('url을 등록해주세요.');
+        }
+        break;
+      case 'github':
+        if (GithubURL !== '') {
+          window.open(GithubURL);
+        } else {
+          alert('url을 등록해주세요.');
+        }
+        break;
+      case 'figma':
+        if (FigmaURL !== '') {
+          window.open(FigmaURL);
+        } else {
+          alert('url을 등록해주세요.');
+        }
+        break;
+      default:
+        window.open(GDriveURL);
+    }
   };
 
   return (
@@ -28,10 +82,30 @@ const WorkSpace = () => {
           <IcPlusBtn type="button" onClick={handleOpen} />
         </StTitleWrapper>
         <Workspace>
-          <NotnBtn key={0} handleClick={handleWSAddress} />
-          <GDriveBtn key={1} handleClick={handleWSAddress} />
-          <GithbBtn key={2} handleClick={handleWSAddress} />
-          <FigmaBtn key={3} handleClick={handleWSAddress} />
+          <NotnBtn
+            key={0}
+            handleClick={() => {
+              handleWSAddress('notion');
+            }}
+          />
+          <GDriveBtn
+            key={1}
+            handleClick={() => {
+              handleWSAddress('gdrive');
+            }}
+          />
+          <GithbBtn
+            key={2}
+            handleClick={() => {
+              handleWSAddress('github');
+            }}
+          />
+          <FigmaBtn
+            key={3}
+            handleClick={() => {
+              handleWSAddress('figma');
+            }}
+          />
         </Workspace>
       </StWorkspaceWrapper>
       <StRegModalWrapper $showing={register.isShowing}>

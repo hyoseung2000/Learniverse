@@ -24,15 +24,16 @@ const CoreTimeCard = ({ coretime, isCoreId }: Props) => {
   return (
     <>
       <StCoretimeWrapper>
-        <p>
-          {changeDateFormat(coreStartTime.toString())} -{' '}
-          {changeDateFormat(coreEndTime.toString())}
-        </p>
-        {isCoreId === coreTimeId ? (
-          <StateBtn btnName="진행중" />
-        ) : (
-          <StateDeleteBtn btnName="삭제" handleClick={handleDeleteOpen} />
-        )}
+        <StContent>
+          <p>{changeDateFormat(coreStartTime.toString())}</p>
+          <p> - </p>
+          <p>{changeDateFormat(coreEndTime.toString())}</p>
+          {isCoreId === coreTimeId ? (
+            <StateBtn btnName="진행중" />
+          ) : (
+            <StateDeleteBtn btnName="삭제" handleClick={handleDeleteOpen} />
+          )}
+        </StContent>
       </StCoretimeWrapper>
       <StDeleteModalWrapper $showing={deleteCT.isShowing}>
         <DeleteCoretimeModal
@@ -47,7 +48,23 @@ const CoreTimeCard = ({ coretime, isCoreId }: Props) => {
 
 export default CoreTimeCard;
 
-const StCoretimeWrapper = styled.div``;
+const StCoretimeWrapper = styled.div`
+  background: ${({ theme }) => theme.colors.LightGray2};
+  border-radius: 1.2rem;
+`;
+
+const StContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin: 0.6rem 1rem;
+
+  & > p {
+    color: ${({ theme }) => theme.colors.Learniverse_BG};
+    ${({ theme }) => theme.fonts.Title5};
+  }
+`;
 
 const StDeleteModalWrapper = styled.div<{ $showing: boolean }>`
   display: ${({ $showing }) => ($showing ? 'block' : 'none')};

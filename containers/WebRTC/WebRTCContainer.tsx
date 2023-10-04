@@ -52,6 +52,8 @@ const WebRTCContainer = () => {
     addChattingList,
   );
   const gallery = useModal();
+  const coreIssue = useModal();
+
   const pushNotification = usePushNotification();
 
   const setCoreEndTime = async () => {
@@ -142,6 +144,7 @@ const WebRTCContainer = () => {
       handleSendChatting={handleSendChatting}
       handleExitRoom={handleExitRoom}
       gallery={gallery}
+      issue={coreIssue}
     />
   );
 };

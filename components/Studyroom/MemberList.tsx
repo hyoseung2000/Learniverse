@@ -1,16 +1,65 @@
+import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
+import { getRoomMembers } from '@/apis/memberList';
+import { getRoomInfo } from '@/apis/studyroom';
 import { IcChar, IcRoomLogo } from '@/public/assets/icons';
+import { memberIdState, roomIdState } from '@/recoil/atom';
+import { MemberInfo } from '@/types/member';
+import { StudyRoomInfo } from '@/types/studyroom';
+import { getCategoryColor } from '@/utils/getCategoryColor';
 
 const MemberList = () => {
+  const roomId = useRecoilValue(roomIdState);
+  const memberId = useRecoilValue(memberIdState);
+
+  const [memberList, setMemberList] = useState<MemberInfo[]>();
+  const [rname, setRName] = useState<string>('');
+  const [rcategory, setRCategory] = useState<string>('');
+  const planetColor = getCategoryColor(rcategory);
+
+  const getRoomName = async () => {
+    const roomInfo: StudyRoomInfo = await getRoomInfo(roomId, memberId);
+    const { roomName, roomCategory } = roomInfo;
+
+    setRName(roomName);
+    setRCategory(roomCategory);
+  };
+  const getMembers = async () => {
+    const members = await getRoomMembers(roomId);
+    setMemberList(members);
+    console.log(members);
+  };
+  const handleMessage = (message: string) => {
+    console.log(message);
+  };
+
+  useEffect(() => {
+    getRoomName();
+    getMembers();
+  }, []);
+
   return (
     <StMembersWrapper>
-      <StTitleWrapper>
+      <StTitleWrapper $planetColor={planetColor}>
         <IcRoomLogo />
-        <h1>소웨5공주 공부방</h1>
+        <h1>{rname}</h1>
       </StTitleWrapper>
       <StMemberWrapper>
-        <StMember>
+        {memberList &&
+          memberList.map((member) => (
+            <StMember
+              key={member.memberId}
+              onClick={() => {
+                handleMessage(member.memberMessage);
+              }}
+            >
+              <IcChar />
+              <p>{member.nickname}</p>
+            </StMember>
+          ))}
+        {/* <StMember>
           <IcChar />
           <p>코딩천사 선영이</p>
         </StMember>
@@ -29,7 +78,7 @@ const MemberList = () => {
         <StMember>
           <IcChar />
           <p>iamphj3</p>
-        </StMember>
+        </StMember> */}
       </StMemberWrapper>
     </StMembersWrapper>
   );
@@ -38,7 +87,7 @@ const MemberList = () => {
 export default MemberList;
 
 const StMembersWrapper = styled.div`
-  margin: 3.3rem;
+  margin: 2rem 2.2rem;
 `;
 
 const StMember = styled.div`
@@ -54,9 +103,15 @@ const StMember = styled.div`
   }
 `;
 
-const StTitleWrapper = styled.div`
+const StTitleWrapper = styled.div<{ $planetColor: string }>`
   display: flex;
   align-items: center;
+
+  & > svg {
+    path {
+      fill: ${({ $planetColor }) => $planetColor};
+    }
+  }
 
   & > h1 {
     margin-left: 1.5rem;
@@ -69,4 +124,6 @@ const StMemberWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(3, 1fr);
+
+  margin-top: 2rem;
 `;

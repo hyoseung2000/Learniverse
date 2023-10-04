@@ -34,3 +34,13 @@ export const todayState = atom<string>({
   key: `today`,
   default: getToday(),
 });
+
+export const roomIdState = atom<number>({
+  key: `roomId`,
+  default: 1,
+});
+
+export const issueIdState = atom<number>({
+  key: `issueId`,
+  default: 1,
+});

@@ -2,44 +2,42 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
+import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 import { createCoretime } from '@/apis/coretimes';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { SmallModal } from '@/components/Common/Modal';
 import useModal from '@/hooks/useModal';
+import { roomIdState } from '@/recoil/atom';
 import { PostCoreTimeInfo } from '@/types/studyroom';
 
 import CompleteCreateCoreModal from './CompleteCreateCoreModal';
 
 interface Props {
   isShowing: boolean;
-  handleCreate: () => void;
   handleCancel: () => void;
 }
 
-const CreateCoretimeModal = ({
-  isShowing,
-  handleCreate,
-  handleCancel,
-}: Props) => {
+const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
   const [startDate, setStartDate] = useState<Date>(new Date());
-  const [coreHour, setCoreHour] = useState<number>(1);
+  const [coreHr, setCoreHr] = useState<number>(1);
   const [coreMin, setCoreMin] = useState<number>(30);
-  const [captureNum, setCaptureNum] = useState<number>(0);
+  const [capture, setCapture] = useState<number>(0);
   const [coreTimeInfo, setCoreTimeInfo] = useState<PostCoreTimeInfo>();
+  const roomID = useRecoilValue(roomIdState);
 
   const complete = useModal();
 
   const handleCreateCtime = async () => {
-    if (
-      (coreHour === 0 && coreMin === 0) ||
-      (coreHour === 24 && coreMin === 30)
-    ) {
+    if (startDate.getMinutes() !== 30 && startDate.getMinutes() !== 0) {
+      alert('시작시간은 30분 단위로 지정하세요.');
+    }
+    if ((coreHr === 0 && coreMin === 0) || (coreHr === 24 && coreMin === 30)) {
       alert('코어타임은 최소 30분 - 최대 24시간 내로 지정하세요.');
     } else {
       await createCoretime(coreTimeInfo!);
-      handleCreate();
+      handleCancel();
     }
   };
   const handleHourChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +45,7 @@ const CreateCoretimeModal = ({
     if (hour < 0 || hour > 24) {
       alert('0 - 24시간 범위에서 입력하세요');
     } else {
-      setCoreHour(hour);
+      setCoreHr(hour);
     }
   };
   const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,23 +57,23 @@ const CreateCoretimeModal = ({
     }
   };
   const handleCaptureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const capture = parseInt(e.target.value, 10);
-    if (capture < 0 || capture > 5) {
+    const captureNumber = parseInt(e.target.value, 10);
+    if (captureNumber < 0 || captureNumber > 5) {
       alert('0 - 5번 이내로 입력하세요');
     } else {
-      setCaptureNum(capture);
+      setCapture(captureNumber);
     }
   };
 
   useEffect(() => {
     setCoreTimeInfo({
-      roomId: 1,
+      roomId: roomID,
       coreStartTime: startDate,
-      coreHour,
+      coreHour: coreHr,
       coreMinute: coreMin,
-      captureNum,
+      captureNum: capture,
     });
-  }, [startDate, coreHour, coreMin, captureNum]);
+  }, [startDate, coreHr, coreMin, capture]);
 
   return (
     isShowing && (
@@ -100,7 +98,7 @@ const CreateCoretimeModal = ({
                     type="number"
                     min="0"
                     max="24"
-                    value={coreHour}
+                    value={coreHr}
                     onChange={handleHourChange}
                   />
                   <p>시간</p>
@@ -121,7 +119,7 @@ const CreateCoretimeModal = ({
                   type="number"
                   min="0"
                   max="5"
-                  value={captureNum}
+                  value={capture}
                   onChange={handleCaptureChange}
                 />
                 <p>번</p>

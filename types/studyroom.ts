@@ -64,3 +64,61 @@ export interface PostCoreTimeInfo {
   coreMinute: number;
   captureNum: number;
 }
+
+export interface WorkSpaceInfo {
+  roomGitOrg: string;
+  roomNotion: string;
+  roomGoogleDrive: string;
+  roomFigma: string;
+}
+
+export interface PostWorkSpaceInfo {
+  roomId: number;
+  roomGitOrg?: string;
+  roomNotion?: string;
+  roomGoogleDrive?: string;
+  roomFigma?: string;
+}
+
+export interface PostNoticeInfo {
+  memberId: number;
+  roomId: number;
+  title: string;
+  content: string;
+}
+
+export interface NoticeListInfo {
+  notices: NoticeInfo[];
+}
+
+export interface NoticeInfo {
+  memberId: number;
+  boardId: number;
+  title: string;
+  content: string;
+}
+
+export interface IssueListInfo {
+  issues: IssueInfo[];
+}
+
+export interface IssueInfo {
+  issueId: number;
+  memberId: number;
+  roomId: number;
+  issueTitle: string;
+  issueDescription: string;
+  issueGitUrl: string;
+  gitFileName: string;
+  gitCode: string;
+  createdDate: Date;
+}
+
+export interface PostIssueInfo {
+  roomId: number;
+  memberId: number;
+  issueTitle: string;
+  issueDescription: string;
+  issueGitUrl: string;
+  gitFileName: string;
+}
