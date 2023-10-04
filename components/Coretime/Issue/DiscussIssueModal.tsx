@@ -1,20 +1,23 @@
 // import 'ace-builds/src-noconflict/ext-language_tools';
 
 import 'ace-builds/src-noconflict/ace';
-import 'ace-builds/src-noconflict/mode-javascript';
+import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/theme-tomorrow';
 
 // import { require } from 'ace-builds/src-noconflict/ace';
 // import { Range } from 'ace-builds/src-noconflict/ace';
 import { useEffect, useRef, useState } from 'react';
 import AceEditor from 'react-ace';
+import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
+import { getDiscussions, getIssueInfo, postDiscuss } from '@/apis/studyroom';
 import { StateDeleteBtn } from '@/components/Common/Button';
 import { SquareModal } from '@/components/Common/Modal';
 import { IcDiscussLogo } from '@/public/assets/icons';
+import { issueIdState, memberIdState } from '@/recoil/atom';
+import { DiscussInfo, IssueInfo, PostDiscussInfo } from '@/types/studyroom';
 
-// import { memberIdState } from '@/recoil/atom';
 import CommentCard from './CommentCard';
 
 interface Props {
@@ -23,29 +26,40 @@ interface Props {
 }
 
 const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
-  const handleOpenGithub = () => {
-    window.open(`https://github.com/`, `cpplovelove`);
-  };
-  // const MemberId = useRecoilValue(memberIdState);
-  // const issueId = useRecoilValue(issueIdState);
+  const memberId = useRecoilValue(memberIdState);
+  const issueId = useRecoilValue(issueIdState);
   const codeRef = useRef<AceEditor>(null);
 
-  // const [issueData, setissueData] = useState<IssueInfo>();
   const [isComment, setIsComment] = useState(false);
-  const [isSubmit, setIsSubmit] = useState(false);
   const [suggestCode, setSuggestCode] = useState<string>('');
   const [index, setIndex] = useState<number>(0);
 
-  // const [commentList, setCommentList] = useState<[]>();
+  const [code, setCode] = useState<string>('');
+  const [title, setTitle] = useState('');
+  const [descrpt, setDescrpt] = useState('');
+  const [giturl, setGiturl] = useState('');
+  const [commentList, setCommentList] = useState<DiscussInfo[]>();
+  const [discussData, setDiscussData] = useState<PostDiscussInfo>();
 
-  const code =
-    'const useToggle = (): UseToggleReturnType => {\n const [toggle, setToggle] = useState(true);\n const handleToggle = () => {\n setToggle((prevState) => !prevState);\n };\n return [toggle, handleToggle];\n};';
+  const getIssueData = async () => {
+    const issueInfo: IssueInfo = await getIssueInfo(issueId);
+    console.log(issueInfo);
+    const { issueTitle, gitCode, issueDescription, issueGitUrl } = issueInfo!;
+    setCode(gitCode);
+    setTitle(issueTitle);
+    setDescrpt(issueDescription);
+    setGiturl(issueGitUrl);
+  };
 
-  // const getIssueData = async () => {
-  //   const issueInfo = await getIssueInfo(issueId);
-  //   console.log(issueInfo);
-  //   setissueData(issueInfo);
-  // };
+  const getDiscuss = async () => {
+    const discussInfo = await getDiscussions(issueId);
+    console.log(discussInfo);
+    setCommentList(discussInfo);
+  };
+
+  const handleOpenGithub = () => {
+    window.open(`https://github.com/${giturl}`);
+  };
 
   const handleCreateInput = () => {
     if (codeRef.current) {
@@ -56,33 +70,44 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
       console.log(line, range, getSelectedText);
       setIsComment(true);
       setIndex(line);
-      initData();
+      changeData();
       // const { Range } = ace.require('ace/range');
       // const mine = new Range(1, 0, 4, 0);
       // editor.session.addMarker(mine, 'ace_active_line', 'text');
     }
   };
 
-  const handleCreateComment = () => {
+  const handleCreateComment = async () => {
     console.log(index, suggestCode);
-    setIsSubmit(true);
+    await postDiscuss(discussData!);
   };
-  const initData = () => {
+
+  const changeData = () => {
     setSuggestCode('');
   };
 
-  const handleHighlight = () => {
-    // const editor = edit(this);
-    // const { Range } = require(`ace/range`).Range;
-    // const range = new Range(index, 0, index, Infinity);
-    // editor.session.addMarker(range, 'ace_active_line', 'text');
-  };
+  // const handleHighlight = () => {
+  //   // const editor = edit(this);
+  //   // const { Range } = require(`ace/range`).Range;
+  //   // const range = new Range(index, 0, index, Infinity);
+  //   // editor.session.addMarker(range, 'ace_active_line', 'text');
+  // };
 
   useEffect(() => {
-    setIsSubmit(true);
+    getIssueData();
+    getDiscuss();
   }, []);
 
   useEffect(() => {}, [isComment]);
+
+  useEffect(() => {
+    setDiscussData({
+      issueId,
+      memberId,
+      issueOpinion: suggestCode,
+      issueOpinionLine: index,
+    });
+  }, [suggestCode, index]);
 
   return (
     isShowing && (
@@ -92,13 +117,13 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
             <StIssue>
               <IcDiscussLogo />
               <StContent>
-                <h3>이대로 했는데 작동오류남 ㅠㅠ</h3>
-                <p>실행하면 버튼이 안생기는 오류가 나네,, 왜그런지 모르겠음 </p>
+                <h3>{title}</h3>
+                <p>{descrpt}</p>
                 <p>
                   🔗 깃허브 링크 :{' '}
-                  <button type="button" onClick={handleOpenGithub}>
-                    https://github.com/cpplovelove
-                  </button>
+                  <StLink onClick={handleOpenGithub}>
+                    https://github.com/{giturl}
+                  </StLink>
                 </p>
               </StContent>
             </StIssue>
@@ -107,8 +132,9 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                 <AceEditor
                   ref={codeRef}
                   className="github code"
+                  setOptions={{ useWorker: false }}
                   placeholder="this is code editor"
-                  mode="javascript"
+                  mode="python"
                   theme="tomorrow"
                   name="codeInput"
                   height="30rem"
@@ -130,11 +156,20 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
             <StTitle>
               <div>
                 <p>의견</p>
-                <span>1</span>
+                <span>{commentList?.length}</span>
               </div>
               <StateDeleteBtn btnName="창 닫기" handleClick={handleCancel} />
             </StTitle>
-
+            <StComment>
+              {commentList &&
+                commentList.map((comment) => (
+                  <CommentCard
+                    coderef={codeRef}
+                    key={comment.opinionId}
+                    commentInfo={comment}
+                  />
+                ))}
+            </StComment>
             {/* {isSubmit &&
               commentList?.map((comment) => (
                 <CommentCard
@@ -144,14 +179,6 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                   index={index}
                 />
               ))} */}
-            {isSubmit && (
-              <CommentCard
-                coderef={codeRef}
-                code={suggestCode}
-                index={index}
-                handleHighlight={handleHighlight}
-              />
-            )}
             {isComment && (
               <StInput>
                 <textarea
@@ -232,6 +259,8 @@ const StTitle = styled.div`
   }
 `;
 
+const StComment = styled.div``;
+
 const StIssue = styled.div`
   display: flex;
   align-items: center;
@@ -277,6 +306,11 @@ const StContent = styled.div`
 `;
 
 const StCode = styled.div``;
+
+const StLink = styled.button`
+  ${({ theme }) => theme.fonts.Body9};
+  color: ${({ theme }) => theme.colors.Purple4};
+`;
 
 const StInput = styled.div`
   padding: 0.5rem;

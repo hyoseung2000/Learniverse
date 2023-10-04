@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
@@ -13,12 +13,12 @@ import NoticeCard from './NoticeCard';
 
 const Notice = () => {
   const roomID = useRecoilValue(roomIdState);
-  const noticeRef = useRef<HTMLDivElement>(null);
 
   const create = useModal();
   const [noticeList, setNoticeList] = useState<NoticeInfo[]>();
 
   const getNotices = async () => {
+    console.log(roomID);
     const noticeInfo = await getNoticeList(roomID);
     console.log(noticeInfo);
 
@@ -33,12 +33,6 @@ const Notice = () => {
     getNotices();
   }, []);
 
-  // useEffect(() => {
-  //   if (noticeRef.current) {
-  //     noticeRef.current.scrollTop = noticeRef.current.scrollHeight;
-  //   }
-  // }, [noticeList]);
-
   return (
     <>
       <StNoticeWrapper>
@@ -46,7 +40,7 @@ const Notice = () => {
           <h1>스터디룸 공지</h1>
           <IcPlusBtn type="button" onClick={handleOpen} />
         </StTitleWrapper>
-        <StComent ref={noticeRef}>
+        <StComent>
           {noticeList &&
             noticeList.map((notice) => (
               <NoticeCard key={notice.boardId} noticeInfo={notice} />
