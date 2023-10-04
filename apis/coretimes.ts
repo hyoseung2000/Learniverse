@@ -49,7 +49,7 @@ export const getCoreEndtime = async (coreTimeId: number) => {
     const { data } = await client.get(
       `/room/core/endTime?coreTimeId=${coreTimeId}`,
     );
-    return data.data.coreEndDTime;
+    return data.data.coreEndTime;
   } catch (err) {
     console.error(err);
     throw err;
