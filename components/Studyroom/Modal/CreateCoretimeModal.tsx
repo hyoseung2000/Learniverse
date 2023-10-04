@@ -199,7 +199,10 @@ const StDate = styled.div`
   }
 `;
 
-const CustomDatePicker = styled(DatePicker)`
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, react/jsx-props-no-spreading
+const DatePickerWrapper: React.FC<any> = (props) => <DatePicker {...props} />;
+
+const CustomDatePicker = styled(DatePickerWrapper)`
   width: 20rem;
   height: 3.2rem;
 
