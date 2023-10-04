@@ -28,12 +28,23 @@ export const getRoomInfo = async (roomId: number, memberId: number) => {
   }
 };
 
+export const getLanguages = async () => {
+  try {
+    const { data } = await client.get('/room/languages');
+    return data.data.languages;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
 export const applyRoom = async (roomId: number, memberId: number) => {
   try {
     const { data } = await client.post(`/room/member/apply`, {
       roomId,
       memberId,
     });
+    console.log(data);
     return data;
   } catch (err) {
     console.error(err);

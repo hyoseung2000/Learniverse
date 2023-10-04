@@ -1,14 +1,22 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+/* eslint-disable prettier/prettier */
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
+import { getPresignedUrl } from '@/apis/alarm';
+import { createCapture, putFile } from '@/apis/coretimes';
 import { Chatting } from '@/components/Coretime/Chatting';
-import Gallery from '@/components/Coretime/Gallery/Gallery';
+import { GalleryModal } from '@/components/Coretime/Gallery';
 import {
   CreateIssueModal,
   DiscussIssueModal,
   IssueModal,
 } from '@/components/Coretime/Issue';
 import { Member } from '@/components/Coretime/Member';
+import {
+  CaptureCompleteModal,
+  CaptureModal,
+  ExitCoretimeModal,
+} from '@/components/Coretime/Modal';
 import {
   MediaBtn,
   MikeBtn,
@@ -19,11 +27,14 @@ import { TimeProvider, Timer } from '@/components/Coretime/Timer';
 import { WebRTCAudio, WebRTCVideo } from '@/components/Coretime/WebRTCMedia';
 import useModal, { UseModalReturnType } from '@/hooks/useModal';
 import { ChattingInfo, ConsumeInfo, RoomPeerInfo } from '@/types/socket';
+import { formatHHMMSS } from '@/utils/getFormattedTime';
 
 interface WebRTCLayoutProps {
+  isCaptureTime: boolean;
   coreEndTime: Date;
   curNickname: string;
   curRoomId: string;
+  curMemberId: string;
   isMedia: boolean;
   handleMedia: () => void;
   isMike: boolean;
@@ -40,14 +51,15 @@ interface WebRTCLayoutProps {
   chattingList: ChattingInfo[];
   handleSendChatting: () => void;
   handleExitRoom: () => void;
-  gallery: UseModalReturnType;
   issue: UseModalReturnType;
 }
 
 const WebRTCLayout = ({
+  isCaptureTime,
   coreEndTime,
   curNickname,
   curRoomId,
+  curMemberId,
   isMedia,
   handleMedia,
   isMike,
@@ -64,12 +76,19 @@ const WebRTCLayout = ({
   chattingList,
   handleSendChatting,
   handleExitRoom,
-  gallery,
   issue,
 }: WebRTCLayoutProps) => {
-  const [isSending, setIsSending] = useState(false);
   const cIssue = useModal();
   const discuss = useModal();
+  const [isSending, setIsSending] = useState(false);
+  const [capturedImageFile, setCapturedImageFile] = useState<
+    File | undefined
+  >();
+
+  const gallery = useModal();
+  const exit = useModal();
+  const capture = useModal();
+  const captureComplete = useModal();
 
   const handleChatSend = async () => {
     if (isSending) return;
@@ -88,6 +107,38 @@ const WebRTCLayout = ({
     issue.toggle();
     discuss.toggle();
   };
+
+  const handleUploadImage = async () => {
+    const now = new Date();
+
+    const captureData = {
+      coreTimeId: Number(curRoomId),
+      memberId: Number(curMemberId),
+      fileName: `coretime-${curRoomId}-${curNickname}-${formatHHMMSS(
+        now.toString(),
+      )}.png`,
+    };
+
+    const url: string = await getPresignedUrl(captureData.fileName);
+    if (capturedImageFile) {
+      await putFile(url, capturedImageFile);
+    }
+
+    const captureImg = await createCapture(captureData);
+    console.log(captureImg);
+  };
+
+  const handleSubmit = () => {
+    // 이미지 전송
+    handleUploadImage();
+    capture.toggle();
+    captureComplete.toggle();
+    setCapturedImageFile(undefined);
+  };
+
+  useEffect(() => {
+    capture.toggle();
+  }, [isCaptureTime]);
 
   return (
     <StWebRTCContainerWrapper>
@@ -111,8 +162,11 @@ const WebRTCLayout = ({
             <WebRTCVideo
               key={stream.consumer_id}
               roomId={curRoomId!}
+              memberId={curMemberId!}
               nickname={stream.nickname}
               mediaStream={stream.stream}
+              isCaptureTime={isCaptureTime}
+              setCapturedImageFile={setCapturedImageFile}
               isSelected={selectedVideo === stream.consumer_id}
               onClick={() => handleSelectVideo(stream)}
             />
@@ -149,14 +203,11 @@ const WebRTCLayout = ({
           </StChatInputWrapper>
         </StChattingWrapper>
         <StCoreTimeBtnWrapper>
-          <StExitButton type="button" onClick={handleExitRoom}>
+          <StExitButton type="button" onClick={exit.toggle}>
             코어타임 나가기
           </StExitButton>
         </StCoreTimeBtnWrapper>
       </StCoretimeInfoWrapper>
-      <StGalleryModalWrapper $showing={gallery.isShowing}>
-        <Gallery isShowing={gallery.isShowing} handleCancel={gallery.toggle} />
-      </StGalleryModalWrapper>
       <StIssueModalWrapper $showing={issue.isShowing}>
         <IssueModal
           isShowing={issue.isShowing}
@@ -177,6 +228,35 @@ const WebRTCLayout = ({
           handleCancel={discuss.toggle}
         />
       </StDiscussIssueModalWrapper>
+      <StModalWrapper $showing={gallery.isShowing}>
+        <GalleryModal
+          curRoomId={curRoomId!}
+          isShowing={gallery.isShowing}
+          handleCancel={gallery.toggle}
+        />
+      </StModalWrapper>
+      <StModalWrapper $showing={exit.isShowing}>
+        <ExitCoretimeModal
+          isShowing={exit.isShowing}
+          handleExit={handleExitRoom}
+          handleCancel={exit.toggle}
+        />
+      </StModalWrapper>
+      <StModalWrapper $showing={capture.isShowing}>
+        <CaptureModal
+          isShowing={capture.isShowing}
+          setShowing={capture.setShowing}
+          imageFile={capturedImageFile!}
+          handleSubmit={handleSubmit}
+          handleCancel={capture.toggle}
+        />
+      </StModalWrapper>
+      <StModalWrapper $showing={captureComplete.isShowing}>
+        <CaptureCompleteModal
+          isShowing={captureComplete.isShowing}
+          handleConfirm={captureComplete.toggle}
+        />
+      </StModalWrapper>
     </StWebRTCContainerWrapper>
   );
 };
@@ -292,8 +372,7 @@ const StExitButton = styled.button`
 
   border-radius: 100rem;
   background-color: ${({ theme }) => theme.colors.Purple3};
-  box-shadow:
-    2.47864px 4.33762px 3.71796px 1.23932px rgba(0, 0, 0, 0.15),
+  box-shadow: 2.47864px 4.33762px 3.71796px 1.23932px rgba(0, 0, 0, 0.15),
     0.61966px 1.23932px 7.43592px 4.33762px rgba(153, 153, 153, 0.3) inset,
     0.61966px 1.23932px 8.67524px 4.33762px rgba(255, 255, 255, 0.15) inset;
 
@@ -301,8 +380,8 @@ const StExitButton = styled.button`
   ${({ theme }) => theme.fonts.Title2};
 `;
 
-const StGalleryModalWrapper = styled.div<{ $showing: boolean }>`
-  display: ${({ $showing }) => ($showing ? 'block' : 'none')};
+const StModalWrapper = styled.div<{ $showing: boolean }>`
+  display: ${({ $showing }) => ($showing ? 'flex' : 'none')};
   position: fixed;
   top: 0;
   left: 0;

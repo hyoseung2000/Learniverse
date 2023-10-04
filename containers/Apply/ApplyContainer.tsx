@@ -108,7 +108,7 @@ const StRoomCardWrapper = styled.section`
   }
 `;
 
-const StSmallModalWrapper = styled.div`
+export const StSmallModalWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -116,7 +116,7 @@ const StSmallModalWrapper = styled.div`
   padding: 1.6rem;
 `;
 
-const StContentWrapper = styled.div`
+export const StContentWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 0.9rem;

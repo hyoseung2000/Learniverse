@@ -1,7 +1,6 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 
 import { ChattingInfo, CustomSocket } from '@/types/socket';
-import { getNickName } from '@/utils/getNicknames';
 import { getTime } from '@/utils/getTime';
 
 type UseChatHandlerReturnType = [
@@ -18,7 +17,7 @@ const useChatHandler = (
   const [chatting, setChatting] = useState<string>('');
 
   const handleSendChatting = async (): Promise<void> => {
-    return new Promise<void>(async (resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       if (!curSocket || !chatting) {
         reject(new Error('Socket not available or no message provided.'));
         return;

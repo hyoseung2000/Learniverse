@@ -5,12 +5,13 @@ import DatePicker from 'react-datepicker';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
+import { createCaptureTime } from '@/apis/alarm';
 import { createCoretime } from '@/apis/coretimes';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { SmallModal } from '@/components/Common/Modal';
 import useModal from '@/hooks/useModal';
 import { roomIdState } from '@/recoil/atom';
-import { PostCoreTimeInfo } from '@/types/studyroom';
+import { CoreTimeIdInfo, PostCoreTimeInfo } from '@/types/studyroom';
 
 import CompleteCreateCoreModal from './CompleteCreateCoreModal';
 
@@ -37,6 +38,26 @@ const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
       alert('코어타임은 최소 30분 - 최대 24시간 내로 지정하세요.');
     } else {
       await createCoretime(coreTimeInfo!);
+      const { coreTimeId }: CoreTimeIdInfo = await createCoretime(
+        coreTimeInfo!,
+      );
+      if (coreTimeId) {
+        const endDate = new Date(startDate);
+        endDate.setHours(startDate.getHours() + coreHr);
+        endDate.setMinutes(startDate.getMinutes() + coreMin);
+
+        const captureTimeData = {
+          coreTimeId,
+          startTime: startDate,
+          endTime: endDate,
+          captureCount: capture,
+          tokens: [
+            'fTx0U1rNI7q4puzp2YlRze:APA91bHy2L9PGMzkg1Yxb0wcl81phUNhrHRZi58uy451inAh0lMPjGvfwwzotR2B1QFtyLK6xPuzIJfaoMGSBWiDEc88w2NAGi-M3lbWCgYuPxg-AWxq91PnEHMRtXR5W67Anb0gnAxl',
+          ],
+        };
+        console.log(captureTimeData);
+        await createCaptureTime(captureTimeData);
+      }
       handleCancel();
     }
   };

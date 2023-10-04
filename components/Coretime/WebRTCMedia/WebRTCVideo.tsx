@@ -1,22 +1,28 @@
-import { useEffect, useRef } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import { styled } from 'styled-components';
 
-import { getPresignedUrl, putFile } from '@/apis/coretimes';
 import { IcCoreChar } from '@/public/assets/icons';
 
 interface WebRTCVideoProps {
   roomId: string;
+  memberId: string;
   nickname: string;
   mediaStream: MediaStream | undefined;
   isSelected: boolean;
+  isCaptureTime: boolean;
+  setCapturedImageFile: Dispatch<SetStateAction<File | undefined>>;
   onClick: () => void;
 }
 
 const WebRTCVideo = ({
   roomId,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  memberId,
   nickname,
   mediaStream,
   isSelected,
+  isCaptureTime,
+  setCapturedImageFile,
   onClick,
 }: WebRTCVideoProps) => {
   const viewRef = useRef<HTMLVideoElement>(null);
@@ -46,22 +52,37 @@ const WebRTCVideo = ({
       type: mimeString,
     });
 
+    setCapturedImageFile(file);
     return file;
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleUploadImage = async () => {
-    const capturedImage = captureAndSaveVideoFrame();
-    const url = await getPresignedUrl();
-    if (capturedImage) {
-      await putFile(url, capturedImage);
-    }
-  };
+  // const handleUploadImage = async () => {
+  //   const capturedImage = captureAndSaveVideoFrame();
+  //   const now = new Date();
+
+  //   const captureData = {
+  //     coreTimeId: Number(roomId),
+  //     memberId: Number(memberId),
+  //     fileName: `coretime-${roomId}-${nickname}-${formatHHMMSS(
+  //       now.toString(),
+  //     )}.png`,
+  //   };
+
+  //   const url: string = await getPresignedUrl(captureData.fileName);
+  //   if (capturedImage) {
+  //     await putFile(url, capturedImage);
+  //     await createCapture(captureData);
+  //   }
+  // };
 
   useEffect(() => {
     if (!viewRef.current) return;
     viewRef.current.srcObject = mediaStream || null;
   }, [mediaStream]);
+
+  useEffect(() => {
+    captureAndSaveVideoFrame();
+  }, [isCaptureTime]);
 
   return (
     <StVideoWrapper>

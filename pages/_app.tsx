@@ -20,10 +20,20 @@ export default function App({ Component, pageProps }: AppProps) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js').then(
           (registration) => {
-            // console.log('SW registered: ', registration);
+            console.log('SW registered: ', registration);
           },
           (err) => {
-            // console.log('SW registration failed: ', err);
+            console.log('SW registration failed: ', err);
+          },
+        );
+      });
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/firebase-messaging-sw.js').then(
+          (registration) => {
+            console.log('FCM registered: ', registration);
+          },
+          (err) => {
+            console.log('FCM registration failed: ', err);
           },
         );
       });
@@ -43,7 +53,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <GlobalStyle />
           <Head>
             <title>LearniVerse</title>
-            <link rel="icon" href="/favicon.png" />
+            <link rel="icon" href="/favicon.ico" />
           </Head>
           <Header />
           <Component {...pageProps} />

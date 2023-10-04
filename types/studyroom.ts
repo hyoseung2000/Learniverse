@@ -8,6 +8,7 @@ export interface LearniverseResponse<T> {
 }
 
 export interface StudyRoomListInfo {
+  pinRooms: StudyRoomInfo[];
   rooms: StudyRoomInfo[];
 }
 
@@ -35,6 +36,7 @@ export interface PostStudyRoomInfo {
   memberId: number;
   roomName: string;
   roomCategory: number;
+  roomLanguages?: string[];
   roomIntro?: string;
   roomLimit: number;
   roomHashtags: string[];
@@ -55,6 +57,10 @@ export interface CoreTimeInfo {
   coreEndTime: Date;
   captureNum: number;
   isCore: boolean;
+}
+
+export interface CoreTimeIdInfo {
+  coreTimeId: number;
 }
 
 export interface PostCoreTimeInfo {

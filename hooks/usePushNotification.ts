@@ -46,8 +46,8 @@ export const usePushNotification = () => {
 
   const fireNotification = (title: string, options?: NotificationOptions) => {
     const newOption: NotificationOptions = {
-      badge: '/favicon.png',
-      icon: '/favicon.png',
+      badge: '/favicon-32x32.png',
+      icon: '/favicon-32x32.png',
       requireInteraction: true,
       ...options,
     };

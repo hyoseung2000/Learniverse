@@ -1,6 +1,9 @@
 import IcAddStudyRoom from './ic_add_studyroom_btn.svg';
 import IcAddTag from './ic_add_tag.svg';
 import IcCancel from './ic_cancel.svg';
+import IcCaptureModal from './ic_capture_modal.svg';
+import IcCaptureTimer from './ic_capture_timer.svg';
+import IcCaptureWarning from './ic_capture_warning.svg';
 import IcChar from './ic_char.svg';
 import IcCharacterCheck from './ic_character_check.svg';
 import IcCharacterDot from './ic_character_dot.svg';
@@ -17,6 +20,7 @@ import IcGithub from './ic_github.svg';
 import IcGraylineLogo from './ic_gray_line.svg';
 import IcIssue from './ic_issue.svg';
 import IcIssueLogo from './ic_issue_logo.svg';
+import IcLanguages from './ic_languages.svg';
 import IcLine from './ic_line.svg';
 import IcLoginBtn from './ic_login_btn.svg';
 import IcLogo from './ic_logo.svg';
@@ -40,10 +44,14 @@ import IcSearch from './ic_search.svg';
 import IcSend from './ic_send.svg';
 import IcSpeaker from './ic_speaker.svg';
 import IcSpeakerOff from './ic_speaker_off.svg';
+import IcStar from './ic_star.svg';
+import IcStarPinned from './ic_star_pinned.svg';
 import IcTimer from './ic_timer.svg';
 import IcTracker from './ic_tracker.svg';
 
 export {
+  IcCaptureTimer,
+  IcCaptureWarning,
   IcConfirm,
   IcCancel,
   IcProfileImage,
@@ -67,6 +75,7 @@ export {
   IcLoginBtn,
   IcRoomLogo,
   IcIssueLogo,
+  IcCaptureModal,
   IcLine,
   IcGraylineLogo,
   IcPlusBtn,
@@ -88,4 +97,7 @@ export {
   IcIssue,
   IcCharacterX,
   IcDiscussLogo,
+  IcStar,
+  IcStarPinned,
+  IcLanguages,
 };

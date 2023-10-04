@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+import { CaptureInfo } from '@/types/capture';
 import { PostCoreTimeInfo } from '@/types/studyroom';
 
 import { client, media } from './axios';
@@ -9,7 +10,7 @@ export const createCoretime = async (postCoreTimeData: PostCoreTimeInfo) => {
     console.log(postCoreTimeData);
     const { data } = await client.post(`/room/core/create`, postCoreTimeData);
     console.log(data);
-    return data;
+    return data.data;
   } catch (err) {
     if (axios.isAxiosError(err))
       if (err.response?.status === 422) {
@@ -69,9 +70,32 @@ export const getPresignedUrl = async () => {
 // eslint-disable-next-line consistent-return
 export const putFile = async (presignedUrl: string, file: File) => {
   try {
-    const data = await axios.put(`${presignedUrl}`, file);
+    const data = await axios.put(presignedUrl, file);
+    console.log('putFile', data);
     return data;
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const createCapture = async (captureInfo: CaptureInfo) => {
+  try {
+    const data = await media.post(`/createCapture`, captureInfo);
+    console.log(data.data);
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const getCapture = async (coretimeId: string) => {
+  try {
+    const data = await media.get(`/getCapture?coreTimeId=${coretimeId}`);
+    console.log(data.data);
+    return data.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
   }
 };

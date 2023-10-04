@@ -26,3 +26,8 @@ export interface MoonScoreInfo {
   isCoreTimeParticipate: number;
   isCapture: number;
 }
+
+export interface MemberTokenInfo {
+  memberId: number;
+  token: string;
+}

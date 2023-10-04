@@ -1,15 +1,20 @@
 import { useRouter } from 'next/router';
-import { useSetRecoilState } from 'recoil';
+import { Dispatch, SetStateAction } from 'react';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { styled } from 'styled-components';
 
-import { IcPlanet } from '@/public/assets/icons';
-import { roomIdState } from '@/recoil/atom';
+import { pinRoom } from '@/apis/roomList';
+import { IcPlanet, IcStar, IcStarPinned } from '@/public/assets/icons';
+import { memberIdState, roomIdState } from '@/recoil/atom';
 import { StudyRoomInfo } from '@/types/studyroom';
 import { getCategoryColor } from '@/utils/getCategoryColor';
 
 interface StudyroomCardProps {
   roomData: StudyRoomInfo;
   roomType?: string;
+  isPinned?: boolean;
+  isMyroom?: boolean;
+  setPinChange?: Dispatch<SetStateAction<boolean>>;
   handleApply?: () => void;
   handleManage?: () => void;
   handleEdit?: () => void;
@@ -18,6 +23,9 @@ interface StudyroomCardProps {
 const StudyroomCard = ({
   roomData,
   roomType,
+  isPinned,
+  isMyroom,
+  setPinChange,
   handleApply,
   handleManage,
   handleEdit,
@@ -34,18 +42,21 @@ const StudyroomCard = ({
   } = roomData;
 
   const router = useRouter();
+  const memberId = useRecoilValue(memberIdState);
   const planetColor = getCategoryColor(roomCategory);
 
   const isMemberApproved = isMember === '승인' || isMember === '팀장';
-  // const isMemberNotApproved = isMember === '대기' || isMember === '거절';
   const canJoinRoom =
     isMemberApproved || (isMember === null && roomLimit > roomCount);
-  const buttonText = handleApply ? '참여' : '입장';
 
   const showManagementButtons = roomType === 'leader';
   const showStatus = roomType === 'apply';
 
   const setroomID = useSetRecoilState(roomIdState);
+  const handlePin = async () => {
+    await pinRoom(roomId, memberId);
+    if (setPinChange) setPinChange((prev) => !prev);
+  };
 
   const handleGotoRoom = () => {
     setroomID(roomId);
@@ -55,6 +66,9 @@ const StudyroomCard = ({
   return (
     <StCardWrapper>
       <StStudyroomCardWrapper>
+        <StStarWrapper onClick={handlePin}>
+          {isMyroom && (isPinned ? <IcStarPinned /> : <IcStar />)}
+        </StStarWrapper>
         <StIconWrapper $planetColor={planetColor}>
           {roomId}
           <IcPlanet />
@@ -72,13 +86,19 @@ const StudyroomCard = ({
             정원
             <span> {roomCount}</span> / {roomLimit}명
           </StLimit>
-          <StJoin
-            type="button"
-            disabled={!canJoinRoom}
-            onClick={handleApply || handleGotoRoom}
-          >
-            {buttonText}
-          </StJoin>
+          {isMember === null ? (
+            <StJoin type="button" onClick={handleApply}>
+              참여
+            </StJoin>
+          ) : (
+            <StEnter
+              type="button"
+              disabled={!canJoinRoom}
+              onClick={handleGotoRoom}
+            >
+              입장
+            </StEnter>
+          )}
         </StJoinWrapper>
       </StStudyroomCardWrapper>
       {showManagementButtons && (
@@ -107,6 +127,7 @@ const StCardWrapper = styled.div`
 `;
 
 const StStudyroomCardWrapper = styled.article`
+  position: relative;
   display: flex;
   flex-direction: column;
 
@@ -120,8 +141,14 @@ const StStudyroomCardWrapper = styled.article`
   background: ${({ theme }) => theme.colors.White};
   color: ${({ theme }) => theme.colors.Gray1};
   ${({ theme }) => theme.fonts.Title5};
+`;
 
-  /* cursor: pointer; */
+const StStarWrapper = styled.div`
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+
+  cursor: pointer;
 `;
 
 const StIconWrapper = styled.div<{ $planetColor: string }>`
@@ -206,7 +233,7 @@ const StLimit = styled.p`
   }
 `;
 
-const StJoin = styled.button`
+const StEnter = styled.button`
   padding: 0.2rem 0.7rem;
 
   border-radius: 0.4rem;
@@ -217,6 +244,11 @@ const StJoin = styled.button`
   ${({ theme }) => theme.fonts.Body8};
 
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+`;
+
+const StJoin = styled(StEnter)`
+  background-color: ${({ theme }) => theme.colors.Purple4};
+  color: ${({ theme }) => theme.colors.White};
 `;
 
 const StBtnWrapper = styled.div`
