@@ -88,6 +88,14 @@ const useWebRTC = (
       });
       console.log('2. Joined to room', socketJoin);
 
+      await socket.request('setCaptureAlert', {
+        memberId: 1,
+        roomId: 1,
+        coreTimeId: 32,
+        token:
+          'eMe5VlDtuFUiRNXUY3qFxK:APA91bH0663I6mu6GWtGzJ-cwnRUTeTb0ZtfpQs6jJNUHW331EUufZGAUnuAGgaV2GjNpRGDh6ymsQQimJI1HNaMCqtEHAFxrxPmBmc05gabVxA7AiIxhPVSOXj1TvzzuLnrTymtl9W0',
+      });
+
       const data = await socket.request('getRouterRtpCapabilities');
       await loadDevice(data);
 
@@ -353,12 +361,14 @@ const useWebRTC = (
   };
 
   const handleExitRoom = async () => {
-    await socket.emit('exitRoom');
+    if (!socket.request) return;
+    const data = await socket.request('exitRoom');
+    console.log(data);
     router.back();
   };
 
   useEffect(() => {
-    if (socket) {
+    if (socket && socket.request) {
       socket.on('connect_error', handleConnectError);
       socket.on('newProducers', async (data: PeersInfo[]) => {
         handleNewProducers(data, consumeProducers, setCurMembers);
@@ -369,7 +379,16 @@ const useWebRTC = (
       socket.on('consumerClosed', (data: ConsumerId) =>
         handleConsumerClosed(data, removeStream),
       );
-      socket.on('disconnect', () => handleDisconnect(router));
+      socket.on('disconnect', async () => {
+        if (socket.request) {
+          const data = await socket.request('removeCaptureAlert', {
+            memberId: 1,
+          });
+          console.log(data);
+          router.push('/home');
+        }
+        // handleDisconnect(router);
+      });
     }
     return () => {
       if (socket) {

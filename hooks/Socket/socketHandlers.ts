@@ -61,6 +61,9 @@ export const handleConsumerClosed = (
   removeStream(data.consumer_id);
 };
 
-export const handleDisconnect = (router: NextRouter) => {
-  router.push('/home');
-};
+// export const handleDisconnect = (router: NextRouter) => {
+//   // socket.request('removeCaptureAlert', { memberId: socket.name }, (data) => {
+//   //   console.log(data)
+//   // })
+//   router.push('/home');
+// };

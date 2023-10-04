@@ -11,6 +11,10 @@ export interface MemberInfo {
   isMember: string;
 }
 
+export interface ProfileDataInfo {
+  member: ProfileInfo;
+}
+
 export interface ProfileInfo {
   imageUrl: string;
   nickname: string;

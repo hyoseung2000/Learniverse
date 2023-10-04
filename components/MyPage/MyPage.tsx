@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { getMoon, getProfile } from '@/apis/profile';
+import { getMoon } from '@/apis/profile';
+import { useGetMemberProfile } from '@/hooks/members';
 import {
   IcMoon0,
   IcMoon1,
@@ -15,23 +16,26 @@ import {
   IcProfileImage,
 } from '@/public/assets/icons';
 import { memberIdState } from '@/recoil/atom';
-import { MoonInfo, ProfileInfo } from '@/types/member';
+import { MoonInfo } from '@/types/member';
 
 import { MyPageStudyRoomList } from '../RoomList';
 
 const MyPage = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [isLeader, setIsLeader] = useState(true);
-  const [profile, setProfile] = useState<ProfileInfo>();
+  // const [profile, setProfile] = useState<ProfileInfo>();
   const [moons, setMoons] = useState<MoonInfo[]>([]);
   const [moonScores, setMoonScores] = useState<number[]>([]);
   const [isMoon, setIsMoon] = useState(false);
   const memberId = useRecoilValue(memberIdState);
 
-  const getProfileData = async () => {
-    const profileData = await getProfile(memberId);
-    setProfile(profileData);
-  };
+  const { profile } = useGetMemberProfile(memberId);
+  console.log(profile);
+
+  // const getProfileData = async () => {
+  //   const profileData = await getProfile(memberId);
+  //   setProfile(profileData);
+  // };
 
   const getMoonData = async () => {
     const moonData = await getMoon(memberId);
@@ -72,7 +76,7 @@ const MyPage = () => {
   };
 
   useEffect(() => {
-    getProfileData();
+    // getProfileData();
     getMoonData();
     getMoonScores();
   }, [isMoon]);
