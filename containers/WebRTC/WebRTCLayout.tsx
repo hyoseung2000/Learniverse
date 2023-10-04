@@ -135,7 +135,7 @@ const WebRTCLayout = ({
   };
 
   useEffect(() => {
-    capture.toggle();
+    if (!isCaptureTime) capture.toggle();
   }, [isCaptureTime]);
 
   return (
