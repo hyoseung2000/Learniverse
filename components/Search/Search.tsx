@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil';
 import { keyframes, styled } from 'styled-components';
 
 import { recommendRoomList, searchHashtag } from '@/apis/roomList';
-import { applyRoom } from '@/apis/studyroom';
+import { applyRoom, getRoomInfo } from '@/apis/studyroom';
 import {
   StContentWrapper,
   StSmallModalWrapper,
@@ -25,6 +25,7 @@ import SearchInput from './SearchInput';
 const Search = () => {
   const curMemberId = useRecoilValue(memberIdState);
   const [searchResult, setSearchResult] = useState<StudyRoomInfo[]>();
+  const [recommendResult, setRecommendResult] = useState<StudyRoomInfo[]>();
   const [searched, setSearched] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -42,13 +43,22 @@ const Search = () => {
     applyCompleteModal.toggle();
   };
 
+  const getRoomData = async (roomId: number) => {
+    const roomData = await getRoomInfo(roomId, curMemberId);
+    return roomData;
+  };
+
   const handleRecommend = async () => {
     recommendModal.toggle();
+
     setLoading(true);
-    const recommend = await recommendRoomList(curMemberId);
+    const roomIds: number[] = await recommendRoomList(curMemberId);
+    const roomDataPromises = roomIds.map((id) => getRoomData(id));
+    const rooms = await Promise.all(roomDataPromises);
+    setRecommendResult(rooms);
     setLoading(false);
-    console.log(recommend);
   };
+
   return (
     <StSearchWrapper>
       <h1>스터디 검색</h1>
@@ -101,7 +111,7 @@ const Search = () => {
             𝗫
           </StCloseBtn>
           <StRecommendWrapper>
-            <StModalContentWrapper>
+            <StRecommendModalContentWrapper>
               {loading && (
                 <StLoadingWrapper>
                   <div className="loading-animation" />
@@ -110,7 +120,23 @@ const Search = () => {
                   </p>
                 </StLoadingWrapper>
               )}
-            </StModalContentWrapper>
+              {!loading && (
+                <StRecommendRoomList>
+                  {recommendResult &&
+                    recommendResult.map((room) => (
+                      <StudyroomCard
+                        key={room.roomId}
+                        roomData={room}
+                        handleApply={
+                          room.isMember === null
+                            ? () => handleApply(room.roomId)
+                            : undefined
+                        }
+                      />
+                    ))}
+                </StRecommendRoomList>
+              )}
+            </StRecommendModalContentWrapper>
           </StRecommendWrapper>
         </LargeModal>
       </StRecommendModalWrapper>
@@ -160,16 +186,37 @@ const StCloseBtn = styled.button`
   ${({ theme }) => theme.fonts.Title1};
 `;
 
-const StCompleteModalWrapper = styled(StManageModalWrapper)``;
+const StCompleteModalWrapper = styled(StManageModalWrapper)`
+  z-index: 20;
+`;
 
 const StModalWrapper = styled(StSmallModalWrapper)``;
 
 const StModalContentWrapper = styled(StContentWrapper)``;
 
-const StRecommendModalWrapper = styled(StManageModalWrapper)``;
+const StRecommendModalWrapper = styled(StManageModalWrapper)`
+  z-index: 19;
+`;
+
+const StRecommendModalContentWrapper = styled(StContentWrapper)``;
 
 const StRecommendWrapper = styled(StSmallModalWrapper)`
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-x: auto;
+
+  width: 90%;
   height: 37.8rem;
+  margin-left: 1.5rem;
+`;
+
+const StRecommendRoomList = styled.div`
+  display: flex;
+  overflow-x: auto;
+  gap: 2rem;
+
+  padding: 2rem;
 `;
 
 const rotate = keyframes`
@@ -188,9 +235,10 @@ const StLoadingWrapper = styled.div`
   align-items: center;
   gap: 10rem;
 
-  padding-top: 13rem;
+  padding: 10rem 0 0 8rem;
 
   & > p {
+    width: 100%;
     color: ${({ theme }) => theme.colors.Learniverse_BG};
     ${({ theme }) => theme.fonts.Title5};
     font-size: 1.5rem;

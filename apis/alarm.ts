@@ -37,7 +37,6 @@ export const getCaptureTime = async (coreTimeId: number) => {
     const { data } = await media.get(
       `/getCaptureTime?coreTimeId=${coreTimeId}`,
     );
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
@@ -48,7 +47,6 @@ export const getCaptureTime = async (coreTimeId: number) => {
 export const getServerTime = async () => {
   try {
     const { data } = await media.get('/getServerTime');
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
@@ -59,7 +57,6 @@ export const getServerTime = async () => {
 export const getPresignedUrl = async (fileName: string) => {
   try {
     const data = await media.get(`/presigned-url?fileName=${fileName}`);
-    console.log(data.data);
     return data.data;
   } catch (err) {
     console.error(err);

@@ -122,10 +122,8 @@ const WebRTCLayout = ({
     const url: string = await getPresignedUrl(captureData.fileName);
     if (capturedImageFile) {
       await putFile(url, capturedImageFile);
+      await createCapture(captureData);
     }
-
-    const captureImg = await createCapture(captureData);
-    console.log(captureImg);
   };
 
   const handleSubmit = () => {
