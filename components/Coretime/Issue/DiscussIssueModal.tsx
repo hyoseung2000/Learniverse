@@ -26,7 +26,7 @@ interface Props {
 }
 
 const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
-  const memberId = useRecoilValue(memberIdState);
+  const cMemberId = useRecoilValue(memberIdState);
   const issueId = useRecoilValue(issueIdState);
   const codeRef = useRef<AceEditor>(null);
 
@@ -38,22 +38,24 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   const [title, setTitle] = useState('');
   const [descrpt, setDescrpt] = useState('');
   const [giturl, setGiturl] = useState('');
+  const [writer, setWriter] = useState<number>(1);
   const [commentList, setCommentList] = useState<DiscussInfo[]>();
   const [discussData, setDiscussData] = useState<PostDiscussInfo>();
 
   const getIssueData = async () => {
     const issueInfo: IssueInfo = await getIssueInfo(issueId);
-    console.log(issueInfo);
-    const { issueTitle, gitCode, issueDescription, issueGitUrl } = issueInfo!;
+
+    const { issueTitle, gitCode, issueDescription, issueGitUrl, memberId } =
+      issueInfo!;
     setCode(gitCode);
     setTitle(issueTitle);
     setDescrpt(issueDescription);
     setGiturl(issueGitUrl);
+    setWriter(memberId);
   };
 
   const getDiscuss = async () => {
     const discussInfo = await getDiscussions(issueId);
-    console.log(discussInfo);
     setCommentList(discussInfo);
   };
 
@@ -78,8 +80,9 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   };
 
   const handleCreateComment = async () => {
-    console.log(index, suggestCode);
     await postDiscuss(discussData!);
+    setSuggestCode('');
+    handleCancel();
   };
 
   const changeData = () => {
@@ -98,12 +101,10 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
     getDiscuss();
   }, []);
 
-  useEffect(() => {}, [isComment]);
-
   useEffect(() => {
     setDiscussData({
       issueId,
-      memberId,
+      memberId: cMemberId,
       issueOpinion: suggestCode,
       issueOpinionLine: index,
     });
@@ -167,6 +168,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                     coderef={codeRef}
                     key={comment.opinionId}
                     commentInfo={comment}
+                    writer={writer}
                   />
                 ))}
             </StComment>
