@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { styled } from 'styled-components';
+import { keyframes, styled } from 'styled-components';
 
 import { recommendRoomList, searchHashtag } from '@/apis/roomList';
-import { applyRoom } from '@/apis/studyroom';
+import { applyRoom, getRoomInfo } from '@/apis/studyroom';
 import {
   StContentWrapper,
   StSmallModalWrapper,
@@ -14,7 +14,7 @@ import { memberIdState } from '@/recoil/atom';
 import { StudyRoomInfo } from '@/types/studyroom';
 
 import { ConfirmButton, PurpleButton } from '../Common/Button';
-import { SmallModal } from '../Common/Modal';
+import { LargeModal, SmallModal } from '../Common/Modal';
 import { StudyroomCard } from '../RoomCard';
 import {
   StManageModalWrapper,
@@ -25,9 +25,12 @@ import SearchInput from './SearchInput';
 const Search = () => {
   const curMemberId = useRecoilValue(memberIdState);
   const [searchResult, setSearchResult] = useState<StudyRoomInfo[]>();
+  const [recommendResult, setRecommendResult] = useState<StudyRoomInfo[]>();
   const [searched, setSearched] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const applyCompleteModal = useModal();
+  const recommendModal = useModal();
 
   const handleSearch = async (searchInput: string) => {
     setSearched(true);
@@ -40,10 +43,22 @@ const Search = () => {
     applyCompleteModal.toggle();
   };
 
-  const handleRecommend = async () => {
-    const recommend = await recommendRoomList(curMemberId);
-    console.log(recommend);
+  const getRoomData = async (roomId: number) => {
+    const roomData = await getRoomInfo(roomId, curMemberId);
+    return roomData;
   };
+
+  const handleRecommend = async () => {
+    recommendModal.toggle();
+
+    setLoading(true);
+    const roomIds: number[] = await recommendRoomList(curMemberId);
+    const roomDataPromises = roomIds.map((id) => getRoomData(id));
+    const rooms = await Promise.all(roomDataPromises);
+    setRecommendResult(rooms);
+    setLoading(false);
+  };
+
   return (
     <StSearchWrapper>
       <h1>스터디 검색</h1>
@@ -86,6 +101,45 @@ const Search = () => {
           </StModalWrapper>
         </SmallModal>
       </StCompleteModalWrapper>
+
+      <StRecommendModalWrapper $showing={recommendModal.isShowing}>
+        <LargeModal
+          title="나와 맞는 스터디 추천받기"
+          isShowing={recommendModal.isShowing}
+        >
+          <StCloseBtn type="button" onClick={recommendModal.toggle}>
+            𝗫
+          </StCloseBtn>
+          <StRecommendWrapper>
+            <StRecommendModalContentWrapper>
+              {loading && (
+                <StLoadingWrapper>
+                  <div className="loading-animation" />
+                  <p>
+                    관심사와 희망 언어를 바탕으로 적합한 스터디를 찾고 있어요.
+                  </p>
+                </StLoadingWrapper>
+              )}
+              {!loading && (
+                <StRecommendRoomList>
+                  {recommendResult &&
+                    recommendResult.map((room) => (
+                      <StudyroomCard
+                        key={room.roomId}
+                        roomData={room}
+                        handleApply={
+                          room.isMember === null
+                            ? () => handleApply(room.roomId)
+                            : undefined
+                        }
+                      />
+                    ))}
+                </StRecommendRoomList>
+              )}
+            </StRecommendModalContentWrapper>
+          </StRecommendWrapper>
+        </LargeModal>
+      </StRecommendModalWrapper>
     </StSearchWrapper>
   );
 };
@@ -124,8 +178,80 @@ const StRoomListWrapper = styled(StMyPageRoomListWrapper)`
   }
 `;
 
-const StCompleteModalWrapper = styled(StManageModalWrapper)``;
+const StCloseBtn = styled.button`
+  position: absolute;
+  top: 1rem;
+  right: 3rem;
+
+  ${({ theme }) => theme.fonts.Title1};
+`;
+
+const StCompleteModalWrapper = styled(StManageModalWrapper)`
+  z-index: 20;
+`;
 
 const StModalWrapper = styled(StSmallModalWrapper)``;
 
 const StModalContentWrapper = styled(StContentWrapper)``;
+
+const StRecommendModalWrapper = styled(StManageModalWrapper)`
+  z-index: 19;
+`;
+
+const StRecommendModalContentWrapper = styled(StContentWrapper)``;
+
+const StRecommendWrapper = styled(StSmallModalWrapper)`
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-x: auto;
+
+  width: 90%;
+  height: 37.8rem;
+  margin-left: 1.5rem;
+`;
+
+const StRecommendRoomList = styled.div`
+  display: flex;
+  overflow-x: auto;
+  gap: 2rem;
+
+  padding: 2rem;
+`;
+
+const rotate = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+`;
+
+const StLoadingWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10rem;
+
+  padding: 10rem 0 0 8rem;
+
+  & > p {
+    width: 100%;
+    color: ${({ theme }) => theme.colors.Learniverse_BG};
+    ${({ theme }) => theme.fonts.Title5};
+    font-size: 1.5rem;
+  }
+  & > .loading-animation {
+    content: '';
+
+    width: 5rem;
+    height: 5rem;
+
+    border: 1rem solid rgba(156, 156, 156, 0.3);
+    border-radius: 50%;
+    border-top: 1rem solid ${({ theme }) => theme.colors.Blue};
+    animation: ${rotate} 1s linear infinite;
+  }
+`;
