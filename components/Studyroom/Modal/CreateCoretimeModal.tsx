@@ -37,7 +37,6 @@ const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
     if ((coreHr === 0 && coreMin === 0) || (coreHr === 24 && coreMin === 30)) {
       alert('코어타임은 최소 30분 - 최대 24시간 내로 지정하세요.');
     } else {
-      await createCoretime(coreTimeInfo!);
       const { coreTimeId }: CoreTimeIdInfo = await createCoretime(
         coreTimeInfo!,
       );
