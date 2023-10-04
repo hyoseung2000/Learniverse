@@ -22,13 +22,15 @@ const IssueCard = ({ core, handleDiscuss, issueInfo }: Props) => {
 
   return (
     <>
-      <StIssueWrapper>
+      <StIssueWrapper $issueOpen={issueOpen}>
         <div>
           <IcIssueLogo
             type="button"
             onClick={() => {
               setIssueID(issueId);
-              handleDiscuss();
+              if (issueOpen) {
+                handleDiscuss();
+              }
             }}
           />
           <StContent $core={core}>
@@ -58,7 +60,7 @@ const IssueCard = ({ core, handleDiscuss, issueInfo }: Props) => {
 
 export default IssueCard;
 
-const StIssueWrapper = styled.div`
+const StIssueWrapper = styled.div<{ $issueOpen: boolean }>`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -75,7 +77,7 @@ const StIssueWrapper = styled.div`
   }
 
   & > div > svg {
-    cursor: pointer;
+    cursor: ${({ $issueOpen }) => ($issueOpen ? 'pointer' : 'default')};
   }
 
   & > hr {
