@@ -51,7 +51,6 @@ const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
         coreTimeInfo!,
       );
       if (coreTimeId) {
-        getMemberTokens();
         const endDate = new Date(startDate);
         endDate.setHours(startDate.getHours() + coreHr);
         endDate.setMinutes(startDate.getMinutes() + coreMin);
@@ -104,9 +103,9 @@ const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
     });
   }, [startDate, coreHr, coreMin, capture]);
 
-  // useEffect(() => {
-  //   getMemberTokens();
-  // }, []);
+  useEffect(() => {
+    getMemberTokens();
+  }, []);
 
   return (
     isShowing && (
