@@ -117,6 +117,7 @@ export interface IssueInfo {
   issueGitUrl: string;
   gitFileName: string;
   gitCode: string;
+  issueOpen: boolean;
   createdDate: Date;
 }
 
@@ -127,4 +128,20 @@ export interface PostIssueInfo {
   issueDescription: string;
   issueGitUrl: string;
   gitFileName: string;
+}
+
+export interface DiscussInfo {
+  opinionId: number;
+  issueId: number;
+  memberId: number;
+  issueOpinion: string;
+  issueOpinionLine: number;
+  createdDate: Date;
+}
+
+export interface PostDiscussInfo {
+  issueId: number;
+  memberId: number;
+  issueOpinion: string;
+  issueOpinionLine: number;
 }

@@ -1,46 +1,71 @@
 import { Range } from 'ace-builds';
-import { RefObject } from 'react';
+import { RefObject, useEffect, useState } from 'react';
 import AceEditor from 'react-ace';
+import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
+// import { StateBtn, StateDeleteBtn } from '@/components/Common/Button';
 import { IcChar } from '@/public/assets/icons';
+import { memberIdState } from '@/recoil/atom';
+import { DiscussInfo } from '@/types/studyroom';
+import { getNickName } from '@/utils/getNicknames';
 
 interface Props {
+  commentInfo: DiscussInfo;
   coderef: RefObject<AceEditor>;
-  code: string;
-  index: number;
-  handleHighlight: () => void;
 }
 
-const CommentCard = ({ coderef, code, index, handleHighlight }: Props) => {
-  const isWriter = true;
+const CommentCard = ({ commentInfo, coderef }: Props) => {
+  const { memberId, issueOpinion, issueOpinionLine } = commentInfo;
+  const cMemberId = useRecoilValue(memberIdState);
+  const [memberNickname, setMemberNickname] = useState('');
+
+  const setNickname = async (): Promise<void> => {
+    const nickname = await getNickName(memberId.toString());
+    setMemberNickname(nickname);
+  };
 
   const handleModify = () => {
     if (coderef.current) {
-      const modifyRange = new Range(index, 0, index, Infinity);
-      coderef.current.editor.session.replace(modifyRange, code);
+      const modifyRange = new Range(
+        issueOpinionLine,
+        0,
+        issueOpinionLine,
+        Infinity,
+      );
+      coderef.current.editor.session.replace(modifyRange, issueOpinion);
       const changes = coderef.current.editor.getValue();
       console.log(changes);
-      // setCode(changes);
     }
   };
 
+  useEffect(() => {
+    setNickname();
+    console.log(
+      cMemberId,
+      memberId,
+      cMemberId.toString() === memberId.toString(),
+    );
+  }, []);
+
   return (
-    <StComment onClick={handleHighlight}>
+    <StComment>
       <IcChar />
       <div>
-        <h3>유지니</h3>
-        <p>난 이렇게 하니까 되던데?</p>
-        <code>{code}</code>
+        <h3>{memberNickname}</h3>
+        {/* <p>{issueOpinion}</p> */}
+        <p>Line : {issueOpinionLine + 1}</p>
+        <pre>
+          <code>{issueOpinion}</code>
+        </pre>
       </div>
-      {isWriter ? (
-        <button type="button" onClick={handleModify}>
-          반영
-        </button>
+      {cMemberId.toString === memberId.toString ? (
+        // eslint-disable-next-line react/jsx-boolean-value
+        <StButton $isPersist={true} onClick={handleModify}>
+          수락
+        </StButton>
       ) : (
-        <button type="button" disabled>
-          비활
-        </button>
+        <StButton $isPersist={false}>거절</StButton>
       )}
     </StComment>
   );
@@ -64,16 +89,21 @@ const StComment = styled.div`
     flex-direction: column;
     gap: 0.5rem;
   }
-
-  & > button {
-    width: 3.5rem;
-    height: 2.2rem;
-
-    position: absolute;
-    right: 1rem;
-
-    border-radius: 0.6rem;
-    background-color: ${({ theme }) => theme.colors.Green};
+  & > div > p {
+    color: ${({ theme }) => theme.colors.Purple3};
     ${({ theme }) => theme.fonts.Body6};
   }
+`;
+
+const StButton = styled.button<{ $isPersist: boolean }>`
+  width: 3.5rem;
+  height: 2.2rem;
+
+  position: absolute;
+  right: 1rem;
+
+  border-radius: 0.6rem;
+
+  ${({ theme }) => theme.fonts.Body6};
+  background-color: ${({ $isPersist }) => ($isPersist ? '#0ACF84' : '#CFCED3')};
 `;
