@@ -73,10 +73,8 @@ const WebRTCVideo = ({
     const url: string = await getPresignedUrl(captureData.fileName);
     if (capturedImage) {
       await putFile(url, capturedImage);
+      await createCapture(captureData);
     }
-
-    const capture = await createCapture(captureData);
-    console.log(capture);
   };
 
   useEffect(() => {

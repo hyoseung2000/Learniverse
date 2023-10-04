@@ -57,6 +57,7 @@ export const getCoreEndtime = async (coreTimeId: number) => {
 export const putFile = async (presignedUrl: string, file: File) => {
   try {
     const data = await axios.put(presignedUrl, file);
+    console.log('putFile', data);
     return data;
   } catch (error) {
     console.error(error);
