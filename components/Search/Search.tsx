@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { styled } from 'styled-components';
+import { keyframes, styled } from 'styled-components';
 
 import { recommendRoomList, searchHashtag } from '@/apis/roomList';
 import { applyRoom } from '@/apis/studyroom';
@@ -104,7 +104,7 @@ const Search = () => {
             <StModalContentWrapper>
               {loading && (
                 <StLoadingWrapper>
-                  <div>로딩중</div>
+                  <div className="loading-animation" />
                   <p>
                     관심사와 희망 언어를 바탕으로 적합한 스터디를 찾고 있어요.
                   </p>
@@ -172,4 +172,38 @@ const StRecommendWrapper = styled(StSmallModalWrapper)`
   height: 37.8rem;
 `;
 
-const StLoadingWrapper = styled.div``;
+const rotate = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+`;
+
+const StLoadingWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10rem;
+
+  padding-top: 13rem;
+
+  & > p {
+    color: ${({ theme }) => theme.colors.Learniverse_BG};
+    ${({ theme }) => theme.fonts.Title5};
+    font-size: 1.5rem;
+  }
+  & > .loading-animation {
+    content: '';
+
+    width: 5rem;
+    height: 5rem;
+
+    border: 1rem solid rgba(156, 156, 156, 0.3);
+    border-radius: 50%;
+    border-top: 1rem solid ${({ theme }) => theme.colors.Blue};
+    animation: ${rotate} 1s linear infinite;
+  }
+`;
