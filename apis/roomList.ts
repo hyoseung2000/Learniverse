@@ -105,8 +105,8 @@ export const searchHashtag = async (hashtag: string, memberId: number) => {
 export const recommendRoomList = async (memberId: number) => {
   try {
     const { data } = await ai.get(`/recommendRoom?memberId=${memberId}`);
-    console.log(data);
-    return data;
+    console.log(data.data);
+    return data.data;
   } catch (err) {
     console.error(err);
     throw err;

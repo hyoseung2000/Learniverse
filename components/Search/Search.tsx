@@ -14,7 +14,7 @@ import { memberIdState } from '@/recoil/atom';
 import { StudyRoomInfo } from '@/types/studyroom';
 
 import { ConfirmButton, PurpleButton } from '../Common/Button';
-import { SmallModal } from '../Common/Modal';
+import { LargeModal, SmallModal } from '../Common/Modal';
 import { StudyroomCard } from '../RoomCard';
 import {
   StManageModalWrapper,
@@ -26,8 +26,10 @@ const Search = () => {
   const curMemberId = useRecoilValue(memberIdState);
   const [searchResult, setSearchResult] = useState<StudyRoomInfo[]>();
   const [searched, setSearched] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const applyCompleteModal = useModal();
+  const recommendModal = useModal();
 
   const handleSearch = async (searchInput: string) => {
     setSearched(true);
@@ -41,7 +43,10 @@ const Search = () => {
   };
 
   const handleRecommend = async () => {
+    recommendModal.toggle();
+    setLoading(true);
     const recommend = await recommendRoomList(curMemberId);
+    setLoading(false);
     console.log(recommend);
   };
   return (
@@ -86,6 +91,29 @@ const Search = () => {
           </StModalWrapper>
         </SmallModal>
       </StCompleteModalWrapper>
+
+      <StRecommendModalWrapper $showing={recommendModal.isShowing}>
+        <LargeModal
+          title="나와 맞는 스터디 추천받기"
+          isShowing={recommendModal.isShowing}
+        >
+          <StCloseBtn type="button" onClick={recommendModal.toggle}>
+            𝗫
+          </StCloseBtn>
+          <StRecommendWrapper>
+            <StModalContentWrapper>
+              {loading && (
+                <StLoadingWrapper>
+                  <div>로딩중</div>
+                  <p>
+                    관심사와 희망 언어를 바탕으로 적합한 스터디를 찾고 있어요.
+                  </p>
+                </StLoadingWrapper>
+              )}
+            </StModalContentWrapper>
+          </StRecommendWrapper>
+        </LargeModal>
+      </StRecommendModalWrapper>
     </StSearchWrapper>
   );
 };
@@ -124,8 +152,24 @@ const StRoomListWrapper = styled(StMyPageRoomListWrapper)`
   }
 `;
 
+const StCloseBtn = styled.button`
+  position: absolute;
+  top: 1rem;
+  right: 3rem;
+
+  ${({ theme }) => theme.fonts.Title1};
+`;
+
 const StCompleteModalWrapper = styled(StManageModalWrapper)``;
 
 const StModalWrapper = styled(StSmallModalWrapper)``;
 
 const StModalContentWrapper = styled(StContentWrapper)``;
+
+const StRecommendModalWrapper = styled(StManageModalWrapper)``;
+
+const StRecommendWrapper = styled(StSmallModalWrapper)`
+  height: 37.8rem;
+`;
+
+const StLoadingWrapper = styled.div``;
