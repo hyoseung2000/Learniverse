@@ -16,6 +16,30 @@ export const createToken = async (memberId: number, token: string) => {
   }
 };
 
+export const getTokenByMemberId = async (memberId: number) => {
+  try {
+    const { data } = await client.get(
+      `room/getTokenByMemberId?memberId=${memberId}`,
+    );
+    console.log(data.data);
+    return data.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const getTokenByRoomId = async (roomId: number) => {
+  try {
+    const { data } = await client.get(`room/tokenList?roomId=${roomId}`);
+    console.log(data.data);
+    return data.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
 export const createCaptureTime = async (
   createCaptureTimeInfo: CreateCaptureTimeInfo,
 ) => {
