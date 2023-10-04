@@ -1,10 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import { styled } from 'styled-components';
 
-import { getPresignedUrl } from '@/apis/alarm';
-import { createCapture, putFile } from '@/apis/coretimes';
 import { IcCoreChar } from '@/public/assets/icons';
-import { formatHHMMSS } from '@/utils/getFormattedTime';
 
 interface WebRTCVideoProps {
   roomId: string;
@@ -57,25 +54,25 @@ const WebRTCVideo = ({
     setCapturedImageFile(file);
     return file;
   };
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleUploadImage = async () => {
-    const capturedImage = captureAndSaveVideoFrame();
-    const now = new Date();
 
-    const captureData = {
-      coreTimeId: Number(roomId),
-      memberId: Number(memberId),
-      fileName: `coretime-${roomId}-${nickname}-${formatHHMMSS(
-        now.toString(),
-      )}.png`,
-    };
+  // const handleUploadImage = async () => {
+  //   const capturedImage = captureAndSaveVideoFrame();
+  //   const now = new Date();
 
-    const url: string = await getPresignedUrl(captureData.fileName);
-    if (capturedImage) {
-      await putFile(url, capturedImage);
-      await createCapture(captureData);
-    }
-  };
+  //   const captureData = {
+  //     coreTimeId: Number(roomId),
+  //     memberId: Number(memberId),
+  //     fileName: `coretime-${roomId}-${nickname}-${formatHHMMSS(
+  //       now.toString(),
+  //     )}.png`,
+  //   };
+
+  //   const url: string = await getPresignedUrl(captureData.fileName);
+  //   if (capturedImage) {
+  //     await putFile(url, capturedImage);
+  //     await createCapture(captureData);
+  //   }
+  // };
 
   useEffect(() => {
     if (!viewRef.current) return;
@@ -102,9 +99,9 @@ const WebRTCVideo = ({
       />
       <IcCoreChar />
       <StName>{nickname}</StName>
-      <button type="button" onClick={handleUploadImage}>
+      {/* <button type="button" onClick={handleUploadImage}>
         Save Image
-      </button>
+      </button> */}
     </StVideoWrapper>
   );
 };
