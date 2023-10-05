@@ -21,6 +21,11 @@ export const fcmTokenState = atom<string>({
   effects_UNSTABLE: [persistAtom],
 });
 
+export const captureTimeState = atom<boolean>({
+  key: `captureTimeState`,
+  default: false,
+});
+
 export const encodedUrlState = atom<string>({
   key: `encodedUrl`,
   default: '',
