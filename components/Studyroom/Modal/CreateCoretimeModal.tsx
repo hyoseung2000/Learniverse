@@ -5,13 +5,12 @@ import DatePicker from 'react-datepicker';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { createCaptureTime, getTokenByRoomId } from '@/apis/alarm';
+import { createCaptureTime } from '@/apis/alarm';
 import { createCoretime } from '@/apis/coretimes';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { SmallModal } from '@/components/Common/Modal';
 import useModal from '@/hooks/useModal';
 import { roomIdState } from '@/recoil/atom';
-import { MemberTokenInfo } from '@/types/member';
 import { CoreTimeIdInfo, PostCoreTimeInfo } from '@/types/studyroom';
 
 import CompleteCreateCoreModal from './CompleteCreateCoreModal';
