@@ -20,6 +20,10 @@ export interface ProfileInfo {
   nickname: string;
 }
 
+export interface MoonDataInfo {
+  moons: MoonInfo[];
+}
+
 export interface MoonInfo {
   moonDate: Date;
   moonScore: number;

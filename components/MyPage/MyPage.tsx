@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { getMoon } from '@/apis/profile';
-import { useGetMemberProfile } from '@/hooks/members';
+import { useGetMemberProfile, useGetMoon } from '@/hooks/members';
 import {
   IcMoon0,
   IcMoon1,
@@ -16,32 +15,26 @@ import {
   IcProfileImage,
 } from '@/public/assets/icons';
 import { memberIdState } from '@/recoil/atom';
-import { MoonInfo } from '@/types/member';
 
 import { MyPageStudyRoomList } from '../RoomList';
 
 const MyPage = () => {
+  const memberId = useRecoilValue(memberIdState);
   const [activeTab, setActiveTab] = useState(0);
   const [isLeader, setIsLeader] = useState(true);
-  const [moons, setMoons] = useState<MoonInfo[]>([]);
   const [moonScores, setMoonScores] = useState<number[]>([]);
-  const [isMoon, setIsMoon] = useState(false);
-  const memberId = useRecoilValue(memberIdState);
 
   const { imgUrl, nickname } = useGetMemberProfile(memberId);
-
-  const getMoonData = async () => {
-    const moonData = await getMoon(memberId);
-    setMoons(moonData);
-    setIsMoon(true);
-  };
+  const { moons, isLoading } = useGetMoon(memberId);
 
   const getMoonScores = () => {
-    const scores = moons.map((moon) => moon.moonScore);
+    const scores = moons?.map((moon) => moon.moonScore) || [];
     setMoonScores(scores);
   };
 
   const matchMoonIcons = () => {
+    if (!Array.isArray(moonScores)) return [];
+
     const reversedMoonScores = [...moonScores].reverse();
 
     return reversedMoonScores.map((score, index) => {
@@ -69,9 +62,8 @@ const MyPage = () => {
   };
 
   useEffect(() => {
-    getMoonData();
     getMoonScores();
-  }, [isMoon]);
+  }, [isLoading]);
 
   useEffect(() => {
     setIsLeader(activeTab === 0);
