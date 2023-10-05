@@ -9,7 +9,9 @@ import {
 } from 'mediasoup-client/lib/types';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 
+import { fcmTokenState } from '@/recoil/atom';
 import {
   ChattingInfo,
   ConsumeInfo,
@@ -37,6 +39,7 @@ const useWebRTC = (
   socket: CustomSocket,
 ) => {
   const router = useRouter();
+  const fcmToken = useRecoilValue(fcmTokenState);
 
   const [curMembers, setCurMembers] = useState<RoomPeerInfo[]>([]);
   const [curDevice, setCurDevice] = useState<Device>();
@@ -91,8 +94,7 @@ const useWebRTC = (
         memberId: curName,
         roomId: 1,
         coreTimeId: curRoomId,
-        token:
-          'fxyfs5Y7GZiaQvqj211DqT:APA91bE_8JAcNIV1LS1hWR7P3gyQcWYVYRN3HukyH-6XAZ_RkP1B7yzGrgjflA1WWV4l9yfNGhLDIGVEvTVq-M-fFkoXJhuHhmK8EbEXmtyQ8ZqEhMZugA_LiMHVEKjzbJN9_u72wuai',
+        token: fcmToken,
       });
 
       const data = await socket.request('getRouterRtpCapabilities');
