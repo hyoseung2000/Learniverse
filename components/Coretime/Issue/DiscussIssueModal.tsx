@@ -11,7 +11,7 @@ import AceEditor from 'react-ace';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { getDiscussions, getIssueInfo, postDiscuss } from '@/apis/studyroom';
+import { getDiscussions, getIssueInfo, postDiscuss } from '@/apis/issue';
 import { StateDeleteBtn } from '@/components/Common/Button';
 import { SquareModal } from '@/components/Common/Modal';
 import { IcDiscussLogo } from '@/public/assets/icons';

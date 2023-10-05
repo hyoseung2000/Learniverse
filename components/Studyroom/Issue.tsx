@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { getIssueList } from '@/apis/studyroom';
+import { getIssueList } from '@/apis/issue';
 import useModal from '@/hooks/useModal';
 import { IcPlusBtn, IcToggleOff, IcToggleOn } from '@/public/assets/icons';
 import { roomIdState } from '@/recoil/atom';
@@ -56,7 +56,7 @@ const Issue = () => {
           {issueList &&
             issueList.map(
               (issue: IssueInfo) =>
-                (showClosed || issue.issueOpen) && (
+                showClosed !== issue.issueOpen && (
                   <IssueCard
                     core={false}
                     key={issue.issueId}

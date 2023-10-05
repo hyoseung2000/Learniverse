@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { getIssueList } from '@/apis/studyroom';
+import { getIssueList } from '@/apis/issue';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { LargeModal } from '@/components/Common/Modal';
 import IssueCard from '@/components/Studyroom/IssueCard';
