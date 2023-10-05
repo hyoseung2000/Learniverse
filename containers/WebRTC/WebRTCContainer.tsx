@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-restricted-globals */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 import { onBackgroundMessage } from 'firebase/messaging/sw';
-/* eslint-disable @typescript-eslint/naming-convention */
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -18,13 +18,17 @@ import {
   useWebRTC,
 } from '@/hooks/Socket';
 import useModal from '@/hooks/useModal';
-import { usePushNotification } from '@/hooks/usePushNotification';
 import useToggle from '@/hooks/useToggle';
 import { memberIdState } from '@/recoil/atom';
 import { getNickName } from '@/utils/getNicknames';
 
 import WebRTCLayout from './WebRTCLayout';
 
+declare global {
+  interface Window {
+    registration: any;
+  }
+}
 const WebRTCContainer = () => {
   const router = useRouter();
   const { room_id } = router.query;
@@ -60,7 +64,6 @@ const WebRTCContainer = () => {
   );
   const coreIssue = useModal();
 
-  const pushNotification = usePushNotification();
   const [isCaptureTime, setIsCaptureTime] = useState(false);
 
   const setCoreEndTime = async () => {
@@ -143,29 +146,26 @@ const WebRTCContainer = () => {
     onMessage(messaging, (payload) => {
       console.log('[Foreground]Message received. ', payload);
       setIsCaptureTime((prev) => !prev);
-      pushNotification?.fireNotification('스크린이 캡처되었습니다!', {
-        body: '60초 이내에 전송해주세요!',
-      });
     });
 
-    // onBackgroundMessage(messaging, (payload) => {
-    //   console.log(
-    //     '[firebase-messaging-sw.js] Received background message ',
-    //     payload,
-    //   );
+    onBackgroundMessage(messaging, (payload) => {
+      console.log(
+        '[firebase-messaging-sw.js] Received background message ',
+        payload,
+      );
+      // });
 
-    //   const notificationTitle = '[Background] 스크린이 캡처되었습니다!';
-    //   const notificationOptions = {
-    //     body: payload,
-    //     icon: '/public/favicon-32x32.png',
-    //   };
+      const notificationTitle = '[Background] 스크린이 캡처되었습니다!';
+      const notificationOptions = {
+        body: payload,
+        icon: '/public/favicon-32x32.png',
+      };
 
-    //   self.registration.showNotification(
-    //     notificationTitle,
-    //     notificationOptions,
-    //   );
-    // }
-    // );
+      self.registration.showNotification(
+        notificationTitle,
+        notificationOptions,
+      );
+    });
   };
 
   useEffect(() => {
@@ -189,11 +189,6 @@ const WebRTCContainer = () => {
 
   useEffect(() => {
     askPermission();
-    if (pushNotification) {
-      pushNotification.fireNotification('스크린이 캡처되었습니다!', {
-        body: '60초 이내에 전송해주세요!',
-      });
-    }
   }, []);
 
   return (
