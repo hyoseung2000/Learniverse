@@ -3,14 +3,14 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { applyRoom, decodeRoomId, getRoomInfo } from '@/apis/studyroom';
+import { applyRoom, decodeRoomId } from '@/apis/studyroom';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { LargeModal, SmallModal } from '@/components/Common/Modal';
 import { StudyroomCard } from '@/components/RoomCard';
+import { useGetRoomInfo } from '@/hooks/StudyRooms';
 import useModal from '@/hooks/useModal';
 import { IcCharacterCheck } from '@/public/assets/icons';
 import { memberIdState } from '@/recoil/atom';
-import { StudyRoomInfo } from '@/types/studyroom';
 
 interface ApplyContainerProps {
   url: string;
@@ -19,8 +19,9 @@ interface ApplyContainerProps {
 const ApplyContainer = ({ url }: ApplyContainerProps) => {
   const router = useRouter();
   const [roomId, setRoomId] = useState<number>(0);
-  const [roomInfo, setRoomInfo] = useState<StudyRoomInfo>();
   const memberId = useRecoilValue(memberIdState);
+
+  const { roomInfo } = useGetRoomInfo(roomId, memberId);
 
   const applyModal = useModal();
   const applyCompleteModal = useModal();
@@ -28,12 +29,6 @@ const ApplyContainer = ({ url }: ApplyContainerProps) => {
   const decodeId = async () => {
     const decodedUrl = await decodeRoomId(url);
     setRoomId(decodedUrl);
-  };
-
-  const getRoomData = async () => {
-    if (roomId === 0) return;
-    const roomData = await getRoomInfo(roomId, memberId);
-    setRoomInfo(roomData);
   };
 
   const handleApply = async () => {
@@ -45,7 +40,6 @@ const ApplyContainer = ({ url }: ApplyContainerProps) => {
   useEffect(() => {
     applyModal.setShowing(true);
     decodeId();
-    getRoomData();
   }, [roomId]);
 
   return (
