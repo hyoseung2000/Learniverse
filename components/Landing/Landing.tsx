@@ -14,9 +14,7 @@ const Landing = () => {
 
   const handleLoginClick = async () => {
     setShowInput(true);
-    // const data = await getLogin();
-    // console.log(data);
-    // window.location.href = `https://learniverse-main.kro.kr/oauth2/authorization/github`;
+    window.location.href = `https://learniverse-main.kro.kr/oauth2/authorization/github`;
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

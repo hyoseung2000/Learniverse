@@ -21,7 +21,6 @@ const DeleteCoretimeModal = ({
   const { coreStartTime, coreEndTime, coreTimeId } = coretimeInfo;
 
   const handleDeleteCoretime = async () => {
-    console.log(coreTimeId);
     await DeleteCoretime(coreTimeId);
     handleCancel();
   };
@@ -32,11 +31,11 @@ const DeleteCoretimeModal = ({
         <StDeleteModalWrapper>
           <StCommentWrapper>
             <IcCharacterX />
-            <p>
+            <div>
               {changeDateFormat(coreStartTime.toString())} -
               {changeDateFormat(coreEndTime.toString())}
               <p>해당 코어타임을 삭제하시겠습니까?</p>
-            </p>
+            </div>
           </StCommentWrapper>
           <StBtnWrapper>
             <ConfirmButton btnName="삭제하기" onClick={handleDeleteCoretime} />
@@ -71,14 +70,14 @@ const StCommentWrapper = styled.div`
   width: 100%;
   margin: 1rem;
 
-  & > p {
+  & > div {
     margin-top: 5rem;
     margin-left: 2rem;
 
     color: ${({ theme }) => theme.colors.Learniverse_BG};
     ${({ theme }) => theme.fonts.Body2};
   }
-  & > p > p {
+  & > div > p {
     color: ${({ theme }) => theme.colors.Learniverse_BG};
     ${({ theme }) => theme.fonts.Body2};
   }
