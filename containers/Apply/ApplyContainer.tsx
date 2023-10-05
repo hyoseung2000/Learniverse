@@ -7,6 +7,7 @@ import { applyRoom, decodeRoomId } from '@/apis/studyroom';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { LargeModal, SmallModal } from '@/components/Common/Modal';
 import { StudyroomCard } from '@/components/RoomCard';
+import { StudyroomCardSkeleton } from '@/components/RoomCard/Skeleton';
 import { useGetRoomInfo } from '@/hooks/StudyRooms';
 import useModal from '@/hooks/useModal';
 import { IcCharacterCheck } from '@/public/assets/icons';
@@ -47,8 +48,10 @@ const ApplyContainer = ({ url }: ApplyContainerProps) => {
       <LargeModal isShowing={applyModal.isShowing} title="스터디룸 참여">
         <StRoomCardWrapper>
           <p>스터디룸에 참여하시려면 참여 버튼을 눌러주세요.</p>
-          {roomInfo && (
+          {roomInfo ? (
             <StudyroomCard roomData={roomInfo} handleApply={handleApply} />
+          ) : (
+            <StudyroomCardSkeleton />
           )}
           <CancelButton
             btnName="취소"
