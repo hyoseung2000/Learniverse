@@ -8,8 +8,9 @@ import { memberIdState } from '@/recoil/atom';
 import { PurpleButton } from '../Common/Button';
 import AddStudyroom from '../RoomCard/AddStudyroom';
 import StudyroomCard from '../RoomCard/StudyroomCard';
+import { StudyroomListSkeleton } from './Skeleton';
 
-const MyStudyroomList = () => {
+export const MyStudyroomList = () => {
   const router = useRouter();
   const memberId = useRecoilValue(memberIdState);
 
@@ -26,27 +27,31 @@ const MyStudyroomList = () => {
           }}
         />
       </StHomeTitle>
-      <StStudyroomList>
-        <AddStudyroom />
-        {myStudyRoomList?.pinRooms &&
-          myStudyRoomList.pinRooms.map((room) => (
-            <StudyroomCard
-              key={room.roomId}
-              roomData={room}
-              isPinned
-              isMyroom
-            />
-          ))}
-        {myStudyRoomList?.rooms &&
-          myStudyRoomList.rooms.map((room) => (
-            <StudyroomCard
-              key={room.roomId}
-              roomData={room}
-              isPinned={false}
-              isMyroom
-            />
-          ))}
-      </StStudyroomList>
+      {myStudyRoomList ? (
+        <StStudyroomList>
+          <AddStudyroom />
+          {myStudyRoomList.pinRooms &&
+            myStudyRoomList.pinRooms.map((room) => (
+              <StudyroomCard
+                key={room.roomId}
+                roomData={room}
+                isPinned
+                isMyroom
+              />
+            ))}
+          {myStudyRoomList.rooms &&
+            myStudyRoomList.rooms.map((room) => (
+              <StudyroomCard
+                key={room.roomId}
+                roomData={room}
+                isPinned={false}
+                isMyroom
+              />
+            ))}
+        </StStudyroomList>
+      ) : (
+        <StudyroomListSkeleton />
+      )}
     </StStudyroomListWrapper>
   );
 };
