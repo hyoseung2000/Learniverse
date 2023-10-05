@@ -1,13 +1,7 @@
 import { getApps, initializeApp } from 'firebase/app';
-import { getMessaging, onMessage } from 'firebase/messaging';
 import { useEffect } from 'react';
-import { useSetRecoilState } from 'recoil';
 
-import { captureTimeState } from '@/recoil/atom';
-
-export const useFCMPushAlarm = () => {
-  const setIsCaptureTime = useSetRecoilState(captureTimeState);
-
+const useFirebaseInit = () => {
   useEffect(() => {
     if (!getApps().length) {
       initializeApp({
@@ -20,14 +14,7 @@ export const useFCMPushAlarm = () => {
         measurementId: 'G-PKVGVW8D2X',
       });
     }
-
-    const messaging = getMessaging();
-
-    const unsubscribe = onMessage(messaging, (payload) => {
-      console.log('[Foreground]Message received. ', payload);
-      setIsCaptureTime((prev) => !prev);
-    });
-
-    return () => unsubscribe();
   }, []);
 };
+
+export default useFirebaseInit;

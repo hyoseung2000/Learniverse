@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import { getCoreEndtime } from '@/apis/coretimes';
+import { useFCMPushAlarm } from '@/hooks/FCM';
 import {
   useChatHandler,
   useSocketConnection,
   useVideoSelector,
   useWebRTC,
 } from '@/hooks/Socket';
-import { useFCMPushAlarm } from '@/hooks/useFCMPushAlarm';
 import useModal from '@/hooks/useModal';
 import useToggle from '@/hooks/useToggle';
 import { captureTimeState, memberIdState } from '@/recoil/atom';

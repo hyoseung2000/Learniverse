@@ -9,6 +9,7 @@ import { styled } from 'styled-components';
 
 import { createToken } from '@/apis/alarm';
 import { Home } from '@/components/Home';
+import { useFirebaseInit } from '@/hooks/FCM';
 import { fcmTokenState, memberIdState } from '@/recoil/atom';
 
 declare global {
@@ -18,6 +19,8 @@ declare global {
 }
 
 const HomeContainer = () => {
+  useFirebaseInit();
+
   const memberId = useRecoilValue(memberIdState);
   const [fcmToken, setFcmToken] = useRecoilState(fcmTokenState);
 
@@ -30,16 +33,7 @@ const HomeContainer = () => {
     console.log('알림 허용 여부 : ', permission, ', FCM 토큰 : ', fcmToken);
     // if (permission !== 'granted' || fcmToken) return;
 
-    const firebaseApp = initializeApp({
-      apiKey: 'AIzaSyDjK6isLBGownY7C1AEA6n05-hjpZEleEo',
-      authDomain: 'learniverse-b34d9.firebaseapp.com',
-      projectId: 'learniverse-b34d9',
-      storageBucket: 'learniverse-b34d9.appspot.com',
-      messagingSenderId: '605501909741',
-      appId: '1:605501909741:web:e9a496058fa8b1812bbae4',
-      measurementId: 'G-PKVGVW8D2X',
-    });
-    const messaging = getMessaging(firebaseApp);
+    const messaging = getMessaging();
 
     getToken(messaging, {
       vapidKey:
