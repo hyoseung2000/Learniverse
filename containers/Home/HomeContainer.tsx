@@ -1,6 +1,5 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken } from 'firebase/messaging';
 // import { onBackgroundMessage } from 'firebase/messaging/sw';
 import { useEffect } from 'react';
@@ -35,25 +34,29 @@ const HomeContainer = () => {
 
     const messaging = getMessaging();
 
-    getToken(messaging, {
-      vapidKey:
-        'BFkKBCZ5O4qmyCwm50Aks7sRmMYJzF2wJ8FZCHNLXDLjVxMDEQJFZ_4U5I6uDBF1zXiRHChNAeeDWrTg2m0eL_k',
-    })
-      .then((currentToken) => {
-        if (currentToken) {
-          console.log('currentToken', currentToken);
-
-          saveToken(currentToken);
-          setFcmToken(currentToken);
-        } else {
-          console.log(
-            'No registration token available. Request permission to generate one.',
-          );
-        }
+    if (permission === 'granted') {
+      getToken(messaging, {
+        vapidKey:
+          'BFkKBCZ5O4qmyCwm50Aks7sRmMYJzF2wJ8FZCHNLXDLjVxMDEQJFZ_4U5I6uDBF1zXiRHChNAeeDWrTg2m0eL_k',
       })
-      .catch((err) => {
-        console.log('An error occurred while retrieving token. ', err);
-      });
+        .then((currentToken) => {
+          if (currentToken) {
+            console.log('currentToken', currentToken);
+
+            saveToken(currentToken);
+            setFcmToken(currentToken);
+          } else {
+            console.log(
+              'No registration token available. Request permission to generate one.',
+            );
+          }
+        })
+        .catch((err) => {
+          console.log('An error occurred while retrieving token. ', err);
+        });
+    } else if (permission === 'denied') {
+      console.log('푸시 알림 권한이 차단되어 있습니다.');
+    }
 
     // onMessage(messaging, (payload) => {
     //   console.log('[Foreground]Message received. ', payload);
