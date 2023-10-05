@@ -1,4 +1,7 @@
-import { getMessaging, onMessage } from 'firebase/messaging';
+// import { getMessaging, onMessage } from 'firebase/messaging';
+import 'firebase/messaging';
+
+import firebase from 'firebase/app';
 import { useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
 
@@ -12,9 +15,9 @@ const useFCMPushAlarm = () => {
   const setIsCaptureTime = useSetRecoilState(captureTimeState);
 
   useEffect(() => {
-    const messaging = getMessaging();
+    const messaging = firebase.messaging();
 
-    const unsubscribe = onMessage(messaging, (payload) => {
+    const unsubscribe = messaging.onMessage((payload) => {
       console.log('[Foreground]Message received. ', payload);
       setIsCaptureTime((prev) => prev + 1);
     });

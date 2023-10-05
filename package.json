@@ -13,7 +13,7 @@
     "axios": "^1.5.0",
     "eslint": "^8.46.0",
     "eslint-config-next": "13.4.13",
-    "firebase": "^10.4.0",
+    "firebase": "8.10.1",
     "firebase-tools": "^12.5.4",
     "mediasoup-client": "3.6.71",
     "next": "13.4.13",
@@ -47,7 +47,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev -p 4003",
+    "dev": "next dev -p 4004",
     "lint": "next lint",
     "start": "next start"
   },

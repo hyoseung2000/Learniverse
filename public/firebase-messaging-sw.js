@@ -1,16 +1,10 @@
-// Import the functions you need from the SDKs you need
+importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js');
 importScripts(
-  'https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js',
+  'https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js',
 );
-importScripts(
-  'https://www.gstatic.com/firebasejs/10.4.0/firebase-messaging-compat.js',
-);
+// import { getMessaging } from 'firebase/messaging/sw';
+// import { onBackgroundMessage } from 'firebase/messaging/sw';
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: 'AIzaSyDjK6isLBGownY7C1AEA6n05-hjpZEleEo',
   authDomain: 'learniverse-b34d9.firebaseapp.com',

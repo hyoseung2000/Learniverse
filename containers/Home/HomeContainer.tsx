@@ -1,7 +1,10 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getMessaging, getToken } from 'firebase/messaging';
+// import { getMessaging, getToken } from 'firebase/messaging';
 // import { onBackgroundMessage } from 'firebase/messaging/sw';
+import 'firebase/messaging';
+
+import firebase from 'firebase/app';
 import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
@@ -32,13 +35,14 @@ const HomeContainer = () => {
     console.log('알림 허용 여부 : ', permission, ', FCM 토큰 : ', fcmToken);
     // if (permission !== 'granted' || fcmToken) return;
 
-    const messaging = getMessaging();
+    const messaging = firebase.messaging();
 
     if (permission === 'granted') {
-      getToken(messaging, {
-        vapidKey:
-          'BFkKBCZ5O4qmyCwm50Aks7sRmMYJzF2wJ8FZCHNLXDLjVxMDEQJFZ_4U5I6uDBF1zXiRHChNAeeDWrTg2m0eL_k',
-      })
+      messaging
+        .getToken({
+          vapidKey:
+            'BFkKBCZ5O4qmyCwm50Aks7sRmMYJzF2wJ8FZCHNLXDLjVxMDEQJFZ_4U5I6uDBF1zXiRHChNAeeDWrTg2m0eL_k',
+        })
         .then((currentToken) => {
           if (currentToken) {
             console.log('currentToken', currentToken);
