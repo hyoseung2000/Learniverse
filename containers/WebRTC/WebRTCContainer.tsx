@@ -23,7 +23,7 @@ const WebRTCContainer = () => {
   const router = useRouter();
   const { room_id } = router.query;
   const name = useRecoilValue(memberIdState);
-  const isCaptureTime = useRecoilValue(captureTimeState);
+  const captureTime = useRecoilValue(captureTimeState);
 
   // 푸시 알림 받기
   useFCMPushAlarm();
@@ -119,7 +119,7 @@ const WebRTCContainer = () => {
 
   return (
     <WebRTCLayout
-      isCaptureTime={isCaptureTime}
+      captureTime={captureTime}
       coreEndTime={curCoreEndTime!}
       curNickname={curNickname!}
       curRoomId={curRoomId!}

@@ -16,7 +16,7 @@ const useFCMPushAlarm = () => {
 
     const unsubscribe = onMessage(messaging, (payload) => {
       console.log('[Foreground]Message received. ', payload);
-      setIsCaptureTime((prev) => !prev);
+      setIsCaptureTime((prev) => prev + 1);
     });
 
     return () => unsubscribe();

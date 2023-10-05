@@ -30,7 +30,7 @@ import { ChattingInfo, ConsumeInfo, RoomPeerInfo } from '@/types/socket';
 import { formatHHMMSS } from '@/utils/getFormattedTime';
 
 interface WebRTCLayoutProps {
-  isCaptureTime: boolean;
+  captureTime: number;
   coreEndTime: Date;
   curNickname: string;
   curRoomId: string;
@@ -55,7 +55,7 @@ interface WebRTCLayoutProps {
 }
 
 const WebRTCLayout = ({
-  isCaptureTime,
+  captureTime,
   coreEndTime,
   curNickname,
   curRoomId,
@@ -127,7 +127,6 @@ const WebRTCLayout = ({
   };
 
   const handleSubmit = () => {
-    // 이미지 전송
     handleUploadImage();
     capture.toggle();
     captureComplete.toggle();
@@ -135,8 +134,10 @@ const WebRTCLayout = ({
   };
 
   useEffect(() => {
-    if (isCaptureTime) capture.setShowing(true);
-  }, [isCaptureTime]);
+    if (captureTime !== 0) {
+      capture.setShowing(true);
+    }
+  }, [captureTime]);
 
   return (
     <StWebRTCContainerWrapper>
@@ -163,7 +164,7 @@ const WebRTCLayout = ({
               memberId={curMemberId!}
               nickname={stream.nickname}
               mediaStream={stream.stream}
-              isCaptureTime={isCaptureTime}
+              captureTime={captureTime}
               setCapturedImageFile={setCapturedImageFile}
               isSelected={selectedVideo === stream.consumer_id}
               onClick={() => handleSelectVideo(stream)}

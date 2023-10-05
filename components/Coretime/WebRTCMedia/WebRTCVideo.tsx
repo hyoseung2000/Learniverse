@@ -9,7 +9,7 @@ interface WebRTCVideoProps {
   nickname: string;
   mediaStream: MediaStream | undefined;
   isSelected: boolean;
-  isCaptureTime: boolean;
+  captureTime: number;
   setCapturedImageFile: Dispatch<SetStateAction<File | undefined>>;
   onClick: () => void;
 }
@@ -21,7 +21,7 @@ const WebRTCVideo = ({
   nickname,
   mediaStream,
   isSelected,
-  isCaptureTime,
+  captureTime,
   setCapturedImageFile,
   onClick,
 }: WebRTCVideoProps) => {
@@ -56,25 +56,6 @@ const WebRTCVideo = ({
     return file;
   };
 
-  // const handleUploadImage = async () => {
-  //   const capturedImage = captureAndSaveVideoFrame();
-  //   const now = new Date();
-
-  //   const captureData = {
-  //     coreTimeId: Number(roomId),
-  //     memberId: Number(memberId),
-  //     fileName: `coretime-${roomId}-${nickname}-${formatHHMMSS(
-  //       now.toString(),
-  //     )}.png`,
-  //   };
-
-  //   const url: string = await getPresignedUrl(captureData.fileName);
-  //   if (capturedImage) {
-  //     await putFile(url, capturedImage);
-  //     await createCapture(captureData);
-  //   }
-  // };
-
   useEffect(() => {
     if (!viewRef.current) return;
     viewRef.current.srcObject = mediaStream || null;
@@ -82,7 +63,7 @@ const WebRTCVideo = ({
 
   useEffect(() => {
     captureAndSaveVideoFrame();
-  }, [isCaptureTime]);
+  }, [captureTime]);
 
   return (
     <StVideoWrapper>
@@ -100,9 +81,6 @@ const WebRTCVideo = ({
       />
       <IcCoreChar />
       <StName>{nickname}</StName>
-      {/* <button type="button" onClick={handleUploadImage}>
-        Save Image
-      </button> */}
     </StVideoWrapper>
   );
 };

@@ -28,17 +28,8 @@ const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
   const [capture, setCapture] = useState<number>(0);
   const [coreTimeInfo, setCoreTimeInfo] = useState<PostCoreTimeInfo>();
   const roomID = useRecoilValue(roomIdState);
-  const [memberTokens, setMemberTokens] = useState<string[]>([]);
 
   const complete = useModal();
-
-  const getMemberTokens = async () => {
-    const tokensData: MemberTokenInfo[] = await getTokenByRoomId(roomID);
-    const tokens: string[] = tokensData
-      .map((tokenInfo) => tokenInfo?.token)
-      .filter(Boolean);
-    setMemberTokens(tokens);
-  };
 
   const handleCreateCtime = async () => {
     // if (startDate.getMinutes() !== 30 && startDate.getMinutes() !== 0) {
@@ -60,7 +51,6 @@ const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
           startTime: startDate,
           endTime: endDate,
           captureCount: capture,
-          tokens: memberTokens,
         };
         console.log('captureTimeData', captureTimeData);
         await createCaptureTime(captureTimeData);
@@ -102,10 +92,6 @@ const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
       captureNum: capture,
     });
   }, [startDate, coreHr, coreMin, capture]);
-
-  useEffect(() => {
-    getMemberTokens();
-  }, []);
 
   return (
     isShowing && (
