@@ -79,7 +79,7 @@ const WebRTCContainer = () => {
     if (foundPeer) {
       await handleCloseProducer(foundPeer.consumer_id);
     } else {
-      console.log('No match found');
+      console.error('No match found');
     }
   };
 
@@ -93,7 +93,6 @@ const WebRTCContainer = () => {
   };
 
   const handleMikeToggle = async () => {
-    console.log(isMike);
     if (isMike) {
       await handleTurnOff('audio');
     } else {

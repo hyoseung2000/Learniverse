@@ -5,12 +5,13 @@ import DatePicker from 'react-datepicker';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { createCaptureTime } from '@/apis/alarm';
+import { createCaptureTime, getTokenByRoomId } from '@/apis/alarm';
 import { createCoretime } from '@/apis/coretimes';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { SmallModal } from '@/components/Common/Modal';
 import useModal from '@/hooks/useModal';
 import { roomIdState } from '@/recoil/atom';
+import { MemberTokenInfo } from '@/types/member';
 import { CoreTimeIdInfo, PostCoreTimeInfo } from '@/types/studyroom';
 
 import CompleteCreateCoreModal from './CompleteCreateCoreModal';
@@ -27,8 +28,17 @@ const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
   const [capture, setCapture] = useState<number>(0);
   const [coreTimeInfo, setCoreTimeInfo] = useState<PostCoreTimeInfo>();
   const roomID = useRecoilValue(roomIdState);
+  const [memberTokens, setMemberTokens] = useState<string[]>([]);
 
   const complete = useModal();
+
+  const getMemberTokens = async () => {
+    const tokensData: MemberTokenInfo[] = await getTokenByRoomId(roomID);
+    const tokens: string[] = tokensData
+      .map((tokenInfo) => tokenInfo?.token)
+      .filter(Boolean);
+    setMemberTokens(tokens);
+  };
 
   const handleCreateCtime = async () => {
     if (startDate.getMinutes() !== 30 && startDate.getMinutes() !== 0) {
@@ -50,11 +60,9 @@ const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
           startTime: startDate,
           endTime: endDate,
           captureCount: capture,
-          tokens: [
-            'fTx0U1rNI7q4puzp2YlRze:APA91bHy2L9PGMzkg1Yxb0wcl81phUNhrHRZi58uy451inAh0lMPjGvfwwzotR2B1QFtyLK6xPuzIJfaoMGSBWiDEc88w2NAGi-M3lbWCgYuPxg-AWxq91PnEHMRtXR5W67Anb0gnAxl',
-          ],
+          tokens: memberTokens,
         };
-        console.log(captureTimeData);
+        console.log('captureTimeData', captureTimeData);
         await createCaptureTime(captureTimeData);
       }
       handleCancel();
@@ -94,6 +102,10 @@ const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
       captureNum: capture,
     });
   }, [startDate, coreHr, coreMin, capture]);
+
+  useEffect(() => {
+    getMemberTokens();
+  }, []);
 
   return (
     isShowing && (
