@@ -47,15 +47,18 @@ const IssueModal = ({
         <StIssueWrapper>
           <StIssue>
             {issueList &&
-              issueList.map((issue: IssueInfo) => (
-                <IssueCard
-                  // eslint-disable-next-line react/jsx-boolean-value
-                  core={true}
-                  key={issue.issueId}
-                  handleDiscuss={handleClick}
-                  issueInfo={issue}
-                />
-              ))}
+              issueList.map(
+                (issue: IssueInfo) =>
+                  issue.issueOpen && (
+                    <IssueCard
+                      // eslint-disable-next-line react/jsx-boolean-value
+                      core={true}
+                      key={issue.issueId}
+                      handleDiscuss={handleClick}
+                      issueInfo={issue}
+                    />
+                  ),
+              )}
           </StIssue>
 
           <StBtnWrapper>

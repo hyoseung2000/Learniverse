@@ -47,12 +47,16 @@ import IcSpeakerOff from './ic_speaker_off.svg';
 import IcStar from './ic_star.svg';
 import IcStarPinned from './ic_star_pinned.svg';
 import IcTimer from './ic_timer.svg';
+import IcToggleOff from './ic_toggle_off.svg';
+import IcToggleOn from './ic_toggle_on.svg';
 import IcTracker from './ic_tracker.svg';
 
 export {
   IcCaptureTimer,
   IcCaptureWarning,
   IcConfirm,
+  IcToggleOff,
+  IcToggleOn,
   IcCancel,
   IcProfileImage,
   IcAddStudyRoom,

@@ -78,7 +78,7 @@ const WorkSpace = () => {
     <>
       <StWorkspaceWrapper>
         <StTitleWrapper>
-          <h2>워크 스페이스</h2>
+          <h2>워크스페이스</h2>
           <IcPlusBtn type="button" onClick={handleOpen} />
         </StTitleWrapper>
         <Workspace>
@@ -140,13 +140,15 @@ const Workspace = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  grid-column-gap: 2rem;
   grid-row-gap: 2rem;
 
   justify-items: center;
+  justify-content: center;
   align-items: center;
 
   margin-top: 3.1rem;
+  margin-left: 2rem;
+  margin-right: 1rem;
 `;
 
 const StRegModalWrapper = styled.div<{ $showing: boolean }>`
