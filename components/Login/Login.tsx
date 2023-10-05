@@ -18,7 +18,8 @@ const Login = () => {
       console.log(token);
       const payload = jwtDecode(token);
       console.log(payload);
-      router.push('/home');
+      // router.push('/home');
+      router.push('/signup');
     } catch (err) {
       console.error(err);
       router.push('/');
