@@ -88,9 +88,9 @@ const useWebRTC = (
       console.log('2. Joined to room', socketJoin);
 
       await socket.request('setCaptureAlert', {
-        memberId: 1,
+        memberId: curName,
         roomId: 1,
-        coreTimeId: 32,
+        coreTimeId: curRoomId,
         token:
           'eMe5VlDtuFUiRNXUY3qFxK:APA91bH0663I6mu6GWtGzJ-cwnRUTeTb0ZtfpQs6jJNUHW331EUufZGAUnuAGgaV2GjNpRGDh6ymsQQimJI1HNaMCqtEHAFxrxPmBmc05gabVxA7AiIxhPVSOXj1TvzzuLnrTymtl9W0',
       });
@@ -381,7 +381,7 @@ const useWebRTC = (
       socket.on('disconnect', async () => {
         if (socket.request) {
           const data = await socket.request('removeCaptureAlert', {
-            memberId: 1,
+            memberId: curName,
           });
           console.log(data);
           router.push('/home');

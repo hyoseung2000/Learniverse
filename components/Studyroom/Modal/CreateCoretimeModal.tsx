@@ -86,7 +86,7 @@ const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
   };
   const handleCaptureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const captureNumber = parseInt(e.target.value, 10);
-    if (captureNumber < 0 || captureNumber > 5) {
+    if (captureNumber < 0 || captureNumber > 100) {
       alert('0 - 5번 이내로 입력하세요');
     } else {
       setCapture(captureNumber);
@@ -150,7 +150,7 @@ const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
                 <input
                   type="number"
                   min="0"
-                  max="5"
+                  max="100"
                   value={capture}
                   onChange={handleCaptureChange}
                 />
