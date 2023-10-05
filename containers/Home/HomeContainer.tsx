@@ -1,15 +1,15 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { initializeApp } from 'firebase/app';
-import { getMessaging, getToken, onMessage } from 'firebase/messaging';
-import { onBackgroundMessage } from 'firebase/messaging/sw';
+import { getMessaging, getToken } from 'firebase/messaging';
+// import { onBackgroundMessage } from 'firebase/messaging/sw';
 import { useEffect } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 import { createToken } from '@/apis/alarm';
 import { Home } from '@/components/Home';
-import { captureTimeState, fcmTokenState, memberIdState } from '@/recoil/atom';
+import { fcmTokenState, memberIdState } from '@/recoil/atom';
 
 declare global {
   interface Window {
@@ -19,8 +19,7 @@ declare global {
 
 const HomeContainer = () => {
   const memberId = useRecoilValue(memberIdState);
-  const setfcmToken = useSetRecoilState(fcmTokenState);
-  const setIsCaptureTime = useSetRecoilState(captureTimeState);
+  const [fcmToken, setFcmToken] = useRecoilState(fcmTokenState);
 
   const saveToken = async (token: string) => {
     await createToken(memberId, token);
@@ -28,7 +27,8 @@ const HomeContainer = () => {
 
   const askPermission = async () => {
     const permission = await window.Notification.requestPermission();
-    if (permission !== 'granted') return;
+    console.log('알림 허용 여부 : ', permission, ', FCM 토큰 : ', fcmToken);
+    // if (permission !== 'granted' || fcmToken) return;
 
     const firebaseApp = initializeApp({
       apiKey: 'AIzaSyDjK6isLBGownY7C1AEA6n05-hjpZEleEo',
@@ -50,7 +50,7 @@ const HomeContainer = () => {
           console.log('currentToken', currentToken);
 
           saveToken(currentToken);
-          setfcmToken(currentToken);
+          setFcmToken(currentToken);
         } else {
           console.log(
             'No registration token available. Request permission to generate one.',
@@ -61,10 +61,10 @@ const HomeContainer = () => {
         console.log('An error occurred while retrieving token. ', err);
       });
 
-    onMessage(messaging, (payload) => {
-      console.log('[Foreground]Message received. ', payload);
-      setIsCaptureTime((prev) => !prev);
-    });
+    // onMessage(messaging, (payload) => {
+    //   console.log('[Foreground]Message received. ', payload);
+    //   setIsCaptureTime((prev) => !prev);
+    // });
 
     // onBackgroundMessage(messaging, (payload) => {
     //   console.log(
@@ -88,7 +88,7 @@ const HomeContainer = () => {
 
   useEffect(() => {
     askPermission();
-  }, []);
+  }, [memberId]);
 
   return (
     <StHomeContainer>

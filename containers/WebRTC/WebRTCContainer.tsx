@@ -10,6 +10,7 @@ import {
   useVideoSelector,
   useWebRTC,
 } from '@/hooks/Socket';
+import { useFCMPushAlarm } from '@/hooks/useFCMPushAlarm';
 import useModal from '@/hooks/useModal';
 import useToggle from '@/hooks/useToggle';
 import { captureTimeState, memberIdState } from '@/recoil/atom';
@@ -18,16 +19,22 @@ import { getNickName } from '@/utils/getNicknames';
 import WebRTCLayout from './WebRTCLayout';
 
 const WebRTCContainer = () => {
+  // 전역 상태 (coreTimeId, memberId, 캡처 시간)
   const router = useRouter();
   const { room_id } = router.query;
   const name = useRecoilValue(memberIdState);
   const isCaptureTime = useRecoilValue(captureTimeState);
 
+  // 푸시 알림 받기
+  useFCMPushAlarm();
+
+  // 현재 코어타임, 사용자 관련 상태
   const [curName, setCurName] = useState<string>();
   const [curNickname, setCurNickname] = useState('');
   const [curRoomId, setRoomId] = useState<string>();
   const [curCoreEndTime, setCurCoreEndTime] = useState<Date>();
 
+  // 소켓 관련 상태
   const curSocket = useSocketConnection(curRoomId!);
   const {
     produce,
@@ -39,16 +46,18 @@ const WebRTCContainer = () => {
     handleCloseProducer,
     handleExitRoom,
   } = useWebRTC(curRoomId!, curName!, curSocket!);
-
-  const [isMedia, handleMedia] = useToggle();
-  const [isMike, handleMike] = useToggle();
-  const [isSpeaker, handleSpeaker] = useToggle();
-  const [selectedVideo, handleSelectVideo] = useVideoSelector();
   const [chatting, setChatting, handleSendChatting] = useChatHandler(
     curSocket!,
     curNickname!,
     addChattingList,
   );
+
+  // 토글 버튼
+  const [isMedia, handleMedia] = useToggle();
+  const [isMike, handleMike] = useToggle();
+  const [isSpeaker, handleSpeaker] = useToggle();
+  const [selectedVideo, handleSelectVideo] = useVideoSelector();
+
   const coreIssue = useModal();
 
   const setCoreEndTime = async () => {

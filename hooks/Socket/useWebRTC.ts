@@ -92,7 +92,7 @@ const useWebRTC = (
         roomId: 1,
         coreTimeId: curRoomId,
         token:
-          'cp3Cch1uEAaD3xU48B7_YW:APA91bFbogR1wQ0yPV9hcLnnYCctgnnP2EmtOa2o7vfCXoD5tV5p2MMJa3G8FdiUs5XKPB7xbtPisEuhPLnkbzMSsHCL8T7JXOen-K9twFgST4kbIw7ipyIb9vdWP_s2JBBaaBKLePVb',
+          'fxyfs5Y7GZiaQvqj211DqT:APA91bE_8JAcNIV1LS1hWR7P3gyQcWYVYRN3HukyH-6XAZ_RkP1B7yzGrgjflA1WWV4l9yfNGhLDIGVEvTVq-M-fFkoXJhuHhmK8EbEXmtyQ8ZqEhMZugA_LiMHVEKjzbJN9_u72wuai',
       });
 
       const data = await socket.request('getRouterRtpCapabilities');
