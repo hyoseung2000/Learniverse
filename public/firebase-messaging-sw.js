@@ -1,9 +1,9 @@
 // Import the functions you need from the SDKs you need
 importScripts(
-  'https://www.gstatic.com/firebasejs/9.14.0/firebase-app-compat.js',
+  'https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js',
 );
 importScripts(
-  'https://www.gstatic.com/firebasejs/9.14.0/firebase-messaging-compat.js',
+  'https://www.gstatic.com/firebasejs/10.4.0/firebase-messaging-compat.js',
 );
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -39,4 +39,10 @@ messaging.onBackgroundMessage(messaging, (payload) => {
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);
+});
+
+self.addEventListener('notificationclick', function (event) {
+  const url = `http://localhost:4003/`;
+  event.notification.close();
+  event.waitUntil(clients.openWindow(url));
 });

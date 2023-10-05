@@ -41,9 +41,9 @@ const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
   };
 
   const handleCreateCtime = async () => {
-    if (startDate.getMinutes() !== 30 && startDate.getMinutes() !== 0) {
-      alert('시작시간은 30분 단위로 지정하세요.');
-    }
+    // if (startDate.getMinutes() !== 30 && startDate.getMinutes() !== 0) {
+    //   alert('시작시간은 30분 단위로 지정하세요.');
+    // }
     if ((coreHr === 0 && coreMin === 0) || (coreHr === 24 && coreMin === 30)) {
       alert('코어타임은 최소 30분 - 최대 24시간 내로 지정하세요.');
     } else {
@@ -86,7 +86,7 @@ const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
   };
   const handleCaptureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const captureNumber = parseInt(e.target.value, 10);
-    if (captureNumber < 0 || captureNumber > 5) {
+    if (captureNumber < 0 || captureNumber > 100) {
       alert('0 - 5번 이내로 입력하세요');
     } else {
       setCapture(captureNumber);
@@ -150,7 +150,7 @@ const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
                 <input
                   type="number"
                   min="0"
-                  max="5"
+                  max="100"
                   value={capture}
                   onChange={handleCaptureChange}
                 />

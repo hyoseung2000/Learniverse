@@ -145,7 +145,7 @@ export const CreateIssue = async (PostIssueData: PostIssueInfo) => {
 export const getIssueList = async (roomId: number) => {
   try {
     const { data } = await client.get(`room/issues?roomId=${roomId}`);
-    return data;
+    return data.data.issues;
   } catch (err) {
     console.error(err);
     throw err;

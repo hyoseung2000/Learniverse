@@ -15,6 +15,17 @@ export const memberIdState = atom<number>({
   effects_UNSTABLE: [persistAtom],
 });
 
+export const fcmTokenState = atom<string>({
+  key: `fcmTokenState`,
+  default: '',
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const captureTimeState = atom<boolean>({
+  key: `captureTimeState`,
+  default: false,
+});
+
 export const encodedUrlState = atom<string>({
   key: `encodedUrl`,
   default: '',

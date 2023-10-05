@@ -9,7 +9,9 @@ import {
 } from 'mediasoup-client/lib/types';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 
+import { fcmTokenState } from '@/recoil/atom';
 import {
   ChattingInfo,
   ConsumeInfo,
@@ -27,7 +29,6 @@ import { addNickNameToPeer, getNickName } from '../../utils/getNicknames';
 import {
   handleConnectError,
   handleConsumerClosed,
-  handleDisconnect,
   handleMessage,
   handleNewProducers,
 } from './socketHandlers';
@@ -38,6 +39,7 @@ const useWebRTC = (
   socket: CustomSocket,
 ) => {
   const router = useRouter();
+  const fcmToken = useRecoilValue(fcmTokenState);
 
   const [curMembers, setCurMembers] = useState<RoomPeerInfo[]>([]);
   const [curDevice, setCurDevice] = useState<Device>();
@@ -87,6 +89,13 @@ const useWebRTC = (
         name: nickName,
       });
       console.log('2. Joined to room', socketJoin);
+
+      await socket.request('setCaptureAlert', {
+        memberId: curName,
+        roomId: 1,
+        coreTimeId: curRoomId,
+        token: fcmToken,
+      });
 
       const data = await socket.request('getRouterRtpCapabilities');
       await loadDevice(data);
@@ -353,12 +362,14 @@ const useWebRTC = (
   };
 
   const handleExitRoom = async () => {
-    await socket.emit('exitRoom');
+    if (!socket.request) return;
+    const data = await socket.request('exitRoom');
+    console.log(data);
     router.back();
   };
 
   useEffect(() => {
-    if (socket) {
+    if (socket && socket.request) {
       socket.on('connect_error', handleConnectError);
       socket.on('newProducers', async (data: PeersInfo[]) => {
         handleNewProducers(data, consumeProducers, setCurMembers);
@@ -369,7 +380,15 @@ const useWebRTC = (
       socket.on('consumerClosed', (data: ConsumerId) =>
         handleConsumerClosed(data, removeStream),
       );
-      socket.on('disconnect', () => handleDisconnect(router));
+      socket.on('disconnect', async () => {
+        if (socket.request) {
+          const data = await socket.request('removeCaptureAlert', {
+            memberId: curName,
+          });
+          console.log(data);
+          router.push('/home');
+        }
+      });
     }
     return () => {
       if (socket) {
