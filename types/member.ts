@@ -28,6 +28,9 @@ export interface MoonScoreInfo {
 }
 
 export interface MemberTokenInfo {
+  tokenId?: string;
   memberId: number;
   token: string;
+  createdDate?: Date;
+  updatedDate?: Date;
 }
