@@ -2,7 +2,7 @@ import { PostDiscussInfo, PostIssueInfo } from '@/types/studyroom';
 
 import { client } from './axios';
 
-export const CreateIssue = async (PostIssueData: PostIssueInfo) => {
+export const createIssue = async (PostIssueData: PostIssueInfo) => {
   try {
     const { data } = await client.post(`/room/issue/create`, PostIssueData);
     console.log(data);
@@ -43,11 +43,11 @@ export const getDiscussions = async (issueId: number) => {
   }
 };
 
-export const postDiscuss = async (PostDiscussData: PostDiscussInfo) => {
+export const postDiscuss = async (postDiscussData: PostDiscussInfo) => {
   try {
     const { data } = await client.post(
       `room/discussion/create`,
-      PostDiscussData,
+      postDiscussData,
     );
     console.log(data);
     return data;

@@ -12,6 +12,8 @@ const SignUp = () => {
 export default SignUp;
 
 const StSignUpWrapper = styled.div`
+  justify-content: center;
+
   & > h1 {
     color: ${({ theme }) => theme.colors.White};
     ${({ theme }) => theme.fonts.Head0};
