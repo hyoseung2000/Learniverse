@@ -10,7 +10,6 @@ const ServiceWorkerManager = () => {
   useEffect(() => {
     if ('serviceWorker' in navigator) {
       const handleMessage = (event: any) => {
-        console.log('알림 수신', event);
         setIsCaptureTime((prev) => prev + 1);
 
         if (event.data && event.data.type === 'FCM_MESSAGE_RECEIVED') {

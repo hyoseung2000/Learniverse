@@ -1,26 +1,27 @@
-import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import { styled } from 'styled-components';
+import { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
+import { styled } from "styled-components";
 
 import {
   useGetApplyStudyRoomList,
-  useGetLeaderStudyRoomList,
-} from '@/hooks/StudyRooms';
-import useModal from '@/hooks/useModal';
-import { IcCharacterCheck } from '@/public/assets/icons';
-import { memberIdState } from '@/recoil/atom';
-import { StudyRoomInfo } from '@/types/studyroom';
+  useGetLeaderStudyRoomList
+} from "@/hooks/StudyRooms";
+import useModal from "@/hooks/useModal";
+import { IcCharacterCheck } from "@/public/assets/icons";
+import { memberIdState } from "@/recoil/atom";
+import { StudyRoomInfo } from "@/types/studyroom";
 
-import { ConfirmButton } from '../Common/Button';
-import SmallModal from '../Common/Modal/SmallModal';
-import { ManageModal } from '../RoomCard/Modal';
-import EditModal from '../RoomCard/Modal/EditModal';
-import StudyroomCard from '../RoomCard/StudyroomCard';
+import { ConfirmButton } from "../Common/Button";
+import SmallModal from "../Common/Modal/SmallModal";
+import { ManageModal } from "../RoomCard/Modal";
+import EditModal from "../RoomCard/Modal/EditModal";
+import StudyroomCard from "../RoomCard/StudyroomCard";
 
 interface MyPageStudyRoomListProps {
   isLeader?: boolean;
 }
 
+// TODO : 리팩토링 - 컴포넌트 분리
 const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
   const [roomList, setRoomList] = useState<StudyRoomInfo[]>();
 

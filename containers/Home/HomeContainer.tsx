@@ -1,22 +1,16 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import 'firebase/messaging';
+import "firebase/messaging";
 
-import firebase from 'firebase/app';
-import { useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { styled } from 'styled-components';
+import firebase from "firebase/app";
+import { useEffect } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { styled } from "styled-components";
 
-import { createToken } from '@/apis/alarm';
-import { Home } from '@/components/Home';
-import { useFirebaseInit } from '@/hooks/FCM';
-import { fcmTokenState, memberIdState } from '@/recoil/atom';
-
-declare global {
-  interface Window {
-    registration: any;
-  }
-}
+import { createToken } from "@/apis/alarm";
+import { Home } from "@/components/Home";
+import { useFirebaseInit } from "@/hooks/FCM";
+import { captureTimeState, fcmTokenState, memberIdState } from "@/recoil/atom";
 
 const HomeContainer = () => {
   const memberId = useRecoilValue(memberIdState);

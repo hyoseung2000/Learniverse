@@ -16,6 +16,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging(app);
+const broadcast = new BroadcastChannel('my-channel');
 
 messaging.onBackgroundMessage((payload) => {
   console.log(
@@ -32,22 +33,37 @@ messaging.onBackgroundMessage((payload) => {
 
   self.registration.showNotification(notificationTitle, notificationOptions);
 
-  // clients.matchAll().then((clientsList) => {
-  //   if (clientsList.length) {
-  //     clientsList.forEach((client) => {
-  //       client.postMessage({ type: 'FCM_MESSAGE_RECEIVED', payload });
-  //     });
-  //   }
-  // });
+  self.addEventListener('push', function (e) {
+    const bc = new BroadcastChannel('fcm_channel');
+    console.log('push: ', e.data.json());
+    if (!e.data.json()) return;
 
-  self.clients.matchAll().then((clients) => {
-    clients.forEach((client) => {
-      client.postMessage({
-        type: 'FCM_BACKGROUND_NOTIFICATION',
-        payload: payload,
-      });
-    });
+    const resultData = e.data.json();
+    const notificationTitle = resultData.notification.title;
+    const notificationOptions = {
+      body: resultData.notification.body,
+      data: resultData.data,
+      ...resultData,
+    };
+
+    e.waitUntil(
+      self.registration.showNotification(
+        notificationTitle,
+        notificationOptions,
+      ),
+    );
+
+    bc.postMessage(resultData);
   });
+
+  // 메시지 수신
+  broadcast.onmessage = (event) => {
+    if (event.data && event.data.type === 'PRINT');
+    {
+      // 메시지 발송
+      broadcast.postMessage({ payload: 'Hello, Client. I am Service-worker' });
+    }
+  };
 });
 
 // self.addEventListener('notificationclick', function (event) {

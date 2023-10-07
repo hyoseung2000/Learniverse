@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 import { getCoreEndtime } from "@/apis/coretimes";
 import { useFCMPushAlarm } from "@/hooks/FCM";
@@ -23,10 +23,11 @@ const WebRTCContainer = () => {
   const router = useRouter();
   const { room_id } = router.query;
   const name = useRecoilValue(memberIdState);
-  const captureTime = useRecoilValue(captureTimeState);
+  // const captureTime = useRecoilValue(captureTimeState);
 
   // 푸시 알림 받기
   useFCMPushAlarm();
+  const [captureTime, setIsCaptureTime] = useRecoilState(captureTimeState);
 
   // 현재 코어타임, 사용자 관련 상태
   const [curName, setCurName] = useState<string>();

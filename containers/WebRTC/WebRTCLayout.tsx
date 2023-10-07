@@ -1,33 +1,33 @@
 /* eslint-disable prettier/prettier */
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { styled } from 'styled-components';
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { styled } from "styled-components";
 
-import { getPresignedUrl } from '@/apis/alarm';
-import { createCapture, putFile } from '@/apis/coretimes';
-import { Chatting } from '@/components/Coretime/Chatting';
-import { GalleryModal } from '@/components/Coretime/Gallery';
+import { getPresignedUrl } from "@/apis/alarm";
+import { createCapture, putFile } from "@/apis/coretimes";
+import { Chatting } from "@/components/Coretime/Chatting";
+import { GalleryModal } from "@/components/Coretime/Gallery";
 import {
   CreateIssueModal,
   DiscussIssueModal,
-  IssueModal,
-} from '@/components/Coretime/Issue';
-import { Member } from '@/components/Coretime/Member';
+  IssueModal
+} from "@/components/Coretime/Issue";
+import { Member } from "@/components/Coretime/Member";
 import {
   CaptureCompleteModal,
   CaptureModal,
-  ExitCoretimeModal,
-} from '@/components/Coretime/Modal';
+  ExitCoretimeModal
+} from "@/components/Coretime/Modal";
 import {
   MediaBtn,
   MikeBtn,
   SpeakerBtn,
-  StudyroomBtn,
-} from '@/components/Coretime/Setting';
-import { TimeProvider, Timer } from '@/components/Coretime/Timer';
-import { WebRTCAudio, WebRTCVideo } from '@/components/Coretime/WebRTCMedia';
-import useModal, { UseModalReturnType } from '@/hooks/useModal';
-import { ChattingInfo, ConsumeInfo, RoomPeerInfo } from '@/types/socket';
-import { formatHHMMSS } from '@/utils/getFormattedTime';
+  StudyroomBtn
+} from "@/components/Coretime/Setting";
+import { TimeProvider, Timer } from "@/components/Coretime/Timer";
+import { WebRTCAudio, WebRTCVideo } from "@/components/Coretime/WebRTCMedia";
+import useModal, { UseModalReturnType } from "@/hooks/useModal";
+import { ChattingInfo, ConsumeInfo, RoomPeerInfo } from "@/types/socket";
+import { formatHHMMSS } from "@/utils/getFormattedTime";
 
 interface WebRTCLayoutProps {
   captureTime: number;
@@ -54,6 +54,7 @@ interface WebRTCLayoutProps {
   issue: UseModalReturnType;
 }
 
+// TODO : 전면 리팩토링
 const WebRTCLayout = ({
   captureTime,
   coreEndTime,
