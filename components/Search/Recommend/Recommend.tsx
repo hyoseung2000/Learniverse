@@ -21,9 +21,14 @@ import ApplyCompleteModal from "../ApplyCompleteModal/ApplyCompleteModal";
 interface RecommendStudyProps {
   isShowing: boolean;
   toggleModal: () => void;
+  handleApply: (roomId: number) => Promise<void>;
 }
 
-const RecommendStudy = ({ isShowing, toggleModal }: RecommendStudyProps) => {
+const RecommendStudy = ({
+  isShowing,
+  toggleModal,
+  handleApply,
+}: RecommendStudyProps) => {
   const curMemberId = useRecoilValue(memberIdState);
 
   const { recommendRoomIdList } = useGetRecommendRoomList(curMemberId);
@@ -47,8 +52,8 @@ const RecommendStudy = ({ isShowing, toggleModal }: RecommendStudyProps) => {
     setLoading(false);
   };
 
-  const handleApply = async (roomId: number) => {
-    await applyRoom(roomId, curMemberId);
+  const handleApplyClick = async (roomId: number) => {
+    handleApply(roomId);
     applyCompleteModal.toggle();
   };
 
@@ -82,7 +87,7 @@ const RecommendStudy = ({ isShowing, toggleModal }: RecommendStudyProps) => {
                         roomData={room}
                         handleApply={
                           room.isMember === null
-                            ? () => handleApply(room.roomId)
+                            ? () => handleApplyClick(room.roomId)
                             : undefined
                         }
                       />

@@ -1,72 +1,67 @@
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
-import { keyframes, styled } from "styled-components";
+import { styled } from "styled-components";
 
-import { recommendRoomList, searchHashtag } from "@/apis/roomList";
-import { applyRoom, getRoomInfo } from "@/apis/studyroom";
-import {
-  StContentWrapper,
-  StSmallModalWrapper
-} from "@/containers/Apply/ApplyContainer";
+import { applyRoom } from "@/apis/studyroom";
 import useModal from "@/hooks/useModal";
-import { IcCharacterCheck } from "@/public/assets/icons";
 import { memberIdState } from "@/recoil/atom";
-import { StudyRoomInfo } from "@/types/studyroom";
 
-import { ConfirmButton, PurpleButton } from "../Common/Button";
-import { LargeModal, SmallModal } from "../Common/Modal";
-import { StudyroomCard } from "../RoomCard";
-import {
-  StManageModalWrapper,
-  StMyPageRoomListWrapper
-} from "../RoomList/MyPageStudyRoomList";
+import { PurpleButton } from "../Common/Button";
+import ApplyCompleteModal from "./ApplyCompleteModal/ApplyCompleteModal";
 import RecommendStudy from "./Recommend/Recommend";
 import SearchInput from "./SearchInput";
+import SearchResult from "./SearchResult";
 
 const Search = () => {
   const curMemberId = useRecoilValue(memberIdState);
-  const [searchResult, setSearchResult] = useState<StudyRoomInfo[]>();
+  const [selectedInput, setSelectedInput] = useState(0);
+  const [currentSearchInput, setCurrentSearchInput] = useState<string>('');
   const [searched, setSearched] = useState(false);
-  const [loading, setLoading] = useState(false);
 
   const recommendModal = useModal();
+  const applyModal = useModal();
 
   const handleSearch = async (searchInput: string) => {
     setSearched(true);
-    const result = await searchHashtag(searchInput, curMemberId);
-    setSearchResult(result);
+    setCurrentSearchInput(searchInput);
   };
 
   const handleApply = async (roomId: number) => {
     await applyRoom(roomId, curMemberId);
   };
 
+  const handleApplyClick = async (roomId: number) => {
+    handleApply(roomId);
+    applyModal.toggle();
+  };
+
   return (
     <StSearchWrapper>
       <h1>스터디 검색</h1>
-      <SearchInput handleSearch={handleSearch} />
+      <SearchInput
+        handleSearch={handleSearch}
+        selectedInput={selectedInput}
+        setSelectedInput={setSelectedInput}
+      />
       <PurpleButton
         btnName="✨ 나와 맞는 스터디 추천받기"
         handleClick={recommendModal.toggle}
       />
-      <StRoomListWrapper>
-        {searchResult && searchResult.length > 0
-          ? searchResult.map((room) => (
-              <StudyroomCard
-                key={room.roomId}
-                roomData={room}
-                handleApply={
-                  room.isMember === null
-                    ? () => handleApply(room.roomId)
-                    : undefined
-                }
-              />
-            ))
-          : searched && <p>검색 결과가 없습니다.</p>}
-      </StRoomListWrapper>
+      <SearchResult
+        searched={searched}
+        searchType={selectedInput === 0 ? 'search' : 'hashtag'}
+        keyword={currentSearchInput}
+        memberId={curMemberId}
+        handleApply={handleApplyClick}
+      />
+      <ApplyCompleteModal
+        isShowing={applyModal.isShowing}
+        toggleModal={applyModal.toggle}
+      />
       <RecommendStudy
         isShowing={recommendModal.isShowing}
         toggleModal={recommendModal.toggle}
+        handleApply={handleApply}
       />
     </StSearchWrapper>
   );
@@ -89,19 +84,5 @@ const StSearchWrapper = styled.section`
 
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-  }
-`;
-
-const StRoomListWrapper = styled(StMyPageRoomListWrapper)`
-  position: relative;
-  & > p {
-    position: absolute;
-    top: 10rem;
-    left: -7rem;
-
-    width: 23rem;
-
-    color: ${({ theme }) => theme.colors.White};
-    ${({ theme }) => theme.fonts.Body0};
   }
 `;
