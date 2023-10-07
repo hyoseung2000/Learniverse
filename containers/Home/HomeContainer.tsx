@@ -1,7 +1,5 @@
 /* eslint-disable no-restricted-globals */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// import { getMessaging, getToken } from 'firebase/messaging';
-// import { onBackgroundMessage } from 'firebase/messaging/sw';
 import 'firebase/messaging';
 
 import firebase from 'firebase/app';

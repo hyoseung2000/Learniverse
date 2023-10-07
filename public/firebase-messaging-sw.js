@@ -2,8 +2,6 @@ importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js');
 importScripts(
   'https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js',
 );
-// import { getMessaging } from 'firebase/messaging/sw';
-// import { onBackgroundMessage } from 'firebase/messaging/sw';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDjK6isLBGownY7C1AEA6n05-hjpZEleEo',
@@ -33,10 +31,27 @@ messaging.onBackgroundMessage((payload) => {
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);
+
+  // clients.matchAll().then((clientsList) => {
+  //   if (clientsList.length) {
+  //     clientsList.forEach((client) => {
+  //       client.postMessage({ type: 'FCM_MESSAGE_RECEIVED', payload });
+  //     });
+  //   }
+  // });
+
+  self.clients.matchAll().then((clients) => {
+    clients.forEach((client) => {
+      client.postMessage({
+        type: 'FCM_BACKGROUND_NOTIFICATION',
+        payload: payload,
+      });
+    });
+  });
 });
 
-self.addEventListener('notificationclick', function (event) {
-  const url = `http://localhost:4003/`;
-  event.notification.close();
-  event.waitUntil(clients.openWindow(url));
-});
+// self.addEventListener('notificationclick', function (event) {
+//   const url = `http://localhost:4003/`;
+//   event.notification.close();
+//   event.waitUntil(clients.openWindow(url));
+// });

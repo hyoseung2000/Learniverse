@@ -1,13 +1,12 @@
-// import { getMessaging, onMessage } from 'firebase/messaging';
-import 'firebase/messaging';
+import "firebase/messaging";
 
-import firebase from 'firebase/app';
-import { useEffect } from 'react';
-import { useSetRecoilState } from 'recoil';
+import firebase from "firebase/app";
+import { useEffect } from "react";
+import { useSetRecoilState } from "recoil";
 
-import { captureTimeState } from '@/recoil/atom';
+import { captureTimeState } from "@/recoil/atom";
 
-import useFirebaseInit from './useFirebaseInit';
+import useFirebaseInit from "./useFirebaseInit";
 
 const useFCMPushAlarm = () => {
   useFirebaseInit();
