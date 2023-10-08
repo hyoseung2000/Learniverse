@@ -14,6 +14,7 @@ interface StudyroomCardProps {
   roomType?: string;
   isPinned?: boolean;
   isMyroom?: boolean;
+  isInterest?: boolean;
   setPinChange?: Dispatch<SetStateAction<boolean>>;
   handleApply?: () => void;
   handleManage?: () => void;
@@ -25,6 +26,7 @@ const StudyroomCard = ({
   roomType,
   isPinned,
   isMyroom,
+  isInterest,
   setPinChange,
   handleApply,
   handleManage,
@@ -81,25 +83,27 @@ const StudyroomCard = ({
         </StHashtags>
         <StCategory>{roomCategory}</StCategory>
         <StIntro>{roomIntro}</StIntro>
-        <StJoinWrapper>
-          <StLimit>
-            정원
-            <span> {roomCount}</span> / {roomLimit}명
-          </StLimit>
-          {isMember === null ? (
-            <StJoin type="button" onClick={handleApply}>
-              참여
-            </StJoin>
-          ) : (
-            <StEnter
-              type="button"
-              disabled={!canJoinRoom}
-              onClick={handleGotoRoom}
-            >
-              입장
-            </StEnter>
-          )}
-        </StJoinWrapper>
+        {!isInterest && (
+          <StJoinWrapper>
+            <StLimit>
+              정원
+              <span> {roomCount}</span> / {roomLimit}명
+            </StLimit>
+            {isMember === null ? (
+              <StJoin type="button" onClick={handleApply}>
+                참여
+              </StJoin>
+            ) : (
+              <StEnter
+                type="button"
+                disabled={!canJoinRoom}
+                onClick={handleGotoRoom}
+              >
+                입장
+              </StEnter>
+            )}
+          </StJoinWrapper>
+        )}
       </StStudyroomCardWrapper>
       {showManagementButtons && (
         <StBtnWrapper>

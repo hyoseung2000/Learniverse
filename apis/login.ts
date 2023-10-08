@@ -1,2 +1,11 @@
-// 로그인 관련 api
-// 이런식으로 컴포넌트 또는 페이지별 필요햔 api들 파일에 모아놓기
+import { client } from './axios';
+
+export const getInterestRoomLists = async () => {
+  try {
+    const { data } = await client.get(`room/create/interest`);
+    return data.data.rooms;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
