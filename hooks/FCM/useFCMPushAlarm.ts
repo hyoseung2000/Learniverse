@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 import 'firebase/messaging';
 
 // import firebase from "firebase/app";
@@ -16,8 +17,7 @@ const useFCMPushAlarm = () => {
   const channel = new BroadcastChannel('fcm_channel');
 
   useEffect(() => {
-    channel.onmessage = function (e) {
-      console.log('알림', e.data);
+    channel.onmessage = function () {
       setCaptureTime((prev) => prev + 1);
     };
   }, []);
