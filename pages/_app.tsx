@@ -2,15 +2,15 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import type { AppProps } from 'next/app';
 
-import Head from "next/head";
-import { useEffect, useState } from "react";
-import { RecoilRoot } from "recoil";
-import { ThemeProvider } from "styled-components";
+import Head from 'next/head';
+import { useEffect, useState } from 'react';
+import { RecoilRoot } from 'recoil';
+import { ThemeProvider } from 'styled-components';
 
-import { Header } from "@/components/Common/Header";
-import { ServiceWorkerManager } from "@/hooks/FCM";
-import { GlobalStyle } from "@/styles/GlobalStyle";
-import { theme } from "@/styles/theme";
+import { Header } from '@/components/Common/Header';
+import { ServiceWorkerManager } from '@/hooks/FCM';
+import { GlobalStyle } from '@/styles/GlobalStyle';
+import { theme } from '@/styles/theme';
 
 export default function App({ Component, pageProps }: AppProps) {
   const [isClient, setIsClient] = useState(false);

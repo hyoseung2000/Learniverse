@@ -1,22 +1,21 @@
-import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
-import { keyframes, styled } from "styled-components";
+import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { keyframes, styled } from 'styled-components';
 
-import { recommendRoomList } from "@/apis/roomList";
-import { applyRoom, getRoomInfo } from "@/apis/studyroom";
-import { LargeModal } from "@/components/Common/Modal";
-import { StudyroomCard } from "@/components/RoomCard";
-import { StManageModalWrapper } from "@/components/RoomList/MyPageStudyRoomList";
+import { getRoomInfo } from '@/apis/studyroom';
+import { LargeModal } from '@/components/Common/Modal';
+import { StudyroomCard } from '@/components/RoomCard';
+import { StManageModalWrapper } from '@/components/RoomList/MyPageStudyRoomList';
 import {
   StContentWrapper,
-  StSmallModalWrapper
-} from "@/containers/Apply/ApplyContainer";
-import { useGetRecommendRoomList } from "@/hooks/StudyRooms";
-import useModal from "@/hooks/useModal";
-import { memberIdState } from "@/recoil/atom";
-import { StudyRoomInfo } from "@/types/studyroom";
+  StSmallModalWrapper,
+} from '@/containers/Apply/ApplyContainer';
+import { useGetRecommendRoomList } from '@/hooks/StudyRooms';
+import useModal from '@/hooks/useModal';
+import { memberIdState } from '@/recoil/atom';
+import { StudyRoomInfo } from '@/types/studyroom';
 
-import ApplyCompleteModal from "../ApplyCompleteModal/ApplyCompleteModal";
+import ApplyCompleteModal from '../ApplyCompleteModal/ApplyCompleteModal';
 
 interface RecommendStudyProps {
   isShowing: boolean;

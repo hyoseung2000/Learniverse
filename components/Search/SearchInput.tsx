@@ -1,7 +1,7 @@
-import { Dispatch, SetStateAction, useState } from "react";
-import { styled } from "styled-components";
+import { Dispatch, SetStateAction, useState } from 'react';
+import { styled } from 'styled-components';
 
-import { IcSearch } from "@/public/assets/icons";
+import { IcSearch } from '@/public/assets/icons';
 
 interface SearchInputProps {
   handleSearch: (searchInput: string) => Promise<void>;

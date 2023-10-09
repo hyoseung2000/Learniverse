@@ -1,16 +1,16 @@
-import { useState } from "react";
-import { useRecoilValue } from "recoil";
-import { styled } from "styled-components";
+import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { styled } from 'styled-components';
 
-import { applyRoom } from "@/apis/studyroom";
-import useModal from "@/hooks/useModal";
-import { memberIdState } from "@/recoil/atom";
+import { applyRoom } from '@/apis/studyroom';
+import useModal from '@/hooks/useModal';
+import { memberIdState } from '@/recoil/atom';
 
-import { PurpleButton } from "../Common/Button";
-import ApplyCompleteModal from "./ApplyCompleteModal/ApplyCompleteModal";
-import RecommendStudy from "./Recommend/Recommend";
-import SearchInput from "./SearchInput";
-import SearchResult from "./SearchResult";
+import { PurpleButton } from '../Common/Button';
+import ApplyCompleteModal from './ApplyCompleteModal/ApplyCompleteModal';
+import RecommendStudy from './Recommend/Recommend';
+import SearchInput from './SearchInput';
+import SearchResult from './SearchResult';
 
 const Search = () => {
   const curMemberId = useRecoilValue(memberIdState);

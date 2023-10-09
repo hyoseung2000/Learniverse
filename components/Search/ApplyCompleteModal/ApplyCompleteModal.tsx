@@ -1,14 +1,14 @@
-import React from "react";
-import { styled } from "styled-components";
+import React from 'react';
+import { styled } from 'styled-components';
 
-import { ConfirmButton } from "@/components/Common/Button";
-import { SmallModal } from "@/components/Common/Modal";
-import { StManageModalWrapper } from "@/components/RoomList/MyPageStudyRoomList";
+import { ConfirmButton } from '@/components/Common/Button';
+import { SmallModal } from '@/components/Common/Modal';
+import { StManageModalWrapper } from '@/components/RoomList/MyPageStudyRoomList';
 import {
   StContentWrapper,
-  StSmallModalWrapper
-} from "@/containers/Apply/ApplyContainer";
-import { IcCharacterCheck } from "@/public/assets/icons";
+  StSmallModalWrapper,
+} from '@/containers/Apply/ApplyContainer';
+import { IcCharacterCheck } from '@/public/assets/icons';
 
 interface StudyApplyCompleteModalProps {
   isShowing: boolean;

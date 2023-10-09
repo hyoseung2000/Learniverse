@@ -1,4 +1,4 @@
-import { StudyroomContianer } from "@/containers/Studyroom";
+import { StudyroomContianer } from '@/containers/Studyroom';
 
 const index = () => {
   return <StudyroomContianer />;

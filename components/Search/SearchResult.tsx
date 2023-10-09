@@ -1,9 +1,9 @@
-import { styled } from "styled-components";
+import { styled } from 'styled-components';
 
-import { useGetSearchResult } from "@/hooks/StudyRooms";
+import { useGetSearchResult } from '@/hooks/StudyRooms';
 
-import { StudyroomCard } from "../RoomCard";
-import { StMyPageRoomListWrapper } from "../RoomList/MyPageStudyRoomList";
+import { StudyroomCard } from '../RoomCard';
+import { StMyPageRoomListWrapper } from '../RoomList/MyPageStudyRoomList';
 
 interface SearchResultProps {
   searched: boolean;

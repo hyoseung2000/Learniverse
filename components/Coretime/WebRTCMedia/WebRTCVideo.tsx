@@ -1,11 +1,11 @@
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
-import { styled } from "styled-components";
+import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
+import { styled } from 'styled-components';
 
-import { IcCoreChar } from "@/public/assets/icons";
+import { IcCoreChar } from '@/public/assets/icons';
 
 interface WebRTCVideoProps {
   roomId: string;
-  memberId: string;
+  // memberId: string;
   nickname: string;
   mediaStream: MediaStream | undefined;
   isSelected: boolean;
