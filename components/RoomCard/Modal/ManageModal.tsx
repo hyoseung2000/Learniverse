@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
 import { getWaitMembers, JoinMember, RejectMember } from '@/apis/memberList';
+import { encodeRoomId } from '@/apis/studyroom';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { SmallModal } from '@/components/Common/Modal';
+import { IcCopy } from '@/public/assets/icons';
 import { MemberInfo } from '@/types/member';
 
 interface CompleteModalProps {
@@ -19,8 +21,20 @@ const ManageModal = ({
   handleConfirm,
   handleCancel,
 }: CompleteModalProps) => {
+  const [encodedLink, setEncodedLink] = useState('');
   const [applyList, setApplyList] = useState<MemberInfo[]>();
   const [statusChange, setStatusChange] = useState(false);
+
+  const getEncodedUrl = async () => {
+    const link = await encodeRoomId(roomId);
+    setEncodedLink(`learniverse-front-end.vercel.app/apply/${link}`);
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(encodedLink).then(() => {
+      alert('링크를 클립보드에 복사했습니다.');
+    });
+  };
 
   const getApplyList = async () => {
     const list = await getWaitMembers(roomId);
@@ -38,12 +52,24 @@ const ManageModal = ({
   };
 
   useEffect(() => {
-    if (roomId !== 0) getApplyList();
+    if (roomId !== 0) {
+      getEncodedUrl();
+      getApplyList();
+    }
   }, [roomId, statusChange]);
 
   return (
     isShowing && (
       <SmallModal title="신청자 관리하기" isShowing={isShowing}>
+        <StRoomLink>
+          <p>
+            <strong>초대 링크</strong>
+            {encodedLink}
+            <button type="button" onClick={handleCopy}>
+              <IcCopy />
+            </button>
+          </p>
+        </StRoomLink>
         <StManageModalWrapper>
           <p>닉네임</p>
           <p>깃허브 아이디</p>
@@ -99,6 +125,30 @@ const StManageModalWrapper = styled.div`
 
     color: ${({ theme }) => theme.colors.Learniverse_BG};
     ${({ theme }) => theme.fonts.Title5};
+  }
+`;
+
+const StRoomLink = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 1rem 0;
+  box-sizing: border-box;
+
+  & > p {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
+    padding: 1rem;
+
+    color: ${({ theme }) => theme.colors.Learniverse_BG};
+    ${({ theme }) => theme.fonts.Body7};
+
+    border-radius: 0.4rem;
+    border: 0.2rem solid ${({ theme }) => theme.colors.Purple4};
   }
 `;
 

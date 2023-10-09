@@ -72,7 +72,7 @@ const StBtnWrapper = styled.div`
   gap: 1rem;
 `;
 
-const StLink = styled.p`
+export const StLink = styled.p`
   display: flex;
   flex-direction: column;
   justify-content: center;
