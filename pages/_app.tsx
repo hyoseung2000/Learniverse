@@ -8,6 +8,7 @@ import { RecoilRoot } from 'recoil';
 import { ThemeProvider } from 'styled-components';
 
 import { Header } from '@/components/Common/Header';
+import { ServiceWorkerManager } from '@/hooks/FCM';
 import { GlobalStyle } from '@/styles/GlobalStyle';
 import { theme } from '@/styles/theme';
 
@@ -16,26 +17,6 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     setIsClient(true);
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').then(
-          (registration) => {
-            console.log('SW registered: ', registration);
-          },
-          (err) => {
-            console.log('SW registration failed: ', err);
-          },
-        );
-        navigator.serviceWorker.register('/firebase-messaging-sw.js').then(
-          (registration) => {
-            console.log('FCM registered: ', registration);
-          },
-          (err) => {
-            console.log('FCM registration failed: ', err);
-          },
-        );
-      });
-    }
   }, []);
 
   if (!isClient) {
@@ -44,11 +25,13 @@ export default function App({ Component, pageProps }: AppProps) {
   if (typeof window === 'undefined') {
     return null;
   }
+
   return (
     isClient && (
       <RecoilRoot>
         <ThemeProvider theme={theme}>
           <GlobalStyle />
+          <ServiceWorkerManager />
           <Head>
             <title>LearniVerse</title>
             <link rel="icon" href="/favicon.ico" />

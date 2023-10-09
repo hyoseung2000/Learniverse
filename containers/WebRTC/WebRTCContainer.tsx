@@ -1,32 +1,32 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 
-import { getCoreEndtime } from '@/apis/coretimes';
-import { useFCMPushAlarm } from '@/hooks/FCM';
+import { getCoreEndtime } from "@/apis/coretimes";
+import { useFCMPushAlarm } from "@/hooks/FCM";
 import {
   useChatHandler,
   useSocketConnection,
   useVideoSelector,
-  useWebRTC,
-} from '@/hooks/Socket';
-import useModal from '@/hooks/useModal';
-import useToggle from '@/hooks/useToggle';
-import { captureTimeState, memberIdState } from '@/recoil/atom';
-import { getNickName } from '@/utils/getNicknames';
+  useWebRTC
+} from "@/hooks/Socket";
+import useModal from "@/hooks/useModal";
+import useToggle from "@/hooks/useToggle";
+import { captureTimeState, memberIdState } from "@/recoil/atom";
+import { getNickName } from "@/utils/getNicknames";
 
-import WebRTCLayout from './WebRTCLayout';
+import WebRTCLayout from "./WebRTCLayout";
 
 const WebRTCContainer = () => {
   // 전역 상태 (coreTimeId, memberId, 캡처 시간)
   const router = useRouter();
   const { room_id } = router.query;
   const name = useRecoilValue(memberIdState);
-  const isCaptureTime = useRecoilValue(captureTimeState);
 
   // 푸시 알림 받기
   useFCMPushAlarm();
+  const [captureTime, setCaptureTime] = useRecoilState(captureTimeState);
 
   // 현재 코어타임, 사용자 관련 상태
   const [curName, setCurName] = useState<string>();
@@ -119,7 +119,7 @@ const WebRTCContainer = () => {
 
   return (
     <WebRTCLayout
-      isCaptureTime={isCaptureTime}
+      captureTime={captureTime}
       coreEndTime={curCoreEndTime!}
       curNickname={curNickname!}
       curRoomId={curRoomId!}

@@ -1,16 +1,8 @@
-// Import the functions you need from the SDKs you need
+importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js');
 importScripts(
-  'https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js',
-);
-importScripts(
-  'https://www.gstatic.com/firebasejs/10.4.0/firebase-messaging-compat.js',
+  'https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js',
 );
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: 'AIzaSyDjK6isLBGownY7C1AEA6n05-hjpZEleEo',
   authDomain: 'learniverse-b34d9.firebaseapp.com',
@@ -25,24 +17,47 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging(app);
 
-messaging.onBackgroundMessage(messaging, (payload) => {
+messaging.onBackgroundMessage((payload) => {
   console.log(
     '[firebase-messaging-sw.js] Received background message ',
     payload,
   );
 
-  // Customize notification here
-  const notificationTitle = '[Background] 스크린이 캡처되었습니다!';
-  const notificationOptions = {
-    body: payload,
-    icon: '/public/favicon-32x32.png',
-  };
+  self.addEventListener('push', function (e) {
+    const bc = new BroadcastChannel('fcm_channel');
+    if (!e.data.json()) return;
+    console.log(e);
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+    const resultData = e.data.json();
+    const notificationTitle = resultData.notification.title;
+    const notificationOptions = {
+      body: resultData.notification.body,
+      data: resultData.data,
+      ...resultData,
+    };
+
+    e.waitUntil(
+      self.registration.showNotification(
+        notificationTitle,
+        notificationOptions,
+      ),
+    );
+
+    bc.postMessage(resultData);
+  });
 });
 
+// self.addEventListener('notificationclick', function (event) {
+//   const url = `http://localhost:3002/`;
+//   event.notification.close();
+//   event.waitUntil(clients.openWindow(url));
+// });
+
 self.addEventListener('notificationclick', function (event) {
-  const url = `http://localhost:4003/`;
   event.notification.close();
-  event.waitUntil(clients.openWindow(url));
+
+  // 클릭 액션 URL을 이용하여 새 탭을 엽니다.
+  if (event.notification.data && event.notification.data.click_action) {
+    event.waitUntil(clients.openWindow(event.notification.data.click_action));
+  }
 });

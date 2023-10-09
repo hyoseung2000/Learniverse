@@ -1,145 +1,68 @@
 import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { keyframes, styled } from 'styled-components';
+import { styled } from 'styled-components';
 
-import { recommendRoomList, searchHashtag } from '@/apis/roomList';
-import { applyRoom, getRoomInfo } from '@/apis/studyroom';
-import {
-  StContentWrapper,
-  StSmallModalWrapper,
-} from '@/containers/Apply/ApplyContainer';
+import { applyRoom } from '@/apis/studyroom';
 import useModal from '@/hooks/useModal';
-import { IcCharacterCheck } from '@/public/assets/icons';
 import { memberIdState } from '@/recoil/atom';
-import { StudyRoomInfo } from '@/types/studyroom';
 
-import { ConfirmButton, PurpleButton } from '../Common/Button';
-import { LargeModal, SmallModal } from '../Common/Modal';
-import { StudyroomCard } from '../RoomCard';
-import {
-  StManageModalWrapper,
-  StMyPageRoomListWrapper,
-} from '../RoomList/MyPageStudyRoomList';
+import { PurpleButton } from '../Common/Button';
+import ApplyCompleteModal from './ApplyCompleteModal/ApplyCompleteModal';
+import RecommendStudy from './Recommend/Recommend';
 import SearchInput from './SearchInput';
+import SearchResult from './SearchResult';
 
 const Search = () => {
   const curMemberId = useRecoilValue(memberIdState);
-  const [searchResult, setSearchResult] = useState<StudyRoomInfo[]>();
-  const [recommendResult, setRecommendResult] = useState<StudyRoomInfo[]>();
+  const [selectedInput, setSelectedInput] = useState(0);
+  const [currentSearchInput, setCurrentSearchInput] = useState<string>('');
   const [searched, setSearched] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  const applyCompleteModal = useModal();
   const recommendModal = useModal();
+  const applyModal = useModal();
 
   const handleSearch = async (searchInput: string) => {
     setSearched(true);
-    const result = await searchHashtag(searchInput, curMemberId);
-    setSearchResult(result);
+    setCurrentSearchInput(searchInput);
   };
 
   const handleApply = async (roomId: number) => {
     await applyRoom(roomId, curMemberId);
-    applyCompleteModal.toggle();
   };
 
-  const getRoomData = async (roomId: number) => {
-    const roomData = await getRoomInfo(roomId, curMemberId);
-    return roomData;
-  };
-
-  const handleRecommend = async () => {
-    recommendModal.toggle();
-
-    setLoading(true);
-    const roomIds: number[] = await recommendRoomList(curMemberId);
-    const roomDataPromises = roomIds.map((id) => getRoomData(id));
-    const rooms = await Promise.all(roomDataPromises);
-    setRecommendResult(rooms);
-    setLoading(false);
+  const handleApplyClick = async (roomId: number) => {
+    handleApply(roomId);
+    applyModal.toggle();
   };
 
   return (
     <StSearchWrapper>
       <h1>스터디 검색</h1>
-      <SearchInput handleSearch={handleSearch} />
+      <SearchInput
+        handleSearch={handleSearch}
+        selectedInput={selectedInput}
+        setSelectedInput={setSelectedInput}
+      />
       <PurpleButton
         btnName="✨ 나와 맞는 스터디 추천받기"
-        handleClick={handleRecommend}
+        handleClick={recommendModal.toggle}
       />
-      <StRoomListWrapper>
-        {searchResult && searchResult.length > 0
-          ? searchResult.map((room) => (
-              <StudyroomCard
-                key={room.roomId}
-                roomData={room}
-                handleApply={
-                  room.isMember === null
-                    ? () => handleApply(room.roomId)
-                    : undefined
-                }
-              />
-            ))
-          : searched && <p>검색 결과가 없습니다.</p>}
-      </StRoomListWrapper>
-
-      <StCompleteModalWrapper $showing={applyCompleteModal.isShowing}>
-        <SmallModal
-          title="스터디 참여 신청 완료"
-          isShowing={applyCompleteModal.isShowing}
-        >
-          <StModalWrapper>
-            <StModalContentWrapper>
-              <IcCharacterCheck />
-              <p>
-                스터디 참여 신청이 완료되었어요.
-                <br />
-                팀장이 수락한 뒤 스터디에 참여할 수 있어요.
-              </p>
-            </StModalContentWrapper>
-            <ConfirmButton btnName="확인" onClick={applyCompleteModal.toggle} />
-          </StModalWrapper>
-        </SmallModal>
-      </StCompleteModalWrapper>
-
-      <StRecommendModalWrapper $showing={recommendModal.isShowing}>
-        <LargeModal
-          title="나와 맞는 스터디 추천받기"
-          isShowing={recommendModal.isShowing}
-        >
-          <StCloseBtn type="button" onClick={recommendModal.toggle}>
-            𝗫
-          </StCloseBtn>
-          <StRecommendWrapper>
-            <StRecommendModalContentWrapper>
-              {loading && (
-                <StLoadingWrapper>
-                  <div className="loading-animation" />
-                  <p>
-                    관심사와 희망 언어를 바탕으로 적합한 스터디를 찾고 있어요.
-                  </p>
-                </StLoadingWrapper>
-              )}
-              {!loading && (
-                <StRecommendRoomList>
-                  {recommendResult &&
-                    recommendResult.map((room) => (
-                      <StudyroomCard
-                        key={room.roomId}
-                        roomData={room}
-                        handleApply={
-                          room.isMember === null
-                            ? () => handleApply(room.roomId)
-                            : undefined
-                        }
-                      />
-                    ))}
-                </StRecommendRoomList>
-              )}
-            </StRecommendModalContentWrapper>
-          </StRecommendWrapper>
-        </LargeModal>
-      </StRecommendModalWrapper>
+      <SearchResult
+        searched={searched}
+        searchType={selectedInput === 0 ? 'search' : 'hashtag'}
+        keyword={currentSearchInput}
+        memberId={curMemberId}
+        handleApply={handleApplyClick}
+      />
+      <ApplyCompleteModal
+        isShowing={applyModal.isShowing}
+        toggleModal={applyModal.toggle}
+      />
+      <RecommendStudy
+        isShowing={recommendModal.isShowing}
+        toggleModal={recommendModal.toggle}
+        handleApply={handleApply}
+      />
     </StSearchWrapper>
   );
 };
@@ -161,97 +84,5 @@ const StSearchWrapper = styled.section`
 
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-  }
-`;
-
-const StRoomListWrapper = styled(StMyPageRoomListWrapper)`
-  position: relative;
-  & > p {
-    position: absolute;
-    top: 10rem;
-    left: -7rem;
-
-    width: 23rem;
-
-    color: ${({ theme }) => theme.colors.White};
-    ${({ theme }) => theme.fonts.Body0};
-  }
-`;
-
-const StCloseBtn = styled.button`
-  position: absolute;
-  top: 1rem;
-  right: 3rem;
-
-  ${({ theme }) => theme.fonts.Title1};
-`;
-
-const StCompleteModalWrapper = styled(StManageModalWrapper)`
-  z-index: 20;
-`;
-
-const StModalWrapper = styled(StSmallModalWrapper)``;
-
-const StModalContentWrapper = styled(StContentWrapper)``;
-
-const StRecommendModalWrapper = styled(StManageModalWrapper)`
-  z-index: 19;
-`;
-
-const StRecommendModalContentWrapper = styled(StContentWrapper)``;
-
-const StRecommendWrapper = styled(StSmallModalWrapper)`
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  overflow-x: auto;
-
-  width: 90%;
-  height: 37.8rem;
-  margin-left: 1.5rem;
-`;
-
-const StRecommendRoomList = styled.div`
-  display: flex;
-  overflow-x: auto;
-  gap: 2rem;
-
-  padding: 2rem;
-`;
-
-const rotate = keyframes`
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-`;
-
-const StLoadingWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 10rem;
-
-  padding: 10rem 0 0 8rem;
-
-  & > p {
-    width: 100%;
-    color: ${({ theme }) => theme.colors.Learniverse_BG};
-    ${({ theme }) => theme.fonts.Title5};
-    font-size: 1.5rem;
-  }
-  & > .loading-animation {
-    content: '';
-
-    width: 5rem;
-    height: 5rem;
-
-    border: 1rem solid rgba(156, 156, 156, 0.3);
-    border-radius: 50%;
-    border-top: 1rem solid ${({ theme }) => theme.colors.Blue};
-    animation: ${rotate} 1s linear infinite;
   }
 `;

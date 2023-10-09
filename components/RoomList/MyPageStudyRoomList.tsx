@@ -21,6 +21,7 @@ interface MyPageStudyRoomListProps {
   isLeader?: boolean;
 }
 
+// TODO : 리팩토링 - 컴포넌트 분리
 const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
   const [roomList, setRoomList] = useState<StudyRoomInfo[]>();
 

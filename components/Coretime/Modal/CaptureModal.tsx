@@ -39,10 +39,12 @@ const CaptureModal = ({
       setRemainingTime(10);
     }
 
-    return () => {
-      if (timer) clearTimeout(timer);
-    };
+    return () => {};
   }, [isShowing, remainingTime]);
+
+  useEffect(() => {
+    setRemainingTime(60);
+  }, [imageFile]);
 
   return (
     isShowing && (

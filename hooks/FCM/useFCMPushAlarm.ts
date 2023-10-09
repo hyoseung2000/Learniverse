@@ -1,26 +1,36 @@
-import { getMessaging, onMessage } from 'firebase/messaging';
-import { useEffect } from 'react';
-import { useSetRecoilState } from 'recoil';
+import "firebase/messaging";
 
-import { captureTimeState } from '@/recoil/atom';
+// import firebase from "firebase/app";
+import { useEffect } from "react";
+import { useSetRecoilState } from "recoil";
 
-import useFirebaseInit from './useFirebaseInit';
+import { captureTimeState } from "@/recoil/atom";
+
+import useFirebaseInit from "./useFirebaseInit";
 
 const useFCMPushAlarm = () => {
   useFirebaseInit();
+  const setCaptureTime = useSetRecoilState(captureTimeState);
 
-  const setIsCaptureTime = useSetRecoilState(captureTimeState);
+  // BroadcastChannel 구독
+  const channel = new BroadcastChannel('fcm_channel');
 
   useEffect(() => {
-    const messaging = getMessaging();
-
-    const unsubscribe = onMessage(messaging, (payload) => {
-      console.log('[Foreground]Message received. ', payload);
-      setIsCaptureTime((prev) => !prev);
-    });
-
-    return () => unsubscribe();
+    channel.onmessage = function (e) {
+      setCaptureTime((prev) => prev + 1);
+    };
   }, []);
+
+  // useEffect(() => {
+  // const messaging = firebase.messaging();
+
+  // const unsubscribe = messaging.onMessage((payload) => {
+  //   console.log('[Foreground]Message received. ', payload);
+  //   setCaptureTime((prev) => prev + 1);
+  // });
+
+  // return () => unsubscribe();
+  // }, []);
 };
 
 export default useFCMPushAlarm;

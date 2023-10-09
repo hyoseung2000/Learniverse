@@ -1,10 +1,12 @@
-import { getApps, initializeApp } from 'firebase/app';
+import 'firebase/messaging';
+
+import firebase from 'firebase/app';
 import { useEffect } from 'react';
 
 const useFirebaseInit = () => {
   useEffect(() => {
-    if (!getApps().length) {
-      initializeApp({
+    if (!firebase.apps.length) {
+      firebase.initializeApp({
         apiKey: 'AIzaSyDjK6isLBGownY7C1AEA6n05-hjpZEleEo',
         authDomain: 'learniverse-b34d9.firebaseapp.com',
         projectId: 'learniverse-b34d9',
