@@ -1,22 +1,22 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
-import { getCoreEndtime } from "@/apis/coretimes";
-import { useFCMPushAlarm } from "@/hooks/FCM";
+import { getCoreEndtime } from '@/apis/coretimes';
+import { useFCMPushAlarm } from '@/hooks/FCM';
 import {
   useChatHandler,
   useSocketConnection,
   useVideoSelector,
-  useWebRTC
-} from "@/hooks/Socket";
-import useModal from "@/hooks/useModal";
-import useToggle from "@/hooks/useToggle";
-import { captureTimeState, memberIdState } from "@/recoil/atom";
-import { getNickName } from "@/utils/getNicknames";
+  useWebRTC,
+} from '@/hooks/Socket';
+import useModal from '@/hooks/useModal';
+import useToggle from '@/hooks/useToggle';
+import { captureTimeState, memberIdState } from '@/recoil/atom';
+import { getNickName } from '@/utils/getNicknames';
 
-import WebRTCLayout from "./WebRTCLayout";
+import WebRTCLayout from './WebRTCLayout';
 
 const WebRTCContainer = () => {
   // 전역 상태 (coreTimeId, memberId, 캡처 시간)
