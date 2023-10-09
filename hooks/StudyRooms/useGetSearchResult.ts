@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable prettier/prettier */
 import { AxiosResponse } from 'axios';
-import useSWR from 'swr';
+import useSWRInfinite from 'swr/infinite';
 
 import { mainGetFetcher } from '@/apis/axios';
-import { StudyRoomListInfo } from '@/types/studyroom';
+import { StudyRoomInfo, StudyRoomListInfo } from '@/types/studyroom';
 
 const useGetSearchResult = (
   keyword: string,
@@ -13,41 +14,29 @@ const useGetSearchResult = (
   page: number,
   searchType: string,
 ) => {
-  const endpoint =
-    searchType === 'hashtag'
-      ? `/room/search/hashtag?hashtag=${keyword}&memberId=${memberId}&page=${page}`
-      : `/room/search?search=${keyword}&memberId=${memberId}&page=${page}`;
+  const getKey = (
+    pageIndex: number,
+    previousPageData: AxiosResponse<StudyRoomListInfo> | null,
+  ) => {
+    if (previousPageData && !previousPageData.data.rooms.length) return null;
 
-  const { data, error, mutate, isLoading } = useSWR<
-    AxiosResponse<StudyRoomListInfo>
-  >(
-    !keyword ? null : endpoint, // keyword가 없으면 useSWR에 null을 전달하여 요청을 스킵
-    mainGetFetcher,
-  );
-
-  const fetchMore = async (curPage: number) => {
-    const newEndpoint =
-      searchType === 'hashtag'
-        ? `/room/search/hashtag?hashtag=${keyword}&memberId=${memberId}&page=${curPage}`
-        : `/room/search?search=${keyword}&memberId=${memberId}&page=${curPage}`;
-
-    const newData: AxiosResponse<StudyRoomListInfo> = await mainGetFetcher(
-      newEndpoint,
-    );
-
-    // mutate(
-    //   (prevData) => ({
-    //     ...newData,
-    //     rooms: [...prevData, ...newData?.data.rooms],
-    //   }),
-    //   false,
-    // );
+    return searchType === 'hashtag'
+      ? `/room/search/hashtag?hashtag=${keyword}&memberId=${memberId}&page=${pageIndex}`
+      : `/room/search?search=${keyword}&memberId=${memberId}&page=${pageIndex}`;
   };
 
+  const { data, error, size, setSize, isLoading } = useSWRInfinite<
+    AxiosResponse<StudyRoomListInfo>
+  >(getKey, mainGetFetcher);
+
+  const rooms: StudyRoomInfo[] = data
+    ? [].concat(...data.map((res: any) => res.data.rooms))
+    : [];
+  const getNextData = () => setSize(size + 1);
+
   return {
-    resultRoomList: data?.data.rooms,
-    mutate,
-    fetchMore,
+    resultRoomList: rooms,
+    getNextData,
     isLoading,
     isError: error,
   };

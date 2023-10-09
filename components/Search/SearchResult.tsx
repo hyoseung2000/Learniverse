@@ -28,7 +28,7 @@ const SearchResult = ({
     threshold: 0.5,
   });
 
-  const { resultRoomList, isLoading } = useGetSearchResult(
+  const { resultRoomList, getNextData, isLoading } = useGetSearchResult(
     keyword,
     memberId,
     0,
@@ -39,14 +39,12 @@ const SearchResult = ({
     setCurPage(0);
   }, [searchType]);
 
-  // useEffect(() => {
-  //   if (inView) {
-  //     setCurPage((prev) => prev + 1);
-  //     mutate(
-  //       `/room/search?search=${keyword}&memberId=${memberId}&page=${curPage}`,
-  //     );
-  //   }
-  // }, [inView]);
+  useEffect(() => {
+    if (inView) {
+      // setCurPage((prev) => prev + 1);
+      getNextData();
+    }
+  }, [inView]);
 
   console.log('curPage', curPage, inView);
 
