@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useEffect, useState } from 'react';
+import { useInView } from 'react-intersection-observer';
 import { styled } from 'styled-components';
 
 import { useGetSearchResult } from '@/hooks/StudyRooms';
@@ -20,6 +23,11 @@ const SearchResult = ({
   memberId,
   handleApply,
 }: SearchResultProps) => {
+  const [curPage, setCurPage] = useState<number>(0);
+  const { ref, inView } = useInView({
+    threshold: 0.5,
+  });
+
   const { resultRoomList, isLoading } = useGetSearchResult(
     keyword,
     memberId,
@@ -27,19 +35,36 @@ const SearchResult = ({
     searchType,
   );
 
+  useEffect(() => {
+    setCurPage(0);
+  }, [searchType]);
+
+  // useEffect(() => {
+  //   if (inView) {
+  //     setCurPage((prev) => prev + 1);
+  //     mutate(
+  //       `/room/search?search=${keyword}&memberId=${memberId}&page=${curPage}`,
+  //     );
+  //   }
+  // }, [inView]);
+
+  console.log('curPage', curPage, inView);
+
   return (
     <StRoomListWrapper>
       {resultRoomList && resultRoomList.length > 0
         ? resultRoomList.map((room) => (
-            <StudyroomCard
-              key={room.roomId}
-              roomData={room}
-              handleApply={
-                room.isMember === null
-                  ? () => handleApply(room.roomId)
-                  : undefined
-              }
-            />
+            <div key={room.roomId} ref={ref}>
+              <StudyroomCard
+                key={room.roomId}
+                roomData={room}
+                handleApply={
+                  room.isMember === null
+                    ? () => handleApply(room.roomId)
+                    : undefined
+                }
+              />
+            </div>
           ))
         : searched && !isLoading && <p>검색 결과가 없습니다.</p>}
     </StRoomListWrapper>

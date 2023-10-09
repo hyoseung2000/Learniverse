@@ -1,5 +1,3 @@
-import 'firebase/messaging';
-
 import firebase from 'firebase/app';
 import { useEffect } from 'react';
 

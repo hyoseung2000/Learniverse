@@ -1,10 +1,10 @@
-import { useRecoilValue } from 'recoil';
-import { styled } from 'styled-components';
+import { useRecoilValue } from "recoil";
+import { styled } from "styled-components";
 
-import { CancelButton, ConfirmButton } from '@/components/Common/Button';
-import { SmallModal } from '@/components/Common/Modal';
-import { IcCharacterSpeaker } from '@/public/assets/icons';
-import { encodedUrlState } from '@/recoil/atom';
+import { CancelButton, ConfirmButton } from "@/components/Common/Button";
+import { SmallModal } from "@/components/Common/Modal";
+import { IcCharacterSpeaker } from "@/public/assets/icons";
+import { encodedUrlState } from "@/recoil/atom";
 
 interface CompleteModalProps {
   isShowing: boolean;

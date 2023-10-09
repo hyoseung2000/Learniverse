@@ -1,10 +1,10 @@
-import { styled } from 'styled-components';
+import { styled } from "styled-components";
 
-import useModal from '@/hooks/useModal';
-import { IcAddStudyRoom } from '@/public/assets/icons';
+import useModal from "@/hooks/useModal";
+import { IcAddStudyRoom } from "@/public/assets/icons";
 
-import AddStudyroomModal from './Modal/AddStudyroomModal';
-import CompleteModal from './Modal/CompleteModal';
+import AddStudyroomModal from "./Modal/AddStudyroomModal";
+import CompleteModal from "./Modal/CompleteModal";
 
 const AddStudyroom = () => {
   const add = useModal();

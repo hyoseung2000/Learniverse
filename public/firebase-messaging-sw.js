@@ -18,40 +18,46 @@ const app = firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging(app);
 
 messaging.onBackgroundMessage((payload) => {
-  console.log(
-    '[firebase-messaging-sw.js] Received background message ',
-    payload,
-  );
+  console.log('[Background] Message received. ', payload);
 
-  self.addEventListener('push', function (e) {
-    const bc = new BroadcastChannel('fcm_channel');
-    // if (!e.data.json()) return;
-    // console.log(e);
+  const bc = new BroadcastChannel('fcm_channel');
+  bc.postMessage(payload);
 
-    // const resultData = e.data.json();
-    // const notificationTitle = resultData.notification.title;
-    // const notificationOptions = {
-    //   body: resultData.notification.body,
-    //   data: resultData.data,
-    //   ...resultData,
-    // };
+  const notificationTitle = payload.data.title;
+  const notificationOptions = {
+    body: payload.data.body,
+    icon: '/favicon.png',
+    data: payload.data.link,
+  };
 
-    // e.waitUntil(
-    //   self.registration.showNotification(
-    //     notificationTitle,
-    //     notificationOptions,
-    //   ),
-    // );
-
-    bc.postMessage(payload);
-  });
+  self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
-// self.addEventListener('notificationclick', function (event) {
-//   const url = `http://localhost:3002/`;
-//   event.notification.close();
-//   event.waitUntil(clients.openWindow(url));
-// });
+self.addEventListener('notificationclick', function (event) {
+  console.log(event.notification);
+
+  const targetUrl =
+    event.notification.data || 'https://learniverse-front-end.vercel.app/';
+  event.notification.close();
+
+  event.waitUntil(
+    clients
+      .matchAll({ type: 'window', includeUncontrolled: true })
+      .then(function (clientList) {
+        // 해당 페이지가 이미 열려 있는지 확인
+        for (let i = 0; i < clientList.length; i++) {
+          const client = clientList[i];
+          if (client.url === targetUrl && 'focus' in client) {
+            return client.focus();
+          }
+        }
+        // 페이지가 열려 있지 않으면 새 탭에서 열림
+        if (clients.openWindow) {
+          return clients.openWindow(targetUrl);
+        }
+      }),
+  );
+});
 
 // self.addEventListener('notificationclick', function (event) {
 //   event.notification.close();

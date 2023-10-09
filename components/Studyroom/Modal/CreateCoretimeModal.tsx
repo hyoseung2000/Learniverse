@@ -22,9 +22,9 @@ interface Props {
 
 const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
   const [startDate, setStartDate] = useState<Date>(new Date());
-  const [coreHr, setCoreHr] = useState<number>(1);
+  const [coreHr, setCoreHr] = useState<number>(0);
   const [coreMin, setCoreMin] = useState<number>(30);
-  const [capture, setCapture] = useState<number>(0);
+  const [capture, setCapture] = useState<number>(100);
   const [coreTimeInfo, setCoreTimeInfo] = useState<PostCoreTimeInfo>();
   const roomID = useRecoilValue(roomIdState);
 
