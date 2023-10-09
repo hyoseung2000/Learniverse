@@ -1,12 +1,12 @@
-import "firebase/messaging";
+import 'firebase/messaging';
 
 // import firebase from "firebase/app";
-import { useEffect } from "react";
-import { useSetRecoilState } from "recoil";
+import { useEffect } from 'react';
+import { useSetRecoilState } from 'recoil';
 
-import { captureTimeState } from "@/recoil/atom";
+import { captureTimeState } from '@/recoil/atom';
 
-import useFirebaseInit from "./useFirebaseInit";
+import useFirebaseInit from './useFirebaseInit';
 
 const useFCMPushAlarm = () => {
   useFirebaseInit();
@@ -17,6 +17,7 @@ const useFCMPushAlarm = () => {
 
   useEffect(() => {
     channel.onmessage = function (e) {
+      console.log('알림', e.data);
       setCaptureTime((prev) => prev + 1);
     };
   }, []);

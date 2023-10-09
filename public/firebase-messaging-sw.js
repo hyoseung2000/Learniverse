@@ -25,25 +25,25 @@ messaging.onBackgroundMessage((payload) => {
 
   self.addEventListener('push', function (e) {
     const bc = new BroadcastChannel('fcm_channel');
-    if (!e.data.json()) return;
-    console.log(e);
+    // if (!e.data.json()) return;
+    // console.log(e);
 
-    const resultData = e.data.json();
-    const notificationTitle = resultData.notification.title;
-    const notificationOptions = {
-      body: resultData.notification.body,
-      data: resultData.data,
-      ...resultData,
-    };
+    // const resultData = e.data.json();
+    // const notificationTitle = resultData.notification.title;
+    // const notificationOptions = {
+    //   body: resultData.notification.body,
+    //   data: resultData.data,
+    //   ...resultData,
+    // };
 
-    e.waitUntil(
-      self.registration.showNotification(
-        notificationTitle,
-        notificationOptions,
-      ),
-    );
+    // e.waitUntil(
+    //   self.registration.showNotification(
+    //     notificationTitle,
+    //     notificationOptions,
+    //   ),
+    // );
 
-    bc.postMessage(resultData);
+    bc.postMessage(payload);
   });
 });
 
@@ -53,11 +53,11 @@ messaging.onBackgroundMessage((payload) => {
 //   event.waitUntil(clients.openWindow(url));
 // });
 
-self.addEventListener('notificationclick', function (event) {
-  event.notification.close();
+// self.addEventListener('notificationclick', function (event) {
+//   event.notification.close();
 
-  // 클릭 액션 URL을 이용하여 새 탭을 엽니다.
-  if (event.notification.data && event.notification.data.click_action) {
-    event.waitUntil(clients.openWindow(event.notification.data.click_action));
-  }
-});
+//   // 클릭 액션 URL을 이용하여 새 탭을 엽니다.
+//   if (event.notification.data && event.notification.data.click_action) {
+//     event.waitUntil(clients.openWindow(event.notification.data.click_action));
+//   }
+// });
