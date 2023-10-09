@@ -47,7 +47,7 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev -p 3102",
+    "dev": "next dev",
     "lint": "next lint",
     "start": "next start"
   },
