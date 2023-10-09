@@ -7,18 +7,23 @@ import { useSetRecoilState } from 'recoil';
 
 import { captureTimeState } from '@/recoil/atom';
 
+import { usePushNotification } from '../usePushNotification';
 import useFirebaseInit from './useFirebaseInit';
 
 const useFCMPushAlarm = () => {
   useFirebaseInit();
   const setCaptureTime = useSetRecoilState(captureTimeState);
+  const pushNotification = usePushNotification();
 
   // BroadcastChannel 구독
   const channel = new BroadcastChannel('fcm_channel');
 
   useEffect(() => {
-    channel.onmessage = function () {
+    channel.onmessage = (event: MessageEvent) => {
+      console.log(event.data);
       setCaptureTime((prev) => prev + 1);
+      console.log(pushNotification);
+      if (pushNotification) pushNotification.fireNotification('ㅎㅇ');
     };
   }, []);
 
