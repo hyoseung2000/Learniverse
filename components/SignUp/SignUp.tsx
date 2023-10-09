@@ -8,15 +8,35 @@ import { StudyroomCard } from '../RoomCard';
 
 const SignUp = () => {
   const [roomList, setRoomList] = useState<StudyRoomInfo[]>();
+  // const [isSelected, setIsSelected] = useState(false);
+  const [selectList, setSelectList] = useState<number[]>([]);
 
   const getInterestList = async () => {
     const list = await getInterestRoomLists();
     setRoomList(list);
   };
 
+  const handleSelected = (roomId: number) => {
+    // 선택해제
+    console.log(roomId);
+    console.log(selectList);
+    if (selectList.includes(roomId)) {
+      setSelectList(selectList.filter((pick) => pick !== roomId));
+      console.log(selectList);
+    } // 선택
+    else {
+      setSelectList((select) => [...select, roomId]);
+      console.log(selectList);
+    }
+  };
+
   useEffect(() => {
     getInterestList();
   }, []);
+
+  useEffect(() => {
+    getInterestList();
+  }, [selectList]);
 
   return (
     <StSignUpWrapper>
@@ -28,7 +48,15 @@ const SignUp = () => {
       <StStudyroomListWrapper>
         {roomList &&
           roomList.map((room) => (
-            <StudyroomCard key={room.roomId} roomData={room} isInterest />
+            <StudyroomCard
+              key={room.roomId}
+              roomData={room}
+              isInterest
+              isSelected={selectList.includes(room.roomId)}
+              handleSelected={() => {
+                handleSelected(room.roomId);
+              }}
+            />
           ))}
       </StStudyroomListWrapper>
       <StButton>선택 완료</StButton>

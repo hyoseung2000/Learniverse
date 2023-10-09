@@ -15,10 +15,12 @@ interface StudyroomCardProps {
   isPinned?: boolean;
   isMyroom?: boolean;
   isInterest?: boolean;
+  isSelected?: boolean;
   setPinChange?: Dispatch<SetStateAction<boolean>>;
   handleApply?: () => void;
   handleManage?: () => void;
   handleEdit?: () => void;
+  handleSelected?: (roomId: number) => void;
 }
 
 const StudyroomCard = ({
@@ -27,10 +29,12 @@ const StudyroomCard = ({
   isPinned,
   isMyroom,
   isInterest,
+  isSelected,
   setPinChange,
   handleApply,
   handleManage,
   handleEdit,
+  handleSelected,
 }: StudyroomCardProps) => {
   const {
     roomId,
@@ -67,7 +71,12 @@ const StudyroomCard = ({
 
   return (
     <StCardWrapper>
-      <StStudyroomCardWrapper>
+      <StStudyroomCardWrapper
+        $isSelected={isSelected!}
+        onClick={() => {
+          handleSelected!(roomId);
+        }}
+      >
         <StStarWrapper onClick={handlePin}>
           {isMyroom && (isPinned ? <IcStarPinned /> : <IcStar />)}
         </StStarWrapper>
@@ -130,21 +139,26 @@ const StCardWrapper = styled.div`
   width: 14.1rem;
 `;
 
-const StStudyroomCardWrapper = styled.article`
+const StStudyroomCardWrapper = styled.article<{ $isSelected: boolean }>`
   position: relative;
   display: flex;
   flex-direction: column;
 
   width: 100%;
   height: 18.6rem;
-  padding: 1.8rem 1.9rem;
+  // padding: 1.8rem 1.9rem;
   box-sizing: border-box;
 
   border-radius: 1.6rem;
   box-shadow: 2.79591px 2.79591px 5.59181px 3.49488px rgba(0, 0, 0, 0.24);
-  background: ${({ theme }) => theme.colors.White};
+
   color: ${({ theme }) => theme.colors.Gray1};
   ${({ theme }) => theme.fonts.Title5};
+
+  ${({ $isSelected }) =>
+    $isSelected
+      ? 'border: 1rem outset transparent; background: linear-gradient(#ffffff, #ffffff), linear-gradient(93deg, #9985fe 1%, #93cdfd 100%); background-origin: border-box; background-clip: content-box, border-box;'
+      : 'background: #ffffff;'};
 `;
 
 const StStarWrapper = styled.div`
@@ -160,6 +174,8 @@ const StIconWrapper = styled.div<{ $planetColor: string }>`
   justify-content: center;
   width: 100%;
   height: 5.2rem;
+
+  margin-top: 1rem;
 
   & > svg {
     width: 3.5rem;
