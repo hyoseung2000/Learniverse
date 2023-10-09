@@ -18,7 +18,6 @@ const useGetSearchResult = (
     pageIndex: number,
     previousPageData: AxiosResponse<StudyRoomListInfo> | null,
   ) => {
-    if (!keyword) return null;
     if (previousPageData && !previousPageData.data.rooms.length) return null;
 
     return searchType === 'hashtag'
