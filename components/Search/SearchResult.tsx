@@ -23,7 +23,6 @@ const SearchResult = ({
   memberId,
   handleApply,
 }: SearchResultProps) => {
-  const [curPage, setCurPage] = useState<number>(0);
   const { ref, inView } = useInView({
     threshold: 0.5,
   });
@@ -36,17 +35,10 @@ const SearchResult = ({
   );
 
   useEffect(() => {
-    setCurPage(0);
-  }, [searchType]);
-
-  useEffect(() => {
     if (inView) {
-      // setCurPage((prev) => prev + 1);
       getNextData();
     }
   }, [inView]);
-
-  console.log('curPage', curPage, inView);
 
   return (
     <StRoomListWrapper>
