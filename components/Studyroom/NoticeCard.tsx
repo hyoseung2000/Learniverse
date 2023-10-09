@@ -2,7 +2,7 @@ import { useRecoilValue } from 'recoil';
 /* eslint-disable @typescript-eslint/naming-convention */
 import { styled } from 'styled-components';
 
-import useModal from '@/hooks/useModal';
+import { useModal } from '@/hooks/Common';
 import { memberIdState } from '@/recoil/atom';
 import { NoticeInfo } from '@/types/studyroom';
 
