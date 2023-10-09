@@ -29,10 +29,7 @@ const CoreTimeCard = ({ coretime, isCoreId }: Props) => {
           <p> - </p>
           <p>{changeDateFormat(coreEndTime.toString())}</p>
           {isCoreId === coreTimeId ? (
-            <>
-              <StateBtn btnName="진행중" />
-              <StateDeleteBtn btnName="삭제" handleClick={handleDeleteOpen} />
-            </>
+            <StateBtn btnName="진행중" />
           ) : (
             <StateDeleteBtn btnName="삭제" handleClick={handleDeleteOpen} />
           )}

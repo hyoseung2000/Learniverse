@@ -34,8 +34,6 @@ messaging.onBackgroundMessage((payload) => {
 });
 
 self.addEventListener('notificationclick', function (event) {
-  console.log(event.notification);
-
   const targetUrl =
     event.notification.data || 'https://learniverse-front-end.vercel.app/';
   event.notification.close();

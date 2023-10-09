@@ -28,6 +28,22 @@ const useFCMPushAlarm = () => {
     const unsubscribe = messaging.onMessage((payload) => {
       console.log('[Foreground] Message received. ', payload);
       setCaptureTime((prev) => prev + 1);
+
+      if (!('Notification' in window)) {
+        console.log('This browser does not support system notifications');
+      } else if (Notification.permission === 'granted') {
+        navigator.serviceWorker.getRegistration().then((reg) => {
+          if (reg) {
+            const notificationTitle = payload.data.title;
+            const notificationOptions = {
+              body: payload.data.body,
+              icon: 'public/favicon.png',
+              data: payload.data.link,
+            };
+            reg.showNotification(notificationTitle, notificationOptions);
+          }
+        });
+      }
     });
 
     return () => unsubscribe();
