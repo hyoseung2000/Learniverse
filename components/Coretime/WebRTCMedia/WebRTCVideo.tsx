@@ -1,7 +1,7 @@
-import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
-import { styled } from 'styled-components';
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { styled } from "styled-components";
 
-import { IcCoreChar } from '@/public/assets/icons';
+import { IcCoreChar } from "@/public/assets/icons";
 
 interface WebRTCVideoProps {
   roomId: string;
@@ -16,8 +16,7 @@ interface WebRTCVideoProps {
 
 const WebRTCVideo = ({
   roomId,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  memberId,
+  // memberId,
   nickname,
   mediaStream,
   isSelected,
@@ -71,10 +70,10 @@ const WebRTCVideo = ({
         ref={viewRef}
         onClick={onClick}
         style={{
-          minWidth: isSelected ? '90rem' : '30rem',
-          maxWidth: isSelected ? '90rem' : '30rem',
-          minHeight: isSelected ? '60rem' : '20rem',
-          maxHeight: isSelected ? '60rem' : '20rem',
+          minWidth: isSelected ? '60rem' : '30rem',
+          maxWidth: isSelected ? '60rem' : '30rem',
+          minHeight: isSelected ? '40rem' : '20rem',
+          maxHeight: isSelected ? '40rem' : '20rem',
         }}
         autoPlay
         playsInline

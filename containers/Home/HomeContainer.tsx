@@ -1,5 +1,3 @@
-/* eslint-disable no-restricted-globals */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import "firebase/messaging";
 
 import firebase from "firebase/app";
@@ -10,7 +8,7 @@ import { styled } from "styled-components";
 import { createToken } from "@/apis/alarm";
 import { Home } from "@/components/Home";
 import { useFirebaseInit } from "@/hooks/FCM";
-import { captureTimeState, fcmTokenState, memberIdState } from "@/recoil/atom";
+import { fcmTokenState, memberIdState } from "@/recoil/atom";
 
 const HomeContainer = () => {
   const memberId = useRecoilValue(memberIdState);

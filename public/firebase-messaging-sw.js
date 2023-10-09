@@ -16,7 +16,6 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging(app);
-const broadcast = new BroadcastChannel('my-channel');
 
 messaging.onBackgroundMessage((payload) => {
   console.log(
@@ -24,19 +23,10 @@ messaging.onBackgroundMessage((payload) => {
     payload,
   );
 
-  // Customize notification here
-  const notificationTitle = '[Background] 스크린이 캡처되었습니다!';
-  const notificationOptions = {
-    body: payload,
-    icon: '/public/favicon-32x32.png',
-  };
-
-  self.registration.showNotification(notificationTitle, notificationOptions);
-
   self.addEventListener('push', function (e) {
     const bc = new BroadcastChannel('fcm_channel');
-    console.log('push: ', e.data.json());
     if (!e.data.json()) return;
+    console.log(e);
 
     const resultData = e.data.json();
     const notificationTitle = resultData.notification.title;
@@ -55,19 +45,19 @@ messaging.onBackgroundMessage((payload) => {
 
     bc.postMessage(resultData);
   });
-
-  // 메시지 수신
-  broadcast.onmessage = (event) => {
-    if (event.data && event.data.type === 'PRINT');
-    {
-      // 메시지 발송
-      broadcast.postMessage({ payload: 'Hello, Client. I am Service-worker' });
-    }
-  };
 });
 
 // self.addEventListener('notificationclick', function (event) {
-//   const url = `http://localhost:4003/`;
+//   const url = `http://localhost:3002/`;
 //   event.notification.close();
 //   event.waitUntil(clients.openWindow(url));
 // });
+
+self.addEventListener('notificationclick', function (event) {
+  event.notification.close();
+
+  // 클릭 액션 URL을 이용하여 새 탭을 엽니다.
+  if (event.notification.data && event.notification.data.click_action) {
+    event.waitUntil(clients.openWindow(event.notification.data.click_action));
+  }
+});

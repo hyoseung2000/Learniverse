@@ -1,7 +1,7 @@
-import React, { useEffect, useRef } from 'react';
-import { styled } from 'styled-components';
+import React, { useEffect, useRef } from "react";
+import { styled } from "styled-components";
 
-import { ChattingInfo } from '@/types/socket';
+import { ChattingInfo } from "@/types/socket";
 
 interface ChattingsProps {
   curNickname: string;

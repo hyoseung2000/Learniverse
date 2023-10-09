@@ -85,6 +85,7 @@ const WebRTCLayout = ({
   const [capturedImageFile, setCapturedImageFile] = useState<
     File | undefined
   >();
+  const [isEnter, setIsEnter] = useState(false);
 
   const gallery = useModal();
   const exit = useModal();
@@ -135,7 +136,11 @@ const WebRTCLayout = ({
   };
 
   useEffect(() => {
-    if (captureTime !== 0) {
+    if (captureTime === 0 && !isEnter) {
+      setIsEnter(true);
+      return;
+    }
+    if (isEnter) {
       capture.setShowing(true);
     }
   }, [captureTime]);
