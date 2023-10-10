@@ -1,6 +1,6 @@
-<div align="center"> 
+<div align="center">
 
-  ![24](https://github.com/Team-Learniverse/Learniverse-FrontEnd/assets/73213437/260d625e-ef7a-4322-a137-1dc99baf47e8)
+![24](https://github.com/Team-Learniverse/Learniverse-FrontEnd/assets/73213437/260d625e-ef7a-4322-a137-1dc99baf47e8)
 
 # Learniverse 💫
 
@@ -62,8 +62,6 @@
 
 > 사용자가 입력한 정보 및 활동 내역과 매칭되는 스터디룸을 AI를 통해 추천
 
-
-
 <br />
 
 <h2> 🛠 기술스택 </h2>
@@ -79,13 +77,13 @@
 | 역할                 | 종류                                                                                                                                                                                                              |
 | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Library              | ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black)                                                                                                                |
-| Framework              | ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=Next.js&logoColor=ffffff)                                                                                                                |
+| Framework            | ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=Next.js&logoColor=ffffff)                                                                                                         |
 | Programming Language | ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6.svg?style=for-the-badge&logo=TypeScript&logoColor=white)                                                                                             |
 | Data Fetching        | ![Data Fetching](https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=Axios&logoColor=white)                                                                                                        |
-| State Management      | ![Recoil](https://img.shields.io/badge/Recoil-3578E5?style=for-the-badge&logo=recoil&logoColor=white) |
+| State Management     | ![Recoil](https://img.shields.io/badge/Recoil-3578E5?style=for-the-badge&logo=recoil&logoColor=white)                                                                                                             |
 | Styling              | ![Styled Components](https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white)                                                                           |
 | Formatting           | ![ESLint](https://img.shields.io/badge/ESLint-4B3263?style=for-the-badge&logo=eslint&logoColor=white) ![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=white) |
-| Package Manager      | ![Yarn](https://img.shields.io/badge/Yarn-2C8EBB?style=for-the-badge&logo=yarn&logoColor=white)                                                                                                       |
+| Package Manager      | ![Yarn](https://img.shields.io/badge/Yarn-2C8EBB?style=for-the-badge&logo=yarn&logoColor=white)                                                                                                                   |
 | Version Control      | ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white) ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)  |
 
 </div>

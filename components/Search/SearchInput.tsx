@@ -1,13 +1,18 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { styled } from 'styled-components';
 
 import { IcSearch } from '@/public/assets/icons';
 
 interface SearchInputProps {
   handleSearch: (searchInput: string) => Promise<void>;
+  selectedInput: number;
+  setSelectedInput: Dispatch<SetStateAction<number>>;
 }
-const SearchInput = ({ handleSearch }: SearchInputProps) => {
-  const [selectedInput, setSelectedInput] = useState(1);
+const SearchInput = ({
+  handleSearch,
+  selectedInput,
+  setSelectedInput,
+}: SearchInputProps) => {
   const [searchInput, setSearchInputInput] = useState('');
 
   const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,7 +55,6 @@ const SearchInput = ({ handleSearch }: SearchInputProps) => {
           해시태그
         </StRadio>
       </StRadioWrapper>
-
       <StInputWrapper>
         <input
           type="text"

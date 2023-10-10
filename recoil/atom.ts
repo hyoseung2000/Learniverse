@@ -1,8 +1,8 @@
-import { atom } from 'recoil';
-import { recoilPersist } from 'recoil-persist';
+import { atom } from "recoil";
+import { recoilPersist } from "recoil-persist";
 
-import { MoonScoreInfo } from '@/types/member';
-import getToday from '@/utils/getToday';
+import { MoonScoreInfo } from "@/types/member";
+import getToday from "@/utils/getToday";
 
 const { persistAtom } = recoilPersist();
 
@@ -13,6 +13,17 @@ export const memberIdState = atom<number>({
   key: `memberId`,
   default: 1,
   effects_UNSTABLE: [persistAtom],
+});
+
+export const fcmTokenState = atom<string>({
+  key: `fcmTokenState`,
+  default: '',
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const captureTimeState = atom<number>({
+  key: `captureTimeState`,
+  default: 0,
 });
 
 export const encodedUrlState = atom<string>({

@@ -7,6 +7,7 @@ export const usePushNotification = () => {
 
   // Notification이 지원되지 않는 브라우저가 있을 수 있기 때문에, 이를 대비해 Early return 문을 걸어준다.
   if (typeof Notification === 'undefined') {
+    console.log('Notification undefiend');
     return;
   }
 

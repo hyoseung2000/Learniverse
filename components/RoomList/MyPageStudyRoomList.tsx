@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { getApplyRoomList, getLeaderRoomList } from '@/apis/roomList';
+import {
+  useGetApplyStudyRoomList,
+  useGetLeaderStudyRoomList,
+} from '@/hooks/StudyRooms';
 import useModal from '@/hooks/useModal';
 import { IcCharacterCheck } from '@/public/assets/icons';
 import { memberIdState } from '@/recoil/atom';
@@ -17,21 +20,27 @@ import StudyroomCard from '../RoomCard/StudyroomCard';
 interface MyPageStudyRoomListProps {
   isLeader?: boolean;
 }
+
+// TODO : 리팩토링 - 컴포넌트 분리
 const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
   const [roomList, setRoomList] = useState<StudyRoomInfo[]>();
+
   const [roomId, setRoomId] = useState<number>(0);
   const memberId = useRecoilValue(memberIdState);
+
+  const { leaderStudyRoomList } = useGetLeaderStudyRoomList(memberId);
+  const { applyStudyRoomList } = useGetApplyStudyRoomList(memberId);
 
   const manage = useModal();
   const edit = useModal();
   const editConfirm = useModal();
 
-  const getAllRoom = async () => {
+  const getRoomList = () => {
     let rooms: StudyRoomInfo[] = [];
     if (isLeader) {
-      rooms = await getLeaderRoomList(memberId);
+      rooms = leaderStudyRoomList || [];
     } else {
-      rooms = await getApplyRoomList(memberId);
+      rooms = applyStudyRoomList || [];
     }
     setRoomList(rooms);
   };
@@ -47,8 +56,8 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
   };
 
   useEffect(() => {
-    getAllRoom();
-  }, [isLeader]);
+    getRoomList();
+  }, [isLeader, leaderStudyRoomList, applyStudyRoomList]);
 
   return (
     <StMyPageWrapper>

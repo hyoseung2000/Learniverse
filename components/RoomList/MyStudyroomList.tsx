@@ -1,32 +1,20 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { getMyRoomList } from '@/apis/roomList';
+import { useGetMyStudyRoomList } from '@/hooks/StudyRooms';
 import { memberIdState } from '@/recoil/atom';
-import { StudyRoomInfo, StudyRoomListInfo } from '@/types/studyroom';
 
 import { PurpleButton } from '../Common/Button';
 import AddStudyroom from '../RoomCard/AddStudyroom';
 import StudyroomCard from '../RoomCard/StudyroomCard';
+import { StudyroomListSkeleton } from './Skeleton';
 
-const MyStudyroomList = () => {
-  const [pinnedRoomList, setPinnedRoomList] = useState<StudyRoomInfo[]>();
-  const [myRoomList, setMyRoomList] = useState<StudyRoomInfo[]>();
+export const MyStudyroomList = () => {
   const router = useRouter();
   const memberId = useRecoilValue(memberIdState);
-  const [pinChange, setPinChange] = useState(false);
 
-  const getMyStudyRoom = async () => {
-    const rooms: StudyRoomListInfo = await getMyRoomList(memberId);
-    setPinnedRoomList(rooms.pinRooms);
-    setMyRoomList(rooms.rooms);
-  };
-
-  useEffect(() => {
-    getMyStudyRoom();
-  }, [pinChange]);
+  const { myStudyRoomList } = useGetMyStudyRoomList(memberId);
 
   return (
     <StStudyroomListWrapper>
@@ -39,29 +27,31 @@ const MyStudyroomList = () => {
           }}
         />
       </StHomeTitle>
-      <StStudyroomList>
-        <AddStudyroom />
-        {pinnedRoomList &&
-          pinnedRoomList.map((room) => (
-            <StudyroomCard
-              key={room.roomId}
-              roomData={room}
-              isPinned
-              isMyroom
-              setPinChange={setPinChange}
-            />
-          ))}
-        {myRoomList &&
-          myRoomList.map((room) => (
-            <StudyroomCard
-              key={room.roomId}
-              roomData={room}
-              isPinned={false}
-              isMyroom
-              setPinChange={setPinChange}
-            />
-          ))}
-      </StStudyroomList>
+      {myStudyRoomList ? (
+        <StStudyroomList>
+          <AddStudyroom />
+          {myStudyRoomList.pinRooms &&
+            myStudyRoomList.pinRooms.map((room) => (
+              <StudyroomCard
+                key={room.roomId}
+                roomData={room}
+                isPinned
+                isMyroom
+              />
+            ))}
+          {myStudyRoomList.rooms &&
+            myStudyRoomList.rooms.map((room) => (
+              <StudyroomCard
+                key={room.roomId}
+                roomData={room}
+                isPinned={false}
+                isMyroom
+              />
+            ))}
+        </StStudyroomList>
+      ) : (
+        <StudyroomListSkeleton />
+      )}
     </StStudyroomListWrapper>
   );
 };

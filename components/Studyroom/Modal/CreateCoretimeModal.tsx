@@ -5,13 +5,12 @@ import DatePicker from 'react-datepicker';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { createCaptureTime, getTokenByRoomId } from '@/apis/alarm';
+import { createCaptureTime } from '@/apis/alarm';
 import { createCoretime } from '@/apis/coretimes';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { SmallModal } from '@/components/Common/Modal';
 import useModal from '@/hooks/useModal';
 import { roomIdState } from '@/recoil/atom';
-import { MemberTokenInfo } from '@/types/member';
 import { CoreTimeIdInfo, PostCoreTimeInfo } from '@/types/studyroom';
 
 import CompleteCreateCoreModal from './CompleteCreateCoreModal';
@@ -25,25 +24,16 @@ const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [coreHr, setCoreHr] = useState<number>(1);
   const [coreMin, setCoreMin] = useState<number>(30);
-  const [capture, setCapture] = useState<number>(0);
+  const [capture, setCapture] = useState<number>(1);
   const [coreTimeInfo, setCoreTimeInfo] = useState<PostCoreTimeInfo>();
   const roomID = useRecoilValue(roomIdState);
-  const [memberTokens, setMemberTokens] = useState<string[]>([]);
 
   const complete = useModal();
 
-  const getMemberTokens = async () => {
-    const tokensData: MemberTokenInfo[] = await getTokenByRoomId(roomID);
-    const tokens: string[] = tokensData
-      .map((tokenInfo) => tokenInfo?.token)
-      .filter(Boolean);
-    setMemberTokens(tokens);
-  };
-
   const handleCreateCtime = async () => {
-    if (startDate.getMinutes() !== 30 && startDate.getMinutes() !== 0) {
-      alert('시작시간은 30분 단위로 지정하세요.');
-    }
+    // if (startDate.getMinutes() !== 30 && startDate.getMinutes() !== 0) {
+    //   alert('시작시간은 30분 단위로 지정하세요.');
+    // }
     if ((coreHr === 0 && coreMin === 0) || (coreHr === 24 && coreMin === 30)) {
       alert('코어타임은 최소 30분 - 최대 24시간 내로 지정하세요.');
     } else {
@@ -60,7 +50,6 @@ const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
           startTime: startDate,
           endTime: endDate,
           captureCount: capture,
-          tokens: memberTokens,
         };
         console.log('captureTimeData', captureTimeData);
         await createCaptureTime(captureTimeData);
@@ -86,7 +75,7 @@ const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
   };
   const handleCaptureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const captureNumber = parseInt(e.target.value, 10);
-    if (captureNumber < 0 || captureNumber > 5) {
+    if (captureNumber < 0 || captureNumber > 100) {
       alert('0 - 5번 이내로 입력하세요');
     } else {
       setCapture(captureNumber);
@@ -102,10 +91,6 @@ const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
       captureNum: capture,
     });
   }, [startDate, coreHr, coreMin, capture]);
-
-  useEffect(() => {
-    getMemberTokens();
-  }, []);
 
   return (
     isShowing && (
@@ -150,7 +135,7 @@ const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
                 <input
                   type="number"
                   min="0"
-                  max="5"
+                  max="100"
                   value={capture}
                   onChange={handleCaptureChange}
                 />

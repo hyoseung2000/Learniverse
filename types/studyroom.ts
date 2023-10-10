@@ -8,8 +8,12 @@ export interface LearniverseResponse<T> {
 }
 
 export interface StudyRoomListInfo {
-  pinRooms: StudyRoomInfo[];
+  pinRooms?: StudyRoomInfo[];
   rooms: StudyRoomInfo[];
+}
+
+export interface StudyRoomDataInfo {
+  rooms: StudyRoomInfo;
 }
 
 export interface StudyRoomInfo {

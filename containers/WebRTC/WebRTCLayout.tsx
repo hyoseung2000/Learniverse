@@ -30,7 +30,7 @@ import { ChattingInfo, ConsumeInfo, RoomPeerInfo } from '@/types/socket';
 import { formatHHMMSS } from '@/utils/getFormattedTime';
 
 interface WebRTCLayoutProps {
-  isCaptureTime: boolean;
+  captureTime: number;
   coreEndTime: Date;
   curNickname: string;
   curRoomId: string;
@@ -54,8 +54,9 @@ interface WebRTCLayoutProps {
   issue: UseModalReturnType;
 }
 
+// TODO : 전면 리팩토링
 const WebRTCLayout = ({
-  isCaptureTime,
+  captureTime,
   coreEndTime,
   curNickname,
   curRoomId,
@@ -84,6 +85,7 @@ const WebRTCLayout = ({
   const [capturedImageFile, setCapturedImageFile] = useState<
     File | undefined
   >();
+  const [isEnter, setIsEnter] = useState(false);
 
   const gallery = useModal();
   const exit = useModal();
@@ -127,7 +129,6 @@ const WebRTCLayout = ({
   };
 
   const handleSubmit = () => {
-    // 이미지 전송
     handleUploadImage();
     capture.toggle();
     captureComplete.toggle();
@@ -135,8 +136,14 @@ const WebRTCLayout = ({
   };
 
   useEffect(() => {
-    capture.toggle();
-  }, [isCaptureTime]);
+    if (captureTime === 0 && !isEnter) {
+      setIsEnter(true);
+      return;
+    }
+    if (isEnter) {
+      capture.setShowing(true);
+    }
+  }, [captureTime]);
 
   return (
     <StWebRTCContainerWrapper>
@@ -160,10 +167,10 @@ const WebRTCLayout = ({
             <WebRTCVideo
               key={stream.consumer_id}
               roomId={curRoomId!}
-              memberId={curMemberId!}
+              // memberId={curMemberId!}
               nickname={stream.nickname}
               mediaStream={stream.stream}
-              isCaptureTime={isCaptureTime}
+              captureTime={captureTime}
               setCapturedImageFile={setCapturedImageFile}
               isSelected={selectedVideo === stream.consumer_id}
               onClick={() => handleSelectVideo(stream)}
