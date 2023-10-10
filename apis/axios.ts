@@ -1,10 +1,18 @@
 import axios from 'axios';
 
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    // eslint-disable-next-line no-param-reassign
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 const client = axios.create({
   baseURL: process.env.NEXT_PUBLIC_APP_IP,
   headers: {
     'Content-type': 'application/json',
-    // Authorization: localStorage.getItem('login-token'),
     // 'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_APP_IP,
     // Authorization: `Bearer ${process.env.NEXT_PUBLIC_ACCESS_TOKEN}`,
   },

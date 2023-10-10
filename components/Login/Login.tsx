@@ -1,15 +1,14 @@
-import jwtDecode from 'jwt-decode';
+import jwtDecode, { JwtPayload } from 'jwt-decode';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { useSetRecoilState } from 'recoil';
 
-// import { useSetRecoilState } from 'recoil';
-
-// import { memberIdState } from '@/recoil/atom';
+import { memberIdState } from '@/recoil/atom';
 
 const Login = () => {
   const router = useRouter();
 
-  // const setMemberId = useSetRecoilState(memberIdState);
+  const setMemberId = useSetRecoilState(memberIdState);
 
   useEffect(() => {
     const params = new URL(document.location.toString()).searchParams;
@@ -23,9 +22,10 @@ const Login = () => {
     try {
       console.log(token);
       localStorage.setItem('access_token', token);
-      const payload = jwtDecode(token);
+      const payload: JwtPayload = jwtDecode(token);
       console.log(payload);
-      // setMemberId(payload.sub.parseInt());
+      const { sub } = payload;
+      setMemberId(Number(sub));
       // router.push('/home');
       router.push('/signup');
     } catch (err) {
