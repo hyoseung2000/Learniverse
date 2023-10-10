@@ -5,7 +5,7 @@ import { styled } from 'styled-components';
 import { getNoticeList } from '@/apis/studyroom';
 import { useModal } from '@/hooks/Common';
 import { IcPlusBtn } from '@/public/assets/icons';
-import { roomIdState } from '@/recoil/atom';
+import { memberIdState, roomIdState } from '@/recoil/atom';
 import { NoticeInfo } from '@/types/studyroom';
 
 import CreateNoticeModal from './Modal/CreateNoticeModal';
@@ -13,15 +13,13 @@ import NoticeCard from './NoticeCard';
 
 const Notice = () => {
   const roomID = useRecoilValue(roomIdState);
+  const curMemberId = useRecoilValue(memberIdState);
 
   const create = useModal();
   const [noticeList, setNoticeList] = useState<NoticeInfo[]>();
 
   const getNotices = async () => {
-    console.log(roomID);
     const noticeInfo = await getNoticeList(roomID);
-    console.log(noticeInfo);
-
     setNoticeList(noticeInfo);
   };
 
@@ -43,7 +41,12 @@ const Notice = () => {
         <StComent>
           {noticeList &&
             noticeList.map((notice) => (
-              <NoticeCard key={notice.boardId} noticeInfo={notice} />
+              <NoticeCard
+                key={notice.boardId}
+                noticeInfo={notice}
+                // eslint-disable-next-line eqeqeq
+                isWriter={curMemberId == notice.memberId}
+              />
             ))}
         </StComent>
       </StNoticeWrapper>

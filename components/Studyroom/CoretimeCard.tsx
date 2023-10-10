@@ -17,7 +17,6 @@ const CoreTimeCard = ({ coretime, isCoreId }: Props) => {
   const deleteCT = useModal();
 
   const handleDeleteOpen = () => {
-    console.log('삭제');
     deleteCT.toggle();
   };
 
