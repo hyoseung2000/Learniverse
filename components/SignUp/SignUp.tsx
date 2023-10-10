@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
@@ -10,6 +11,7 @@ const SignUp = () => {
   const [roomList, setRoomList] = useState<StudyRoomInfo[]>();
   // const [isSelected, setIsSelected] = useState(false);
   const [selectList, setSelectList] = useState<number[]>([]);
+  const router = useRouter();
 
   const getInterestList = async () => {
     const list = await getInterestRoomLists();
@@ -29,12 +31,13 @@ const SignUp = () => {
   };
 
   const handleInterest = async () => {
-    const memberId = 7;
+    const memberId = 1;
     console.log(selectList);
     if (selectList.length < 3 || selectList.length > 5) {
       alert('관심 스터디는 3-5개 입력해주세요.');
     } else {
       await postInterests(memberId, selectList);
+      router.push('/home');
     }
   };
 
