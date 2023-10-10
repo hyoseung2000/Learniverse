@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { styled } from 'styled-components';
 
-import { getInterestRoomLists } from '@/apis/login';
+import { getInterestRoomLists, postInterests } from '@/apis/login';
 import { StudyRoomInfo } from '@/types/studyroom';
 
 import { StudyroomCard } from '../RoomCard';
@@ -18,15 +18,23 @@ const SignUp = () => {
 
   const handleSelected = (roomId: number) => {
     // 선택해제
-    console.log(roomId);
-    console.log(selectList);
     if (selectList.includes(roomId)) {
       setSelectList(selectList.filter((pick) => pick !== roomId));
-      console.log(selectList);
     } // 선택
-    else {
+    else if (selectList.length === 5) {
+      alert('관심 스터디는 최대 5개까지 선택할 수 있어요.');
+    } else {
       setSelectList((select) => [...select, roomId]);
-      console.log(selectList);
+    }
+  };
+
+  const handleInterest = async () => {
+    const memberId = 7;
+    console.log(selectList);
+    if (selectList.length < 3 || selectList.length > 5) {
+      alert('관심 스터디는 3-5개 입력해주세요.');
+    } else {
+      await postInterests(memberId, selectList);
     }
   };
 
@@ -59,7 +67,7 @@ const SignUp = () => {
             />
           ))}
       </StStudyroomListWrapper>
-      <StButton>선택 완료</StButton>
+      <StButton onClick={handleInterest}>선택 완료</StButton>
     </StSignUpWrapper>
   );
 };
