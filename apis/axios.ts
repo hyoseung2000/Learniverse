@@ -19,7 +19,8 @@ const client = axios.create({
 });
 
 const media = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_MEDIA_IP,
+  // baseURL: process.env.NEXT_PUBLIC_MEDIA_IP,
+  baseURL: 'http://0.0.0.0:8080/',
 });
 
 const ai = axios.create({

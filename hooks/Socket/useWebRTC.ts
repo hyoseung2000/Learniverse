@@ -54,7 +54,7 @@ const useWebRTC = (
     if (!socket || !socket.request) return;
     try {
       await socket.request('createRoom', {
-        room_id: roomId,
+        coreTimeId: roomId,
       });
     } catch (err) {
       console.error('Create room error:', err);
@@ -85,8 +85,8 @@ const useWebRTC = (
     if (!socket || !socket.request) return;
     try {
       const socketJoin: JoinInfo = await socket.request('join', {
-        room_id: roomId,
-        name: nickName,
+        coreTimeId: roomId,
+        memberId: nickName,
       });
       console.log('2. Joined to room', socketJoin);
 

@@ -30,11 +30,11 @@ const WebRTCContainer = () => {
   // 현재 코어타임, 사용자 관련 상태
   const [curName, setCurName] = useState<string>();
   const [curNickname, setCurNickname] = useState('');
-  const [curRoomId, setRoomId] = useState<string>();
+  const [curCoreTimeId, setCurCoreTimeId] = useState<string>();
   const [curCoreEndTime, setCurCoreEndTime] = useState<Date>();
 
   // 소켓 관련 상태
-  const curSocket = useSocketConnection(curRoomId!);
+  const curSocket = useSocketConnection(curCoreTimeId!);
   const {
     produce,
     curMembers,
@@ -44,7 +44,7 @@ const WebRTCContainer = () => {
     addChattingList,
     handleCloseProducer,
     handleExitRoom,
-  } = useWebRTC(curRoomId!, curName!, curSocket!);
+  } = useWebRTC(curCoreTimeId!, curName!, curSocket!);
   const [chatting, setChatting, handleSendChatting] = useChatHandler(
     curSocket!,
     curNickname!,
@@ -60,7 +60,7 @@ const WebRTCContainer = () => {
   const coreIssue = useModal();
 
   const setCoreEndTime = async () => {
-    const coreEndTime = await getCoreEndtime(Number(curRoomId));
+    const coreEndTime = await getCoreEndtime(Number(curCoreTimeId));
     setCurCoreEndTime(coreEndTime);
   };
 
@@ -100,7 +100,7 @@ const WebRTCContainer = () => {
   useEffect(() => {
     if (name && room_id) {
       setCurName(name.toString());
-      setRoomId(room_id as string);
+      setCurCoreTimeId(room_id as string);
     }
   }, [name, room_id]);
 
@@ -111,17 +111,17 @@ const WebRTCContainer = () => {
   }, [curName]);
 
   useEffect(() => {
-    if (curRoomId) {
+    if (curCoreTimeId) {
       setCoreEndTime();
     }
-  }, [curRoomId]);
+  }, [curCoreTimeId]);
 
   return (
     <WebRTCLayout
       captureTime={captureTime}
       coreEndTime={curCoreEndTime!}
       curNickname={curNickname!}
-      curRoomId={curRoomId!}
+      curCoreTimeId={curCoreTimeId!}
       curMemberId={curName!}
       isMedia={isMedia}
       handleMedia={handleMediaToggle}
