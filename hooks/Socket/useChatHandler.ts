@@ -11,6 +11,7 @@ type UseChatHandlerReturnType = [
 
 const useChatHandler = (
   curSocket: CustomSocket,
+  curMemberId: number,
   curNickname: string,
   addChattingList: (chat: ChattingInfo) => void,
 ): UseChatHandlerReturnType => {
@@ -26,9 +27,10 @@ const useChatHandler = (
       curSocket.emit('message', chatting);
 
       const sentChat: ChattingInfo = {
-        name: curNickname,
+        memberId: curMemberId,
         message: chatting,
         time: getTime(new Date()),
+        nickname: curNickname,
       };
       addChattingList(sentChat);
       setChatting('');

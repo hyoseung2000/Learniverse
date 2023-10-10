@@ -45,6 +45,7 @@ const WebRTCContainer = () => {
   } = useWebRTC(curCoreTimeId!, curMemberId!, curSocket!);
   const [chatting, setChatting, handleSendChatting] = useChatHandler(
     curSocket!,
+    curMemberId,
     curNickname!,
     addChattingList,
   );

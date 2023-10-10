@@ -23,10 +23,10 @@ const Chatting = ({ curNickname, chattingList }: ChattingsProps) => {
       <StChattings ref={chatRef}>
         {chattingList.map((chattings) => (
           <StChatting
-            key={`${chattings.name}-${chattings.message}-${chattings.time}`}
-            $iscurrentUser={curNickname === chattings.name}
+            key={`${chattings.nickname}-${chattings.message}-${chattings.time}`}
+            $iscurrentUser={curNickname === chattings.nickname}
           >
-            <span>{chattings.name}</span>
+            <span>{chattings.nickname}</span>
             <p>{chattings.message}</p>
             <time>{chattings.time}</time>
           </StChatting>
