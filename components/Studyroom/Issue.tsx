@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { getIssueList } from '@/apis/studyroom';
+import { getIssueList } from '@/apis/issue';
 import useModal from '@/hooks/useModal';
-import { IcPlusBtn } from '@/public/assets/icons';
+import { IcPlusBtn, IcToggleOff, IcToggleOn } from '@/public/assets/icons';
 import { roomIdState } from '@/recoil/atom';
 import { IssueInfo } from '@/types/studyroom';
 
@@ -18,16 +18,20 @@ const Issue = () => {
 
   const roomID = useRecoilValue(roomIdState);
   const [issueList, setIssueList] = useState<IssueInfo[]>();
+  const [showClosed, setshowClosed] = useState(true);
 
   const getIssues = async () => {
     const issueInfo = await getIssueList(roomID);
-    console.log(issueInfo);
 
     setIssueList(issueInfo);
   };
 
   const handleOpenIssue = () => {
     cIssue.toggle();
+  };
+
+  const handleToggle = () => {
+    setshowClosed(!showClosed);
   };
 
   const handleDiscuss = () => {
@@ -43,18 +47,24 @@ const Issue = () => {
       <StIsuueWrapper>
         <StTitleWrapper>
           <h2>이슈</h2>
+          <button type="button" onClick={handleToggle}>
+            <p>CLOSED</p> {showClosed ? <IcToggleOn /> : <IcToggleOff />}
+          </button>
           <IcPlusBtn type="button" onClick={handleOpenIssue} />
         </StTitleWrapper>
         <StIssue>
           {issueList &&
-            issueList.map((issue: IssueInfo) => (
-              <IssueCard
-                core={false}
-                key={issue.issueId}
-                handleDiscuss={handleDiscuss}
-                issueInfo={issue}
-              />
-            ))}
+            issueList.map(
+              (issue: IssueInfo) =>
+                showClosed !== issue.issueOpen && (
+                  <IssueCard
+                    core={false}
+                    key={issue.issueId}
+                    handleDiscuss={handleDiscuss}
+                    issueInfo={issue}
+                  />
+                ),
+            )}
         </StIssue>
       </StIsuueWrapper>
       <StCreateIssueModalWrapper $showing={cIssue.isShowing}>
@@ -77,7 +87,20 @@ export default Issue;
 
 const StTitleWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
+  position: relative;
+  align-items: center;
+
+  & > button {
+    display: flex;
+    align-items: center;
+    margin-left: 2rem;
+
+    & > p {
+      margin-right: 1rem;
+      color: ${({ theme }) => theme.colors.White};
+      ${({ theme }) => theme.fonts.Body1};
+    }
+  }
 
   & > h2 {
     color: ${({ theme }) => theme.colors.White};
@@ -85,6 +108,8 @@ const StTitleWrapper = styled.div`
   }
 
   & > svg {
+    position: absolute;
+    right: 0rem;
     cursor: pointer;
   }
 `;

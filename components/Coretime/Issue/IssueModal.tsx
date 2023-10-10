@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { getIssueList } from '@/apis/studyroom';
+import { getIssueList } from '@/apis/issue';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { LargeModal } from '@/components/Common/Modal';
 import IssueCard from '@/components/Studyroom/IssueCard';
@@ -47,15 +47,18 @@ const IssueModal = ({
         <StIssueWrapper>
           <StIssue>
             {issueList &&
-              issueList.map((issue: IssueInfo) => (
-                <IssueCard
-                  // eslint-disable-next-line react/jsx-boolean-value
-                  core={true}
-                  key={issue.issueId}
-                  handleDiscuss={handleClick}
-                  issueInfo={issue}
-                />
-              ))}
+              issueList.map(
+                (issue: IssueInfo) =>
+                  issue.issueOpen && (
+                    <IssueCard
+                      // eslint-disable-next-line react/jsx-boolean-value
+                      core={true}
+                      key={issue.issueId}
+                      handleDiscuss={handleClick}
+                      issueInfo={issue}
+                    />
+                  ),
+              )}
           </StIssue>
 
           <StBtnWrapper>

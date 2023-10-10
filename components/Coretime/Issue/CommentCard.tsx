@@ -13,9 +13,10 @@ import { getNickName } from '@/utils/getNicknames';
 interface Props {
   commentInfo: DiscussInfo;
   coderef: RefObject<AceEditor>;
+  writer: number;
 }
 
-const CommentCard = ({ commentInfo, coderef }: Props) => {
+const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
   const { memberId, issueOpinion, issueOpinionLine } = commentInfo;
   const cMemberId = useRecoilValue(memberIdState);
   const [memberNickname, setMemberNickname] = useState('');
@@ -41,11 +42,6 @@ const CommentCard = ({ commentInfo, coderef }: Props) => {
 
   useEffect(() => {
     setNickname();
-    console.log(
-      cMemberId,
-      memberId,
-      cMemberId.toString() === memberId.toString(),
-    );
   }, []);
 
   return (
@@ -59,14 +55,18 @@ const CommentCard = ({ commentInfo, coderef }: Props) => {
           <code>{issueOpinion}</code>
         </pre>
       </div>
-      {cMemberId.toString === memberId.toString ? (
-        // eslint-disable-next-line react/jsx-boolean-value
-        <StButton $isPersist={true} onClick={handleModify}>
-          수락
-        </StButton>
-      ) : (
-        <StButton $isPersist={false}>거절</StButton>
-      )}
+
+      {
+        // eslint-disable-next-line eqeqeq
+        cMemberId == writer ? (
+          // eslint-disable-next-line react/jsx-boolean-value
+          <StButton $isPersist={true} onClick={handleModify}>
+            수락
+          </StButton>
+        ) : (
+          <StButton $isPersist={false}>거절</StButton>
+        )
+      }
     </StComment>
   );
 };
@@ -74,6 +74,7 @@ const CommentCard = ({ commentInfo, coderef }: Props) => {
 export default CommentCard;
 
 const StComment = styled.div`
+  margin-bottom: 1rem;
   position: relative;
   padding: 0.5rem;
   display: flex;

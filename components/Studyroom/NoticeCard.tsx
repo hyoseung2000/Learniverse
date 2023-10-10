@@ -1,39 +1,44 @@
-import { useRecoilValue } from 'recoil';
+import { useEffect, useState } from 'react';
 /* eslint-disable @typescript-eslint/naming-convention */
 import { styled } from 'styled-components';
 
 import useModal from '@/hooks/useModal';
-import { memberIdState } from '@/recoil/atom';
 import { NoticeInfo } from '@/types/studyroom';
+import { getNickName } from '@/utils/getNicknames';
 
 import ModifyNoticeModal from './Modal/ModifyNoticeModal';
 
 interface Props {
   noticeInfo: NoticeInfo;
+  isWriter: boolean;
 }
 
-const NoticeCard = ({ noticeInfo }: Props) => {
+const NoticeCard = ({ noticeInfo, isWriter }: Props) => {
   const { memberId, title, content } = noticeInfo;
-  const curMemberId = useRecoilValue(memberIdState);
-
   const modify = useModal();
+  const [memberNickname, setMemberNickname] = useState('');
+
+  const setNickname = async (): Promise<void> => {
+    const nickname = await getNickName(memberId.toString());
+    setMemberNickname(nickname);
+  };
 
   const handleModify = () => {
-    if (curMemberId === memberId) {
-      console.log(curMemberId, memberId);
+    if (isWriter) {
       modify.toggle();
     }
   };
+
+  useEffect(() => {
+    setNickname();
+  }, []);
+
   return (
     <>
-      <StNoticeCardWrapper
-        onClick={handleModify}
-        $curMemberId={curMemberId}
-        $memberId={memberId}
-      >
+      <StNoticeCardWrapper onClick={handleModify} $isWriter={isWriter}>
         <StTitle>
           <h2>{title}</h2>
-          <p>작성자 : {memberId}</p>
+          <p>작성자 : {memberNickname}</p>
         </StTitle>
         <StContent>
           <p>{content}</p>
@@ -53,8 +58,7 @@ const NoticeCard = ({ noticeInfo }: Props) => {
 export default NoticeCard;
 
 const StNoticeCardWrapper = styled.div<{
-  $curMemberId: number;
-  $memberId: number;
+  $isWriter: boolean;
 }>`
   width: 73rem;
   padding: 0.5rem;
@@ -63,8 +67,7 @@ const StNoticeCardWrapper = styled.div<{
 
   background: ${({ theme }) => theme.colors.LightGray2};
 
-  cursor: ${({ $curMemberId, $memberId }) =>
-    $curMemberId === $memberId ? 'pointer' : 'default'};
+  cursor: ${({ $isWriter }) => ($isWriter ? 'pointer' : 'default')};
 `;
 
 const StTitle = styled.div`

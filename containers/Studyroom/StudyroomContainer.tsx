@@ -12,9 +12,4 @@ const StudyroomContainer = () => {
 
 export default StudyroomContainer;
 
-const StStudyroomWrapper = styled.main`
-  & > p {
-    color: ${({ theme }) => theme.colors.White};
-    ${({ theme }) => theme.fonts.Body0};
-  }
-`;
+const StStudyroomWrapper = styled.main``;
