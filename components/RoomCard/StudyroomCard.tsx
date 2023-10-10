@@ -75,7 +75,7 @@ const StudyroomCard = ({
       <StStudyroomCardWrapper
         $isSelected={isSelected!}
         onClick={() => {
-          handleSelected!(roomId);
+          handleSelected?.(roomId);
         }}
       >
         <StStarWrapper onClick={handlePin}>
