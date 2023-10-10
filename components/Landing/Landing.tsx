@@ -14,7 +14,7 @@ const Landing = () => {
 
   const handleLoginClick = async () => {
     setShowInput(true);
-    window.location.href = `${process.env.NEXT_PUBLIC_APP_IP}/oauth2/authorization/github`;
+    // window.location.href = `${process.env.NEXT_PUBLIC_APP_IP}/oauth2/authorization/github`;
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

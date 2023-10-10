@@ -154,14 +154,13 @@ const useWebRTC = (
 
   const consumeWithDevice = async (device: Device, producers: PeersInfo[]) => {
     const consumePromises = producers.map((producer) => {
-      const { producer_id, producer_user_name, producer_type } = producer;
-      return consume(
-        device,
-        producer_id,
-        producer_user_name,
-        producer_type,
-      ).catch((error) =>
-        console.error(`Error while consuming producer ${producer_id}:`, error),
+      const { producer_id, memberId, producer_type } = producer;
+      return consume(device, producer_id, memberId, producer_type).catch(
+        (error) =>
+          console.error(
+            `Error while consuming producer ${producer_id}:`,
+            error,
+          ),
       );
     });
     await Promise.all(consumePromises);
@@ -304,7 +303,7 @@ const useWebRTC = (
   const consume = async (
     device: Device,
     curProducerId: string,
-    curProducerName: string,
+    curProducerMemberId: number,
     produceType: string,
   ): Promise<void> => {
     try {
@@ -315,20 +314,20 @@ const useWebRTC = (
       const data = await socket.request('consume', {
         consumerTransportId: consumerTransport.id,
         producerId: curProducerId,
-        producerName: curProducerName,
+        producerName: curProducerMemberId,
         rtpCapabilities,
       });
 
       const {
         producerId,
-        producerName,
-        id,
+        memberId,
+        consumerId,
         kind,
         rtpParameters,
       }: ConsumerInfo = data;
 
       const consumer: Consumer = await consumerTransport.consume({
-        id,
+        id: consumerId,
         producerId,
         kind,
         rtpParameters,
@@ -337,12 +336,12 @@ const useWebRTC = (
       const stream = new MediaStream();
       stream.addTrack(consumer.track);
 
-      const nickname = await getNickName(producerName);
+      const nickname = await getNickName(memberId);
       addStream(
         new MediaStream([consumer.track]),
         nickname,
-        producerName,
-        id,
+        memberId,
+        consumerId,
         produceType,
       );
     } catch (error) {
