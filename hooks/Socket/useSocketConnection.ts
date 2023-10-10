@@ -3,7 +3,7 @@ import io, { Socket } from 'socket.io-client';
 
 import { CustomSocket } from '@/types/socket';
 
-const useSocketConnection = (curRoomId: string) => {
+const useSocketConnection = (curCoreTimeId: number) => {
   const [socket, setSocket] = useState<CustomSocket | null>(null);
 
   const socketPromise = (curSocket: typeof Socket) => {
@@ -15,7 +15,7 @@ const useSocketConnection = (curRoomId: string) => {
   };
 
   const connect = async () => {
-    if (!curRoomId) return;
+    if (!curCoreTimeId) return;
     const socketConnection: CustomSocket = await io(
       // process.env.NEXT_PUBLIC_MEDIA_IP!,
       'http://0.0.0.0:8080/',
@@ -31,7 +31,7 @@ const useSocketConnection = (curRoomId: string) => {
 
   useEffect(() => {
     connect();
-  }, [curRoomId]);
+  }, [curCoreTimeId]);
 
   return socket;
 };

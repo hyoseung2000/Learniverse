@@ -33,8 +33,8 @@ interface WebRTCLayoutProps {
   captureTime: number;
   coreEndTime: Date;
   curNickname: string;
-  curRoomId: string;
-  curMemberId: string;
+  curCoreTimeId: number;
+  curMemberId: number;
   isMedia: boolean;
   handleMedia: () => void;
   isMike: boolean;
@@ -59,7 +59,7 @@ const WebRTCLayout = ({
   captureTime,
   coreEndTime,
   curNickname,
-  curRoomId,
+  curCoreTimeId,
   curMemberId,
   isMedia,
   handleMedia,
@@ -114,9 +114,9 @@ const WebRTCLayout = ({
     const now = new Date();
 
     const captureData = {
-      coreTimeId: Number(curRoomId),
+      coreTimeId: Number(curCoreTimeId),
       memberId: Number(curMemberId),
-      fileName: `coretime-${curRoomId}-${curNickname}-${formatHHMMSS(
+      fileName: `coretime-${curCoreTimeId}-${curNickname}-${formatHHMMSS(
         now.toString(),
       )}.png`,
     };
@@ -166,7 +166,7 @@ const WebRTCLayout = ({
           {videoStreams.map((stream) => (
             <WebRTCVideo
               key={stream.consumer_id}
-              roomId={curRoomId!}
+              coreTimeId={curCoreTimeId!}
               // memberId={curMemberId!}
               nickname={stream.nickname}
               mediaStream={stream.stream}
@@ -235,7 +235,7 @@ const WebRTCLayout = ({
       </StDiscussIssueModalWrapper>
       <StModalWrapper $showing={gallery.isShowing}>
         <GalleryModal
-          curRoomId={curRoomId!}
+          curCoreTimeId={curCoreTimeId!}
           isShowing={gallery.isShowing}
           handleCancel={gallery.toggle}
         />

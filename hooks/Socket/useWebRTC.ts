@@ -34,8 +34,8 @@ import {
 } from './socketHandlers';
 
 const useWebRTC = (
-  curRoomId: string,
-  curName: string,
+  curCoreTimeId: number,
+  curMemberId: number,
   socket: CustomSocket,
 ) => {
   const router = useRouter();
@@ -50,11 +50,11 @@ const useWebRTC = (
   const [audioStreams, setAudioStreams] = useState<ConsumeInfo[]>([]);
   const [chattingList, setChattingList] = useState<ChattingInfo[]>([]);
 
-  const createRoom = async (roomId: string) => {
+  const createRoom = async (coreTimeId: number) => {
     if (!socket || !socket.request) return;
     try {
       await socket.request('createRoom', {
-        coreTimeId: roomId,
+        coreTimeId,
       });
     } catch (err) {
       console.error('Create room error:', err);
@@ -81,19 +81,19 @@ const useWebRTC = (
     return device;
   };
 
-  const join = async (roomId: string, nickName: string) => {
+  const join = async (coreTimeId: number, memberId: number) => {
     if (!socket || !socket.request) return;
     try {
       const socketJoin: JoinInfo = await socket.request('join', {
-        coreTimeId: roomId,
-        memberId: nickName,
+        coreTimeId,
+        memberId,
       });
       console.log('2. Joined to room', socketJoin);
 
       await socket.request('setCaptureAlert', {
-        memberId: curName,
+        memberId,
         roomId: 1,
-        coreTimeId: curRoomId,
+        coreTimeId,
         token: fcmToken,
       });
 
@@ -109,10 +109,10 @@ const useWebRTC = (
   };
 
   const enterRoom = async () => {
-    if (!socket || !curRoomId || !curName) return;
+    if (!socket || !curCoreTimeId || !curMemberId) return;
     try {
-      await createRoom(curRoomId);
-      await join(curRoomId, curName);
+      await createRoom(curCoreTimeId);
+      await join(curCoreTimeId, curMemberId);
     } catch (error) {
       console.error('Error in creating or joining the room:', error);
     }
@@ -224,13 +224,13 @@ const useWebRTC = (
   const addStream = (
     newStream: MediaStream,
     nickname: string,
-    name: string,
+    memberId: number,
     consumerId: string,
     type: string,
   ) => {
     const curStream: ConsumeInfo = {
       nickname,
-      name,
+      memberId,
       consumer_id: consumerId,
       stream: newStream,
     };
@@ -253,7 +253,7 @@ const useWebRTC = (
     if (!curDevice || !socket || !socket.request) return;
 
     try {
-      const nickname = await getNickName(curName!);
+      const nickname = await getNickName(curMemberId!);
       const stream = await getMediaStream(type);
       if (!stream) return;
 
@@ -264,7 +264,7 @@ const useWebRTC = (
       addStream(
         stream,
         nickname,
-        curName,
+        curMemberId,
         producer.id,
         type === 'screenType' ? 'video' : 'audio',
       );
@@ -383,7 +383,7 @@ const useWebRTC = (
       socket.on('disconnect', async () => {
         if (socket.request) {
           const data = await socket.request('removeCaptureAlert', {
-            memberId: curName,
+            memberId: curMemberId,
           });
           console.log(data);
           router.push('/home');
@@ -404,7 +404,7 @@ const useWebRTC = (
   useEffect(() => {
     enterRoom();
     initSockets();
-  }, [socket, curRoomId, curName]);
+  }, [socket, curCoreTimeId, curMemberId]);
 
   useEffect(() => {
     initSockets();

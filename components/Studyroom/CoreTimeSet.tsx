@@ -2,14 +2,14 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 import { getCoretimeID } from '@/apis/coretimes';
 import { getCoretimeList } from '@/apis/studyroom';
 import { useModal } from '@/hooks/Common';
 import { IcPlusBtn } from '@/public/assets/icons';
-import { roomIdState } from '@/recoil/atom';
+import { coreTimeIdState, roomIdState } from '@/recoil/atom';
 import { CoreTimeInfo } from '@/types/studyroom';
 
 import CoreTimeCard from './CoretimeCard';
@@ -18,21 +18,21 @@ import CreateCoretimeModal from './Modal/CreateCoretimeModal';
 const CoreTimeSet = () => {
   const router = useRouter();
   const coreRef = useRef<HTMLDivElement>(null);
-  const room_id = useRecoilValue(roomIdState);
+  const roomId = useRecoilValue(roomIdState);
 
   const create = useModal();
 
   const [coreTimeList, setCoreTimeList] = useState<CoreTimeInfo[]>();
   const [isCoreTime, setIsCoreTime] = useState<boolean>();
-  const [nowCoreId, setNowCoreId] = useState<number>();
+  const [nowCoreId, setNowCoreId] = useRecoilState<number>(coreTimeIdState);
 
   const getCoretimes = async () => {
-    const coresInfo = await getCoretimeList(room_id);
+    const coresInfo = await getCoretimeList(roomId);
     const { cores, isCore } = coresInfo;
 
     if (isCore) {
       // 현재 코어타임 여부 확인
-      const coreID: number = await getCoretimeID(room_id);
+      const coreID: number = await getCoretimeID(roomId);
       console.log(coreID);
       setNowCoreId(coreID);
     }
@@ -47,8 +47,8 @@ const CoreTimeSet = () => {
 
   const handleAttend = () => {
     router.push({
-      pathname: `/coretime/${room_id}`,
-      query: { room_id: nowCoreId },
+      pathname: `/coretime/${nowCoreId}`,
+      query: { coreTimeId: nowCoreId },
     });
   };
 

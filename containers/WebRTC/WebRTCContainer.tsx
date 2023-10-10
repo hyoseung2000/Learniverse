@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
@@ -20,17 +19,16 @@ import WebRTCLayout from './WebRTCLayout';
 const WebRTCContainer = () => {
   // 전역 상태 (coreTimeId, memberId, 캡처 시간)
   const router = useRouter();
-  const { room_id } = router.query;
-  const name = useRecoilValue(memberIdState);
+  const { coreTimeId } = router.query;
+  const curMemberId = useRecoilValue(memberIdState);
 
   // 푸시 알림 받기
   useFCMPushAlarm();
   const captureTime = useRecoilValue(captureTimeState);
 
   // 현재 코어타임, 사용자 관련 상태
-  const [curName, setCurName] = useState<string>();
   const [curNickname, setCurNickname] = useState('');
-  const [curCoreTimeId, setCurCoreTimeId] = useState<string>();
+  const [curCoreTimeId, setCurCoreTimeId] = useState<number>();
   const [curCoreEndTime, setCurCoreEndTime] = useState<Date>();
 
   // 소켓 관련 상태
@@ -44,7 +42,7 @@ const WebRTCContainer = () => {
     addChattingList,
     handleCloseProducer,
     handleExitRoom,
-  } = useWebRTC(curCoreTimeId!, curName!, curSocket!);
+  } = useWebRTC(curCoreTimeId!, curMemberId!, curSocket!);
   const [chatting, setChatting, handleSendChatting] = useChatHandler(
     curSocket!,
     curNickname!,
@@ -65,13 +63,13 @@ const WebRTCContainer = () => {
   };
 
   const setNickname = async () => {
-    const nickname = await getNickName(curName!);
+    const nickname = await getNickName(curMemberId!);
     setCurNickname(nickname);
   };
 
   const handleTurnOff = async (type: string) => {
     const medias = type === 'video' ? videoStreams : audioStreams;
-    const foundPeer = medias.find((media) => media.name === curName);
+    const foundPeer = medias.find((media) => media.memberId === curMemberId);
     if (foundPeer) {
       await handleCloseProducer(foundPeer.consumer_id);
     } else {
@@ -98,17 +96,14 @@ const WebRTCContainer = () => {
   };
 
   useEffect(() => {
-    if (name && room_id) {
-      setCurName(name.toString());
-      setCurCoreTimeId(room_id as string);
+    if (curMemberId && coreTimeId) {
+      setCurCoreTimeId(Number(coreTimeId));
     }
-  }, [name, room_id]);
+  }, [curMemberId, coreTimeId]);
 
   useEffect(() => {
-    if (curName) {
-      setNickname();
-    }
-  }, [curName]);
+    setNickname();
+  }, [curMemberId]);
 
   useEffect(() => {
     if (curCoreTimeId) {
@@ -122,7 +117,7 @@ const WebRTCContainer = () => {
       coreEndTime={curCoreEndTime!}
       curNickname={curNickname!}
       curCoreTimeId={curCoreTimeId!}
-      curMemberId={curName!}
+      curMemberId={curMemberId!}
       isMedia={isMedia}
       handleMedia={handleMediaToggle}
       isMike={isMike}
