@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-import { deleteIssue } from '@/apis/studyroom';
+import { deleteIssue } from '@/apis/issue';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { SmallModal } from '@/components/Common/Modal';
 import { IcCharacterX } from '@/public/assets/icons';

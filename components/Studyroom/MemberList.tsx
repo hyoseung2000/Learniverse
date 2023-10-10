@@ -29,7 +29,6 @@ const MemberList = () => {
   const getMembers = async () => {
     const members = await getRoomMembers(roomId);
     setMemberList(members);
-    console.log(members);
   };
   const handleMessage = (message: string) => {
     console.log(message);

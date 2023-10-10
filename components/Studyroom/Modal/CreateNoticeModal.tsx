@@ -31,6 +31,7 @@ const CreateNoticeModal = ({ isShowing, handleCancel }: Props) => {
 
   const handleNotice = async () => {
     await postNotice(noticeData!);
+    handleCancel();
   };
 
   const initData = () => {
