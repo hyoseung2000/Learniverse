@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
-import { Dispatch, SetStateAction } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { styled } from 'styled-components';
+import { mutate } from 'swr';
 
 import { pinRoom } from '@/apis/roomList';
 import { IcPlanet, IcStar, IcStarPinned } from '@/public/assets/icons';
@@ -61,7 +61,7 @@ const StudyroomCard = ({
   const setroomID = useSetRecoilState(roomIdState);
   const handlePin = async () => {
     await pinRoom(roomId, memberId);
-    if (setPinChange) setPinChange((prev) => !prev);
+    mutate(`/member/room/list?memberId=${memberId}`);
   };
 
   const handleGotoRoom = () => {

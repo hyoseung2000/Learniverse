@@ -16,7 +16,6 @@ export interface CreateCaptureTimeInfo {
   startTime: Date;
   endTime: Date;
   captureCount: number;
-  tokens: string[];
 }
 
 export interface GetCaptureTimeInfo {

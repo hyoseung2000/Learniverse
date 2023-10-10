@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { getMoon, getProfile } from '@/apis/profile';
+import { useGetMemberProfile, useGetMoon } from '@/hooks/members';
 import {
   IcMoon0,
   IcMoon1,
@@ -15,36 +15,26 @@ import {
   IcProfileImage,
 } from '@/public/assets/icons';
 import { memberIdState } from '@/recoil/atom';
-import { MoonInfo, ProfileInfo } from '@/types/member';
 
 import { MyPageStudyRoomList } from '../RoomList';
 
 const MyPage = () => {
+  const memberId = useRecoilValue(memberIdState);
   const [activeTab, setActiveTab] = useState(0);
   const [isLeader, setIsLeader] = useState(true);
-  const [profile, setProfile] = useState<ProfileInfo>();
-  const [moons, setMoons] = useState<MoonInfo[]>([]);
   const [moonScores, setMoonScores] = useState<number[]>([]);
-  const [isMoon, setIsMoon] = useState(false);
-  const memberId = useRecoilValue(memberIdState);
 
-  const getProfileData = async () => {
-    const profileData = await getProfile(memberId);
-    setProfile(profileData);
-  };
-
-  const getMoonData = async () => {
-    const moonData = await getMoon(memberId);
-    setMoons(moonData);
-    setIsMoon(true);
-  };
+  const { imgUrl, nickname } = useGetMemberProfile(memberId);
+  const { moons, isLoading } = useGetMoon(memberId);
 
   const getMoonScores = () => {
-    const scores = moons.map((moon) => moon.moonScore);
+    const scores = moons?.map((moon) => moon.moonScore) || [];
     setMoonScores(scores);
   };
 
   const matchMoonIcons = () => {
+    if (!Array.isArray(moonScores)) return [];
+
     const reversedMoonScores = [...moonScores].reverse();
 
     return reversedMoonScores.map((score, index) => {
@@ -72,10 +62,8 @@ const MyPage = () => {
   };
 
   useEffect(() => {
-    getProfileData();
-    getMoonData();
     getMoonScores();
-  }, [isMoon]);
+  }, [isLoading]);
 
   useEffect(() => {
     setIsLeader(activeTab === 0);
@@ -85,17 +73,17 @@ const MyPage = () => {
     <StMyPageWrapper>
       <h2>마이페이지</h2>
       <StMyInfo>
-        {profile && (
+        {imgUrl && nickname && (
           <StProfile>
             <IcProfileImage />
             <Image
               className="githubImage"
-              src={profile.imageUrl}
+              src={imgUrl}
               alt="profile"
               width={77}
               height={70}
             />
-            <p>{profile.nickname}</p>
+            <p>{nickname}</p>
           </StProfile>
         )}
         <StMoon>

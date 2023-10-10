@@ -1,4 +1,3 @@
-import { NextRouter } from 'next/router';
 import { Dispatch, SetStateAction } from 'react';
 
 import {
@@ -59,8 +58,4 @@ export const handleConsumerClosed = (
 ) => {
   console.log('Closing Consumer : ', data);
   removeStream(data.consumer_id);
-};
-
-export const handleDisconnect = (router: NextRouter) => {
-  router.push('/home');
 };
