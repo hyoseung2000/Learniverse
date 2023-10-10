@@ -2,6 +2,16 @@ import { PostNoticeInfo, PostWorkSpaceInfo } from '@/types/studyroom';
 
 import { client } from './axios';
 
+export const encodeRoomId = async (roomId: number) => {
+  try {
+    const { data } = await client.get(`/room/encode?roomId=${roomId}`);
+    return data.data.encoded;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
 export const decodeRoomId = async (encodedUrl: string) => {
   try {
     const { data } = await client.get(`/room/decode?encoded=${encodedUrl}`);

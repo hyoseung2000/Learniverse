@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
+import { useModal } from '@/hooks/Common';
 import {
   useGetApplyStudyRoomList,
   useGetLeaderStudyRoomList,
 } from '@/hooks/StudyRooms';
-import useModal from '@/hooks/useModal';
 import { IcCharacterCheck } from '@/public/assets/icons';
 import { memberIdState } from '@/recoil/atom';
 import { StudyRoomInfo } from '@/types/studyroom';

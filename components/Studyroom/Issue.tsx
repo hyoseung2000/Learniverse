@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { getIssueList } from '@/apis/issue';
-import useModal from '@/hooks/useModal';
+
+import { getIssueList } from '@/apis/studyroom';
+import { useModal } from '@/hooks/Common';
 import { IcPlusBtn, IcToggleOff, IcToggleOn } from '@/public/assets/icons';
 import { roomIdState } from '@/recoil/atom';
 import { IssueInfo } from '@/types/studyroom';

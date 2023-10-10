@@ -1,7 +1,7 @@
 import { useSetRecoilState } from 'recoil';
 import { styled } from 'styled-components';
 
-import useModal from '@/hooks/useModal';
+import { useModal } from '@/hooks/Common';
 import { IcIssueLogo } from '@/public/assets/icons';
 import { issueIdState } from '@/recoil/atom';
 import { IssueInfo } from '@/types/studyroom';

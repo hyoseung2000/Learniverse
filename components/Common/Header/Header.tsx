@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useRef } from 'react';
 import { css, styled } from 'styled-components';
 
-import useModal from '@/hooks/useModal';
+import { useModal } from '@/hooks/Common';
 import { IcLogo, IcProfile } from '@/public/assets/icons';
 
 import HeaderModal from './HeaderModal';

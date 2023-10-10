@@ -1,8 +1,8 @@
-import { atom } from "recoil";
-import { recoilPersist } from "recoil-persist";
+import { atom } from 'recoil';
+import { recoilPersist } from 'recoil-persist';
 
-import { MoonScoreInfo } from "@/types/member";
-import getToday from "@/utils/getToday";
+import { MoonScoreInfo } from '@/types/member';
+import getToday from '@/utils/getToday';
 
 const { persistAtom } = recoilPersist();
 

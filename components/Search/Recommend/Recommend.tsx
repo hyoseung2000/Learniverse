@@ -10,8 +10,8 @@ import {
   StContentWrapper,
   StSmallModalWrapper,
 } from '@/containers/Apply/ApplyContainer';
+import { useModal } from '@/hooks/Common';
 import { useGetRecommendRoomList } from '@/hooks/StudyRooms';
-import useModal from '@/hooks/useModal';
 import { memberIdState } from '@/recoil/atom';
 import { StudyRoomInfo } from '@/types/studyroom';
 

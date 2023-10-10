@@ -23,12 +23,11 @@ const SearchResult = ({
   memberId,
   handleApply,
 }: SearchResultProps) => {
-  const [curPage, setCurPage] = useState<number>(0);
   const { ref, inView } = useInView({
     threshold: 0.5,
   });
 
-  const { resultRoomList, isLoading } = useGetSearchResult(
+  const { resultRoomList, getNextData, isLoading } = useGetSearchResult(
     keyword,
     memberId,
     0,
@@ -36,19 +35,10 @@ const SearchResult = ({
   );
 
   useEffect(() => {
-    setCurPage(0);
-  }, [searchType]);
-
-  // useEffect(() => {
-  //   if (inView) {
-  //     setCurPage((prev) => prev + 1);
-  //     mutate(
-  //       `/room/search?search=${keyword}&memberId=${memberId}&page=${curPage}`,
-  //     );
-  //   }
-  // }, [inView]);
-
-  console.log('curPage', curPage, inView);
+    if (inView) {
+      getNextData();
+    }
+  }, [inView]);
 
   return (
     <StRoomListWrapper>

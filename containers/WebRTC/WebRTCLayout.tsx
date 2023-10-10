@@ -25,7 +25,7 @@ import {
 } from '@/components/Coretime/Setting';
 import { TimeProvider, Timer } from '@/components/Coretime/Timer';
 import { WebRTCAudio, WebRTCVideo } from '@/components/Coretime/WebRTCMedia';
-import useModal, { UseModalReturnType } from '@/hooks/useModal';
+import useModal, { UseModalReturnType } from '@/hooks/Common/useModal';
 import { ChattingInfo, ConsumeInfo, RoomPeerInfo } from '@/types/socket';
 import { formatHHMMSS } from '@/utils/getFormattedTime';
 

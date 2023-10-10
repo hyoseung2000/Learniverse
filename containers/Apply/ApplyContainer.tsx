@@ -8,8 +8,8 @@ import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { LargeModal, SmallModal } from '@/components/Common/Modal';
 import { StudyroomCard } from '@/components/RoomCard';
 import { StudyroomCardSkeleton } from '@/components/RoomCard/Skeleton';
+import { useModal } from '@/hooks/Common';
 import { useGetRoomInfo } from '@/hooks/StudyRooms';
-import useModal from '@/hooks/useModal';
 import { IcCharacterCheck } from '@/public/assets/icons';
 import { memberIdState } from '@/recoil/atom';
 

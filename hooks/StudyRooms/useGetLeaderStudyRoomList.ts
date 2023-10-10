@@ -9,6 +9,7 @@ const useGetLeaderStudyRoomList = (memberId: number) => {
     `/member/room/list/leader?memberId=${memberId}`,
     mainGetFetcher,
   );
+  console.log(data);
 
   return {
     leaderStudyRoomList: data?.data.rooms,

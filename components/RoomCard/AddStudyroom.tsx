@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-import useModal from '@/hooks/useModal';
+import { useModal } from '@/hooks/Common';
 import { IcAddStudyRoom } from '@/public/assets/icons';
 
 import AddStudyroomModal from './Modal/AddStudyroomModal';

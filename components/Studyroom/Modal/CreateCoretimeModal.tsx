@@ -9,7 +9,7 @@ import { createCaptureTime } from '@/apis/alarm';
 import { createCoretime } from '@/apis/coretimes';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { SmallModal } from '@/components/Common/Modal';
-import useModal from '@/hooks/useModal';
+import { useModal } from '@/hooks/Common';
 import { roomIdState } from '@/recoil/atom';
 import { CoreTimeIdInfo, PostCoreTimeInfo } from '@/types/studyroom';
 

@@ -3,7 +3,7 @@ import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 import { applyRoom } from '@/apis/studyroom';
-import useModal from '@/hooks/useModal';
+import { useModal } from '@/hooks/Common';
 import { memberIdState } from '@/recoil/atom';
 
 import { PurpleButton } from '../Common/Button';
