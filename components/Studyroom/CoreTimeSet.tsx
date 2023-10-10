@@ -47,7 +47,7 @@ const CoreTimeSet = () => {
 
   const handleAttend = () => {
     router.push({
-      pathname: `/coretime/${nowCoreId}`,
+      pathname: `/coretime/${roomId}`,
       query: { coreTimeId: nowCoreId },
     });
   };

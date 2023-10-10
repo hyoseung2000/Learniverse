@@ -10,6 +10,7 @@ export const getNickName = async (memberId: number) => {
 export const addNickNameToPeer = async (
   peer: RoomPeerInfo,
 ): Promise<RoomPeerInfo> => {
+  console.log('peer.memberId', peer);
   const nickname = await getNickName(peer.memberId);
   return {
     ...peer,

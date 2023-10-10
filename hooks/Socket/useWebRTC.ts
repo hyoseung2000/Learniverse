@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
-import { fcmTokenState } from '@/recoil/atom';
+import { fcmTokenState, roomIdState } from '@/recoil/atom';
 import {
   ChattingInfo,
   ConsumeInfo,
@@ -40,6 +40,7 @@ const useWebRTC = (
 ) => {
   const router = useRouter();
   const fcmToken = useRecoilValue(fcmTokenState);
+  const curRoomId = useRecoilValue(roomIdState);
 
   const [curMembers, setCurMembers] = useState<RoomPeerInfo[]>([]);
   const [curDevice, setCurDevice] = useState<Device>();
@@ -92,7 +93,7 @@ const useWebRTC = (
 
       await socket.request('setCaptureAlert', {
         memberId,
-        roomId: 1,
+        roomId: curRoomId,
         coreTimeId,
         token: fcmToken,
       });
