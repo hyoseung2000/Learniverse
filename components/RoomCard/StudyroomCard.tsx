@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+// import { Dispatch, SetStateAction } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { styled } from 'styled-components';
 import { mutate } from 'swr';
@@ -16,7 +17,7 @@ interface StudyroomCardProps {
   isMyroom?: boolean;
   isInterest?: boolean;
   isSelected?: boolean;
-  setPinChange?: Dispatch<SetStateAction<boolean>>;
+  // setPinChange?: Dispatch<SetStateAction<boolean>>;
   handleApply?: () => void;
   handleManage?: () => void;
   handleEdit?: () => void;
@@ -30,7 +31,7 @@ const StudyroomCard = ({
   isMyroom,
   isInterest,
   isSelected,
-  setPinChange,
+  // setPinChange,
   handleApply,
   handleManage,
   handleEdit,
