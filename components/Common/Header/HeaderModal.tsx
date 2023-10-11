@@ -14,7 +14,7 @@ const HeaderModal = ({ isShowing }: HeaderModalProps) => {
   const setMemberId = useSetRecoilState(memberIdState);
 
   const handleProfile = () => {
-    console.log('프로필 설정 : 1차 데모 이후 구현');
+    router.push('/profile');
   };
   const handleLogout = () => {
     setMemberId(1);

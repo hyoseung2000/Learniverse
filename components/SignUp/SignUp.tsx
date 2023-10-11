@@ -1,13 +1,16 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 import { getInterestRoomLists, postInterests } from '@/apis/login';
+import { memberIdState } from '@/recoil/atom';
 import { StudyRoomInfo } from '@/types/studyroom';
 
 import { StudyroomCard } from '../RoomCard';
 
 const SignUp = () => {
+  const memberId = useRecoilValue(memberIdState);
   const [roomList, setRoomList] = useState<StudyRoomInfo[]>();
   // const [isSelected, setIsSelected] = useState(false);
   const [selectList, setSelectList] = useState<number[]>([]);
@@ -31,8 +34,6 @@ const SignUp = () => {
   };
 
   const handleInterest = async () => {
-    const memberId = 1;
-    console.log(selectList);
     if (selectList.length < 3 || selectList.length > 5) {
       alert('관심 스터디는 3-5개 입력해주세요.');
     } else {

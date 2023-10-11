@@ -1,3 +1,4 @@
+import { PostProfileInfo } from '@/types/member';
 import getToday from '@/utils/getToday';
 
 import { client } from './axios';
@@ -34,5 +35,19 @@ export const addMoon = async (memberId: number, curScore: number) => {
   } catch (err: any) {
     console.log(err.response?.data.message);
     return err.response?.data.message;
+  }
+};
+
+export const postProfile = async (postProfileData: PostProfileInfo) => {
+  try {
+    const { data } = await client.post(
+      `/member/profile/update`,
+      postProfileData,
+    );
+    console.log(data);
+    return data.data;
+  } catch (err) {
+    console.error(err);
+    throw err;
   }
 };
