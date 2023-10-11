@@ -13,6 +13,7 @@ const useGetMemberProfile = (memberId: number) => {
   return {
     imgUrl: data?.data?.member.imageUrl,
     nickname: data?.data?.member.nickname,
+    memberMessage: data?.data?.member.memberMessage,
     isLoading,
     isError: error,
   };

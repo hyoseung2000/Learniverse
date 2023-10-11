@@ -147,7 +147,8 @@ const StStudyroomCardWrapper = styled.article<{ $isSelected: boolean }>`
 
   width: 100%;
   height: 18.6rem;
-  // padding: 1.8rem 1.9rem;
+  ${({ $isSelected }) =>
+    $isSelected ? 'padding: 0rem;' : 'padding: 1.8rem 1.9rem;'}
   box-sizing: border-box;
 
   border-radius: 1.6rem;
