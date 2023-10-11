@@ -17,8 +17,7 @@ const useSocketConnection = (curCoreTimeId: number) => {
   const connect = async () => {
     if (!curCoreTimeId) return;
     const socketConnection: CustomSocket = await io(
-      // process.env.NEXT_PUBLIC_MEDIA_IP!,
-      'http://0.0.0.0:8080/',
+      process.env.NEXT_PUBLIC_MEDIA_IP!,
       {
         transports: ['websocket', 'polling', 'flashsocket'],
         secure: true,
