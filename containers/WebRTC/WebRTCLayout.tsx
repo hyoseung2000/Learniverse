@@ -130,7 +130,7 @@ const WebRTCLayout = ({
       await putFile(url, capturedImageFile);
       await createCapture(captureData);
       const moonScoreRes = await addMoon(curMemberId, curMoonScore);
-      if (moonScoreRes === 422) {
+      if (moonScoreRes === 400) {
         setCurMoonScore(4);
       }
     }
