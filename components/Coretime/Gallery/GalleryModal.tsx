@@ -1,29 +1,29 @@
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
-import { styled } from 'styled-components';
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
+import { styled } from "styled-components";
 
-import { getCapture } from '@/apis/coretimes';
-import { LargeModal } from '@/components/Common/Modal';
-import { ImageListInfo } from '@/types/capture';
-import { formatHHMMSS } from '@/utils/getFormattedTime';
-import { getNickName } from '@/utils/getNicknames';
+import { getCapture } from "@/apis/coretimes";
+import { LargeModal } from "@/components/Common/Modal";
+import { ImageListInfo } from "@/types/capture";
+import { formatHHMMSS } from "@/utils/getFormattedTime";
+import { getNickName } from "@/utils/getNicknames";
 
-import { memberIdState } from '../../../recoil/atom';
+import { memberIdState } from "../../../recoil/atom";
 
 interface GalleryModalProps {
-  curCoreTimeId: number;
+  coreTimeId: number;
   isShowing: boolean;
   handleCancel: () => void;
 }
 
 const GalleryModal = ({
-  curCoreTimeId,
+  coreTimeId,
   isShowing,
   handleCancel,
 }: GalleryModalProps) => {
   const [galleryImages, setGalleryImages] = useState<ImageListInfo[] | null>(
-    null,
+    null
   );
   const curMemberId = useRecoilValue(memberIdState);
 
@@ -39,14 +39,14 @@ const GalleryModal = ({
   };
 
   const getGalleryData = async () => {
-    const images = await getCapture(curCoreTimeId);
+    const images = await getCapture(coreTimeId);
     const filteredImages = removeDuplicateFile(images);
 
     const updatedImages = await Promise.all(
       filteredImages.map(async (image) => {
         const nickname = await getNickName(image.memberId);
         return { ...image, nickname };
-      }),
+      })
     );
 
     setGalleryImages(updatedImages);
@@ -74,7 +74,6 @@ const GalleryModal = ({
                     {image.nickname}
                     <span>{formatHHMMSS(image.createdTime)}</span>
                   </p>
-                  {/* <img src={image.fileLink} alt="capture" /> */}
                   <Image
                     src={image.fileLink}
                     alt="capture"
@@ -128,7 +127,7 @@ const StImageWrapper = styled.div<{ $iscurrentuser: boolean }>`
 
     color: ${({ theme }) => theme.colors.Gray1};
     ${({ theme }) => theme.fonts.Title4};
-    text-align: ${({ $iscurrentuser }) => ($iscurrentuser ? 'right' : 'left')};
+    text-align: ${({ $iscurrentuser }) => ($iscurrentuser ? "right" : "left")};
 
     & > span {
       padding-left: 1rem;

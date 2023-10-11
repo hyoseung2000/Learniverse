@@ -5,7 +5,6 @@ import { IcCoreChar } from '@/public/assets/icons';
 
 interface WebRTCVideoProps {
   coreTimeId: number;
-  // memberId: number;
   nickname: string;
   mediaStream: MediaStream | undefined;
   isSelected: boolean;
@@ -16,7 +15,6 @@ interface WebRTCVideoProps {
 
 const WebRTCVideo = ({
   coreTimeId,
-  // memberId,
   nickname,
   mediaStream,
   isSelected,

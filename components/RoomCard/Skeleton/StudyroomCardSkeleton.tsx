@@ -13,7 +13,6 @@ const StCardSkeleton = styled.div`
   height: 18.6rem;
 
   border-radius: 1.6rem;
-  /* background: ${({ theme }) => theme.colors.Gray4}; */
   background: linear-gradient(
     90deg,
     rgba(165, 165, 165, 0.4) 25%,
