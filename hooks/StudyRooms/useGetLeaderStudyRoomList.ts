@@ -13,7 +13,7 @@ const useGetLeaderStudyRoomList = (memberId: number) => {
 
   return {
     leaderStudyRoomList: data?.data.rooms,
-    isLoading,
+    isLeaderRoomLoading: isLoading,
     isError: error,
   };
 };

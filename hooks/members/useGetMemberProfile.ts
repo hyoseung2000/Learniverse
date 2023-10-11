@@ -14,7 +14,7 @@ const useGetMemberProfile = (memberId: number) => {
     imgUrl: data?.data?.member.imageUrl,
     nickname: data?.data?.member.nickname,
     memberMessage: data?.data?.member.memberMessage,
-    isLoading,
+    isProfileLoading: isLoading,
     isError: error,
   };
 };

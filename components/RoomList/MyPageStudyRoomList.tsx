@@ -16,6 +16,7 @@ import SmallModal from '../Common/Modal/SmallModal';
 import { ManageModal } from '../RoomCard/Modal';
 import EditModal from '../RoomCard/Modal/EditModal';
 import StudyroomCard from '../RoomCard/StudyroomCard';
+import { StudyroomListSkeleton } from './Skeleton';
 
 interface MyPageStudyRoomListProps {
   isLeader?: boolean;
@@ -28,8 +29,10 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
   const [roomId, setRoomId] = useState<number>(0);
   const memberId = useRecoilValue(memberIdState);
 
-  const { leaderStudyRoomList } = useGetLeaderStudyRoomList(memberId);
-  const { applyStudyRoomList } = useGetApplyStudyRoomList(memberId);
+  const { leaderStudyRoomList, isLeaderRoomLoading } =
+    useGetLeaderStudyRoomList(memberId);
+  const { applyStudyRoomList, isApplyRoomLoading } =
+    useGetApplyStudyRoomList(memberId);
 
   const manage = useModal();
   const edit = useModal();
@@ -62,8 +65,10 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
   return (
     <StMyPageWrapper>
       <StMyPageRoomListWrapper>
-        {roomList &&
-          roomList.map((room) => (
+        {isLeaderRoomLoading || isApplyRoomLoading ? (
+          <StudyroomListSkeleton />
+        ) : (
+          roomList?.map((room) => (
             <StudyroomCard
               key={room.roomId}
               roomData={room}
@@ -73,7 +78,8 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
               }
               handleEdit={isLeader ? () => handleEdit(room.roomId) : undefined}
             />
-          ))}
+          ))
+        )}
       </StMyPageRoomListWrapper>
       <StManageModalWrapper $showing={manage.isShowing}>
         <ManageModal
