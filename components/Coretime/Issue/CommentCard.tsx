@@ -22,7 +22,7 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
   const [memberNickname, setMemberNickname] = useState('');
 
   const setNickname = async (): Promise<void> => {
-    const nickname = await getNickName(memberId.toString());
+    const nickname = await getNickName(memberId);
     setMemberNickname(nickname);
   };
 

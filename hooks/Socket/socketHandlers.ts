@@ -23,16 +23,16 @@ export const handleNewProducers = async (
 
   await consumeProducers(data);
 
-  const newMemberId = data[0].producer_user_id;
-  const newMemberNickName = await getNickName(data[0].producer_user_name);
+  const newMemberSocketId = data[0].socketId;
+  const newMemberNickName = await getNickName(data[0].memberId);
 
   setCurMembers((prev) => {
-    if (prev.some((member) => member.id === newMemberId)) {
+    if (prev.some((member) => member.socketId === newMemberSocketId)) {
       return prev;
     }
     const newMember = {
-      id: newMemberId,
-      name: data[0].producer_user_name,
+      socketId: newMemberSocketId,
+      memberId: data[0].memberId,
       nickname: newMemberNickName,
     };
     return [...prev, newMember];
@@ -43,12 +43,14 @@ export const handleMessage = async (
   data: ChattingInfo,
   setChattingList: Dispatch<SetStateAction<ChattingInfo[]>>,
 ) => {
-  const nickname = await getNickName(data.name.toString());
+  const curNickname = await getNickName(data.memberId);
   const dataWithNickname = {
-    name: nickname,
+    memberId: data.memberId,
     message: data.message,
     time: data.time,
+    nickname: curNickname,
   };
+  console.log(data);
   setChattingList((prev: ChattingInfo[]) => [...prev, dataWithNickname]);
 };
 

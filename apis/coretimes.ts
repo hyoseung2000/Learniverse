@@ -86,7 +86,7 @@ export const createCapture = async (captureInfo: CaptureInfo) => {
   }
 };
 
-export const getCapture = async (coretimeId: string) => {
+export const getCapture = async (coretimeId: number) => {
   try {
     const data = await media.get(`/getCapture?coreTimeId=${coretimeId}`);
     console.log(data.data);

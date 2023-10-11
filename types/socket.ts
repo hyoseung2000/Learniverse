@@ -16,7 +16,7 @@ export interface JoinInfo {
 }
 
 export interface RoomInfo {
-  room_id: string;
+  coreTimeId: string;
   peers: PeersInfo[];
   peerCount: number;
 }
@@ -24,20 +24,21 @@ export interface RoomInfo {
 export interface PeersInfo {
   producer_id: string; // producer id
   producer_type: string; // video or audio
-  producer_user_id: string; // socket id
-  producer_user_name: string; // memeber id
+  socketId: string; // socket id
+  memberId: number; // memeber id
 }
 
 export interface RoomPeerInfo {
-  id: string; // socket id
-  name: string; // memeber id
+  socketId: string; // socket id
+  memberId: number; // memeber id
   nickname?: string; // memeber nickname
 }
 
 export interface ChattingInfo {
-  name: string; // member id
+  memberId: number; // member id
   message: string; // chatting message
   time: string; // chatting time
+  nickname?: string;
 }
 
 export interface ConsumerId {
@@ -46,15 +47,15 @@ export interface ConsumerId {
 
 export interface ConsumeInfo {
   nickname: string; // memeber nickname
-  name: string; // memeber id
+  memberId: number; // memeber id
   consumer_id: string; // consumer_id
   stream: MediaStream; // stream (video or audio)
 }
 
 export interface ConsumerInfo {
   producerId: string; // producer id
-  producerName: string; // memeber id
-  id: string; // consumer id
+  memberId: number; // memeber id
+  consumerId: string; // consumer id
   kind: 'video' | 'audio';
   rtpParameters: RtpParameters;
   type: string;

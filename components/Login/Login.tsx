@@ -29,6 +29,7 @@ const Login = () => {
       setMemberId(Number(sub));
       router.push('/home');
       // router.push('/signup');
+
     } catch (err) {
       console.error(err);
       router.push('/');

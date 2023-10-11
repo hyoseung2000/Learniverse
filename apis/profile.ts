@@ -30,11 +30,12 @@ export const addMoon = async (memberId: number, curScore: number) => {
       memberId,
       moonDate: getToday(),
     });
+    console.log(data);
     return data;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
-    console.log(err.response?.data.message);
-    return err.response?.data.message;
+    console.log(err.response?.data.status);
+    return err.response?.data.status;
   }
 };
 

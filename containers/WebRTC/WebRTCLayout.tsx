@@ -1,9 +1,11 @@
 /* eslint-disable prettier/prettier */
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import { styled } from 'styled-components';
 
 import { getPresignedUrl } from '@/apis/alarm';
 import { createCapture, putFile } from '@/apis/coretimes';
+import { addMoon } from '@/apis/profile';
 import { Chatting } from '@/components/Coretime/Chatting';
 import { GalleryModal } from '@/components/Coretime/Gallery';
 import {
@@ -26,6 +28,7 @@ import {
 import { TimeProvider, Timer } from '@/components/Coretime/Timer';
 import { WebRTCAudio, WebRTCVideo } from '@/components/Coretime/WebRTCMedia';
 import useModal, { UseModalReturnType } from '@/hooks/Common/useModal';
+import { moonScoreState } from '@/recoil/atom';
 import { ChattingInfo, ConsumeInfo, RoomPeerInfo } from '@/types/socket';
 import { formatHHMMSS } from '@/utils/getFormattedTime';
 
@@ -33,8 +36,8 @@ interface WebRTCLayoutProps {
   captureTime: number;
   coreEndTime: Date;
   curNickname: string;
-  curRoomId: string;
-  curMemberId: string;
+  curCoreTimeId: number;
+  curMemberId: number;
   isMedia: boolean;
   handleMedia: () => void;
   isMike: boolean;
@@ -59,7 +62,7 @@ const WebRTCLayout = ({
   captureTime,
   coreEndTime,
   curNickname,
-  curRoomId,
+  curCoreTimeId,
   curMemberId,
   isMedia,
   handleMedia,
@@ -86,6 +89,7 @@ const WebRTCLayout = ({
     File | undefined
   >();
   const [isEnter, setIsEnter] = useState(false);
+  const [curMoonScore, setCurMoonScore] = useRecoilState(moonScoreState);
 
   const gallery = useModal();
   const exit = useModal();
@@ -114,9 +118,9 @@ const WebRTCLayout = ({
     const now = new Date();
 
     const captureData = {
-      coreTimeId: Number(curRoomId),
+      coreTimeId: Number(curCoreTimeId),
       memberId: Number(curMemberId),
-      fileName: `coretime-${curRoomId}-${curNickname}-${formatHHMMSS(
+      fileName: `coretime-${curCoreTimeId}-${curNickname}-${formatHHMMSS(
         now.toString(),
       )}.png`,
     };
@@ -125,6 +129,10 @@ const WebRTCLayout = ({
     if (capturedImageFile) {
       await putFile(url, capturedImageFile);
       await createCapture(captureData);
+      const moonScoreRes = await addMoon(curMemberId, curMoonScore);
+      if (moonScoreRes === 422) {
+        setCurMoonScore(4);
+      }
     }
   };
 
@@ -166,7 +174,7 @@ const WebRTCLayout = ({
           {videoStreams.map((stream) => (
             <WebRTCVideo
               key={stream.consumer_id}
-              roomId={curRoomId!}
+              coreTimeId={curCoreTimeId!}
               // memberId={curMemberId!}
               nickname={stream.nickname}
               mediaStream={stream.stream}
@@ -235,7 +243,7 @@ const WebRTCLayout = ({
       </StDiscussIssueModalWrapper>
       <StModalWrapper $showing={gallery.isShowing}>
         <GalleryModal
-          curRoomId={curRoomId!}
+          curCoreTimeId={curCoreTimeId!}
           isShowing={gallery.isShowing}
           handleCancel={gallery.toggle}
         />

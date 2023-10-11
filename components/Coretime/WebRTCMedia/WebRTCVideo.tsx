@@ -4,8 +4,8 @@ import { styled } from 'styled-components';
 import { IcCoreChar } from '@/public/assets/icons';
 
 interface WebRTCVideoProps {
-  roomId: string;
-  // memberId: string;
+  coreTimeId: number;
+  // memberId: number;
   nickname: string;
   mediaStream: MediaStream | undefined;
   isSelected: boolean;
@@ -15,7 +15,7 @@ interface WebRTCVideoProps {
 }
 
 const WebRTCVideo = ({
-  roomId,
+  coreTimeId,
   // memberId,
   nickname,
   mediaStream,
@@ -47,7 +47,7 @@ const WebRTCVideo = ({
     }
 
     const blob = new Blob([ab], { type: mimeString });
-    const file = new File([blob], `${roomId}-${nickname}.png`, {
+    const file = new File([blob], `${coreTimeId}-${nickname}.png`, {
       type: mimeString,
     });
 
