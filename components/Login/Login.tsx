@@ -20,14 +20,16 @@ const Login = () => {
       return;
     }
     try {
+      console.log(params);
       console.log(token);
       localStorage.setItem('access_token', token);
       const payload: JwtPayload = jwtDecode(token);
       console.log(payload);
       const { sub } = payload;
       setMemberId(Number(sub));
-      // router.push('/home');
-      router.push('/signup');
+      router.push('/home');
+      // router.push('/signup');
+
     } catch (err) {
       console.error(err);
       router.push('/');

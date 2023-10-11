@@ -18,7 +18,7 @@ const MemberList = () => {
   const [rname, setRName] = useState<string>('');
   const [rcategory, setRCategory] = useState<string>('');
   const planetColor = getCategoryColor(rcategory);
-
+  // const [position, setPosition] = useState();
   const getRoomName = async () => {
     const roomInfo: StudyRoomInfo = await getRoomInfo(roomId, memberId);
     const { roomName, roomCategory } = roomInfo;
@@ -51,6 +51,7 @@ const MemberList = () => {
             <StMember
               key={member.memberId}
               onClick={() => {
+                // setPosition({})
                 handleMessage(member.memberMessage);
               }}
             >
@@ -58,26 +59,7 @@ const MemberList = () => {
               <p>{member.nickname}</p>
             </StMember>
           ))}
-        {/* <StMember>
-          <IcChar />
-          <p>코딩천사 선영이</p>
-        </StMember>
-        <StMember>
-          <IcChar />
-          <p>유지니</p>
-        </StMember>
-        <StMember>
-          <IcChar />
-          <p>100지민</p>
-        </StMember>
-        <StMember>
-          <IcChar />
-          <p>효승이</p>
-        </StMember>
-        <StMember>
-          <IcChar />
-          <p>iamphj3</p>
-        </StMember> */}
+        {/* { position && <StMessage positon={position} />} */}
       </StMemberWrapper>
     </StMembersWrapper>
   );

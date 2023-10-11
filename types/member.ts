@@ -18,6 +18,7 @@ export interface ProfileDataInfo {
 export interface ProfileInfo {
   imageUrl: string;
   nickname: string;
+  memberMessage?: string;
 }
 
 export interface MoonDataInfo {
@@ -35,4 +36,10 @@ export interface MemberTokenInfo {
   token: string;
   createdDate?: Date;
   updatedDate?: Date;
+}
+
+export interface PostProfileInfo {
+  memberId: number;
+  nickname: string;
+  memberMessage: string;
 }
