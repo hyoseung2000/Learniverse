@@ -1,5 +1,7 @@
 import { styled } from 'styled-components';
 
+import { shimmerAnimation } from '@/utils/skeletonAnimation';
+
 const StudyroomCardSkeleton = () => {
   return <StCardSkeleton />;
 };
@@ -11,5 +13,14 @@ const StCardSkeleton = styled.div`
   height: 18.6rem;
 
   border-radius: 1.6rem;
-  background: ${({ theme }) => theme.colors.Gray4};
+  /* background: ${({ theme }) => theme.colors.Gray4}; */
+  background: linear-gradient(
+    90deg,
+    rgba(165, 165, 165, 0.4) 25%,
+    rgba(165, 165, 165, 0.8) 50%,
+    rgba(165, 165, 165, 0.4) 75%
+  );
+  background-size: 200% 100%;
+
+  animation: ${shimmerAnimation} 2s infinite linear;
 `;
