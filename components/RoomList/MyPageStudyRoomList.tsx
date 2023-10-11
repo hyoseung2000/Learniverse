@@ -12,6 +12,7 @@ import { memberIdState } from '@/recoil/atom';
 import { StudyRoomInfo } from '@/types/studyroom';
 
 import { ConfirmButton } from '../Common/Button';
+import { ModalWrapper } from '../Common/Modal';
 import SmallModal from '../Common/Modal/SmallModal';
 import { ManageModal } from '../RoomCard/Modal';
 import EditModal from '../RoomCard/Modal/EditModal';
@@ -81,15 +82,16 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
           ))
         )}
       </StMyPageRoomListWrapper>
-      <StManageModalWrapper $showing={manage.isShowing}>
+
+      <ModalWrapper isShowing={manage.isShowing}>
         <ManageModal
           roomId={roomId}
           isShowing={manage.isShowing}
           handleConfirm={manage.toggle}
           handleCancel={manage.toggle}
         />
-      </StManageModalWrapper>
-      <StEditModalWrapper $showing={edit.isShowing}>
+      </ModalWrapper>
+      <ModalWrapper isShowing={edit.isShowing}>
         <EditModal
           roomId={roomId}
           isShowing={edit.isShowing}
@@ -99,8 +101,8 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
           }}
           handleCancel={edit.toggle}
         />
-      </StEditModalWrapper>
-      <StEditConfirmModalWrapper $showing={editConfirm.isShowing}>
+      </ModalWrapper>
+      <ModalWrapper isShowing={editConfirm.isShowing}>
         <SmallModal
           title="스터디 정보 수정 완료"
           isShowing={editConfirm.isShowing}
@@ -113,7 +115,7 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
             <ConfirmButton btnName="확인" onClick={editConfirm.toggle} />
           </StSmallModalWrapper>
         </SmallModal>
-      </StEditConfirmModalWrapper>
+      </ModalWrapper>
     </StMyPageWrapper>
   );
 };
@@ -135,26 +137,6 @@ export const StMyPageRoomListWrapper = styled.section`
   margin-top: 4.6rem;
   margin-bottom: 8rem;
 `;
-
-export const StManageModalWrapper = styled.div<{ $showing: boolean }>`
-  display: ${({ $showing }) => ($showing ? 'block' : 'none')};
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-
-  justify-content: center;
-  align-items: center;
-
-  width: 100vw;
-  height: 100vh;
-
-  background-color: rgba(0, 0, 0, 0.5);
-`;
-
-const StEditModalWrapper = styled(StManageModalWrapper)``;
-
-const StEditConfirmModalWrapper = styled(StManageModalWrapper)``;
 
 const StSmallModalWrapper = styled.div`
   display: flex;
