@@ -31,13 +31,9 @@ export const encodedUrlState = atom<string>({
   default: '',
 });
 
-export const moonScoreState = atom<MoonScoreInfo>({
+export const moonScoreState = atom<number>({
   key: `moonScore`,
-  default: {
-    isFirstAccess: 0,
-    isCoreTimeParticipate: 0,
-    isCapture: 0,
-  },
+  default: 0,
   effects_UNSTABLE: [persistAtom],
 });
 

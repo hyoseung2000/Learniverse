@@ -1,9 +1,11 @@
 /* eslint-disable prettier/prettier */
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
 import { styled } from 'styled-components';
 
 import { getPresignedUrl } from '@/apis/alarm';
 import { createCapture, putFile } from '@/apis/coretimes';
+import { addMoon } from '@/apis/profile';
 import { Chatting } from '@/components/Coretime/Chatting';
 import { GalleryModal } from '@/components/Coretime/Gallery';
 import {
@@ -26,6 +28,7 @@ import {
 import { TimeProvider, Timer } from '@/components/Coretime/Timer';
 import { WebRTCAudio, WebRTCVideo } from '@/components/Coretime/WebRTCMedia';
 import useModal, { UseModalReturnType } from '@/hooks/Common/useModal';
+import { moonScoreState } from '@/recoil/atom';
 import { ChattingInfo, ConsumeInfo, RoomPeerInfo } from '@/types/socket';
 import { formatHHMMSS } from '@/utils/getFormattedTime';
 
@@ -86,6 +89,7 @@ const WebRTCLayout = ({
     File | undefined
   >();
   const [isEnter, setIsEnter] = useState(false);
+  const [curMoonScore, setCurMoonScore] = useRecoilState(moonScoreState);
 
   const gallery = useModal();
   const exit = useModal();
@@ -125,6 +129,10 @@ const WebRTCLayout = ({
     if (capturedImageFile) {
       await putFile(url, capturedImageFile);
       await createCapture(captureData);
+      const moonScoreRes = await addMoon(curMemberId, curMoonScore);
+      if (moonScoreRes === 422) {
+        setCurMoonScore(4);
+      }
     }
   };
 
