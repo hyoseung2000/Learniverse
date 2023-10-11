@@ -27,7 +27,7 @@ import {
 } from '@/components/Coretime/Setting';
 import { TimeProvider, Timer } from '@/components/Coretime/Timer';
 import { WebRTCAudio, WebRTCVideo } from '@/components/Coretime/WebRTCMedia';
-import useModal, { UseModalReturnType } from '@/hooks/Common/useModal';
+import useModal from '@/hooks/Common/useModal';
 import { moonScoreState } from '@/recoil/atom';
 import { ChattingInfo, ConsumeInfo, RoomPeerInfo } from '@/types/socket';
 import { formatHHMMSS } from '@/utils/getFormattedTime';
@@ -54,7 +54,6 @@ interface WebRTCLayoutProps {
   chattingList: ChattingInfo[];
   handleSendChatting: () => void;
   handleExitRoom: () => void;
-  issue: UseModalReturnType;
 }
 
 // TODO : 전면 리팩토링
@@ -80,7 +79,6 @@ const WebRTCLayout = ({
   chattingList,
   handleSendChatting,
   handleExitRoom,
-  issue,
 }: WebRTCLayoutProps) => {
   const cIssue = useModal();
   const discuss = useModal();
@@ -91,6 +89,7 @@ const WebRTCLayout = ({
   const [isEnter, setIsEnter] = useState(false);
   const [curMoonScore, setCurMoonScore] = useRecoilState(moonScoreState);
 
+  const issue = useModal();
   const gallery = useModal();
   const exit = useModal();
   const capture = useModal();

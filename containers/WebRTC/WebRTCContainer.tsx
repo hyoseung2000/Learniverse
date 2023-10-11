@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
 import { getCoreEndtime } from '@/apis/coretimes';
-import { useModal, useToggle } from '@/hooks/Common';
+import { useToggle } from '@/hooks/Common';
 import { useFCMPushAlarm } from '@/hooks/FCM';
 import {
   useChatHandler,
@@ -55,8 +55,6 @@ const WebRTCContainer = () => {
   const [isMike, handleMike] = useToggle();
   const [isSpeaker, handleSpeaker] = useToggle();
   const [selectedVideo, handleSelectVideo] = useVideoSelector();
-
-  const coreIssue = useModal();
 
   const setCoreEndTime = async () => {
     const coreEndTime = await getCoreEndtime(Number(curCoreTimeId));
@@ -135,7 +133,6 @@ const WebRTCContainer = () => {
       chattingList={chattingList}
       handleSendChatting={handleSendChatting}
       handleExitRoom={handleExitRoom}
-      issue={coreIssue}
     />
   );
 };
