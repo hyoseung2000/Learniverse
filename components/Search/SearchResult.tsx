@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { styled } from 'styled-components';
 
@@ -7,6 +6,7 @@ import { useGetSearchResult } from '@/hooks/StudyRooms';
 
 import { StudyroomCard } from '../RoomCard';
 import { StMyPageRoomListWrapper } from '../RoomList/MyPageStudyRoomList';
+import { StudyroomListSkeleton } from '../RoomList/Skeleton';
 
 interface SearchResultProps {
   searched: boolean;
@@ -27,18 +27,18 @@ const SearchResult = ({
     threshold: 0.5,
   });
 
-  const { resultRoomList, getNextData, isLoading } = useGetSearchResult(
-    keyword,
-    memberId,
-    0,
-    searchType,
-  );
+  const { resultRoomList, getNextData, isResultRoomListLoading } =
+    useGetSearchResult(keyword, memberId, 0, searchType);
 
   useEffect(() => {
     if (inView) {
       getNextData();
     }
   }, [inView]);
+
+  if (isResultRoomListLoading) {
+    return <StudyroomListSkeleton />;
+  }
 
   return (
     <StRoomListWrapper>
@@ -56,7 +56,7 @@ const SearchResult = ({
               />
             </div>
           ))
-        : searched && !isLoading && <p>검색 결과가 없습니다.</p>}
+        : searched && !isResultRoomListLoading && <p>검색 결과가 없습니다.</p>}
     </StRoomListWrapper>
   );
 };
