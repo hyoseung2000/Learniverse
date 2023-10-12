@@ -43,7 +43,7 @@ export const getRoomMembers = async (roomId: number) => {
     const { data } = await client.get(`room/member/list?roomId=${roomId}`);
     return data.data.members;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     throw err;
   }
 };

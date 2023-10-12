@@ -8,7 +8,6 @@ export const createToken = async (memberId: number, token: string) => {
       memberId,
       token,
     });
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
@@ -21,7 +20,6 @@ export const getTokenByMemberId = async (memberId: number) => {
     const { data } = await client.get(
       `room/getTokenByMemberId?memberId=${memberId}`,
     );
-    console.log(data.data);
     return data.data;
   } catch (err) {
     console.error(err);
@@ -32,7 +30,6 @@ export const getTokenByMemberId = async (memberId: number) => {
 export const getTokenByRoomId = async (roomId: number) => {
   try {
     const { data } = await client.get(`room/tokenList?roomId=${roomId}`);
-    console.log(data.data);
     return data.data;
   } catch (err) {
     console.error(err);
@@ -48,7 +45,6 @@ export const createCaptureTime = async (
       `/createCaptureTime`,
       createCaptureTimeInfo,
     );
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);

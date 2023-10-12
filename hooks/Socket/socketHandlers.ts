@@ -50,7 +50,6 @@ export const handleMessage = async (
     time: data.time,
     nickname: curNickname,
   };
-  console.log(data);
   setChattingList((prev: ChattingInfo[]) => [...prev, dataWithNickname]);
 };
 
