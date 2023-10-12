@@ -32,6 +32,7 @@ export interface RoomPeerInfo {
   id: string; // socket id
   name: string; // memeber id
   nickname?: string; // memeber nickname
+  message?: string;
 }
 
 export interface ChattingInfo {

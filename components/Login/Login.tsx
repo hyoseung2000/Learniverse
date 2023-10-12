@@ -3,12 +3,18 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
 
+import { postLog } from '@/apis/login';
 import { memberIdState } from '@/recoil/atom';
 
 const Login = () => {
   const router = useRouter();
 
   const setMemberId = useSetRecoilState(memberIdState);
+
+  const postLogin = async (memberId: number) => {
+    console.log(memberId);
+    await postLog(memberId);
+  };
 
   useEffect(() => {
     const params = new URL(document.location.toString()).searchParams;
@@ -27,6 +33,7 @@ const Login = () => {
       console.log(payload);
       const { sub } = payload;
       setMemberId(Number(sub));
+      postLogin(Number(sub));
       router.push('/home');
       // router.push('/signup');
     } catch (err) {

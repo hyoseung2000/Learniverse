@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // import 'ace-builds/src-noconflict/ext-language_tools';
 
 import 'ace-builds/src-noconflict/ace';
@@ -16,7 +17,7 @@ import { StateDeleteBtn } from '@/components/Common/Button';
 import { SquareModal } from '@/components/Common/Modal';
 import { IcDiscussLogo } from '@/public/assets/icons';
 import { issueIdState, memberIdState } from '@/recoil/atom';
-import { DiscussInfo, IssueInfo, PostDiscussInfo } from '@/types/studyroom';
+import { DiscussInfo, PostDiscussInfo } from '@/types/studyroom';
 
 import CommentCard from './CommentCard';
 
@@ -43,15 +44,14 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   const [discussData, setDiscussData] = useState<PostDiscussInfo>();
 
   const getIssueData = async () => {
-    const issueInfo: IssueInfo = await getIssueInfo(issueId);
-
-    const { issueTitle, gitCode, issueDescription, issueGitUrl, memberId } =
-      issueInfo!;
-    setCode(gitCode);
-    setTitle(issueTitle);
-    setDescrpt(issueDescription);
-    setGiturl(issueGitUrl);
-    setWriter(memberId);
+    // const issueInfo = await getIssueInfo(issueId);
+    // const { issue, gitcode } = issueInfo!;
+    // const { issueTitle, issueDescription, issueGitUrl, memberId } = issue!;
+    // setCode(gitcode);
+    // setTitle(issueTitle);
+    // setDescrpt(issueDescription);
+    // setGiturl(issueGitUrl);
+    // setWriter(memberId);
   };
 
   const getDiscuss = async () => {
@@ -172,15 +172,6 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                   />
                 ))}
             </StComment>
-            {/* {isSubmit &&
-              commentList?.map((comment) => (
-                <CommentCard
-                  key={comment}
-                  coderef={codeRef}
-                  code={suggestCode}
-                  index={index}
-                />
-              ))} */}
             {isComment && (
               <StInput>
                 <textarea
@@ -195,7 +186,6 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                 </button>
               </StInput>
             )}
-            {/* <CommentCard /> */}
           </StCommentWrapper>
         </StDiscussWrapper>
       </SquareModal>

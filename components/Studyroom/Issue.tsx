@@ -4,7 +4,7 @@ import { styled } from 'styled-components';
 
 import { getIssueList } from '@/apis/issue';
 import { useModal } from '@/hooks/Common';
-import { IcPlusBtn, IcToggleOff, IcToggleOn } from '@/public/assets/icons';
+import { IcPlusBtn } from '@/public/assets/icons';
 import { roomIdState } from '@/recoil/atom';
 import { IssueInfo } from '@/types/studyroom';
 
@@ -30,8 +30,12 @@ const Issue = () => {
     cIssue.toggle();
   };
 
-  const handleToggle = () => {
-    setshowClosed(!showClosed);
+  const handleOpenToggle = () => {
+    setshowClosed(true);
+  };
+
+  const handleCloseToggle = () => {
+    setshowClosed(false);
   };
 
   const handleDiscuss = () => {
@@ -47,8 +51,19 @@ const Issue = () => {
       <StIsuueWrapper>
         <StTitleWrapper>
           <h2>이슈</h2>
-          <button type="button" onClick={handleToggle}>
-            <p>CLOSED</p> {showClosed ? <IcToggleOn /> : <IcToggleOff />}
+          <button
+            type="button"
+            className={showClosed ? 'active' : ''}
+            onClick={handleOpenToggle}
+          >
+            OPEN
+          </button>
+          <button
+            type="button"
+            className={showClosed ? '' : 'active'}
+            onClick={handleCloseToggle}
+          >
+            CLOSED
           </button>
           <IcPlusBtn type="button" onClick={handleOpenIssue} />
         </StTitleWrapper>
@@ -56,7 +71,7 @@ const Issue = () => {
           {issueList &&
             issueList.map(
               (issue: IssueInfo) =>
-                showClosed !== issue.issueOpen && (
+                showClosed === issue.issueOpen && (
                   <IssueCard
                     core={false}
                     key={issue.issueId}
@@ -95,11 +110,12 @@ const StTitleWrapper = styled.div`
     align-items: center;
     margin-left: 2rem;
 
-    & > p {
-      margin-right: 1rem;
-      color: ${({ theme }) => theme.colors.White};
-      ${({ theme }) => theme.fonts.Body1};
-    }
+    color: ${({ theme }) => theme.colors.White};
+    ${({ theme }) => theme.fonts.Body1};
+  }
+
+  & > .active {
+    color: ${({ theme }) => theme.colors.Orange1};
   }
 
   & > h2 {

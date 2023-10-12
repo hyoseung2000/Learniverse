@@ -106,6 +106,17 @@ export interface NoticeInfo {
   boardId: number;
   title: string;
   content: string;
+  createdDate: Date;
+}
+
+export interface ModifyNoticeInfo {
+  memberId: number;
+  roomId: number;
+  boardId: number;
+  title: string;
+  content: string;
+  createdDate: Date;
+  updatedDate: Date;
 }
 
 export interface IssueListInfo {
@@ -148,4 +159,11 @@ export interface PostDiscussInfo {
   memberId: number;
   issueOpinion: string;
   issueOpinionLine: number;
+}
+
+export interface ModifyDiscussInfo {
+  issueId: number;
+  roomId: number;
+  memberId: number;
+  gitCode: string;
 }

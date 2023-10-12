@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { styled } from 'styled-components';
 
+import { postLog } from '@/apis/login';
 import { IcLoginBtn } from '@/public/assets/icons';
 import { memberIdState } from '@/recoil/atom';
 
@@ -14,15 +15,20 @@ const Landing = () => {
 
   const handleLoginClick = async () => {
     setShowInput(true);
-    window.location.href = `${process.env.NEXT_PUBLIC_APP_IP}/oauth2/authorization/github`;
+    // window.location.href = `${process.env.NEXT_PUBLIC_APP_IP}/oauth2/authorization/github`;
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurMemberId(e.target.value as unknown as number);
   };
 
-  const handleInputClick = () => {
+  const postLogin = async () => {
+    await postLog(curMemberId);
+  };
+
+  const handleInputClick = async () => {
     if (curMemberId) {
+      postLogin();
       router.push('/home');
     }
   };
