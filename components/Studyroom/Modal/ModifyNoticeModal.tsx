@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { DeleteNotice } from '@/apis/studyroom';
+import { DeleteNotice, ModifyNotice } from '@/apis/studyroom';
 import {
   CancelButton,
   ConfirmButton,
@@ -10,7 +10,7 @@ import {
 } from '@/components/Common/Button';
 import { LargeModal } from '@/components/Common/Modal';
 import { memberIdState, roomIdState } from '@/recoil/atom';
-import { NoticeInfo, PostNoticeInfo } from '@/types/studyroom';
+import { ModifyNoticeInfo, NoticeInfo } from '@/types/studyroom';
 
 interface Props {
   isShowing: boolean;
@@ -19,11 +19,12 @@ interface Props {
 }
 
 const ModifyNoticeModal = ({ isShowing, noticeInfo, handleCancel }: Props) => {
-  const { memberId, boardId, title, content } = noticeInfo;
+  const { memberId, boardId, title, content, createdDate } = noticeInfo;
 
   const [ntitle, setNTitle] = useState('');
   const [ncontent, setNContent] = useState('');
-  const [noticeData, setNoticeData] = useState<PostNoticeInfo>();
+  const [update, setUpdate] = useState<Date>();
+  const [noticeData, setNoticeData] = useState<ModifyNoticeInfo>();
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -32,12 +33,11 @@ const ModifyNoticeModal = ({ isShowing, noticeInfo, handleCancel }: Props) => {
 
   const handleModify = async () => {
     console.log('공지사항 수정', noticeData, memberId);
-    // await postNotice(noticeData!);
+    await ModifyNotice(noticeData!);
     handleCancel();
   };
 
   const handleDelete = async () => {
-    console.log('공지사항 삭제');
     await DeleteNotice(boardId);
     handleCancel();
   };
@@ -58,11 +58,15 @@ const ModifyNoticeModal = ({ isShowing, noticeInfo, handleCancel }: Props) => {
   }, []);
 
   useEffect(() => {
+    setUpdate(new Date());
     setNoticeData({
       memberId: memberID,
       roomId: roomID,
+      boardId,
       title: ntitle,
       content: ncontent,
+      createdDate,
+      updatedDate: update!,
     });
   }, [ntitle, ncontent]);
 

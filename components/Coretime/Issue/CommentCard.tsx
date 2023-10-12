@@ -4,10 +4,10 @@ import AceEditor from 'react-ace';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-// import { StateBtn, StateDeleteBtn } from '@/components/Common/Button';
+import { ModifyIssueDiscuss } from '@/apis/issue';
 import { IcChar } from '@/public/assets/icons';
-import { memberIdState } from '@/recoil/atom';
-import { DiscussInfo } from '@/types/studyroom';
+import { memberIdState, roomIdState } from '@/recoil/atom';
+import { DiscussInfo, ModifyDiscussInfo } from '@/types/studyroom';
 import { getNickName } from '@/utils/getNicknames';
 
 interface Props {
@@ -17,16 +17,18 @@ interface Props {
 }
 
 const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
-  const { memberId, issueOpinion, issueOpinionLine } = commentInfo;
+  const { issueId, memberId, issueOpinion, issueOpinionLine } = commentInfo;
   const cMemberId = useRecoilValue(memberIdState);
+  const roomId = useRecoilValue(roomIdState);
   const [memberNickname, setMemberNickname] = useState('');
+  const [modifyData, setModifyData] = useState<ModifyDiscussInfo>();
 
   const setNickname = async (): Promise<void> => {
     const nickname = await getNickName(memberId);
     setMemberNickname(nickname);
   };
 
-  const handleModify = () => {
+  const handleModify = async () => {
     if (coderef.current) {
       const modifyRange = new Range(
         issueOpinionLine,
@@ -37,6 +39,13 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
       coderef.current.editor.session.replace(modifyRange, issueOpinion);
       const changes = coderef.current.editor.getValue();
       console.log(changes);
+      setModifyData({
+        issueId,
+        roomId,
+        memberId,
+        gitCode: changes,
+      });
+      await ModifyIssueDiscuss(modifyData!);
     }
   };
 
@@ -64,7 +73,7 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
             수락
           </StButton>
         ) : (
-          <StButton $isPersist={false}>거절</StButton>
+          <StButton $isPersist={false}>불가</StButton>
         )
       }
     </StComment>

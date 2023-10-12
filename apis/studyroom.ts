@@ -1,4 +1,8 @@
-import { PostNoticeInfo, PostWorkSpaceInfo } from '@/types/studyroom';
+import {
+  ModifyNoticeInfo,
+  PostNoticeInfo,
+  PostWorkSpaceInfo,
+} from '@/types/studyroom';
 
 import { client } from './axios';
 
@@ -127,6 +131,17 @@ export const DeleteNotice = async (boardId: number) => {
     const { data } = await client.delete(
       `/room/board/delete?boardId=${boardId}`,
     );
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const ModifyNotice = async (ModifyNoticeData: ModifyNoticeInfo) => {
+  try {
+    const { data } = await client.post(`/room/board/update`, ModifyNoticeData);
     console.log(data);
     return data;
   } catch (err) {

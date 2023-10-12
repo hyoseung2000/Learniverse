@@ -1,4 +1,8 @@
-import { PostDiscussInfo, PostIssueInfo } from '@/types/studyroom';
+import {
+  ModifyDiscussInfo,
+  PostDiscussInfo,
+  PostIssueInfo,
+} from '@/types/studyroom';
 
 import { client } from './axios';
 
@@ -26,7 +30,7 @@ export const getIssueList = async (roomId: number) => {
 export const getIssueInfo = async (issueId: number) => {
   try {
     const { data } = await client.get(`/room/issue?issueId=${issueId}`);
-    return data;
+    return data.data;
   } catch (err) {
     console.error(err);
     throw err;
@@ -59,9 +63,22 @@ export const postDiscuss = async (postDiscussData: PostDiscussInfo) => {
 
 export const deleteIssue = async (issueId: number) => {
   try {
-    const { data } = await client.post(`room/issue/update`, {
+    const { data } = await client.post(`room/issue/close`, {
       issueId,
     });
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const ModifyIssueDiscuss = async (
+  postDiscussData: ModifyDiscussInfo,
+) => {
+  try {
+    const { data } = await client.post(`/room/issue/update`, postDiscussData);
     console.log(data);
     return data;
   } catch (err) {
