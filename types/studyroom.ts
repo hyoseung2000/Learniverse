@@ -16,6 +16,10 @@ export interface StudyRoomDataInfo {
   rooms: StudyRoomInfo;
 }
 
+export interface LanguageDataInfo {
+  languages: string[];
+}
+
 export interface StudyRoomInfo {
   roomId: number;
   roomName: string;

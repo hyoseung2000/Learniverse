@@ -37,6 +37,7 @@ export const getRoomInfo = async (roomId: number, memberId: number) => {
 export const getLanguages = async () => {
   try {
     const { data } = await client.get('/room/languages');
+    console.log(data.data);
     return data.data.languages;
   } catch (err) {
     console.error(err);

@@ -4,3 +4,4 @@ export { default as useGetApplyStudyRoomList } from './useGetApplyStudyRoomList'
 export { default as useGetRoomInfo } from './useGetRoomInfo';
 export { default as useGetSearchResult } from './useGetSearchResult';
 export { default as useGetRecommendRoomList } from './useGetRecommendRoomList';
+export { default as useGetLanguages } from './useGetLanguages';
