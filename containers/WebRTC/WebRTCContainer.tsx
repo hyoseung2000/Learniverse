@@ -107,7 +107,7 @@ const WebRTCContainer = () => {
       return;
     }
     if (isEnter) {
-      capture.setShowing(false);
+      capture.setShowing(true);
     }
   }, [captureTime]);
 

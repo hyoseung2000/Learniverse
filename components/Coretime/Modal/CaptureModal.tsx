@@ -78,7 +78,7 @@ const CaptureModal = ({
 
 export default CaptureModal;
 
-const StCaptureModalWrapper = styled.section`
+const StCaptureModalWrapper = styled.div`
   position: relative;
 
   display: flex;

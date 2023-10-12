@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/naming-convention */
 import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';

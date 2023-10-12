@@ -9,6 +9,7 @@ const useGetMoon = (memberId: number) => {
     `/member/moon/list?memberId=${memberId}`,
     mainGetFetcher,
   );
+  console.log(data);
 
   return {
     moons: data?.data.moons,

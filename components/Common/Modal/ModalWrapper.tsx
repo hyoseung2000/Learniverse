@@ -10,7 +10,7 @@ const ModalWrapper: React.FC<ModalWrapperProps> = ({ isShowing, children }) => (
 );
 
 const StModalWrapper = styled.div<{ $showing: boolean }>`
-  display: ${({ $showing }) => ($showing ? 'block' : 'none')};
+  display: ${({ $showing }) => ($showing ? 'flex' : 'none')};
   position: fixed;
   top: 0;
   left: 0;

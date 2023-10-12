@@ -1,9 +1,8 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 import { WebRTCAudio, WebRTCVideo } from '@/components/Coretime/WebRTCMedia';
-import { useToggle } from '@/hooks/Common';
 import { useVideoSelector } from '@/hooks/Socket';
 import { captureTimeState } from '@/recoil/atom';
 import { ConsumeInfo } from '@/types/socket';
@@ -23,7 +22,6 @@ const MediaContainer = ({
   isSpeaker,
 }: MediaContainerProps) => {
   const captureTime = useRecoilValue(captureTimeState);
-
   const [selectedVideo, handleSelectVideo] = useVideoSelector();
 
   return (
