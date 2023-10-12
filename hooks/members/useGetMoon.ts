@@ -12,7 +12,7 @@ const useGetMoon = (memberId: number) => {
 
   return {
     moons: data?.data.moons,
-    isLoading,
+    isMoonLoading: isLoading,
     isError: error,
   };
 };

@@ -58,7 +58,7 @@
 
 > 스터디룸 내에서 개발 관련 이슈를 공유하고, 디스커션 후 해당 이슈를 깃허브에 자동으로 업로드
 
-**✅ 사용자 기반 스터디 추천**
+**✅ 사용자 기반 스터디 AI 추천**
 
 > 사용자가 입력한 정보 및 활동 내역과 매칭되는 스터디룸을 AI를 통해 추천
 
@@ -67,8 +67,8 @@
 <h2> 🛠 기술스택 </h2>
 
 <div align="center"> 
-  
-![LearniVerse (4)](https://github.com/Team-Learniverse/Learniverse-FrontEnd/assets/73213437/3d3f2a2e-8522-4f93-87cb-5bb038a20059)
+
+![LV2](https://github.com/Team-Learniverse/Learniverse-FrontEnd/assets/73213437/7196dbf6-e075-47f9-b6d0-c49156a087c0)
 
 <br />
 
@@ -79,7 +79,7 @@
 | Library              | ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black)                                                                                                                |
 | Framework            | ![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=Next.js&logoColor=ffffff)                                                                                                         |
 | Programming Language | ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6.svg?style=for-the-badge&logo=TypeScript&logoColor=white)                                                                                             |
-| Data Fetching        | ![Data Fetching](https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=Axios&logoColor=white)                                                                                                        |
+| Data Fetching        | ![Axios](https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=Axios&logoColor=white) ![SWR](https://img.shields.io/badge/swr-ffffff?style=for-the-badge&logo=SWR&logoColor=000000)                  |
 | State Management     | ![Recoil](https://img.shields.io/badge/Recoil-3578E5?style=for-the-badge&logo=recoil&logoColor=white)                                                                                                             |
 | Styling              | ![Styled Components](https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white)                                                                           |
 | Formatting           | ![ESLint](https://img.shields.io/badge/ESLint-4B3263?style=for-the-badge&logo=eslint&logoColor=white) ![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=white) |

@@ -16,6 +16,10 @@ export interface StudyRoomDataInfo {
   rooms: StudyRoomInfo;
 }
 
+export interface LanguageDataInfo {
+  languages: string[];
+}
+
 export interface StudyRoomInfo {
   roomId: number;
   roomName: string;
@@ -52,6 +56,7 @@ export interface PostStudyRoomInfo {
 
 export interface CoreTimeListInfo {
   cores: CoreTimeInfo[];
+  isCore: boolean;
 }
 
 export interface CoreTimeInfo {

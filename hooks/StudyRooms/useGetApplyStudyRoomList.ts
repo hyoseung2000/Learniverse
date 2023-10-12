@@ -12,7 +12,7 @@ const useGetApplyStudyRoomList = (memberId: number) => {
 
   return {
     applyStudyRoomList: data?.data.rooms,
-    isLoading,
+    isApplyRoomLoading: isLoading,
     isError: error,
   };
 };

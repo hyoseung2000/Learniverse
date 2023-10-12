@@ -54,7 +54,6 @@ export const applyRoom = async (roomId: number, memberId: number) => {
       roomId,
       memberId,
     });
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
@@ -101,7 +100,7 @@ export const getStudyroomName = async (roomId: number) => {
     const { data } = await client.get(`room/info/roomName?roomId=${roomId}`);
     return data.data;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     throw err;
   }
 };

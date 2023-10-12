@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 
-import { fcmTokenState } from '@/recoil/atom';
+import { fcmTokenState, roomIdState } from '@/recoil/atom';
 import {
   ChattingInfo,
   ConsumeInfo,
@@ -34,12 +34,13 @@ import {
 } from './socketHandlers';
 
 const useWebRTC = (
-  curRoomId: string,
-  curName: string,
+  curCoreTimeId: number,
+  curMemberId: number,
   socket: CustomSocket,
 ) => {
   const router = useRouter();
   const fcmToken = useRecoilValue(fcmTokenState);
+  const curRoomId = useRecoilValue(roomIdState);
 
   const [curMembers, setCurMembers] = useState<RoomPeerInfo[]>([]);
   const [curDevice, setCurDevice] = useState<Device>();
@@ -50,11 +51,11 @@ const useWebRTC = (
   const [audioStreams, setAudioStreams] = useState<ConsumeInfo[]>([]);
   const [chattingList, setChattingList] = useState<ChattingInfo[]>([]);
 
-  const createRoom = async (roomId: string) => {
+  const createRoom = async (coreTimeId: number) => {
     if (!socket || !socket.request) return;
     try {
       await socket.request('createRoom', {
-        room_id: roomId,
+        coreTimeId,
       });
     } catch (err) {
       console.error('Create room error:', err);
@@ -81,19 +82,19 @@ const useWebRTC = (
     return device;
   };
 
-  const join = async (roomId: string, nickName: string) => {
+  const join = async (coreTimeId: number, memberId: number) => {
     if (!socket || !socket.request) return;
     try {
       const socketJoin: JoinInfo = await socket.request('join', {
-        room_id: roomId,
-        name: nickName,
+        coreTimeId,
+        memberId,
       });
       console.log('2. Joined to room', socketJoin);
 
       await socket.request('setCaptureAlert', {
-        memberId: curName,
-        roomId: 1,
-        coreTimeId: curRoomId,
+        memberId,
+        roomId: curRoomId,
+        coreTimeId,
         token: fcmToken,
       });
 
@@ -109,10 +110,10 @@ const useWebRTC = (
   };
 
   const enterRoom = async () => {
-    if (!socket || !curRoomId || !curName) return;
+    if (!socket || !curCoreTimeId || !curMemberId) return;
     try {
-      await createRoom(curRoomId);
-      await join(curRoomId, curName);
+      await createRoom(curCoreTimeId);
+      await join(curCoreTimeId, curMemberId);
     } catch (error) {
       console.error('Error in creating or joining the room:', error);
     }
@@ -153,14 +154,13 @@ const useWebRTC = (
 
   const consumeWithDevice = async (device: Device, producers: PeersInfo[]) => {
     const consumePromises = producers.map((producer) => {
-      const { producer_id, producer_user_name, producer_type } = producer;
-      return consume(
-        device,
-        producer_id,
-        producer_user_name,
-        producer_type,
-      ).catch((error) =>
-        console.error(`Error while consuming producer ${producer_id}:`, error),
+      const { producer_id, memberId, producer_type } = producer;
+      return consume(device, producer_id, memberId, producer_type).catch(
+        (error) =>
+          console.error(
+            `Error while consuming producer ${producer_id}:`,
+            error,
+          ),
       );
     });
     await Promise.all(consumePromises);
@@ -224,13 +224,13 @@ const useWebRTC = (
   const addStream = (
     newStream: MediaStream,
     nickname: string,
-    name: string,
+    memberId: number,
     consumerId: string,
     type: string,
   ) => {
     const curStream: ConsumeInfo = {
       nickname,
-      name,
+      memberId,
       consumer_id: consumerId,
       stream: newStream,
     };
@@ -253,7 +253,7 @@ const useWebRTC = (
     if (!curDevice || !socket || !socket.request) return;
 
     try {
-      const nickname = await getNickName(curName!);
+      const nickname = await getNickName(curMemberId!);
       const stream = await getMediaStream(type);
       if (!stream) return;
 
@@ -264,7 +264,7 @@ const useWebRTC = (
       addStream(
         stream,
         nickname,
-        curName,
+        curMemberId,
         producer.id,
         type === 'screenType' ? 'video' : 'audio',
       );
@@ -303,7 +303,7 @@ const useWebRTC = (
   const consume = async (
     device: Device,
     curProducerId: string,
-    curProducerName: string,
+    curProducerMemberId: number,
     produceType: string,
   ): Promise<void> => {
     try {
@@ -314,20 +314,20 @@ const useWebRTC = (
       const data = await socket.request('consume', {
         consumerTransportId: consumerTransport.id,
         producerId: curProducerId,
-        producerName: curProducerName,
+        producerName: curProducerMemberId,
         rtpCapabilities,
       });
 
       const {
         producerId,
-        producerName,
-        id,
+        memberId,
+        consumerId,
         kind,
         rtpParameters,
       }: ConsumerInfo = data;
 
       const consumer: Consumer = await consumerTransport.consume({
-        id,
+        id: consumerId,
         producerId,
         kind,
         rtpParameters,
@@ -336,12 +336,12 @@ const useWebRTC = (
       const stream = new MediaStream();
       stream.addTrack(consumer.track);
 
-      const nickname = await getNickName(producerName);
+      const nickname = await getNickName(memberId);
       addStream(
         new MediaStream([consumer.track]),
         nickname,
-        producerName,
-        id,
+        memberId,
+        consumerId,
         produceType,
       );
     } catch (error) {
@@ -383,7 +383,7 @@ const useWebRTC = (
       socket.on('disconnect', async () => {
         if (socket.request) {
           const data = await socket.request('removeCaptureAlert', {
-            memberId: curName,
+            memberId: curMemberId,
           });
           console.log(data);
           router.push('/home');
@@ -404,7 +404,7 @@ const useWebRTC = (
   useEffect(() => {
     enterRoom();
     initSockets();
-  }, [socket, curRoomId, curName]);
+  }, [socket, curCoreTimeId, curMemberId]);
 
   useEffect(() => {
     initSockets();

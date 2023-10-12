@@ -28,7 +28,7 @@ const Member = ({ curMembers }: MembersProps) => {
       <h3>현재 접속 중</h3>
       <StMembers>
         {curMembers.map((member) => (
-          <StMember key={member.id}>
+          <StMember key={member.socketId}>
             <IcChar />
             <button
               type="button"

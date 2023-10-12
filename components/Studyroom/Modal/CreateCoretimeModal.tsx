@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
+import { mutate } from 'swr';
 
 import { createCaptureTime } from '@/apis/alarm';
 import { createCoretime } from '@/apis/coretimes';
@@ -53,6 +54,7 @@ const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
         };
         console.log('captureTimeData', captureTimeData);
         await createCaptureTime(captureTimeData);
+        mutate(`/room/core/list?roomId=${roomID}`);
       }
       handleCancel();
     }

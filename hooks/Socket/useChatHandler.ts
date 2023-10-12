@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 
 import { ChattingInfo, CustomSocket } from '@/types/socket';
-import { getTime } from '@/utils/getTime';
+import { getKSTTime } from '@/utils/getTime';
 
 type UseChatHandlerReturnType = [
   string,
@@ -11,6 +11,7 @@ type UseChatHandlerReturnType = [
 
 const useChatHandler = (
   curSocket: CustomSocket,
+  curMemberId: number,
   curNickname: string,
   addChattingList: (chat: ChattingInfo) => void,
 ): UseChatHandlerReturnType => {
@@ -23,12 +24,11 @@ const useChatHandler = (
         return;
       }
 
-      curSocket.emit('message', chatting);
-
       const sentChat: ChattingInfo = {
-        name: curNickname,
+        memberId: curMemberId,
         message: chatting,
-        time: getTime(new Date()),
+        time: getKSTTime(new Date()),
+        nickname: curNickname,
       };
       addChattingList(sentChat);
       setChatting('');

@@ -3,9 +3,8 @@ import { useRecoilValue } from 'recoil';
 import { keyframes, styled } from 'styled-components';
 
 import { getRoomInfo } from '@/apis/studyroom';
-import { LargeModal } from '@/components/Common/Modal';
+import { LargeModal, ModalWrapper } from '@/components/Common/Modal';
 import { StudyroomCard } from '@/components/RoomCard';
-import { StManageModalWrapper } from '@/components/RoomList/MyPageStudyRoomList';
 import {
   StContentWrapper,
   StSmallModalWrapper,
@@ -15,19 +14,19 @@ import { useGetRecommendRoomList } from '@/hooks/StudyRooms';
 import { memberIdState } from '@/recoil/atom';
 import { StudyRoomInfo } from '@/types/studyroom';
 
-import ApplyCompleteModal from '../ApplyCompleteModal/ApplyCompleteModal';
+import ApplyCompleteModal from './ApplyCompleteModal';
 
-interface RecommendStudyProps {
+interface RecommendModalProps {
   isShowing: boolean;
   toggleModal: () => void;
   handleApply: (roomId: number) => Promise<void>;
 }
 
-const RecommendStudy = ({
+const RecommendModal = ({
   isShowing,
   toggleModal,
   handleApply,
-}: RecommendStudyProps) => {
+}: RecommendModalProps) => {
   const curMemberId = useRecoilValue(memberIdState);
 
   const { recommendRoomIdList } = useGetRecommendRoomList(curMemberId);
@@ -62,7 +61,7 @@ const RecommendStudy = ({
 
   return (
     <>
-      <StRecommendModalWrapper $showing={isShowing}>
+      <ModalWrapper isShowing={isShowing}>
         <LargeModal title="나와 맞는 스터디 추천받기" isShowing={isShowing}>
           <StCloseBtn type="button" onClick={toggleModal}>
             𝗫
@@ -96,7 +95,7 @@ const RecommendStudy = ({
             </StRecommendModalContentWrapper>
           </StRecommendWrapper>
         </LargeModal>
-      </StRecommendModalWrapper>
+      </ModalWrapper>
       <ApplyCompleteModal
         isShowing={applyCompleteModal.isShowing}
         toggleModal={applyCompleteModal.toggle}
@@ -105,7 +104,7 @@ const RecommendStudy = ({
   );
 };
 
-export default RecommendStudy;
+export default RecommendModal;
 
 const StCloseBtn = styled.button`
   position: absolute;
@@ -113,10 +112,6 @@ const StCloseBtn = styled.button`
   right: 3rem;
 
   ${({ theme }) => theme.fonts.Title1};
-`;
-
-const StRecommendModalWrapper = styled(StManageModalWrapper)`
-  z-index: 19;
 `;
 
 const StRecommendModalContentWrapper = styled(StContentWrapper)``;

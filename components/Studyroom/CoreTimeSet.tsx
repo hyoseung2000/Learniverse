@@ -1,16 +1,14 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable @typescript-eslint/naming-convention */
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useEffect, useRef } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 import { getCoretimeID } from '@/apis/coretimes';
-import { getCoretimeList } from '@/apis/studyroom';
 import { useModal } from '@/hooks/Common';
+import { useGetCoreTimeList } from '@/hooks/StudyRooms';
 import { IcPlusBtn } from '@/public/assets/icons';
-import { roomIdState } from '@/recoil/atom';
-import { CoreTimeInfo } from '@/types/studyroom';
+import { coreTimeIdState, roomIdState } from '@/recoil/atom';
 
 import CoreTimeCard from './CoretimeCard';
 import CreateCoretimeModal from './Modal/CreateCoretimeModal';
@@ -18,27 +16,20 @@ import CreateCoretimeModal from './Modal/CreateCoretimeModal';
 const CoreTimeSet = () => {
   const router = useRouter();
   const coreRef = useRef<HTMLDivElement>(null);
-  const room_id = useRecoilValue(roomIdState);
+  const roomId = useRecoilValue(roomIdState);
 
   const create = useModal();
 
-  const [coreTimeList, setCoreTimeList] = useState<CoreTimeInfo[]>();
-  const [isCoreTime, setIsCoreTime] = useState<boolean>();
-  const [nowCoreId, setNowCoreId] = useState<number>();
+  const { coreTimeList, isCoreTime } = useGetCoreTimeList(roomId);
+  const [nowCoreId, setNowCoreId] = useRecoilState<number>(coreTimeIdState);
 
   const getCoretimes = async () => {
-    const coresInfo = await getCoretimeList(room_id);
-    const { cores, isCore } = coresInfo;
-
-    if (isCore) {
+    if (isCoreTime) {
       // 현재 코어타임 여부 확인
-      const coreID: number = await getCoretimeID(room_id);
+      const coreID: number = await getCoretimeID(roomId);
       console.log(coreID);
       setNowCoreId(coreID);
     }
-
-    setCoreTimeList(cores);
-    setIsCoreTime(isCore);
   };
 
   const handleOpen = () => {
@@ -47,8 +38,8 @@ const CoreTimeSet = () => {
 
   const handleAttend = () => {
     router.push({
-      pathname: `/coretime/${room_id}`,
-      query: { room_id: nowCoreId },
+      pathname: `/coretime/${roomId}`,
+      query: { coreTimeId: nowCoreId },
     });
   };
 
