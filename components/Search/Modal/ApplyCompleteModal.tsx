@@ -2,8 +2,7 @@ import React from 'react';
 import { styled } from 'styled-components';
 
 import { ConfirmButton } from '@/components/Common/Button';
-import { SmallModal } from '@/components/Common/Modal';
-import { StManageModalWrapper } from '@/components/RoomList/MyPageStudyRoomList';
+import { ModalWrapper, SmallModal } from '@/components/Common/Modal';
 import {
   StContentWrapper,
   StSmallModalWrapper,
@@ -20,7 +19,7 @@ const ApplyCompleteModal: React.FC<StudyApplyCompleteModalProps> = ({
   toggleModal,
 }) => {
   return (
-    <StCompleteModalWrapper $showing={isShowing}>
+    <ModalWrapper isShowing={isShowing}>
       <SmallModal title="스터디 참여 신청 완료" isShowing={isShowing}>
         <StModalWrapper>
           <StModalContentWrapper>
@@ -34,15 +33,11 @@ const ApplyCompleteModal: React.FC<StudyApplyCompleteModalProps> = ({
           <ConfirmButton btnName="확인" onClick={toggleModal} />
         </StModalWrapper>
       </SmallModal>
-    </StCompleteModalWrapper>
+    </ModalWrapper>
   );
 };
 
 export default ApplyCompleteModal;
-
-const StCompleteModalWrapper = styled(StManageModalWrapper)`
-  z-index: 20;
-`;
 
 const StModalWrapper = styled(StSmallModalWrapper)``;
 

@@ -12,24 +12,27 @@ import { memberIdState } from '@/recoil/atom';
 import { StudyRoomInfo } from '@/types/studyroom';
 
 import { ConfirmButton } from '../Common/Button';
+import { ModalWrapper } from '../Common/Modal';
 import SmallModal from '../Common/Modal/SmallModal';
 import { ManageModal } from '../RoomCard/Modal';
 import EditModal from '../RoomCard/Modal/EditModal';
 import StudyroomCard from '../RoomCard/StudyroomCard';
+import { StudyroomListSkeleton } from './Skeleton';
 
 interface MyPageStudyRoomListProps {
   isLeader?: boolean;
 }
 
-// TODO : 리팩토링 - 컴포넌트 분리
 const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
   const [roomList, setRoomList] = useState<StudyRoomInfo[]>();
 
   const [roomId, setRoomId] = useState<number>(0);
   const memberId = useRecoilValue(memberIdState);
 
-  const { leaderStudyRoomList } = useGetLeaderStudyRoomList(memberId);
-  const { applyStudyRoomList } = useGetApplyStudyRoomList(memberId);
+  const { leaderStudyRoomList, isLeaderRoomLoading } =
+    useGetLeaderStudyRoomList(memberId);
+  const { applyStudyRoomList, isApplyRoomLoading } =
+    useGetApplyStudyRoomList(memberId);
 
   const manage = useModal();
   const edit = useModal();
@@ -62,8 +65,10 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
   return (
     <StMyPageWrapper>
       <StMyPageRoomListWrapper>
-        {roomList &&
-          roomList.map((room) => (
+        {isLeaderRoomLoading || isApplyRoomLoading ? (
+          <StudyroomListSkeleton />
+        ) : (
+          roomList?.map((room) => (
             <StudyroomCard
               key={room.roomId}
               roomData={room}
@@ -73,17 +78,19 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
               }
               handleEdit={isLeader ? () => handleEdit(room.roomId) : undefined}
             />
-          ))}
+          ))
+        )}
       </StMyPageRoomListWrapper>
-      <StManageModalWrapper $showing={manage.isShowing}>
+
+      <ModalWrapper isShowing={manage.isShowing}>
         <ManageModal
           roomId={roomId}
           isShowing={manage.isShowing}
           handleConfirm={manage.toggle}
           handleCancel={manage.toggle}
         />
-      </StManageModalWrapper>
-      <StEditModalWrapper $showing={edit.isShowing}>
+      </ModalWrapper>
+      <ModalWrapper isShowing={edit.isShowing}>
         <EditModal
           roomId={roomId}
           isShowing={edit.isShowing}
@@ -93,8 +100,8 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
           }}
           handleCancel={edit.toggle}
         />
-      </StEditModalWrapper>
-      <StEditConfirmModalWrapper $showing={editConfirm.isShowing}>
+      </ModalWrapper>
+      <ModalWrapper isShowing={editConfirm.isShowing}>
         <SmallModal
           title="스터디 정보 수정 완료"
           isShowing={editConfirm.isShowing}
@@ -107,7 +114,7 @@ const MyPageStudyRoomList = ({ isLeader }: MyPageStudyRoomListProps) => {
             <ConfirmButton btnName="확인" onClick={editConfirm.toggle} />
           </StSmallModalWrapper>
         </SmallModal>
-      </StEditConfirmModalWrapper>
+      </ModalWrapper>
     </StMyPageWrapper>
   );
 };
@@ -129,26 +136,6 @@ export const StMyPageRoomListWrapper = styled.section`
   margin-top: 4.6rem;
   margin-bottom: 8rem;
 `;
-
-export const StManageModalWrapper = styled.div<{ $showing: boolean }>`
-  display: ${({ $showing }) => ($showing ? 'block' : 'none')};
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-
-  justify-content: center;
-  align-items: center;
-
-  width: 100vw;
-  height: 100vh;
-
-  background-color: rgba(0, 0, 0, 0.5);
-`;
-
-const StEditModalWrapper = styled(StManageModalWrapper)``;
-
-const StEditConfirmModalWrapper = styled(StManageModalWrapper)``;
 
 const StSmallModalWrapper = styled.div`
   display: flex;

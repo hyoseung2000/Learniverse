@@ -12,7 +12,7 @@ interface ExitCoretimeModallProps {
   isShowing: boolean;
   setShowing: (showing: boolean) => void;
   imageFile: File;
-  handleSubmit: () => void;
+  handleCapture: () => void;
   handleCancel: () => void;
 }
 
@@ -20,7 +20,7 @@ const CaptureModal = ({
   isShowing,
   setShowing,
   imageFile,
-  handleSubmit,
+  handleCapture,
   handleCancel,
 }: ExitCoretimeModallProps) => {
   const [remainingTime, setRemainingTime] = useState<number>(60);
@@ -63,7 +63,7 @@ const CaptureModal = ({
           )}
         </StImage>
         <StBtnWrapper>
-          <ConfirmButton btnName="전송" onClick={handleSubmit} />
+          <ConfirmButton btnName="전송" onClick={handleCapture} />
           <CancelButton btnName="취소" onClick={handleCancel} />
         </StBtnWrapper>
         <StTime>
@@ -78,7 +78,7 @@ const CaptureModal = ({
 
 export default CaptureModal;
 
-const StCaptureModalWrapper = styled.section`
+const StCaptureModalWrapper = styled.div`
   position: relative;
 
   display: flex;

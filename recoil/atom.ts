@@ -1,7 +1,6 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
-import { MoonScoreInfo } from '@/types/member';
 import getToday from '@/utils/getToday';
 
 const { persistAtom } = recoilPersist();
@@ -31,13 +30,9 @@ export const encodedUrlState = atom<string>({
   default: '',
 });
 
-export const moonScoreState = atom<MoonScoreInfo>({
+export const moonScoreState = atom<number>({
   key: `moonScore`,
-  default: {
-    isFirstAccess: 0,
-    isCoreTimeParticipate: 0,
-    isCapture: 0,
-  },
+  default: 0,
   effects_UNSTABLE: [persistAtom],
 });
 
@@ -48,6 +43,12 @@ export const todayState = atom<string>({
 
 export const roomIdState = atom<number>({
   key: `roomId`,
+  default: 1,
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const coreTimeIdState = atom<number>({
+  key: `coreTimeId`,
   default: 1,
   effects_UNSTABLE: [persistAtom],
 });

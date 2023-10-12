@@ -2,15 +2,16 @@ import { styled } from 'styled-components';
 
 import { shimmerAnimation } from '@/utils/skeletonAnimation';
 
-const StudyroomCardSkeleton = () => {
-  return <StCardSkeleton />;
+const ProfileSkeleton = () => {
+  return <StProfileSkeleton />;
 };
 
-export default StudyroomCardSkeleton;
+export default ProfileSkeleton;
 
-const StCardSkeleton = styled.div`
-  width: 14.1rem;
-  height: 18.6rem;
+const StProfileSkeleton = styled.div`
+  width: 20rem;
+  height: 20rem;
+  margin-top: 2rem;
 
   border-radius: 1.6rem;
   background: linear-gradient(
