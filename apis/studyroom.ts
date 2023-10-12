@@ -37,7 +37,6 @@ export const getRoomInfo = async (roomId: number, memberId: number) => {
 export const getLanguages = async () => {
   try {
     const { data } = await client.get('/room/languages');
-    console.log(data.data);
     return data.data.languages;
   } catch (err) {
     console.error(err);
@@ -51,7 +50,6 @@ export const applyRoom = async (roomId: number, memberId: number) => {
       roomId,
       memberId,
     });
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
@@ -62,6 +60,7 @@ export const applyRoom = async (roomId: number, memberId: number) => {
 export const getCoretimeList = async (roomId: number) => {
   try {
     const { data } = await client.get(`/room/core/list?roomId=${roomId}`);
+    console.log(data.data);
     return data.data;
   } catch (err) {
     console.error(err);

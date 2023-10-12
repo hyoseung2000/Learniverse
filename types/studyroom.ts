@@ -56,6 +56,7 @@ export interface PostStudyRoomInfo {
 
 export interface CoreTimeListInfo {
   cores: CoreTimeInfo[];
+  isCore: boolean;
 }
 
 export interface CoreTimeInfo {
