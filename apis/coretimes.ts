@@ -68,7 +68,7 @@ export const getPresignedUrl = async () => {
 export const putFile = async (presignedUrl: string, file: File) => {
   try {
     const data = await axios.put(presignedUrl, file);
-    console.log('putFile', data);
+    console.log('랜덤 캡처 이미지 s3 업로드 완료', data);
     return data;
   } catch (error) {
     console.error(error);
@@ -78,7 +78,6 @@ export const putFile = async (presignedUrl: string, file: File) => {
 export const createCapture = async (captureInfo: CaptureInfo) => {
   try {
     const data = await media.post(`/createCapture`, captureInfo);
-    console.log(data.data);
     return data;
   } catch (err) {
     console.error(err);
@@ -89,7 +88,6 @@ export const createCapture = async (captureInfo: CaptureInfo) => {
 export const getCapture = async (coretimeId: number) => {
   try {
     const data = await media.get(`/getCapture?coreTimeId=${coretimeId}`);
-    console.log(data.data);
     return data.data;
   } catch (err) {
     console.error(err);

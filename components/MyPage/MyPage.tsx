@@ -17,6 +17,7 @@ import {
 import { memberIdState } from '@/recoil/atom';
 
 import { MyPageStudyRoomList } from '../RoomList';
+import { MoonSkeleton, ProfileSkeleton } from './Skeleton';
 
 const MyPage = () => {
   const memberId = useRecoilValue(memberIdState);
@@ -24,8 +25,8 @@ const MyPage = () => {
   const [isLeader, setIsLeader] = useState(true);
   const [moonScores, setMoonScores] = useState<number[]>([]);
 
-  const { imgUrl, nickname } = useGetMemberProfile(memberId);
-  const { moons, isLoading } = useGetMoon(memberId);
+  const { imgUrl, nickname, isProfileLoading } = useGetMemberProfile(memberId);
+  const { moons, isMoonLoading } = useGetMoon(memberId);
 
   const getMoonScores = () => {
     const scores = moons?.map((moon) => moon.moonScore) || [];
@@ -63,7 +64,7 @@ const MyPage = () => {
 
   useEffect(() => {
     getMoonScores();
-  }, [isLoading]);
+  }, [isMoonLoading]);
 
   useEffect(() => {
     setIsLeader(activeTab === 0);
@@ -73,12 +74,14 @@ const MyPage = () => {
     <StMyPageWrapper>
       <h2>마이페이지</h2>
       <StMyInfo>
-        {imgUrl && nickname && (
+        {isProfileLoading ? (
+          <ProfileSkeleton />
+        ) : (
           <StProfile>
             <IcProfileImage />
             <Image
               className="githubImage"
-              src={imgUrl}
+              src={imgUrl!}
               alt="profile"
               width={77}
               height={70}
@@ -88,8 +91,14 @@ const MyPage = () => {
         )}
         <StMoon>
           <p>나의 달</p>
-          <IcMoonBox className="box" />
-          <StMoonWrapper>{matchMoonIcons()}</StMoonWrapper>
+          {isMoonLoading ? (
+            <MoonSkeleton />
+          ) : (
+            <>
+              <IcMoonBox className="box" />
+              <StMoonWrapper>{matchMoonIcons()}</StMoonWrapper>
+            </>
+          )}
         </StMoon>
       </StMyInfo>
       <StTabs>

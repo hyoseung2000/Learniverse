@@ -37,7 +37,7 @@ const useGetSearchResult = (
   return {
     resultRoomList: rooms,
     getNextData,
-    isLoading,
+    isResultRoomListLoading: isLoading,
     isError: error,
   };
 };

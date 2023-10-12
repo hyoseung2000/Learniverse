@@ -13,6 +13,5 @@ export const getKSTTime = (date: Date) => {
     '0',
   )}:${String(date.getUTCMinutes()).padStart(2, '0')}`;
 
-  console.log(date, formattedKSTTime);
   return formattedKSTTime;
 };

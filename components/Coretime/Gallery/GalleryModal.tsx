@@ -12,13 +12,13 @@ import { getNickName } from '@/utils/getNicknames';
 import { memberIdState } from '../../../recoil/atom';
 
 interface GalleryModalProps {
-  curCoreTimeId: number;
+  coreTimeId: number;
   isShowing: boolean;
   handleCancel: () => void;
 }
 
 const GalleryModal = ({
-  curCoreTimeId,
+  coreTimeId,
   isShowing,
   handleCancel,
 }: GalleryModalProps) => {
@@ -39,7 +39,7 @@ const GalleryModal = ({
   };
 
   const getGalleryData = async () => {
-    const images = await getCapture(curCoreTimeId);
+    const images = await getCapture(coreTimeId);
     const filteredImages = removeDuplicateFile(images);
 
     const updatedImages = await Promise.all(
@@ -74,7 +74,6 @@ const GalleryModal = ({
                     {image.nickname}
                     <span>{formatHHMMSS(image.createdTime)}</span>
                   </p>
-                  {/* <img src={image.fileLink} alt="capture" /> */}
                   <Image
                     src={image.fileLink}
                     alt="capture"

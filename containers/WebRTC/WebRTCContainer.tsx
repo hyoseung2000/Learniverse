@@ -1,35 +1,33 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { styled } from 'styled-components';
 
-import { getCoreEndtime } from '@/apis/coretimes';
-import { useToggle } from '@/hooks/Common';
+import { getPresignedUrl } from '@/apis/alarm';
+import { createCapture, putFile } from '@/apis/coretimes';
+import { addMoon } from '@/apis/profile';
+import { useModal, useToggle } from '@/hooks/Common';
 import { useFCMPushAlarm } from '@/hooks/FCM';
-import {
-  useChatHandler,
-  useSocketConnection,
-  useVideoSelector,
-  useWebRTC,
-} from '@/hooks/Socket';
-import { captureTimeState, memberIdState } from '@/recoil/atom';
-import { getNickName } from '@/utils/getNicknames';
+import { useSocketConnection, useWebRTC } from '@/hooks/Socket';
+import { captureTimeState, memberIdState, moonScoreState } from '@/recoil/atom';
+import { formatHHMMSS } from '@/utils/getFormattedTime';
 
-import WebRTCLayout from './WebRTCLayout';
+import {
+  CoreTimeInfoContainer,
+  MediaContainer,
+  ModalContainer,
+  SettingContainer,
+} from './CoretimeContainers';
 
 const WebRTCContainer = () => {
-  // 전역 상태 (coreTimeId, memberId, 캡처 시간)
+  // 코어타임, 멤버 관련 상태
   const router = useRouter();
   const { coreTimeId } = router.query;
   const curMemberId = useRecoilValue(memberIdState);
-
-  // 푸시 알림 받기
-  useFCMPushAlarm();
   const captureTime = useRecoilValue(captureTimeState);
-
-  // 현재 코어타임, 사용자 관련 상태
-  const [curNickname, setCurNickname] = useState('');
+  const [curMoonScore, setCurMoonScore] = useRecoilState(moonScoreState);
   const [curCoreTimeId, setCurCoreTimeId] = useState<number>();
-  const [curCoreEndTime, setCurCoreEndTime] = useState<Date>();
+  const [isEnter, setIsEnter] = useState(false);
 
   // 소켓 관련 상태
   const curSocket = useSocketConnection(curCoreTimeId!);
@@ -43,28 +41,22 @@ const WebRTCContainer = () => {
     handleCloseProducer,
     handleExitRoom,
   } = useWebRTC(curCoreTimeId!, curMemberId!, curSocket!);
-  const [chatting, setChatting, handleSendChatting] = useChatHandler(
-    curSocket!,
-    curMemberId,
-    curNickname!,
-    addChattingList,
-  );
+  const [capturedImageFile, setCapturedImageFile] = useState<
+    File | undefined
+  >();
 
-  // 토글 버튼
-  const [isMedia, handleMedia] = useToggle();
-  const [isMike, handleMike] = useToggle();
+  // 모달, 토글
+  const issue = useModal();
+  const cIssue = useModal();
+  const discuss = useModal();
+  const gallery = useModal();
+  const exit = useModal();
+  const capture = useModal();
+  const captureComplete = useModal();
   const [isSpeaker, handleSpeaker] = useToggle();
-  const [selectedVideo, handleSelectVideo] = useVideoSelector();
 
-  const setCoreEndTime = async () => {
-    const coreEndTime = await getCoreEndtime(Number(curCoreTimeId));
-    setCurCoreEndTime(coreEndTime);
-  };
-
-  const setNickname = async () => {
-    const nickname = await getNickName(curMemberId!);
-    setCurNickname(nickname);
-  };
+  // 푸시 알림 받기
+  useFCMPushAlarm();
 
   const handleTurnOff = async (type: string) => {
     const medias = type === 'video' ? videoStreams : audioStreams;
@@ -76,22 +68,31 @@ const WebRTCContainer = () => {
     }
   };
 
-  const handleMediaToggle = async () => {
-    if (isMedia) {
-      await handleTurnOff('video');
-    } else {
-      await produce('screenType');
+  const handleUploadImage = async () => {
+    const now = new Date();
+    const captureData = {
+      coreTimeId: Number(curCoreTimeId),
+      memberId: Number(curMemberId),
+      fileName: `coretime-${curCoreTimeId}-${curMemberId}-${formatHHMMSS(
+        now.toString(),
+      )}.png`,
+    };
+    const url: string = await getPresignedUrl(captureData.fileName);
+    if (capturedImageFile) {
+      await putFile(url, capturedImageFile);
+      await createCapture(captureData);
+      const moonScoreRes = await addMoon(curMemberId, curMoonScore);
+      if (moonScoreRes === 422) {
+        setCurMoonScore(4);
+      }
     }
-    handleMedia();
   };
 
-  const handleMikeToggle = async () => {
-    if (isMike) {
-      await handleTurnOff('audio');
-    } else {
-      await produce('audioType');
-    }
-    handleMike();
+  const handleCapture = () => {
+    handleUploadImage();
+    capture.toggle();
+    captureComplete.toggle();
+    setCapturedImageFile(undefined);
   };
 
   useEffect(() => {
@@ -101,40 +102,73 @@ const WebRTCContainer = () => {
   }, [curMemberId, coreTimeId]);
 
   useEffect(() => {
-    setNickname();
-  }, [curMemberId]);
-
-  useEffect(() => {
-    if (curCoreTimeId) {
-      setCoreEndTime();
+    if (captureTime === 0 && !isEnter) {
+      setIsEnter(true);
+      return;
     }
-  }, [curCoreTimeId]);
+    if (isEnter) {
+      capture.setShowing(true);
+    }
+  }, [captureTime]);
 
   return (
-    <WebRTCLayout
-      captureTime={captureTime}
-      coreEndTime={curCoreEndTime!}
-      curNickname={curNickname!}
-      curCoreTimeId={curCoreTimeId!}
-      curMemberId={curMemberId!}
-      isMedia={isMedia}
-      handleMedia={handleMediaToggle}
-      isMike={isMike}
-      handleMike={handleMikeToggle}
-      isSpeaker={isSpeaker}
-      handleSpeaker={handleSpeaker}
-      selectedVideo={selectedVideo}
-      chatting={chatting}
-      setChatting={setChatting}
-      curMembers={curMembers}
-      videoStreams={videoStreams}
-      audioStreams={audioStreams}
-      handleSelectVideo={handleSelectVideo}
-      chattingList={chattingList}
-      handleSendChatting={handleSendChatting}
-      handleExitRoom={handleExitRoom}
-    />
+    <StWebRTCContainerWrapper>
+      <StWebRTCContainer>
+        <SettingContainer
+          curCoreTimeId={curCoreTimeId!}
+          produce={produce}
+          issue={issue}
+          gallery={gallery}
+          handleTurnOff={handleTurnOff}
+          isSpeaker={isSpeaker}
+          handleSpeaker={handleSpeaker}
+        />
+        <MediaContainer
+          curCoreTimeId={curCoreTimeId!}
+          videoStreams={videoStreams}
+          audioStreams={audioStreams}
+          setCapturedImageFile={setCapturedImageFile}
+          isSpeaker={isSpeaker}
+        />
+      </StWebRTCContainer>
+
+      <CoreTimeInfoContainer
+        curSocket={curSocket}
+        curMembers={curMembers}
+        chattingList={chattingList}
+        addChattingList={addChattingList}
+        exit={exit}
+      />
+
+      <ModalContainer
+        coreTimeId={curCoreTimeId!}
+        issue={issue}
+        cIssue={cIssue}
+        discuss={discuss}
+        gallery={gallery}
+        exit={exit}
+        capture={capture}
+        captureComplete={captureComplete}
+        capturedImageFile={capturedImageFile}
+        handleCapture={handleCapture}
+        handleExitRoom={handleExitRoom}
+      />
+    </StWebRTCContainerWrapper>
   );
 };
 
 export default WebRTCContainer;
+
+const StWebRTCContainerWrapper = styled.main`
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+`;
+
+const StWebRTCContainer = styled.section`
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  padding: 2rem 0rem 2rem 6.5rem;
+  box-sizing: border-box;
+`;

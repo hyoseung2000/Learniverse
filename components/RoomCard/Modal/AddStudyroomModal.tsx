@@ -3,7 +3,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { styled } from 'styled-components';
 
 import { createRoom } from '@/apis/roomList';
-import { getLanguages } from '@/apis/studyroom';
+import { useGetLanguages } from '@/hooks/StudyRooms';
 import { IcAddTag, IcDeleteTag, IcLanguages } from '@/public/assets/icons';
 import { encodedUrlState, memberIdState } from '@/recoil/atom';
 import { PostStudyRoomInfo } from '@/types/studyroom';
@@ -27,7 +27,6 @@ const AddStudyroomModal = ({
   const [category, setCategory] = useState(5);
   const [hashtag, setHashtag] = useState('');
   const [hashtagList, setHashtagList] = useState<string[]>([]);
-  const [languages, setLanguages] = useState<string[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const [member, setMember] = useState(2);
   const [introduction, setIntroduction] = useState('');
@@ -35,10 +34,7 @@ const AddStudyroomModal = ({
   const setEncodedUrl = useSetRecoilState(encodedUrlState);
   const memberId = useRecoilValue(memberIdState);
 
-  const getLanguageData = async () => {
-    const languageData = await getLanguages();
-    setLanguages(languageData);
-  };
+  const { languages } = useGetLanguages();
 
   const initInfo = () => {
     setStudyName('');
@@ -74,12 +70,6 @@ const AddStudyroomModal = ({
   const handleRemoveHashtag = (index: number) => {
     setHashtagList((prev) => prev.filter((_, i) => i !== index));
   };
-
-  useEffect(() => {
-    if (isShowing) {
-      getLanguageData();
-    }
-  }, [isShowing]);
 
   useEffect(() => {
     setAddRoomInfo({
@@ -139,7 +129,7 @@ const AddStudyroomModal = ({
           <StLanguages>
             <label htmlFor="language-checkbox">개발 언어(선택)</label>
             <StLanguageWrapper>
-              {languages.map((lang) => (
+              {languages?.map((lang) => (
                 <Checkbox
                   key={lang}
                   language={lang}

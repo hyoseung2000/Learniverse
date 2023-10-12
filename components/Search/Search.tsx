@@ -7,8 +7,7 @@ import { useModal } from '@/hooks/Common';
 import { memberIdState } from '@/recoil/atom';
 
 import { PurpleButton } from '../Common/Button';
-import ApplyCompleteModal from './ApplyCompleteModal/ApplyCompleteModal';
-import RecommendStudy from './Recommend/Recommend';
+import { ApplyCompleteModal, RecommendModal } from './Modal';
 import SearchInput from './SearchInput';
 import SearchResult from './SearchResult';
 
@@ -58,7 +57,7 @@ const Search = () => {
         isShowing={applyModal.isShowing}
         toggleModal={applyModal.toggle}
       />
-      <RecommendStudy
+      <RecommendModal
         isShowing={recommendModal.isShowing}
         toggleModal={recommendModal.toggle}
         handleApply={handleApply}
