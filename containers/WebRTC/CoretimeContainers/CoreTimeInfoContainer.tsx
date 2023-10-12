@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
@@ -10,7 +11,7 @@ import { memberIdState } from '@/recoil/atom';
 import { ChattingInfo, CustomSocket, RoomPeerInfo } from '@/types/socket';
 import { getNickName } from '@/utils/getNicknames';
 
-interface CoreTimeInfoContainer {
+interface CoreTimeInfoContainerProps {
   curSocket: CustomSocket | null;
   curMembers: RoomPeerInfo[];
   chattingList: ChattingInfo[];
@@ -24,7 +25,7 @@ const CoreTimeInfoContainer = ({
   chattingList,
   addChattingList,
   exit,
-}: CoreTimeInfoContainer) => {
+}: CoreTimeInfoContainerProps) => {
   const curMemberId = useRecoilValue(memberIdState);
   const [curNickname, setCurNickname] = useState('');
   const [chatting, setChatting, handleSendChatting] = useChatHandler(
