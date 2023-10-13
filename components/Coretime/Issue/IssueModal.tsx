@@ -35,7 +35,6 @@ const IssueModal = ({
 
   const handleCreateIssue = () => {
     handleCreate();
-    console.log('이슈 생성창');
   };
 
   useEffect(() => {

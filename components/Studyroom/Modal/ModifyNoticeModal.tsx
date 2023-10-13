@@ -9,7 +9,7 @@ import {
   DeleteButton,
 } from '@/components/Common/Button';
 import { LargeModal } from '@/components/Common/Modal';
-import { memberIdState, roomIdState } from '@/recoil/atom';
+import { roomIdState } from '@/recoil/atom';
 import { ModifyNoticeInfo, NoticeInfo } from '@/types/studyroom';
 
 interface Props {
@@ -29,10 +29,8 @@ const ModifyNoticeModal = ({ isShowing, noticeInfo, handleCancel }: Props) => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const roomID = useRecoilValue(roomIdState);
-  const memberID = useRecoilValue(memberIdState);
 
   const handleModify = async () => {
-    console.log('공지사항 수정', noticeData, memberId);
     await ModifyNotice(noticeData!);
     handleCancel();
   };
@@ -60,7 +58,7 @@ const ModifyNoticeModal = ({ isShowing, noticeInfo, handleCancel }: Props) => {
   useEffect(() => {
     setUpdate(new Date());
     setNoticeData({
-      memberId: memberID,
+      memberId,
       roomId: roomID,
       boardId,
       title: ntitle,

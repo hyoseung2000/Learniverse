@@ -33,7 +33,7 @@ const Member = ({ curMembers }: MembersProps) => {
             <button
               type="button"
               onClick={(event) => {
-                const eventTarget = event.target as HTMLDivElement;
+                const eventTarget = event.target as HTMLButtonElement;
                 const position = eventTarget.getBoundingClientRect();
                 setX(position.x - 10);
                 setY(position.y);

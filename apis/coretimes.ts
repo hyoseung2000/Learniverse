@@ -8,7 +8,6 @@ import { client, media } from './axios';
 export const createCoretime = async (postCoreTimeData: PostCoreTimeInfo) => {
   try {
     const { data } = await client.post(`/room/core/create`, postCoreTimeData);
-    console.log(data);
     return data.data;
   } catch (err) {
     if (axios.isAxiosError(err))
@@ -24,7 +23,6 @@ export const DeleteCoretime = async (coreTimeId: number) => {
     const { data } = await client.delete(
       `/room/core/delete?coreTimeId=${coreTimeId}`,
     );
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);

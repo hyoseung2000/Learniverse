@@ -39,7 +39,6 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
       );
       coderef.current.editor.session.replace(modifyRange, issueOpinion);
       const changes = coderef.current.editor.getValue();
-      console.log(changes);
       setModifyData({
         issueId,
         roomId,

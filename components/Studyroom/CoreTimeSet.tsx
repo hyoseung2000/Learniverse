@@ -27,7 +27,6 @@ const CoreTimeSet = () => {
     if (isCoreTime) {
       // 현재 코어타임 여부 확인
       const coreID: number = await getCoretimeID(roomId);
-      console.log(coreID);
       setNowCoreId(coreID);
     }
   };
@@ -46,12 +45,6 @@ const CoreTimeSet = () => {
   useEffect(() => {
     getCoretimes();
   }, []);
-
-  // useEffect(() => {
-  //   if (coreRef.current) {
-  //     coreRef.current.scrollTop = coreRef.current.scrollHeight;
-  //   }
-  // }, [coreTimeList]);
 
   return (
     <>
