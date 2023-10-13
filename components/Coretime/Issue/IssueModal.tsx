@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-boolean-value */
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
@@ -51,7 +52,6 @@ const IssueModal = ({
                 (issue: IssueInfo) =>
                   issue.issueOpen && (
                     <IssueCard
-                      // eslint-disable-next-line react/jsx-boolean-value
                       core={true}
                       key={issue.issueId}
                       handleDiscuss={handleClick}

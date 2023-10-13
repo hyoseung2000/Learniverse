@@ -195,7 +195,6 @@ const StCancelButton = styled.button`
   color: ${({ theme }) => theme.colors.Learniverse_BG};
   ${({ theme }) => theme.fonts.Title5};
 
-  // border-color: linear-gradient(93deg, #9985fe 1%, #93cdfd 100%);
   box-shadow: 2.791367530822754px 4.88489294052124px 4.187050819396973px
     1.395683765411377px rgba(0, 0, 0, 0.15);
   border-radius: 6.5rem;

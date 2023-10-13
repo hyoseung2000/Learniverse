@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
@@ -44,7 +45,6 @@ const Notice = () => {
               <NoticeCard
                 key={notice.boardId}
                 noticeInfo={notice}
-                // eslint-disable-next-line eqeqeq
                 isWriter={curMemberId == notice.memberId}
               />
             ))}
