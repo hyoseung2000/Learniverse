@@ -24,6 +24,8 @@ const useChatHandler = (
         return;
       }
 
+      curSocket.emit('message', chatting);
+
       const sentChat: ChattingInfo = {
         memberId: curMemberId,
         message: chatting,
