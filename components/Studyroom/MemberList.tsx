@@ -18,7 +18,11 @@ const MemberList = () => {
   const [rname, setRName] = useState<string>('');
   const [rcategory, setRCategory] = useState<string>('');
   const planetColor = getCategoryColor(rcategory);
-  // const [position, setPosition] = useState();
+  const [isShowing, setIsShowing] = useState(false);
+  const [message, setMessage] = useState('');
+  const [x, setX] = useState(0);
+  const [y, setY] = useState(0);
+
   const getRoomName = async () => {
     const roomInfo: StudyRoomInfo = await getRoomInfo(roomId, memberId);
     const { roomName, roomCategory } = roomInfo;
@@ -30,8 +34,13 @@ const MemberList = () => {
     const members = await getRoomMembers(roomId);
     setMemberList(members);
   };
-  const handleMessage = (message: string) => {
-    console.log(message);
+  const handleMessage = (memberMessage: string) => {
+    setMessage(memberMessage);
+    setIsShowing(true);
+    setTimeout(() => {
+      setIsShowing(false);
+      setMessage('');
+    }, 2000);
   };
 
   useEffect(() => {
@@ -48,18 +57,27 @@ const MemberList = () => {
       <StMemberWrapper>
         {memberList &&
           memberList.map((member) => (
-            <StMember
-              key={member.memberId}
-              onClick={() => {
-                // setPosition({})
-                handleMessage(member.memberMessage);
-              }}
-            >
+            <StMember className="member" key={member.memberId}>
               <IcChar />
-              <p>{member.nickname}</p>
+              <button
+                type="button"
+                onClick={(event) => {
+                  const eventTarget = event.target as HTMLDivElement;
+                  const position = eventTarget.getBoundingClientRect();
+                  setX(position.x - 10);
+                  setY(position.y);
+                  handleMessage(member.memberMessage);
+                }}
+              >
+                {member.nickname}
+              </button>
             </StMember>
           ))}
-        {/* { position && <StMessage positon={position} />} */}
+        {isShowing && message && (
+          <StMessage x={x} y={y}>
+            <p>{message}</p>
+          </StMessage>
+        )}
       </StMemberWrapper>
     </StMembersWrapper>
   );
@@ -78,7 +96,7 @@ const StMember = styled.div`
 
   margin-top: 1rem;
 
-  & > p {
+  & > button {
     color: ${({ theme }) => theme.colors.White};
     ${({ theme }) => theme.fonts.Title5};
   }
@@ -107,4 +125,27 @@ const StMemberWrapper = styled.div`
   grid-template-rows: repeat(3, 1fr);
 
   margin-top: 2rem;
+`;
+
+const StMessage = styled.div<{ x: number; y: number }>`
+  width: fit-content;
+  height: 2rem;
+  z-index: 1000;
+
+  text-align: center;
+  align-items: center;
+
+  padding: 0 1rem;
+
+  & > p {
+    color: ${({ theme }) => theme.colors.Learniverse_BG};
+    ${({ theme }) => theme.fonts.Body4};
+  }
+
+  background-color: ${({ theme }) => theme.colors.White};
+  border-radius: 1rem;
+
+  position: absolute;
+  left: ${(props) => `${props.x}px`};
+  top: ${(props) => `${props.y} px`};
 `;

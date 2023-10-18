@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { styled } from 'styled-components';
 
+import { postLog } from '@/apis/login';
 import { IcLoginBtn } from '@/public/assets/icons';
 import { memberIdState } from '@/recoil/atom';
 
@@ -21,8 +22,13 @@ const Landing = () => {
     setCurMemberId(e.target.value as unknown as number);
   };
 
-  const handleInputClick = () => {
+  const postLogin = async () => {
+    await postLog(curMemberId);
+  };
+
+  const handleInputClick = async () => {
     if (curMemberId) {
+      postLogin();
       router.push('/home');
     }
   };

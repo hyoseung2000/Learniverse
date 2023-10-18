@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { postProfile } from '@/apis/profile';
+import { getProfile, postProfile } from '@/apis/profile';
 import { useGetMemberProfile } from '@/hooks/members';
 import { IcProfileImage } from '@/public/assets/icons';
 import { memberIdState } from '@/recoil/atom';
@@ -11,27 +11,28 @@ import { PostProfileInfo } from '@/types/member';
 
 const Profile = () => {
   const memberId = useRecoilValue(memberIdState);
-  const { imgUrl, nickname, memberMessage } = useGetMemberProfile(memberId);
+  const { imgUrl } = useGetMemberProfile(memberId);
 
   const [CnickName, setCNickName] = useState('');
   const [Cmessage, setCMessage] = useState('');
   const [profileData, setProfileData] = useState<PostProfileInfo>();
 
+  const getMemberProfile = async () => {
+    const { nickname, memberMessage } = await getProfile(memberId);
+    setCNickName(nickname!);
+    setCMessage(memberMessage!);
+  };
+
   const handleCancel = () => {
-    initData();
+    getMemberProfile();
   };
 
   const handleModify = async () => {
     await postProfile(profileData!);
   };
 
-  const initData = () => {
-    setCNickName(nickname!);
-    setCMessage(memberMessage ? memberMessage! : '');
-  };
-
   useEffect(() => {
-    initData();
+    getMemberProfile();
   }, []);
 
   useEffect(() => {

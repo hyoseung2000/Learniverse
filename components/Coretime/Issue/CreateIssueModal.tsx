@@ -5,7 +5,7 @@ import { styled } from 'styled-components';
 import { createIssue } from '@/apis/issue';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { LargeModal } from '@/components/Common/Modal';
-import { roomIdState } from '@/recoil/atom';
+import { memberIdState, roomIdState } from '@/recoil/atom';
 import { PostIssueInfo } from '@/types/studyroom';
 
 interface Props {
@@ -15,7 +15,7 @@ interface Props {
 
 const CreateIssueModal = ({ isShowing, handleCancel }: Props) => {
   const roomId = useRecoilValue(roomIdState);
-  // const memberId = useRecoilValue(memberIdState);
+  const memberId = useRecoilValue(memberIdState);
 
   const [ntitle, setNTitle] = useState('');
   const [ncontent, setNContent] = useState('');
@@ -47,7 +47,7 @@ const CreateIssueModal = ({ isShowing, handleCancel }: Props) => {
   useEffect(() => {
     setIssueInfo({
       roomId,
-      memberId: 7,
+      memberId,
       issueTitle: ntitle,
       issueDescription: ncontent,
       issueGitUrl: GithubRepoURL,
