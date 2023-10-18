@@ -1,12 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-// import 'ace-builds/src-noconflict/ext-language_tools';
-
 import 'ace-builds/src-noconflict/ace';
 import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/theme-tomorrow';
 
-// import { require } from 'ace-builds/src-noconflict/ace';
-// import { Range } from 'ace-builds/src-noconflict/ace';
 import { useEffect, useRef, useState } from 'react';
 import AceEditor from 'react-ace';
 import { useRecoilValue } from 'recoil';
@@ -73,9 +69,6 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
       setIsComment(true);
       setIndex(line);
       changeData();
-      // const { Range } = ace.require('ace/range');
-      // const mine = new Range(1, 0, 4, 0);
-      // editor.session.addMarker(mine, 'ace_active_line', 'text');
     }
   };
 
@@ -88,13 +81,6 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   const changeData = () => {
     setSuggestCode('');
   };
-
-  // const handleHighlight = () => {
-  //   // const editor = edit(this);
-  //   // const { Range } = require(`ace/range`).Range;
-  //   // const range = new Range(index, 0, index, Infinity);
-  //   // editor.session.addMarker(range, 'ace_active_line', 'text');
-  // };
 
   useEffect(() => {
     getIssueData();

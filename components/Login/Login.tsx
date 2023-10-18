@@ -12,7 +12,6 @@ const Login = () => {
   const setMemberId = useSetRecoilState(memberIdState);
 
   const postLogin = async (memberId: number) => {
-    console.log(memberId);
     await postLog(memberId);
   };
 
@@ -21,16 +20,12 @@ const Login = () => {
     const token = params.get('token');
 
     if (token === null) {
-      console.log(params);
       router.push('/');
       return;
     }
     try {
-      console.log(params);
-      console.log(token);
       localStorage.setItem('access_token', token);
       const payload: JwtPayload = jwtDecode(token);
-      console.log(payload);
       const { sub } = payload;
       setMemberId(Number(sub));
       postLogin(Number(sub));

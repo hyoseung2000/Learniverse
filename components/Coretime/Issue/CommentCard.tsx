@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import { Range } from 'ace-builds';
 import { RefObject, useEffect, useState } from 'react';
 import AceEditor from 'react-ace';
@@ -38,7 +39,6 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
       );
       coderef.current.editor.session.replace(modifyRange, issueOpinion);
       const changes = coderef.current.editor.getValue();
-      console.log(changes);
       setModifyData({
         issueId,
         roomId,
@@ -65,17 +65,13 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
         </pre>
       </div>
 
-      {
-        // eslint-disable-next-line eqeqeq
-        cMemberId == writer ? (
-          // eslint-disable-next-line react/jsx-boolean-value
-          <StButton $isPersist={true} onClick={handleModify}>
-            수락
-          </StButton>
-        ) : (
-          <StButton $isPersist={false}>불가</StButton>
-        )
-      }
+      {cMemberId == writer ? (
+        <StButton $isPersist onClick={handleModify}>
+          수락
+        </StButton>
+      ) : (
+        <StButton $isPersist={false}>불가</StButton>
+      )}
     </StComment>
   );
 };

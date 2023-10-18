@@ -77,7 +77,6 @@ export const postWorkspace = async (PostWorkSpaceData: PostWorkSpaceInfo) => {
       `/room/workspace/update`,
       PostWorkSpaceData,
     );
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
@@ -108,7 +107,6 @@ export const getStudyroomName = async (roomId: number) => {
 export const postNotice = async (PostNoticeData: PostNoticeInfo) => {
   try {
     const { data } = await client.post(`/room/board/create`, PostNoticeData);
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
@@ -131,7 +129,6 @@ export const DeleteNotice = async (boardId: number) => {
     const { data } = await client.delete(
       `/room/board/delete?boardId=${boardId}`,
     );
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
@@ -142,7 +139,6 @@ export const DeleteNotice = async (boardId: number) => {
 export const ModifyNotice = async (ModifyNoticeData: ModifyNoticeInfo) => {
   try {
     const { data } = await client.post(`/room/board/update`, ModifyNoticeData);
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);

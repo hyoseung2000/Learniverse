@@ -1,5 +1,4 @@
 import { useRouter } from 'next/router';
-// import { Dispatch, SetStateAction } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { styled } from 'styled-components';
 import { mutate } from 'swr';

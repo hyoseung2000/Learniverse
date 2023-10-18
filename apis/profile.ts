@@ -44,7 +44,6 @@ export const postProfile = async (postProfileData: PostProfileInfo) => {
       `/member/profile/update`,
       postProfileData,
     );
-    console.log(data);
     return data.data;
   } catch (err) {
     console.error(err);
