@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { DeleteNotice, ModifyNotice } from '@/apis/studyroom';
+import { deleteNotice, modifyNotice } from '@/apis/studyroom';
 import {
   CancelButton,
   ConfirmButton,
@@ -31,12 +31,12 @@ const ModifyNoticeModal = ({ isShowing, noticeInfo, handleCancel }: Props) => {
   const roomID = useRecoilValue(roomIdState);
 
   const handleModify = async () => {
-    await ModifyNotice(noticeData!);
+    await modifyNotice(noticeData!);
     handleCancel();
   };
 
   const handleDelete = async () => {
-    await DeleteNotice(boardId);
+    await deleteNotice(boardId);
     handleCancel();
   };
 

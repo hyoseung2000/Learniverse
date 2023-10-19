@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import {
   ModifyNoticeInfo,
   PostNoticeInfo,
@@ -124,7 +126,7 @@ export const getNoticeList = async (roomId: number) => {
   }
 };
 
-export const DeleteNotice = async (boardId: number) => {
+export const deleteNotice = async (boardId: number) => {
   try {
     const { data } = await client.delete(
       `/room/board/delete?boardId=${boardId}`,
@@ -136,12 +138,29 @@ export const DeleteNotice = async (boardId: number) => {
   }
 };
 
-export const ModifyNotice = async (ModifyNoticeData: ModifyNoticeInfo) => {
+export const modifyNotice = async (ModifyNoticeData: ModifyNoticeInfo) => {
   try {
     const { data } = await client.post(`/room/board/update`, ModifyNoticeData);
     return data;
   } catch (err) {
     console.error(err);
     throw err;
+  }
+};
+
+export const addMoonScore = async (memberId: number) => {
+  const moonDate = new Date();
+  try {
+    const { data } = await client.post(`/member/moon/add/core`, {
+      memberId,
+      moonDate,
+    });
+    return data;
+  } catch (err) {
+    if (axios.isAxiosError(err))
+      if (err.response?.status === 422) {
+        return 422;
+      }
+    return err;
   }
 };
