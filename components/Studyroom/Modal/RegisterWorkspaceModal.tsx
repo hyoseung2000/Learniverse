@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
+import { mutate } from 'swr';
 
 import { getStudyroomWorkSpace, postWorkspace } from '@/apis/studyroom';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
@@ -22,9 +23,9 @@ const RegisterWorkspaceModal = ({ isShowing, handleCancel }: Props) => {
   const roomID = useRecoilValue(roomIdState);
 
   const handleRegWS = async () => {
-    console.log('워크스페이스 생성 및 수정');
     await postWorkspace(workSpaceData!);
     handleCancel();
+    mutate(`/room/info/workspace?roomId=${roomID}`);
   };
 
   const getWorkSpace = async () => {

@@ -2,11 +2,10 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { getStudyroomWorkSpace } from '@/apis/studyroom';
 import { useModal } from '@/hooks/Common';
+import { useGetStudyRoomWorkSpace } from '@/hooks/StudyRooms';
 import { IcPlusBtn } from '@/public/assets/icons';
 import { roomIdState } from '@/recoil/atom';
-import { WorkSpaceInfo } from '@/types/studyroom';
 
 import { FigmaBtn, GDriveBtn, GithbBtn, NotnBtn } from '../Common/Button';
 import RegisterWorkspaceModal from './Modal/RegisterWorkspaceModal';
@@ -20,10 +19,11 @@ const WorkSpace = () => {
   const [GDriveURL, setGDriveURL] = useState('');
 
   const roomID = useRecoilValue(roomIdState);
+  const { workSpaceList } = useGetStudyRoomWorkSpace(roomID);
 
   const getWorkSpace = async () => {
-    const WSInfo: WorkSpaceInfo = await getStudyroomWorkSpace(roomID);
-    const { roomGitOrg, roomNotion, roomGoogleDrive, roomFigma } = WSInfo;
+    const { roomGitOrg, roomNotion, roomGoogleDrive, roomFigma } =
+      workSpaceList || {};
 
     setNotnURL(roomNotion ? roomNotion.toString() : '');
     setGithubURL(roomGitOrg ? roomGitOrg.toString() : '');

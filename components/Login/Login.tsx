@@ -1,18 +1,26 @@
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 
-import { postLog } from '@/apis/login';
+import { getLoginInfo, postLog } from '@/apis/login';
 import { memberIdState } from '@/recoil/atom';
 
 const Login = () => {
   const router = useRouter();
 
-  const setMemberId = useSetRecoilState(memberIdState);
+  const [memberId, setMemberId] = useRecoilState(memberIdState);
 
-  const postLogin = async (memberId: number) => {
+  const postLogin = async () => {
     await postLog(memberId);
+  };
+
+  const handleLogin = async () => {
+    const data = await getLoginInfo(memberId);
+    const { memberFirst, refreshToken } = data!;
+    localStorage.setItem('refreshToken', refreshToken);
+    router.push(memberFirst === 'true' ? '/signup' : '/home');
+    postLogin();
   };
 
   useEffect(() => {
@@ -24,13 +32,11 @@ const Login = () => {
       return;
     }
     try {
-      localStorage.setItem('access_token', token);
+      localStorage.setItem('accessToken', token);
       const payload: JwtPayload = jwtDecode(token);
       const { sub } = payload;
       setMemberId(Number(sub));
-      postLogin(Number(sub));
-      router.push('/home');
-      // router.push('/signup');
+      handleLogin();
     } catch (err) {
       console.error(err);
       router.push('/');

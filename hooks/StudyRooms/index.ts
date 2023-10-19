@@ -6,3 +6,4 @@ export { default as useGetSearchResult } from './useGetSearchResult';
 export { default as useGetRecommendRoomList } from './useGetRecommendRoomList';
 export { default as useGetLanguages } from './useGetLanguages';
 export { default as useGetCoreTimeList } from './useGetCoreTimeList';
+export { default as useGetStudyRoomWorkSpace } from './useGetStudyRoomWorkSpace';

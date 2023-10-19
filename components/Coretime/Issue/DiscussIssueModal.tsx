@@ -11,6 +11,7 @@ import { styled } from 'styled-components';
 import { getDiscussions, getIssueInfo, postDiscuss } from '@/apis/issue';
 import { StateDeleteBtn } from '@/components/Common/Button';
 import { SquareModal } from '@/components/Common/Modal';
+import useGetIssueInfo from '@/hooks/StudyRooms/useGetIssueInfo';
 import { IcDiscussLogo } from '@/public/assets/icons';
 import { issueIdState, memberIdState } from '@/recoil/atom';
 import { DiscussInfo, PostDiscussInfo } from '@/types/studyroom';
@@ -38,16 +39,17 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   const [writer, setWriter] = useState<number>(1);
   const [commentList, setCommentList] = useState<DiscussInfo[]>();
   const [discussData, setDiscussData] = useState<PostDiscussInfo>();
+  const { issue, issueCode } = useGetIssueInfo(issueId);
 
   const getIssueData = async () => {
     // const issueInfo = await getIssueInfo(issueId);
-    // const { issue, gitcode } = issueInfo!;
-    // const { issueTitle, issueDescription, issueGitUrl, memberId } = issue!;
-    // setCode(gitcode);
-    // setTitle(issueTitle);
-    // setDescrpt(issueDescription);
-    // setGiturl(issueGitUrl);
-    // setWriter(memberId);
+    // const { issue, issueCode } = issueInfo!;
+    const { issueTitle, issueDescription, issueGitUrl, memberId } = issue || {};
+    setCode(issueCode!);
+    setTitle(issueTitle!);
+    setDescrpt(issueDescription!);
+    setGiturl(issueGitUrl!);
+    setWriter(memberId!);
   };
 
   const getDiscuss = async () => {
@@ -121,12 +123,12 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                   className="github code"
                   setOptions={{ useWorker: false }}
                   placeholder="this is code editor"
-                  mode="python"
+                  mode="typescript"
                   theme="tomorrow"
                   name="codeInput"
                   height="30rem"
                   width="100%"
-                  fontSize={12}
+                  fontSize={10}
                   showPrintMargin
                   showGutter
                   highlightActiveLine

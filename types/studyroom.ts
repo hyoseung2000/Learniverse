@@ -128,6 +128,11 @@ export interface IssueListInfo {
   issues: IssueInfo[];
 }
 
+export interface IssueGetInfo {
+  issue: IssueInfo;
+  gitCode: string;
+}
+
 export interface IssueInfo {
   issueId: number;
   memberId: number;
