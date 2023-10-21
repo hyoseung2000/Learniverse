@@ -31,7 +31,7 @@ const RecommendModal = ({
 
   const { recommendRoomIdList } = useGetRecommendRoomList(curMemberId);
   const [recommendResult, setRecommendResult] = useState<StudyRoomInfo[]>();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const applyCompleteModal = useModal();
 
@@ -56,6 +56,7 @@ const RecommendModal = ({
   };
 
   useEffect(() => {
+    handleRecommend();
     handleRecommend();
   }, [isShowing]);
 
