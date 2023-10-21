@@ -17,7 +17,7 @@ const HeaderModal = ({ isShowing }: HeaderModalProps) => {
     router.push('/profile');
   };
   const handleLogout = () => {
-    setMemberId(1);
+    setMemberId(0);
     router.push('/');
   };
 
