@@ -39,13 +39,15 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   const [writer, setWriter] = useState<number>(1);
   const [commentList, setCommentList] = useState<DiscussInfo[]>();
   const [discussData, setDiscussData] = useState<PostDiscussInfo>();
-  const { issue, issueCode } = useGetIssueInfo(issueId);
+  // const { issue, issueCode } = useGetIssueInfo(issueId);
 
   const getIssueData = async () => {
-    // const issueInfo = await getIssueInfo(issueId);
-    // const { issue, issueCode } = issueInfo!;
-    const { issueTitle, issueDescription, issueGitUrl, memberId } = issue || {};
-    setCode(issueCode!);
+    const issueInfo = await getIssueInfo(issueId);
+    const { issue, gitCode } = issueInfo!;
+    const { issueTitle, issueDescription, issueGitUrl, memberId } = issue;
+    // const { issueTitle, issueDescription, issueGitUrl, memberId } = issue || {};
+    // setCode(issueCode!);
+    setCode(gitCode!);
     setTitle(issueTitle!);
     setDescrpt(issueDescription!);
     setGiturl(issueGitUrl!);
@@ -54,6 +56,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
 
   const getDiscuss = async () => {
     const discussInfo = await getDiscussions(issueId);
+    console.log(discussInfo);
     setCommentList(discussInfo);
   };
 
@@ -123,12 +126,12 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                   className="github code"
                   setOptions={{ useWorker: false }}
                   placeholder="this is code editor"
-                  mode="typescript"
+                  mode="javascript"
                   theme="tomorrow"
                   name="codeInput"
                   height="30rem"
                   width="100%"
-                  fontSize={10}
+                  fontSize={20}
                   showPrintMargin
                   showGutter
                   highlightActiveLine

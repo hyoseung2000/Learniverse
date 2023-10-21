@@ -118,7 +118,7 @@ const StMessage = styled.div<{ x: number; y: number }>`
   background-color: ${({ theme }) => theme.colors.White};
   border-radius: 1rem;
 
-  position: absolute;
+  position: fixed;
   left: ${(props) => `${props.x}px`};
   top: ${(props) => `${props.y} px`};
 `;

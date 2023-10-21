@@ -19,7 +19,8 @@ const Login = () => {
     const data = await getLoginInfo(memberId);
     const { memberFirst, refreshToken } = data!;
     localStorage.setItem('refreshToken', refreshToken);
-    router.push(memberFirst === 'true' ? '/signup' : '/home');
+    // eslint-disable-next-line eqeqeq
+    router.push(memberFirst == 'true' ? '/signup' : '/home');
     postLogin();
   };
 
