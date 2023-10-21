@@ -94,6 +94,7 @@ const StComment = styled.div`
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    flex-wrap: wrap;
   }
   & > div > p {
     color: ${({ theme }) => theme.colors.Purple3};
