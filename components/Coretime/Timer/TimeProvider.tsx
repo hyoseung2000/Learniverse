@@ -1,5 +1,8 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+
+import { roomIdState } from '@/recoil/atom';
 
 import TimeContext from './TimeContext';
 
@@ -13,6 +16,7 @@ const TimeProvider: React.FC<TimeProviderProps> = ({
   coreEndTime,
 }) => {
   const router = useRouter();
+  const roomId = useRecoilValue(roomIdState);
 
   const endTime = new Date(coreEndTime);
   const [seconds, setSeconds] = useState<number>(100);
@@ -27,10 +31,9 @@ const TimeProvider: React.FC<TimeProviderProps> = ({
     const timer = setInterval(() => {
       setSeconds((prevSeconds) => {
         if (prevSeconds <= 0) {
-          console.log(prevSeconds);
           clearInterval(timer);
           alert('코어타임이 끝났습니다.');
-          router.back();
+          router.push(`/studyroom/${roomId}`);
           return 0;
         }
         return prevSeconds - 1;
