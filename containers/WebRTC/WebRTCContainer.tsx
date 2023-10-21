@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { styled } from 'styled-components';
 
 import { getPresignedUrl } from '@/apis/alarm';
@@ -9,7 +9,12 @@ import { addMoon } from '@/apis/profile';
 import { useModal, useToggle } from '@/hooks/Common';
 import { useFCMPushAlarm } from '@/hooks/FCM';
 import { useSocketConnection, useWebRTC } from '@/hooks/Socket';
-import { captureTimeState, memberIdState, moonScoreState } from '@/recoil/atom';
+import {
+  captureTimeState,
+  coreTimeIdState,
+  memberIdState,
+  moonScoreState,
+} from '@/recoil/atom';
 import { formatHHMMSS } from '@/utils/getFormattedTime';
 
 import {
@@ -23,6 +28,7 @@ const WebRTCContainer = () => {
   // 코어타임, 멤버 관련 상태
   const router = useRouter();
   const { coreTimeId } = router.query;
+  const setCoreTimeId = useSetRecoilState(coreTimeIdState);
   const curMemberId = useRecoilValue(memberIdState);
   const captureTime = useRecoilValue(captureTimeState);
   const [curMoonScore, setCurMoonScore] = useRecoilState(moonScoreState);
@@ -96,10 +102,8 @@ const WebRTCContainer = () => {
   };
 
   useEffect(() => {
-    console.log(router.query);
-    if (router.query.coreTimeId) {
-      setCurCoreTimeId(Number(router.query.coreTimeId));
-    }
+    setCoreTimeId(Number(router.query.coreTimeId));
+    setCurCoreTimeId(Number(router.query.coreTimeId));
   }, [router]);
 
   useEffect(() => {
