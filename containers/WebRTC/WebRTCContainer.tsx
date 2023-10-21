@@ -96,14 +96,11 @@ const WebRTCContainer = () => {
   };
 
   useEffect(() => {
-    const matched = router.asPath.match(/\/coretime\/(\d+)/);
-    if (matched && matched[1]) {
-      setCurCoreTimeId(Number(matched[1]));
-    }
+    console.log(router.query);
     if (router.query.coreTimeId) {
       setCurCoreTimeId(Number(router.query.coreTimeId));
     }
-  }, [router.asPath, router.query]);
+  }, [router.query]);
 
   useEffect(() => {
     if (curMemberId && coreTimeId) {
