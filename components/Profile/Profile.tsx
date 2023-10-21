@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
@@ -10,6 +11,7 @@ import { memberIdState } from '@/recoil/atom';
 import { PostProfileInfo } from '@/types/member';
 
 const Profile = () => {
+  const router = useRouter();
   const memberId = useRecoilValue(memberIdState);
   const { imgUrl } = useGetMemberProfile(memberId);
 
@@ -24,11 +26,13 @@ const Profile = () => {
   };
 
   const handleCancel = () => {
-    getMemberProfile();
+    router.back();
   };
 
   const handleModify = async () => {
     await postProfile(profileData!);
+    alert('프로필 수정이 완료되었습니다.');
+    router.back();
   };
 
   useEffect(() => {
