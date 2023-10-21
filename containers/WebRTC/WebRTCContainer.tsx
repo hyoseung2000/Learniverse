@@ -100,7 +100,7 @@ const WebRTCContainer = () => {
     if (router.query.coreTimeId) {
       setCurCoreTimeId(Number(router.query.coreTimeId));
     }
-  }, [router.query]);
+  }, [router]);
 
   useEffect(() => {
     if (curMemberId && coreTimeId) {
