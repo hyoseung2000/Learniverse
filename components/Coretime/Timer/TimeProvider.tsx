@@ -31,6 +31,7 @@ const TimeProvider: React.FC<TimeProviderProps> = ({
     const timer = setInterval(() => {
       setSeconds((prevSeconds) => {
         if (prevSeconds <= 0) {
+          console.log(prevSeconds);
           clearInterval(timer);
           alert('코어타임이 끝났습니다.');
           router.back();
@@ -41,7 +42,7 @@ const TimeProvider: React.FC<TimeProviderProps> = ({
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [differenceInSeconds]);
+  }, [seconds]);
 
   const formattedTime = useMemo(() => {
     const hours = Math.floor(seconds / 3600);
