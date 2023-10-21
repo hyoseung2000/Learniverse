@@ -35,7 +35,7 @@ const CoreTimeSet = () => {
     create.toggle();
   };
 
-  const handleAttend = async() => {
+  const handleAttend = async () => {
     router.push({
       pathname: `/coretime/${roomId}`,
       query: { coreTimeId: nowCoreId },
@@ -44,7 +44,7 @@ const CoreTimeSet = () => {
 
   useEffect(() => {
     getCoretimes();
-  }, []);
+  }, [coreTimeList]);
 
   return (
     <>
