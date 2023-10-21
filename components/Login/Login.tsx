@@ -42,7 +42,7 @@ const Login = () => {
       console.error(err);
       router.push('/');
     }
-  }, []);
+  }, [memberId]);
 
   return <div />;
 };
