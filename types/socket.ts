@@ -62,3 +62,8 @@ export interface ConsumerInfo {
   type: string;
   producerPaused: boolean;
 }
+
+export interface RemoveRoomInfo {
+  coreTimeId: number;
+  memberId: number;
+}

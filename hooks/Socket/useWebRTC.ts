@@ -21,6 +21,7 @@ import {
   JoinInfo,
   MediaType,
   PeersInfo,
+  RemoveRoomInfo,
   RoomInfo,
   RoomPeerInfo,
 } from '@/types/socket';
@@ -380,11 +381,11 @@ const useWebRTC = (
       socket.on('consumerClosed', (data: ConsumerId) => {
         handleConsumerClosed(data, removeStream);
       });
-      socket.on('removeMember', (data: any) => {
+      socket.on('removeMember', (data: RemoveRoomInfo) => {
         console.log('removeMember', data);
-        // setCurMembers((prevMembers) =>
-        //   prevMembers.filter((member) => member.memberId !== curMemberId),
-        // );
+        setCurMembers((prevMembers) =>
+          prevMembers.filter((member) => member.memberId !== data.memberId),
+        );
       });
       socket.on('disconnect', async () => {
         if (socket.request) {
