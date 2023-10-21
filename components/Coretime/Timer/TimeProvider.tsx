@@ -15,10 +15,6 @@ const TimeProvider: React.FC<TimeProviderProps> = ({
   const router = useRouter();
 
   const endTime = new Date(coreEndTime);
-  const currentTime = new Date();
-  const differenceInSeconds = Math.floor(
-    (endTime.getTime() - currentTime.getTime()) / 1000,
-  );
   const [seconds, setSeconds] = useState<number>(100);
 
   useEffect(() => {
