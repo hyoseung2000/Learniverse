@@ -42,7 +42,6 @@ const Member = ({ curMembers }: MembersProps) => {
             >
               {member.nickname}
             </button>
-            {/* <span>{member.nickname}</span> */}
           </StMember>
         ))}
         {isShowing && message && (

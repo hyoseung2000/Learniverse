@@ -382,10 +382,12 @@ const useWebRTC = (
       );
       socket.on('disconnect', async () => {
         if (socket.request) {
-          const data = await socket.request('removeCaptureAlert', {
+          await socket.request('removeCaptureAlert', {
             memberId: curMemberId,
           });
-          console.log(data);
+          setCurMembers((prevMembers) =>
+            prevMembers.filter((member) => member.memberId !== curMemberId),
+          );
           router.push('/home');
         }
       });
