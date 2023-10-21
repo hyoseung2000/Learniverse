@@ -13,6 +13,7 @@ const Member = ({ curMembers }: MembersProps) => {
   const [message, setMessage] = useState('');
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
+  console.log('curMembers', curMembers);
 
   const handleMessage = (memberMessage: string) => {
     setMessage(memberMessage);
