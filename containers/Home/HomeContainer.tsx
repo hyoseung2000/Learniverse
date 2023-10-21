@@ -22,9 +22,7 @@ const HomeContainer = () => {
 
   const askPermission = async () => {
     const permission = await window.Notification.requestPermission();
-    // TODO : 밑에 콘솔 삭제하고 주석 되돌리기
-    console.log('알림 허용 여부 : ', permission, ', FCM 토큰 : ', fcmToken);
-    // if (permission !== 'granted' || fcmToken) return;
+    if (permission !== 'granted' || fcmToken) return;
 
     const messaging = firebase.messaging();
 
@@ -54,7 +52,6 @@ const HomeContainer = () => {
     }
   };
 
-  // TODO : 한번 토큰 저장했으면 이후에는 요청하지 않기
   useEffect(() => {
     askPermission();
   }, [memberId]);
