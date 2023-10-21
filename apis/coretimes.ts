@@ -66,7 +66,6 @@ export const getPresignedUrl = async () => {
 export const putFile = async (presignedUrl: string, file: File) => {
   try {
     const data = await axios.put(presignedUrl, file);
-    console.log('랜덤 캡처 이미지 s3 업로드 완료', data);
     return data;
   } catch (error) {
     console.error(error);

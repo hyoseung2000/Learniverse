@@ -25,7 +25,7 @@ const useSocketConnection = (curCoreTimeId: number) => {
     );
     socketConnection.request = await socketPromise(socketConnection);
     setSocket(socketConnection);
-    console.log('1. socket connect', socketConnection);
+    // console.log('1. socket connect', socketConnection);
   };
 
   useEffect(() => {

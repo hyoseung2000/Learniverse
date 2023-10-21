@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Device } from 'mediasoup-client';
 import {
@@ -18,7 +17,6 @@ import {
   ConsumerId,
   ConsumerInfo,
   CustomSocket,
-  JoinInfo,
   MediaType,
   PeersInfo,
   RemoveRoomInfo,
@@ -61,7 +59,7 @@ const useWebRTC = (
     } catch (err) {
       console.error('Create room error:', err);
     }
-    console.log('1-1. createRoom');
+    // console.log('1-1. createRoom');
   };
 
   const loadDevice = async (routerRtpCapabilities: RtpCapabilities) => {
@@ -71,7 +69,7 @@ const useWebRTC = (
       await device.load({ routerRtpCapabilities });
       setCurDevice(device);
       setIsDeviceLoaded(true);
-      console.log('3. device 로딩 ', device);
+      // console.log('3. device 로딩');
     } catch (error) {
       if (error instanceof UnsupportedError) {
         console.error('Browser not supported');
@@ -86,11 +84,11 @@ const useWebRTC = (
   const join = async (coreTimeId: number, memberId: number) => {
     if (!socket || !socket.request) return;
     try {
-      const socketJoin: JoinInfo = await socket.request('join', {
+      await socket.request('join', {
         coreTimeId,
         memberId,
       });
-      console.log('2. Joined to room', socketJoin);
+      // console.log('2. Joined to room', socketJoin);
 
       await socket.request('setCaptureAlert', {
         memberId,
@@ -127,13 +125,13 @@ const useWebRTC = (
     await produce('audioType');
 
     const peerList: RoomInfo = await socket.request('getRoomInfo');
-    console.log('4-1. peerList', peerList);
+    // console.log('4-1. peerList', peerList);
     setCurPeerList(peerList.peers);
     const formatData = peerList.peers.slice(0, -2);
     await consumeProducers(formatData);
 
     const peers: RoomPeerInfo[] = await socket.request('getRoomPeerInfo');
-    console.log('4-1. getRoomPeerInfo', peers);
+    // console.log('4-1. getRoomPeerInfo', peers);
     const peersWithNickNames = await Promise.all(
       peers.map((peer) => addNickNameToPeer(peer)),
     );
@@ -355,7 +353,7 @@ const useWebRTC = (
   };
 
   const handleCloseProducer = async (producerId: string) => {
-    console.log('Closing Producer : ', producerId);
+    // console.log('Closing Producer : ', producerId);
     removeStream(producerId);
     await socket.emit('producerClosed', {
       producer_id: producerId,
@@ -364,8 +362,7 @@ const useWebRTC = (
 
   const handleExitRoom = async () => {
     if (!socket.request) return;
-    const data = await socket.request('exitRoom');
-    console.log(data);
+    await socket.request('exitRoom');
     router.back();
   };
 
@@ -382,7 +379,6 @@ const useWebRTC = (
         handleConsumerClosed(data, removeStream);
       });
       socket.on('removeMember', (data: RemoveRoomInfo) => {
-        console.log('removeMember', data);
         setCurMembers((prevMembers) =>
           prevMembers.filter((member) => member.memberId !== data.memberId),
         );

@@ -57,6 +57,5 @@ export const handleConsumerClosed = (
   data: ConsumerId,
   removeStream: (consumer_id: string) => void,
 ) => {
-  console.log('Closing Consumer : ', data);
   removeStream(data.consumer_id);
 };
