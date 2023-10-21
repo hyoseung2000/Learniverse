@@ -5,11 +5,10 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 import { getCoretimeID } from '@/apis/coretimes';
-import { addMoonScore } from '@/apis/studyroom';
 import { useModal } from '@/hooks/Common';
 import { useGetCoreTimeList } from '@/hooks/StudyRooms';
 import { IcPlusBtn } from '@/public/assets/icons';
-import { coreTimeIdState, memberIdState, roomIdState } from '@/recoil/atom';
+import { coreTimeIdState, roomIdState } from '@/recoil/atom';
 
 import CoreTimeCard from './CoretimeCard';
 import CreateCoretimeModal from './Modal/CreateCoretimeModal';
@@ -18,7 +17,6 @@ const CoreTimeSet = () => {
   const router = useRouter();
   const coreRef = useRef<HTMLDivElement>(null);
   const roomId = useRecoilValue(roomIdState);
-  const memberId = useRecoilValue(memberIdState);
 
   const create = useModal();
 
@@ -38,13 +36,6 @@ const CoreTimeSet = () => {
   };
 
   const handleAttend = async() => {
-    const error = await addMoonScore(memberId);
-    if (error === 422) {
-      router.push({
-      pathname: `/coretime/${roomId}`,
-      query: { coreTimeId: nowCoreId },
-    });
-    }
     router.push({
       pathname: `/coretime/${roomId}`,
       query: { coreTimeId: nowCoreId },

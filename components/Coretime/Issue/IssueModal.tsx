@@ -38,8 +38,8 @@ const IssueModal = ({
   };
 
   useEffect(() => {
-    getIssues();
-  }, []);
+    if (isShowing) getIssues();
+  }, [isShowing]);
 
   return (
     isShowing && (
