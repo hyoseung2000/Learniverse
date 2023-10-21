@@ -56,12 +56,3 @@ self.addEventListener('notificationclick', function (event) {
       }),
   );
 });
-
-// self.addEventListener('notificationclick', function (event) {
-//   event.notification.close();
-
-//   // 클릭 액션 URL을 이용하여 새 탭을 엽니다.
-//   if (event.notification.data && event.notification.data.click_action) {
-//     event.waitUntil(clients.openWindow(event.notification.data.click_action));
-//   }
-// });
