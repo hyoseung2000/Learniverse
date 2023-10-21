@@ -377,15 +377,17 @@ const useWebRTC = (
       socket.on('message', async (data: ChattingInfo) => {
         handleMessage(data, setChattingList);
       });
-      socket.on('consumerClosed', (data: ConsumerId) =>
-        handleConsumerClosed(data, removeStream),
-      );
+      socket.on('consumerClosed', (data: ConsumerId) => {
+        handleConsumerClosed(data, removeStream);
+      });
+      socket.on('removeMember', (data: any) => {
+        console.log('removeMember', data);
+        // setCurMembers((prevMembers) =>
+        //   prevMembers.filter((member) => member.memberId !== curMemberId),
+        // );
+      });
       socket.on('disconnect', async () => {
         if (socket.request) {
-          console.log(curMemberId, 'curMemberId');
-          setCurMembers((prevMembers) =>
-            prevMembers.filter((member) => member.memberId !== curMemberId),
-          );
           await socket.request('removeCaptureAlert', {
             memberId: curMemberId,
           });
