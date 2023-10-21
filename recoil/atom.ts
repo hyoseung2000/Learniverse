@@ -10,7 +10,6 @@ resetTime.setHours(0, 0, 0, 0);
 
 export const memberIdState = atom<number>({
   key: `memberId`,
-  default: 1,
   effects_UNSTABLE: [persistAtom],
 });
 
@@ -43,18 +42,15 @@ export const todayState = atom<string>({
 
 export const roomIdState = atom<number>({
   key: `roomId`,
-  default: 1,
   effects_UNSTABLE: [persistAtom],
 });
 
 export const coreTimeIdState = atom<number>({
   key: `coreTimeId`,
-  default: 1,
   effects_UNSTABLE: [persistAtom],
 });
 
 export const issueIdState = atom<number>({
   key: `issueId`,
-  default: 1,
   effects_UNSTABLE: [persistAtom],
 });
