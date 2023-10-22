@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { keyframes, styled } from 'styled-components';
