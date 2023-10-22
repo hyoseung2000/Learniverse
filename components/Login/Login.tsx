@@ -20,7 +20,7 @@ const Login = () => {
     const { memberFirst, refreshToken } = data!;
     localStorage.setItem('refreshToken', refreshToken);
     // eslint-disable-next-line eqeqeq
-    router.push(memberFirst == 'true' ? '/signup' : '/home');
+    router.push(memberFirst !== 'true' ? '/home' : '/signup');
     postLogin();
   };
 
@@ -42,7 +42,7 @@ const Login = () => {
       console.error(err);
       router.push('/');
     }
-  }, []);
+  }, [memberId]);
 
   return <div />;
 };

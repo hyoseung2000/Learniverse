@@ -42,7 +42,6 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
       setModifyData({
         issueId,
         roomId,
-        memberId,
         gitCode: changes,
       });
       await ModifyIssueDiscuss(modifyData!);
@@ -94,7 +93,7 @@ const StComment = styled.div`
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    flex-wrap: wrap;
+    max-width: 50rem;
   }
   & > div > p {
     color: ${({ theme }) => theme.colors.Purple3};
