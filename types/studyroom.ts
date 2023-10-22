@@ -174,6 +174,5 @@ export interface PostDiscussInfo {
 export interface ModifyDiscussInfo {
   issueId: number;
   roomId: number;
-  memberId: number;
   gitCode: string;
 }

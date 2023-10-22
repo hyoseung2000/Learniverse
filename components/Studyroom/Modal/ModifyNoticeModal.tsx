@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
+import { mutate } from 'swr';
 
 import { deleteNotice, modifyNotice } from '@/apis/studyroom';
 import {
@@ -32,11 +33,13 @@ const ModifyNoticeModal = ({ isShowing, noticeInfo, handleCancel }: Props) => {
 
   const handleModify = async () => {
     await modifyNotice(noticeData!);
+    mutate(`/room/boards?roomId=${roomID}`);
     handleCancel();
   };
 
   const handleDelete = async () => {
     await deleteNotice(boardId);
+    mutate(`/room/boards?roomId=${roomID}`);
     handleCancel();
   };
 

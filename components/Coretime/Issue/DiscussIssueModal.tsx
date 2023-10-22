@@ -88,9 +88,11 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   };
 
   useEffect(() => {
-    getIssueData();
-    getDiscuss();
-  }, []);
+    if (isShowing) {
+      getIssueData();
+      getDiscuss();
+    }
+  }, [isShowing]);
 
   useEffect(() => {
     setDiscussData({
@@ -131,7 +133,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                   name="codeInput"
                   height="30rem"
                   width="100%"
-                  fontSize={20}
+                  fontSize={30}
                   showPrintMargin
                   showGutter
                   highlightActiveLine

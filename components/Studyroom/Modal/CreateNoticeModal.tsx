@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
+import { mutate } from 'swr';
 
 import { postNotice } from '@/apis/studyroom';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
@@ -31,6 +32,7 @@ const CreateNoticeModal = ({ isShowing, handleCancel }: Props) => {
 
   const handleNotice = async () => {
     await postNotice(noticeData!);
+    mutate(`/room/boards?roomId=${roomID}`);
     handleCancel();
   };
 
