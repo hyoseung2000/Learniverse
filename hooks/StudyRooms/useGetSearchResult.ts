@@ -34,6 +34,8 @@ const useGetSearchResult = (
     : [];
   const getNextData = () => setSize(size + 1);
 
+  console.log(rooms);
+
   return {
     resultRoomList: rooms,
     getNextData,
