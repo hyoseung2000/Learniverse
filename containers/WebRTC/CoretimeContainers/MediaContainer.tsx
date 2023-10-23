@@ -30,6 +30,7 @@ const MediaContainer = ({
       {videoStreams.map((stream) => (
         <WebRTCVideo
           key={stream.consumer_id}
+          memberId={stream.memberId}
           coreTimeId={curCoreTimeId!}
           nickname={stream.nickname}
           mediaStream={stream.stream}
