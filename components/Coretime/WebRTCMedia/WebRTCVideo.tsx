@@ -1,10 +1,14 @@
 import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
+import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
 import { IcCoreChar } from '@/public/assets/icons';
+import { memberIdState } from '@/recoil/atom';
+import { formatHHMMSS } from '@/utils/getFormattedTime';
 
 interface WebRTCVideoProps {
   coreTimeId: number;
+  memberId: number;
   nickname: string;
   mediaStream: MediaStream | undefined;
   isSelected: boolean;
@@ -15,6 +19,7 @@ interface WebRTCVideoProps {
 
 const WebRTCVideo = ({
   coreTimeId,
+  memberId,
   nickname,
   mediaStream,
   isSelected,
@@ -22,9 +27,11 @@ const WebRTCVideo = ({
   setCapturedImageFile,
   onClick,
 }: WebRTCVideoProps) => {
+  const curMemberId = useRecoilValue(memberIdState);
   const viewRef = useRef<HTMLVideoElement>(null);
 
   const captureAndSaveVideoFrame = () => {
+    if (memberId !== curMemberId) return null;
     if (!viewRef.current) return null;
 
     const canvas = document.createElement('canvas');
@@ -45,9 +52,14 @@ const WebRTCVideo = ({
     }
 
     const blob = new Blob([ab], { type: mimeString });
-    const file = new File([blob], `${coreTimeId}-${nickname}.png`, {
-      type: mimeString,
-    });
+    const now = new Date();
+    const file = new File(
+      [blob],
+      `${coreTimeId} -${nickname}-${formatHHMMSS(now.toString())}.png`,
+      {
+        type: mimeString,
+      },
+    );
 
     setCapturedImageFile(file);
     return file;
