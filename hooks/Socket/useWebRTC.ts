@@ -121,8 +121,8 @@ const useWebRTC = (
   const initSockets = async () => {
     if (!socket || !socket.request) return;
 
-    await produce('screenType');
-    await produce('audioType');
+    // await produce('screenType');
+    // await produce('audioType');
 
     const peerList: RoomInfo = await socket.request('getRoomInfo');
     // console.log('4-1. peerList', peerList);
@@ -249,6 +249,7 @@ const useWebRTC = (
   };
 
   const produce = async (type: MediaType): Promise<void> => {
+    console.log(curDevice, socket, type);
     if (!curDevice || !socket || !socket.request) return;
 
     try {
