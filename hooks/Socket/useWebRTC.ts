@@ -249,7 +249,6 @@ const useWebRTC = (
   };
 
   const produce = async (type: MediaType): Promise<void> => {
-    console.log(curDevice, socket, type);
     if (!curDevice || !socket || !socket.request) return;
 
     try {
@@ -261,13 +260,9 @@ const useWebRTC = (
       const producerTransport = await createTransport(curDevice, 'produce');
       const producer = await producerTransport.produce({ track });
 
-      addStream(
-        stream,
-        nickname,
-        curMemberId,
-        producer.id,
-        type === 'screenType' ? 'video' : 'audio',
-      );
+      if (type === 'screenType') {
+        addStream(stream, nickname, curMemberId, producer.id, 'video');
+      }
     } catch (error) {
       console.error(`Error producing ${type}:`, error);
     }
@@ -308,6 +303,8 @@ const useWebRTC = (
   ): Promise<void> => {
     try {
       if (!socket || !socket.request) return;
+      console.log(curProducerMemberId, curProducerId, produceType);
+      // if (produceType === 'audioType' && )
       const consumerTransport = await createTransport(device, 'consume');
       const { rtpCapabilities } = device;
 

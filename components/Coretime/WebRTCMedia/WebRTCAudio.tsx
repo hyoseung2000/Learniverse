@@ -8,7 +8,6 @@ interface WebRTCAudioProps {
 
 const WebRTCAudio = ({ mediaStream, ismuted }: WebRTCAudioProps) => {
   const viewRef = useRef<HTMLAudioElement>(null);
-
   useEffect(() => {
     if (!viewRef.current) return;
     viewRef.current.srcObject = mediaStream || null;
