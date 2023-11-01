@@ -62,6 +62,7 @@ const ManageModal = ({
     }
   }, [roomId, statusChange]);
 
+  console.log(applyList);
   return (
     isShowing && (
       <SmallModal title="신청자 관리하기" isShowing={isShowing}>
@@ -83,7 +84,7 @@ const ManageModal = ({
           applyList.map((apply) => (
             <StApplyList key={apply.memberId}>
               <span>{apply.nickname}</span>
-              <span>{apply.memberEmail}</span>
+              <span>{apply.githubId}</span>
               {apply.isMember === '대기' ? (
                 <span>
                   <button

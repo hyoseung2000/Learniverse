@@ -5,6 +5,7 @@ export interface MemberListInfo {
 export interface MemberInfo {
   memberId: number;
   memberEmail: string;
+  githubId: string;
   nickname: string;
   memberMessage: string;
   status: boolean;
