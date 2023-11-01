@@ -146,8 +146,7 @@ const StStudyroomCardWrapper = styled.article<{ $isSelected: boolean }>`
 
   width: 100%;
   height: 18.6rem;
-  ${({ $isSelected }) =>
-    $isSelected ? 'padding: 0rem;' : 'padding: 1.8rem 1.9rem;'}
+  ${({ $isSelected }) => ($isSelected ? 'padding: 0rem;' : 'padding: 1rem;')}
   box-sizing: border-box;
 
   border-radius: 1.6rem;
@@ -200,12 +199,13 @@ const StHashtags = styled.ol`
   overflow: hidden;
 
   width: 100%;
-  height: 2rem;
+  height: 3.5rem;
   max-width: 100%;
   margin: 0.6rem 0;
 
   & > li {
     display: inline-block;
+    height: 1rem;
 
     padding: 0.2rem 0.5rem;
 
