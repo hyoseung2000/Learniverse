@@ -22,17 +22,17 @@ const IssueCard = ({ core, handleDiscuss, issueInfo }: Props) => {
 
   return (
     <>
-      <StIssueWrapper $issueOpen={issueOpen}>
+      <StIssueWrapper
+        $issueOpen={issueOpen}
+        onClick={() => {
+          setIssueID(issueId);
+          if (issueOpen) {
+            handleDiscuss();
+          }
+        }}
+      >
         <div>
-          <IcIssueLogo
-            type="button"
-            onClick={() => {
-              setIssueID(issueId);
-              if (issueOpen) {
-                handleDiscuss();
-              }
-            }}
-          />
+          <IcIssueLogo />
           <StContent $core={core}>
             <h3>{issueTitle}</h3>
             <p>{issueDescription}</p>
