@@ -116,7 +116,6 @@ const useWebRTC = (
   };
 
   const enterRoom = async () => {
-    console.log(socket);
     if (!socket || !curCoreTimeId || !curMemberId) return;
     try {
       await createRoom(curCoreTimeId);
