@@ -17,7 +17,6 @@ interface StudyroomCardProps {
   isMyroom?: boolean;
   isInterest?: boolean;
   isSelected?: boolean;
-  // setPinChange?: Dispatch<SetStateAction<boolean>>;
   handleApply?: () => void;
   handleManage?: () => void;
   handleEdit?: () => void;
@@ -31,7 +30,6 @@ const StudyroomCard = ({
   isMyroom,
   isInterest,
   isSelected,
-  // setPinChange,
   handleApply,
   handleManage,
   handleEdit,
@@ -139,7 +137,7 @@ const StudyroomCard = ({
             )}
           </StJoinWrapper>
         )}
-        <StOverlay isVisible={showOverlay}>
+        <StOverlay $isVisible={showOverlay}>
           <StRoomName>{roomName}</StRoomName>
           <StHashtags>
             {roomHashtags.map((hashtag) => (
@@ -174,7 +172,7 @@ const StCardWrapper = styled.div`
   width: 14.1rem;
 `;
 
-const StOverlay = styled.div<{ isVisible: boolean }>`
+const StOverlay = styled.div<{ $isVisible: boolean }>`
   position: absolute;
   top: 0;
   left: 0;
@@ -193,8 +191,8 @@ const StOverlay = styled.div<{ isVisible: boolean }>`
   justify-content: space-between;
   gap: 1rem;
 
-  opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
-  pointer-events: ${({ isVisible }) => (isVisible ? 'auto' : 'none')};
+  opacity: ${({ $isVisible }) => ($isVisible ? 1 : 0)};
+  pointer-events: ${({ $isVisible }) => ($isVisible ? 'auto' : 'none')};
   transition: opacity 0.3s;
 
   p,

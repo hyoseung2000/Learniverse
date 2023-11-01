@@ -19,9 +19,10 @@ export const JoinMember = async (roomId: number, memberId: number) => {
       memberId,
     });
     return data;
-  } catch (err) {
-    console.error(err);
-    throw err;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    console.log(err.response?.data.status);
+    return err.response?.data.status;
   }
 };
 

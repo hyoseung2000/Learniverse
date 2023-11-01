@@ -27,7 +27,7 @@ const ManageModal = ({
 
   const getEncodedUrl = async () => {
     const link = await encodeRoomId(roomId);
-    setEncodedLink(`learniverse-front-end.vercel.app/apply/${link}`);
+    setEncodedLink(`https://learniverse-front-end.vercel.app/apply/${link}`);
   };
 
   const handleCopy = () => {
@@ -42,8 +42,12 @@ const ManageModal = ({
   };
 
   const handleJoin = async (memberId: number) => {
-    await JoinMember(roomId, memberId);
-    setStatusChange((prev) => !prev);
+    const res = await JoinMember(roomId, memberId);
+    if (res === 400) {
+      alert('정원이 이미 다 찼습니다.');
+    } else {
+      setStatusChange((prev) => !prev);
+    }
   };
 
   const handleReject = async (memberId: number) => {
@@ -149,6 +153,10 @@ const StRoomLink = styled.div`
 
     border-radius: 0.4rem;
     border: 0.2rem solid ${({ theme }) => theme.colors.Purple4};
+
+    & > strong {
+      ${({ theme }) => theme.fonts.Body7};
+    }
   }
 `;
 
