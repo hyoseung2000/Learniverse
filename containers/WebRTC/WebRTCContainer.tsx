@@ -59,7 +59,7 @@ const WebRTCContainer = () => {
   const exit = useModal();
   const capture = useModal();
   const captureComplete = useModal();
-  const [isSpeaker, handleSpeaker] = useToggle();
+  const [isSpeaker, handleSpeaker] = useToggle(true);
 
   // 푸시 알림 받기
   useFCMPushAlarm();

@@ -32,8 +32,8 @@ const SettingContainer = ({
   handleTurnOff,
 }: SettingContainerProps) => {
   const [curCoreEndTime, setCurCoreEndTime] = useState<Date>();
-  const [isMedia, handleMedia] = useToggle();
-  const [isMike, handleMike] = useToggle();
+  const [isMedia, handleMedia] = useToggle(false);
+  const [isMike, handleMike] = useToggle(false);
 
   const setCoreEndTime = async () => {
     const coreEndTime = await getCoreEndtime(curCoreTimeId);
