@@ -91,4 +91,5 @@ const StHeaderModalWrapper = styled.div`
   position: absolute;
   top: 5rem;
   right: 0;
+  z-index: 10;
 `;
