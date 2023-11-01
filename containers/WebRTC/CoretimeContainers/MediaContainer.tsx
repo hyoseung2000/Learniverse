@@ -24,7 +24,7 @@ const MediaContainer = ({
   const captureTime = useRecoilValue(captureTimeState);
   const [selectedVideo, handleSelectVideo] = useVideoSelector();
 
-  console.log(videoStreams);
+  console.log(videoStreams, audioStreams);
   return (
     <StMediaWrapper>
       {videoStreams.map((stream) => (

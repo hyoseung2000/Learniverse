@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { styled } from 'styled-components';
 import { mutate } from 'swr';
@@ -16,7 +17,6 @@ interface StudyroomCardProps {
   isMyroom?: boolean;
   isInterest?: boolean;
   isSelected?: boolean;
-  // setPinChange?: Dispatch<SetStateAction<boolean>>;
   handleApply?: () => void;
   handleManage?: () => void;
   handleEdit?: () => void;
@@ -30,7 +30,6 @@ const StudyroomCard = ({
   isMyroom,
   isInterest,
   isSelected,
-  // setPinChange,
   handleApply,
   handleManage,
   handleEdit,
@@ -50,6 +49,7 @@ const StudyroomCard = ({
   const router = useRouter();
   const memberId = useRecoilValue(memberIdState);
   const planetColor = getCategoryColor(roomCategory);
+  const [showOverlay, setShowOverlay] = useState<boolean>(false);
 
   const isMemberApproved = isMember === '승인' || isMember === '팀장';
   const canJoinRoom =
@@ -58,7 +58,17 @@ const StudyroomCard = ({
   const showManagementButtons = roomType === 'leader';
   const showStatus = roomType === 'apply';
 
+  let displayedRoomName = roomName;
+  if (roomName.length > 10) {
+    displayedRoomName = `${roomName.substring(0, 10)}...`;
+  }
+  let displayedRoomIntro = roomIntro;
+  if (roomIntro.length > 17) {
+    displayedRoomIntro = `${roomIntro.substring(0, 17)}...`;
+  }
+
   const setroomID = useSetRecoilState(roomIdState);
+
   const handlePin = async () => {
     await pinRoom(roomId, memberId);
     mutate(`/member/room/list?memberId=${memberId}`);
@@ -75,23 +85,28 @@ const StudyroomCard = ({
         $isSelected={isSelected!}
         onClick={() => {
           handleSelected?.(roomId);
+          setShowOverlay((prev) => !prev);
         }}
       >
-        <StStarWrapper onClick={handlePin}>
+        <StStarWrapper
+          onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+            handlePin();
+            e.stopPropagation();
+          }}
+        >
           {isMyroom && (isPinned ? <IcStarPinned /> : <IcStar />)}
         </StStarWrapper>
         <StIconWrapper $planetColor={planetColor}>
-          {roomId}
           <IcPlanet />
         </StIconWrapper>
-        <StRoomName>{roomName}</StRoomName>
+        <StRoomName>{displayedRoomName}</StRoomName>
         <StHashtags>
           {roomHashtags.map((hashtag) => (
             <li key={hashtag}>#{hashtag}</li>
           ))}
         </StHashtags>
         <StCategory>{roomCategory}</StCategory>
-        <StIntro>{roomIntro}</StIntro>
+        <StIntro>{displayedRoomIntro}</StIntro>
         {!isInterest && (
           <StJoinWrapper>
             <StLimit>
@@ -99,20 +114,38 @@ const StudyroomCard = ({
               <span> {roomCount}</span> / {roomLimit}명
             </StLimit>
             {isMember === null ? (
-              <StJoin type="button" onClick={handleApply}>
+              <StJoin
+                type="button"
+                onClick={(e: React.MouseEvent<HTMLElement>) => {
+                  handleApply!();
+                  e.stopPropagation();
+                }}
+              >
                 참여
               </StJoin>
             ) : (
               <StEnter
                 type="button"
                 disabled={!canJoinRoom}
-                onClick={handleGotoRoom}
+                onClick={(e: React.MouseEvent<HTMLElement>) => {
+                  handleGotoRoom();
+                  e.stopPropagation();
+                }}
               >
                 입장
               </StEnter>
             )}
           </StJoinWrapper>
         )}
+        <StOverlay $isVisible={showOverlay}>
+          <StRoomName>{roomName}</StRoomName>
+          <StHashtags>
+            {roomHashtags.map((hashtag) => (
+              <li key={hashtag}>#{hashtag}</li>
+            ))}
+          </StHashtags>
+          <StIntro>{roomIntro}</StIntro>
+        </StOverlay>
       </StStudyroomCardWrapper>
       {showManagementButtons && (
         <StBtnWrapper>
@@ -137,6 +170,38 @@ export default StudyroomCard;
 
 const StCardWrapper = styled.div`
   width: 14.1rem;
+`;
+
+const StOverlay = styled.div<{ $isVisible: boolean }>`
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+  padding: 4rem 0;
+  box-sizing: border-box;
+
+  border-radius: 1.6rem;
+  background: rgba(255, 255, 255, 0.9);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  opacity: ${({ $isVisible }) => ($isVisible ? 1 : 0)};
+  pointer-events: ${({ $isVisible }) => ($isVisible ? 'auto' : 'none')};
+  transition: opacity 0.3s;
+
+  p,
+  ol {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    max-width: 90%;
+  }
 `;
 
 const StStudyroomCardWrapper = styled.article<{ $isSelected: boolean }>`
@@ -191,11 +256,16 @@ const StIconWrapper = styled.div<{ $planetColor: string }>`
 const StRoomName = styled.p`
   ${({ theme }) => theme.fonts.Body2};
   text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 100%;
 `;
 
 const StHashtags = styled.ol`
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.3rem;
   overflow: hidden;
 
@@ -212,11 +282,7 @@ const StHashtags = styled.ol`
     border-radius: 1.6rem;
     background-color: ${({ theme }) => theme.colors.Gray4};
     color: ${({ theme }) => theme.colors.Gray1};
-    ${({ theme }) => theme.fonts.Body9};
-
-    font-size: 0.6rem;
-    font-style: normal;
-    font-weight: 500;
+    ${({ theme }) => theme.fonts.Body7};
   }
 `;
 
@@ -225,17 +291,19 @@ const StCategory = styled.p`
 
   color: ${({ theme }) => theme.colors.Purple4};
   ${({ theme }) => theme.fonts.Body6};
+  text-align: center;
 `;
 
 const StIntro = styled.p`
-  margin-bottom: 0.5rem;
+  overflow: hidden;
 
   width: 100%;
   height: 1.3rem;
-  overflow: hidden;
+  margin-bottom: 0.5rem;
 
   color: ${({ theme }) => theme.colors.Learniverse_BG};
   ${({ theme }) => theme.fonts.Body8};
+  text-align: center;
 `;
 
 const StJoinWrapper = styled.div`
