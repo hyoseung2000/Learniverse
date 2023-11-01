@@ -1,4 +1,3 @@
-// 커스텀 훅 저장하는 폴더
 import { useState } from 'react';
 
 export type UseModalReturnType = {

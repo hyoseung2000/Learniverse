@@ -1,4 +1,3 @@
-// 유틸성 함수들 (예시)
 const getToday = () => {
   const date = new Date();
 

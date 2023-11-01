@@ -23,7 +23,6 @@ const Member = ({ curMembers }: MembersProps) => {
     }, 2000);
   };
 
-  console.log(curMembers);
   return (
     <StMemberWrapper>
       <h3>현재 접속 중</h3>

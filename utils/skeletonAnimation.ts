@@ -1,4 +1,3 @@
-// 유틸성 함수들 (예시)
 import { keyframes } from 'styled-components';
 
 export const skeletonAnimation = keyframes`

@@ -44,7 +44,7 @@ const useWebRTC = (
   const [curMembers, setCurMembers] = useState<RoomPeerInfo[]>([]);
   const [curDevice, setCurDevice] = useState<Device>();
   const [curPeerList, setCurPeerList] = useState<PeersInfo[]>([]);
-  // const [isDeviceLoaded, setIsDeviceLoaded] = useState(false);
+  const [isDeviceLoaded, setIsDeviceLoaded] = useState(false);
 
   const [videoStreams, setVideoStreams] = useState<ConsumeInfo[]>([]);
   const [audioStreams, setAudioStreams] = useState<ConsumeInfo[]>([]);
@@ -59,7 +59,7 @@ const useWebRTC = (
     } catch (err) {
       console.error('Create room error:', err);
     }
-    // console.log('1-1. createRoom');
+    console.log('1-1. createRoom');
   };
 
   const loadDevice = async (routerRtpCapabilities: RtpCapabilities) => {
@@ -68,8 +68,8 @@ const useWebRTC = (
       device = new Device();
       await device.load({ routerRtpCapabilities });
       setCurDevice(device);
-      // setIsDeviceLoaded(true);
-      // console.log('3. device 로딩');
+      setIsDeviceLoaded(true);
+      console.log('3. device 로딩');
     } catch (error) {
       if (error instanceof UnsupportedError) {
         console.error('Browser not supported');
@@ -84,11 +84,11 @@ const useWebRTC = (
   const join = async (coreTimeId: number, memberId: number) => {
     if (!socket || !socket.request) return;
     try {
-      await socket.request('join', {
+      const socketJoin = await socket.request('join', {
         coreTimeId,
         memberId,
       });
-      // console.log('2. Joined to room', socketJoin);
+      console.log('2. Joined to room', socketJoin);
 
       await socket.request('setCaptureAlert', {
         memberId,
@@ -109,6 +109,7 @@ const useWebRTC = (
   };
 
   const enterRoom = async () => {
+    console.log(socket);
     if (!socket || !curCoreTimeId || !curMemberId) return;
     try {
       await createRoom(curCoreTimeId);
@@ -121,17 +122,14 @@ const useWebRTC = (
   const initSockets = async () => {
     if (!socket || !socket.request) return;
 
-    // await produce('screenType');
-    // await produce('audioType');
-
     const peerList: RoomInfo = await socket.request('getRoomInfo');
-    // console.log('4-1. peerList', peerList);
+    console.log('4-1. peerList', peerList);
     setCurPeerList(peerList.peers);
     const formatData = peerList.peers.slice(0, -2);
     await consumeProducers(formatData);
 
     const peers: RoomPeerInfo[] = await socket.request('getRoomPeerInfo');
-    // console.log('4-1. getRoomPeerInfo', peers);
+    console.log('4-1. getRoomPeerInfo', peers);
     const peersWithNickNames = await Promise.all(
       peers.map((peer) => addNickNameToPeer(peer)),
     );
@@ -306,8 +304,6 @@ const useWebRTC = (
   ): Promise<void> => {
     try {
       if (!socket || !socket.request) return;
-      console.log(curProducerMemberId, curProducerId, produceType);
-      // if (produceType === 'audioType' && )
       const consumerTransport = await createTransport(device, 'consume');
       const { rtpCapabilities } = device;
 
@@ -354,7 +350,7 @@ const useWebRTC = (
   };
 
   const handleCloseProducer = async (producerId: string) => {
-    // console.log('Closing Producer : ', producerId);
+    console.log('Closing Producer : ', producerId);
     removeStream(producerId);
     await socket.emit('producerClosed', {
       producer_id: producerId,
@@ -406,8 +402,11 @@ const useWebRTC = (
 
   useEffect(() => {
     enterRoom();
-    initSockets();
   }, [socket, curCoreTimeId, curMemberId]);
+
+  useEffect(() => {
+    initSockets();
+  }, [isDeviceLoaded]);
 
   return {
     produce,
