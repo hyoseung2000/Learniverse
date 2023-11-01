@@ -29,17 +29,18 @@ const useGetSearchResult = (
     AxiosResponse<StudyRoomListInfo>
   >(getKey, mainGetFetcher);
 
+  const isFinished = data && data[data.length - 1]?.data.rooms.length === 0;
+
   const rooms: StudyRoomInfo[] = data
     ? [].concat(...data.map((res: any) => res.data.rooms))
     : [];
   const getNextData = () => setSize(size + 1);
 
-  console.log(rooms);
-
   return {
     resultRoomList: rooms,
     getNextData,
     isResultRoomListLoading: isLoading,
+    isFinished,
     isError: error,
   };
 };

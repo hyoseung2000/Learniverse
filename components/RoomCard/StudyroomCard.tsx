@@ -97,6 +97,7 @@ const StudyroomCard = ({
           {isMyroom && (isPinned ? <IcStarPinned /> : <IcStar />)}
         </StStarWrapper>
         <StIconWrapper $planetColor={planetColor}>
+          {roomId}
           <IcPlanet />
         </StIconWrapper>
         <StRoomName>{displayedRoomName}</StRoomName>
