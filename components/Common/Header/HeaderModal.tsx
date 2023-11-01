@@ -18,6 +18,8 @@ const HeaderModal = ({ isShowing }: HeaderModalProps) => {
   };
   const handleLogout = () => {
     setMemberId(0);
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     router.push('/');
   };
 
