@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { useRouter } from 'next/router';
 
 import { ModalWrapper } from '@/components/Common/Modal';

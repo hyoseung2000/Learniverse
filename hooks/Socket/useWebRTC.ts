@@ -1,10 +1,11 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Device } from 'mediasoup-client';
 import {
   Consumer,
   RtpCapabilities,
   Transport,
-  UnsupportedError,
+  UnsupportedError
 } from 'mediasoup-client/lib/types';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -21,7 +22,7 @@ import {
   PeersInfo,
   RemoveRoomInfo,
   RoomInfo,
-  RoomPeerInfo,
+  RoomPeerInfo
 } from '@/types/socket';
 
 import { addNickNameToPeer, getNickName } from '../../utils/getNicknames';
@@ -29,7 +30,7 @@ import {
   handleConnectError,
   handleConsumerClosed,
   handleMessage,
-  handleNewProducers,
+  handleNewProducers
 } from './socketHandlers';
 
 const useWebRTC = (
@@ -365,6 +366,12 @@ const useWebRTC = (
 
   const handleExitRoom = async () => {
     if (!socket.request) return;
+    videoStreams.forEach((streamInfo) => {
+      streamInfo.stream.getTracks().forEach((track) => track.stop());
+    });
+    audioStreams.forEach((streamInfo) => {
+      streamInfo.stream.getTracks().forEach((track) => track.stop());
+    });
     const exit = await socket.request('exitRoom');
     console.log(exit);
   };
