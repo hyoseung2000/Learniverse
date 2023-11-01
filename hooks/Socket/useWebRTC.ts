@@ -44,7 +44,7 @@ const useWebRTC = (
   const [curMembers, setCurMembers] = useState<RoomPeerInfo[]>([]);
   const [curDevice, setCurDevice] = useState<Device>();
   const [curPeerList, setCurPeerList] = useState<PeersInfo[]>([]);
-  const [isDeviceLoaded, setIsDeviceLoaded] = useState(false);
+  // const [isDeviceLoaded, setIsDeviceLoaded] = useState(false);
 
   const [videoStreams, setVideoStreams] = useState<ConsumeInfo[]>([]);
   const [audioStreams, setAudioStreams] = useState<ConsumeInfo[]>([]);
@@ -68,7 +68,7 @@ const useWebRTC = (
       device = new Device();
       await device.load({ routerRtpCapabilities });
       setCurDevice(device);
-      setIsDeviceLoaded(true);
+      // setIsDeviceLoaded(true);
       // console.log('3. device 로딩');
     } catch (error) {
       if (error instanceof UnsupportedError) {
