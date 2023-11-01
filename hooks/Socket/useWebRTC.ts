@@ -409,10 +409,6 @@ const useWebRTC = (
     initSockets();
   }, [socket, curCoreTimeId, curMemberId]);
 
-  useEffect(() => {
-    initSockets();
-  }, [isDeviceLoaded]);
-
   return {
     produce,
     curMembers,
