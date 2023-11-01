@@ -58,6 +58,15 @@ const StudyroomCard = ({
   const showManagementButtons = roomType === 'leader';
   const showStatus = roomType === 'apply';
 
+  let displayedRoomName = roomName;
+  if (roomName.length > 8) {
+    displayedRoomName = `${roomName.substring(0, 8)}...`;
+  }
+  let displayedRoomIntro = roomIntro;
+  if (roomIntro.length > 17) {
+    displayedRoomIntro = `${roomIntro.substring(0, 17)}...`;
+  }
+
   const setroomID = useSetRecoilState(roomIdState);
   const handlePin = async () => {
     await pinRoom(roomId, memberId);
@@ -81,17 +90,16 @@ const StudyroomCard = ({
           {isMyroom && (isPinned ? <IcStarPinned /> : <IcStar />)}
         </StStarWrapper>
         <StIconWrapper $planetColor={planetColor}>
-          {roomId}
           <IcPlanet />
         </StIconWrapper>
-        <StRoomName>{roomName}</StRoomName>
+        <StRoomName>{displayedRoomName}</StRoomName>
         <StHashtags>
           {roomHashtags.map((hashtag) => (
             <li key={hashtag}>#{hashtag}</li>
           ))}
         </StHashtags>
         <StCategory>{roomCategory}</StCategory>
-        <StIntro>{roomIntro}</StIntro>
+        <StIntro>{displayedRoomIntro}</StIntro>
         {!isInterest && (
           <StJoinWrapper>
             <StLimit>
@@ -191,6 +199,10 @@ const StIconWrapper = styled.div<{ $planetColor: string }>`
 const StRoomName = styled.p`
   ${({ theme }) => theme.fonts.Body2};
   text-align: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 100%;
 `;
 
 const StHashtags = styled.ol`
@@ -212,11 +224,7 @@ const StHashtags = styled.ol`
     border-radius: 1.6rem;
     background-color: ${({ theme }) => theme.colors.Gray4};
     color: ${({ theme }) => theme.colors.Gray1};
-    ${({ theme }) => theme.fonts.Body9};
-
-    font-size: 0.6rem;
-    font-style: normal;
-    font-weight: 500;
+    ${({ theme }) => theme.fonts.Body7};
   }
 `;
 
