@@ -90,6 +90,12 @@ const useWebRTC = (
       });
       console.log('2. Joined to room', socketJoin);
 
+      if (socketJoin.error) {
+        alert('이미 코어타임에 참여중입니다! 코어타임 퇴장 후 입장해주세요.');
+        router.back();
+        return;
+      }
+
       await socket.request('setCaptureAlert', {
         memberId,
         roomId: curRoomId,
@@ -359,8 +365,8 @@ const useWebRTC = (
 
   const handleExitRoom = async () => {
     if (!socket.request) return;
-    await socket.request('exitRoom');
-    router.back();
+    const exit = await socket.request('exitRoom');
+    console.log(exit);
   };
 
   useEffect(() => {

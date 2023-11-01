@@ -1,14 +1,16 @@
+import { useRouter } from 'next/router';
+
 import { ModalWrapper } from '@/components/Common/Modal';
 import { GalleryModal } from '@/components/Coretime/Gallery';
 import {
   CreateIssueModal,
   DiscussIssueModal,
-  IssueModal,
+  IssueModal
 } from '@/components/Coretime/Issue';
 import {
   CaptureCompleteModal,
   CaptureModal,
-  ExitCoretimeModal,
+  ExitCoretimeModal
 } from '@/components/Coretime/Modal';
 import { UseModalReturnType } from '@/hooks/Common/useModal';
 
@@ -23,7 +25,7 @@ interface ModalContainerProps {
   captureComplete: UseModalReturnType;
   capturedImageFile: File | undefined;
   handleCapture: () => void;
-  handleExitRoom: () => Promise<void>;
+  handleExitAndNavigate: () => void;
 }
 
 const ModalContainer = ({
@@ -37,8 +39,10 @@ const ModalContainer = ({
   captureComplete,
   capturedImageFile,
   handleCapture,
-  handleExitRoom,
+  handleExitAndNavigate,
 }: ModalContainerProps) => {
+  const router = useRouter();
+
   const handleCreateIssue = () => {
     issue.toggle();
     cIssue.toggle();
@@ -81,7 +85,10 @@ const ModalContainer = ({
       <ModalWrapper isShowing={exit.isShowing}>
         <ExitCoretimeModal
           isShowing={exit.isShowing}
-          handleExit={handleExitRoom}
+          handleExit={() => {
+            handleExitAndNavigate();
+            router.push('/home');
+          }}
           handleCancel={exit.toggle}
         />
       </ModalWrapper>

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
@@ -6,14 +7,15 @@ import { styled } from 'styled-components';
 import { getPresignedUrl } from '@/apis/alarm';
 import { createCapture, putFile } from '@/apis/coretimes';
 import { addMoon } from '@/apis/profile';
-import { useModal, useToggle } from '@/hooks/Common';
+import { ExitCoretimeModal } from '@/components/Coretime/Modal';
+import { useModal, useRouteChangeBlocking, useToggle } from '@/hooks/Common';
 import { useFCMPushAlarm } from '@/hooks/FCM';
 import { useSocketConnection, useWebRTC } from '@/hooks/Socket';
 import {
   captureTimeState,
   coreTimeIdState,
   memberIdState,
-  moonScoreState,
+  moonScoreState
 } from '@/recoil/atom';
 import { formatHHMMSS } from '@/utils/getFormattedTime';
 
@@ -21,7 +23,7 @@ import {
   CoreTimeInfoContainer,
   MediaContainer,
   ModalContainer,
-  SettingContainer,
+  SettingContainer
 } from './CoretimeContainers';
 
 const WebRTCContainer = () => {
@@ -59,7 +61,27 @@ const WebRTCContainer = () => {
   const exit = useModal();
   const capture = useModal();
   const captureComplete = useModal();
+  const leavePageModal = useModal();
   const [isSpeaker, handleSpeaker] = useToggle(true);
+  const { offRouteChangeBlocking } = useRouteChangeBlocking(
+    leavePageModal.toggle,
+  );
+  const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+    e.preventDefault();
+    e.returnValue = '';
+  };
+
+  const handleExitAndNavigate = () => {
+    handleExitRoom();
+    offRouteChangeBlocking();
+  };
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   // 푸시 알림 받기
   useFCMPushAlarm();
@@ -166,7 +188,16 @@ const WebRTCContainer = () => {
         captureComplete={captureComplete}
         capturedImageFile={capturedImageFile}
         handleCapture={handleCapture}
-        handleExitRoom={handleExitRoom}
+        handleExitAndNavigate={handleExitAndNavigate}
+      />
+
+      <ExitCoretimeModal
+        isShowing={leavePageModal.isShowing}
+        handleExit={() => {
+          handleExitAndNavigate();
+          leavePageModal.toggle();
+        }}
+        handleCancel={leavePageModal.toggle}
       />
     </StWebRTCContainerWrapper>
   );
