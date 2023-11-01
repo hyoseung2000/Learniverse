@@ -57,11 +57,11 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
       <IcChar />
       <div>
         <h3>{memberNickname}</h3>
-        {/* <p>{issueOpinion}</p> */}
         <p>Line : {issueOpinionLine + 1}</p>
-        <pre>
+        <p className="code">{issueOpinion}</p>
+        {/* <pre>
           <code>{issueOpinion}</code>
-        </pre>
+        </pre> */}
       </div>
 
       {cMemberId == writer ? (
@@ -82,7 +82,7 @@ const StComment = styled.div`
   position: relative;
   padding: 0.5rem;
   display: flex;
-  width: 95%;
+  flex-wrap: wrap;
   height: fit-content;
   align-items: center;
   gap: 1rem;
@@ -93,11 +93,18 @@ const StComment = styled.div`
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    max-width: 50rem;
+    max-width: 80%;
+    flex-wrap: wrap;
   }
+
   & > div > p {
     color: ${({ theme }) => theme.colors.Purple3};
     ${({ theme }) => theme.fonts.Body6};
+  }
+
+  & > div > .code {
+    color: ${({ theme }) => theme.colors.Learniverse_BG};
+    ${({ theme }) => theme.fonts.Body7};
   }
 `;
 

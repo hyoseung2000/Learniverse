@@ -114,7 +114,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                 <h3>{title}</h3>
                 <p>{descrpt}</p>
                 <p>
-                  🔗 깃허브 링크 :{' '}
+                  🔗 깃허브 링크{' '}
                   <StLink onClick={handleOpenGithub}>
                     https://github.com/{giturl}
                   </StLink>
@@ -244,7 +244,14 @@ const StTitle = styled.div`
   }
 `;
 
-const StComment = styled.div``;
+const StComment = styled.div`
+  height: 28rem;
+
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
 
 const StIssue = styled.div`
   display: flex;
@@ -257,12 +264,6 @@ const StIssue = styled.div`
     margin-top: 1rem;
   }
 
-  & > hr {
-    margin-top: 1rem;
-
-    background-color: ${({ theme }) => theme.colors.Learniverse_BG};
-  }
-
   overflow-y: scroll;
   &::-webkit-scrollbar {
     display: none;
@@ -272,6 +273,7 @@ const StIssue = styled.div`
 const StContent = styled.div`
   display: flex;
   flex-direction: column;
+  max-width: 90%;
 
   & > h3 {
     margin-left: 2.1rem;
@@ -293,7 +295,7 @@ const StContent = styled.div`
 const StCode = styled.div``;
 
 const StLink = styled.button`
-  ${({ theme }) => theme.fonts.Body5};
+  ${({ theme }) => theme.fonts.Body7};
   color: ${({ theme }) => theme.colors.Purple4};
 `;
 
