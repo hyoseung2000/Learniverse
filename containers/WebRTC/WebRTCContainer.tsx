@@ -113,11 +113,15 @@ const WebRTCContainer = () => {
   }, [curMemberId, coreTimeId]);
 
   useEffect(() => {
+    const isMemberInVideoStreams = videoStreams.some(
+      (stream) => stream.memberId === curMemberId,
+    );
+
     if (captureTime === 0 && !isEnter) {
       setIsEnter(true);
       return;
     }
-    if (isEnter) {
+    if (isMemberInVideoStreams && isEnter) {
       capture.setShowing(true);
     }
   }, [captureTime]);
