@@ -22,7 +22,8 @@ const HomeContainer = () => {
 
   const askPermission = async () => {
     const permission = await window.Notification.requestPermission();
-    if (permission !== 'granted' || fcmToken) return;
+    console.log('알림 :', permission, fcmToken);
+    // if (permission !== 'granted' || fcmToken) return;
 
     const messaging = firebase.messaging();
 
