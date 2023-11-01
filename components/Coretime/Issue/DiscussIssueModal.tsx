@@ -293,7 +293,7 @@ const StContent = styled.div`
 const StCode = styled.div``;
 
 const StLink = styled.button`
-  ${({ theme }) => theme.fonts.Body9};
+  ${({ theme }) => theme.fonts.Body5};
   color: ${({ theme }) => theme.colors.Purple4};
 `;
 
