@@ -32,6 +32,10 @@ const ModifyNoticeModal = ({ isShowing, noticeInfo, handleCancel }: Props) => {
   const roomID = useRecoilValue(roomIdState);
 
   const handleModify = async () => {
+    if (!ntitle || !ncontent) {
+      alert('제목과 내용 입력은 필수입니다.');
+      return;
+    }
     await modifyNotice(noticeData!);
     mutate(`/room/boards?roomId=${roomID}`);
     handleCancel();

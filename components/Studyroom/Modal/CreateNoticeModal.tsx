@@ -31,6 +31,10 @@ const CreateNoticeModal = ({ isShowing, handleCancel }: Props) => {
   };
 
   const handleNotice = async () => {
+    if (!ntitle || !ncontent) {
+      alert('제목과 내용 입력은 필수입니다.');
+      return;
+    }
     await postNotice(noticeData!);
     mutate(`/room/boards?roomId=${roomID}`);
     handleCancel();
@@ -64,6 +68,7 @@ const CreateNoticeModal = ({ isShowing, handleCancel }: Props) => {
                 onChange={(e) => {
                   setNTitle(e.target.value);
                 }}
+                maxLength={20}
               />
             </StInput>
             <StInput>
@@ -77,6 +82,7 @@ const CreateNoticeModal = ({ isShowing, handleCancel }: Props) => {
                 onChange={(e) => {
                   setNContent(e.target.value);
                 }}
+                maxLength={500}
               />
             </StInput>
           </StInputWrapper>
