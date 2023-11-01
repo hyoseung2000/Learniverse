@@ -43,6 +43,7 @@ const MediaContainer = ({
       {audioStreams.map((stream) => (
         <WebRTCAudio
           key={stream.consumer_id}
+          memberId={stream.memberId}
           mediaStream={stream.stream}
           ismuted={!isSpeaker}
         />

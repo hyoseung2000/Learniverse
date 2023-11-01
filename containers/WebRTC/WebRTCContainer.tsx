@@ -59,7 +59,7 @@ const WebRTCContainer = () => {
   const exit = useModal();
   const capture = useModal();
   const captureComplete = useModal();
-  const [isSpeaker, handleSpeaker] = useToggle();
+  const [isSpeaker, handleSpeaker] = useToggle(true);
 
   // 푸시 알림 받기
   useFCMPushAlarm();
@@ -113,11 +113,15 @@ const WebRTCContainer = () => {
   }, [curMemberId, coreTimeId]);
 
   useEffect(() => {
+    const isMemberInVideoStreams = videoStreams.some(
+      (stream) => stream.memberId === curMemberId,
+    );
+
     if (captureTime === 0 && !isEnter) {
       setIsEnter(true);
       return;
     }
-    if (isEnter) {
+    if (isMemberInVideoStreams && isEnter) {
       capture.setShowing(true);
     }
   }, [captureTime]);

@@ -263,6 +263,9 @@ const useWebRTC = (
       if (type === 'screenType') {
         addStream(stream, nickname, curMemberId, producer.id, 'video');
       }
+      if (type === 'audioType') {
+        addStream(stream, nickname, curMemberId, producer.id, 'audio');
+      }
     } catch (error) {
       console.error(`Error producing ${type}:`, error);
     }
