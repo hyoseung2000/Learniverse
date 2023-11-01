@@ -261,6 +261,7 @@ const StRoomName = styled.p`
   white-space: nowrap;
   text-overflow: ellipsis;
   max-width: 100%;
+  padding-bottom: 0.2rem;
 `;
 
 const StHashtags = styled.ol`
