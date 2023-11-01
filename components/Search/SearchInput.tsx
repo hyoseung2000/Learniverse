@@ -146,12 +146,12 @@ const StInputWrapper = styled.div`
   & > input {
     z-index: 1;
 
-    width: 80%;
-    height: 6.6rem;
-    margin-top: 0.3rem;
-    padding-left: 1rem;
+    width: 75%;
+    height: 5.2rem;
+    margin-top: 1rem;
+    margin-left: -2rem;
 
-    background: none;
+    background: transparent;
     border: none;
     color: ${({ theme }) => theme.colors.Black};
     ${({ theme }) => theme.fonts.Body1};
@@ -162,6 +162,16 @@ const StInputWrapper = styled.div`
     &:focus {
       outline: none;
     }
+  }
+  input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 3rem #eeeefa inset;
+    -webkit-text-fill-color: #000;
+  }
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    transition: background-color 5000s ease-in-out 0s;
   }
 `;
 
