@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-// import { useGetStudyRoomWorkSpace } from '@/hooks/StudyRooms';
-import { getStudyroomWorkSpace } from '@/apis/studyroom';
 import { useModal } from '@/hooks/Common';
+import { useGetStudyRoomWorkSpace } from '@/hooks/StudyRooms';
 import { IcPlusBtn } from '@/public/assets/icons';
 import { roomIdState } from '@/recoil/atom';
 
@@ -20,24 +19,23 @@ const WorkSpace = () => {
   const [GDriveURL, setGDriveURL] = useState('');
 
   const roomID = useRecoilValue(roomIdState);
-  // const { workSpaceList } = useGetStudyRoomWorkSpace(roomID);
+  const { workSpaceList, isLoading } = useGetStudyRoomWorkSpace(roomID);
 
   const getWorkSpace = async () => {
-    const workSpaceList = await getStudyroomWorkSpace(roomID);
-    const { roomGitOrg, roomNotion, roomGoogleDrive, roomFigma } =
-      workSpaceList;
-    // const { roomGitOrg, roomNotion, roomGoogleDrive, roomFigma } =
-    //   workSpaceList || {};
+    if (!isLoading) {
+      const { roomFigma, roomGitOrg, roomGoogleDrive, roomNotion } =
+        workSpaceList!;
 
-    setNotnURL(roomNotion ? roomNotion.toString() : '');
-    setGithubURL(roomGitOrg ? roomGitOrg.toString() : '');
-    setFigmaURL(roomFigma ? roomFigma.toString() : '');
-    setGDriveURL(roomGoogleDrive ? roomGoogleDrive.toString() : '');
+      setNotnURL(roomNotion ? roomNotion.toString() : '');
+      setGithubURL(roomGitOrg ? roomGitOrg.toString() : '');
+      setFigmaURL(roomFigma ? roomFigma.toString() : '');
+      setGDriveURL(roomGoogleDrive ? roomGoogleDrive.toString() : '');
+    }
   };
 
   useEffect(() => {
     getWorkSpace();
-  }, []);
+  }, [workSpaceList]);
 
   const handleOpen = () => {
     register.toggle();

@@ -80,11 +80,15 @@ export interface PostCoreTimeInfo {
   captureNum: number;
 }
 
+export interface WorkSpaceDataInfo {
+  workspaces: WorkSpaceInfo;
+}
+
 export interface WorkSpaceInfo {
-  roomGitOrg: string;
-  roomNotion: string;
-  roomGoogleDrive: string;
   roomFigma: string;
+  roomGitOrg: string;
+  roomGoogleDrive: string;
+  roomNotion: string;
 }
 
 export interface PostWorkSpaceInfo {
@@ -142,6 +146,7 @@ export interface IssueInfo {
   issueGitUrl: string;
   gitFileName: string;
   gitCode: string;
+  gitCodeModify: string;
   issueOpen: boolean;
   createdDate: Date;
 }
@@ -160,7 +165,9 @@ export interface DiscussInfo {
   issueId: number;
   memberId: number;
   issueOpinion: string;
-  issueOpinionLine: number;
+  issueOpinionStartLine: number;
+  issueOpinionEndLine: number;
+  issueOpinionCode: string;
   createdDate: Date;
 }
 
@@ -168,11 +175,13 @@ export interface PostDiscussInfo {
   issueId: number;
   memberId: number;
   issueOpinion: string;
-  issueOpinionLine: number;
+  issueOpinionStartLine: number;
+  issueOpinionEndLine: number;
+  issueOpinionCode: string;
 }
 
 export interface ModifyDiscussInfo {
   issueId: number;
   roomId: number;
-  gitCode: string;
+  gitCodeModify: string;
 }

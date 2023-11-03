@@ -1,24 +1,33 @@
 /* eslint-disable eqeqeq */
-import { Range } from 'ace-builds';
-import { RefObject, useEffect, useState } from 'react';
-import AceEditor from 'react-ace';
+// import { Range } from 'ace-builds';
+import { useEffect, useState } from 'react';
+// import AceEditor from 'react-ace';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
+import { mutate } from 'swr';
 
 import { ModifyIssueDiscuss } from '@/apis/issue';
 import { IcChar } from '@/public/assets/icons';
 import { memberIdState, roomIdState } from '@/recoil/atom';
 import { DiscussInfo, ModifyDiscussInfo } from '@/types/studyroom';
 import { getNickName } from '@/utils/getNicknames';
+import { MonacoDiffEditor } from '@monaco-editor/react';
 
 interface Props {
   commentInfo: DiscussInfo;
-  coderef: RefObject<AceEditor>;
+  coderef: MonacoDiffEditor;
   writer: number;
 }
 
 const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
-  const { issueId, memberId, issueOpinion, issueOpinionLine } = commentInfo;
+  const {
+    issueId,
+    memberId,
+    issueOpinion,
+    issueOpinionStartLine,
+    issueOpinionEndLine,
+    issueOpinionCode,
+  } = commentInfo;
   const cMemberId = useRecoilValue(memberIdState);
   const roomId = useRecoilValue(roomIdState);
   const [memberNickname, setMemberNickname] = useState('');
@@ -30,22 +39,53 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
   };
 
   const handleModify = async () => {
-    if (coderef.current) {
-      const modifyRange = new Range(
-        issueOpinionLine,
-        0,
-        issueOpinionLine,
-        Infinity,
-      );
-      coderef.current.editor.session.replace(modifyRange, issueOpinion);
-      const changes = coderef.current.editor.getValue();
-      setModifyData({
-        issueId,
-        roomId,
-        gitCode: changes,
-      });
-      await ModifyIssueDiscuss(modifyData!);
-    }
+    // if (coderef) {
+    //   console.log(coderef.getValue());
+    //   const modifyRange = new Range(
+    //     issueOpinionStartLine,
+    //     0,
+    //     issueOpinionEndLine,
+    //     Infinity,
+    //   );
+    //   coderef.session.replace(modifyRange, issueOpinionCode);
+    //   const changes = coderef.getValue();
+    // const modifyRange = new Range(1, 0, 2, Infinity);
+    // coderef.executeEdits('new', [
+    //   { identifier: 'new', range: modifyRange, text: 'import axios' },
+    // ]);
+
+    const text = coderef.getValue();
+    const splitedText = text.split('\n');
+    const lines = issueOpinionEndLine - issueOpinionStartLine + 1;
+    console.log(issueOpinionCode);
+    const lineContent = splitedText.splice(
+      issueOpinionStartLine - 1,
+      lines,
+      issueOpinionCode,
+    );
+
+    console.log('split', lineContent);
+
+    // const textToInsert = '// test'; // text to be inserted
+
+    // splitedText[0] = [textToInsert];
+
+    // coderef.setValue(splitedText.join('\n'));
+    coderef.setValue(lineContent.join('\n'));
+
+    const changes: string = coderef.getValue();
+
+    console.log('수정', changes);
+
+    setModifyData({
+      issueId,
+      roomId,
+      gitCodeModify: changes,
+    });
+
+    console.log(modifyData);
+    await ModifyIssueDiscuss(modifyData!);
+    mutate(`/room/issue?issueId=${issueId}`);
   };
 
   useEffect(() => {
@@ -57,8 +97,11 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
       <IcChar />
       <div>
         <h3>{memberNickname}</h3>
-        <p>Line : {issueOpinionLine + 1}</p>
+        <p>
+          Line : {issueOpinionStartLine} - {issueOpinionEndLine}
+        </p>
         <p className="code">{issueOpinion}</p>
+        <p>{issueOpinionCode}</p>
         {/* <pre>
           <code>{issueOpinion}</code>
         </pre> */}

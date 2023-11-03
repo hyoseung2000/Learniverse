@@ -4,6 +4,7 @@ import { styled } from 'styled-components';
 import { mutate } from 'swr';
 
 import { pinRoom } from '@/apis/roomList';
+import { enterRoomLog } from '@/apis/studyroom';
 import { IcPlanet, IcStar, IcStarPinned } from '@/public/assets/icons';
 import { memberIdState, roomIdState } from '@/recoil/atom';
 import { StudyRoomInfo } from '@/types/studyroom';
@@ -64,7 +65,8 @@ const StudyroomCard = ({
     mutate(`/member/room/list?memberId=${memberId}`);
   };
 
-  const handleGotoRoom = () => {
+  const handleGotoRoom = async () => {
+    enterRoomLog(roomId, memberId);
     setroomID(roomId);
     router.push(`/studyroom/${roomId}`);
   };
@@ -199,7 +201,7 @@ const StHashtags = styled.ol`
   overflow: hidden;
 
   width: 100%;
-  height: 3.5rem;
+  height: fit-content;
   max-width: 100%;
   margin: 0.6rem 0;
 

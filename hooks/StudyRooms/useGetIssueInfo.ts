@@ -11,8 +11,8 @@ const useGetIssueInfo = (issueId: number) => {
   );
 
   return {
-    issue: data?.data.issue,
-    issueCode: data?.data.gitCode,
+    issue: data?.data?.issue,
+    issueCode: data?.data?.gitCode,
     isLoading,
     isError: error,
   };
