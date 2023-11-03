@@ -25,8 +25,8 @@ const StSquareModalWrapper = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
 
-  width: 77rem;
-  height: fit-content;
+  width: 90%;
+  height: 90%;
 
   border-radius: 2rem;
   box-shadow:

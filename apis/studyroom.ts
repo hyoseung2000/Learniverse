@@ -164,3 +164,16 @@ export const addMoonScore = async (memberId: number) => {
     return err;
   }
 };
+
+export const enterRoomLog = async (roomId: number, memberId: number) => {
+  try {
+    const { data } = await client.post(`room/enter`, {
+      roomId,
+      memberId,
+    });
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};

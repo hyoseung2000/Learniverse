@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import 'ace-builds/src-noconflict/ace';
-import 'ace-builds/src-noconflict/mode-python';
-import 'ace-builds/src-noconflict/theme-tomorrow';
+// import 'ace-builds/src-noconflict/ace';
+// import 'ace-builds/src-noconflict/mode-python';
+// import 'ace-builds/src-noconflict/theme-tomorrow';
 
 import { useEffect, useRef, useState } from 'react';
 import AceEditor from 'react-ace';
@@ -15,6 +15,12 @@ import useGetIssueInfo from '@/hooks/StudyRooms/useGetIssueInfo';
 import { IcDiscussLogo } from '@/public/assets/icons';
 import { issueIdState, memberIdState } from '@/recoil/atom';
 import { DiscussInfo, PostDiscussInfo } from '@/types/studyroom';
+import {
+  DiffEditor,
+  Editor,
+  MonacoDiffEditor,
+  useMonaco,
+} from '@monaco-editor/react';
 
 import CommentCard from './CommentCard';
 
@@ -26,32 +32,47 @@ interface Props {
 const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   const cMemberId = useRecoilValue(memberIdState);
   const issueId = useRecoilValue(issueIdState);
-  const codeRef = useRef<AceEditor>(null);
+  // const codeRef = useRef<AceEditor>(null);
+  // const codeRef = useRef<MonacoDiffEditor>(null);
+  const editorRef = useRef<MonacoDiffEditor>(null);
+  // const editor = useRef<undefined | monaco.editor.IStandaloneCodeEditor>();
 
   const [isComment, setIsComment] = useState(false);
   const [suggestCode, setSuggestCode] = useState<string>('');
+  const [opinion, setOpinion] = useState<string>('');
   const [index, setIndex] = useState<number>(0);
 
+  const [language, setLanguage] = useState('typescript');
   const [code, setCode] = useState<string>('');
+  const [changeCode, setChangeCode] = useState<string>('');
   const [title, setTitle] = useState('');
   const [descrpt, setDescrpt] = useState('');
   const [giturl, setGiturl] = useState('');
   const [writer, setWriter] = useState<number>(1);
   const [commentList, setCommentList] = useState<DiscussInfo[]>();
   const [discussData, setDiscussData] = useState<PostDiscussInfo>();
-  // const { issue, issueCode } = useGetIssueInfo(issueId);
+
+  const [editor, setEditor] = useState<MonacoDiffEditor>(null);
+  const [modifyEditor, setmodifyEditor] = useState<MonacoDiffEditor>(null);
+  const [start, setStart] = useState<number>(1);
+  const [end, setEnd] = useState<number>(1);
+
+  const { issue, issueCode, isLoading } = useGetIssueInfo(issueId);
 
   const getIssueData = async () => {
-    const issueInfo = await getIssueInfo(issueId);
-    const { issue, gitCode } = issueInfo!;
-    const { issueTitle, issueDescription, issueGitUrl, memberId } = issue;
-    // const { issueTitle, issueDescription, issueGitUrl, memberId } = issue || {};
-    // setCode(issueCode!);
-    setCode(gitCode!);
-    setTitle(issueTitle!);
-    setDescrpt(issueDescription!);
-    setGiturl(issueGitUrl!);
-    setWriter(memberId!);
+    // const issueInfo = await getIssueInfo(issueId);
+    // const { issue, gitCode } = issueInfo!;
+    if (!isLoading) {
+      const { issueTitle, issueDescription, issueGitUrl, memberId } = issue!;
+      // const { issueTitle, issueDescription, issueGitUrl, memberId } = issue || {};
+      // setCode(issueCode!);
+      setCode(issueCode!);
+      setChangeCode(issueCode!);
+      setTitle(issueTitle!);
+      setDescrpt(issueDescription!);
+      setGiturl(issueGitUrl!);
+      setWriter(memberId!);
+    }
   };
 
   const getDiscuss = async () => {
@@ -65,27 +86,63 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   };
 
   const handleCreateInput = () => {
-    if (codeRef.current) {
-      const { editor } = codeRef.current;
-      const line = editor.getSelectionRange().start.row;
-      const range = editor.getSelectionRange();
-      const getSelectedText = editor.session.getTextRange(range);
-      console.log(line, range, getSelectedText);
-      setIsComment(true);
-      setIndex(line);
-      changeData();
-    }
+    // if (codeRef.current) {
+    //   const { editor } = codeRef.current;
+    //   const line = editor.getSelectionRange().start.row;
+    //   const range = editor.getSelectionRange();
+    //   const getSelectedText = editor.session.getTextRange(range);
+    //   console.log(line, range, getSelectedText);
+    //   setIsComment(true);
+    //   setIndex(line);
+    //   changeData();
+    // }
   };
 
   const handleCreateComment = async () => {
     await postDiscuss(discussData!);
     setSuggestCode('');
-    handleCancel();
   };
 
   const changeData = () => {
     setSuggestCode('');
   };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleEditorDidMount = (e: any) => {
+    const original = e.getOriginalEditor();
+    setEditor(original);
+    const modify = e.getModifiedEditor();
+    setmodifyEditor(modify);
+    // console.log('model', e.getModel());
+    // console.log('modify', e.getModifiedEditor());
+    // console.log('original', original);
+    // console.log(editorRef.current.getSelection());
+    // console.log(editor.current.getSelection());
+  };
+
+  const monaco = useMonaco();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleClick = async () => {
+    editorRef.current = editor;
+    const position = editor.getSelection();
+    // console.log('position', editor.getvalue());
+    setStart(position.startLineNumber);
+    setEnd(position.endLineNumber - 1);
+    setIsComment(true);
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleInput = (value: any) => {
+    setSuggestCode(value);
+    console.log(value);
+  };
+
+  useEffect(() => {
+    if (monaco) {
+      console.log('here is the monaco instance:', monaco);
+    }
+  }, [monaco]);
 
   useEffect(() => {
     if (isShowing) {
@@ -98,10 +155,12 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
     setDiscussData({
       issueId,
       memberId: cMemberId,
-      issueOpinion: suggestCode,
-      issueOpinionLine: index,
+      issueOpinion: opinion,
+      issueOpinionStartLine: start,
+      issueOpinionEndLine: end,
+      issueOpinionCode: suggestCode,
     });
-  }, [suggestCode, index]);
+  }, [opinion, start, end, suggestCode]);
 
   return (
     isShowing && (
@@ -114,16 +173,16 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                 <h3>{title}</h3>
                 <p>{descrpt}</p>
                 <p>
-                  🔗 깃허브 링크 :{' '}
+                  🔗 깃허브 링크{' '}
                   <StLink onClick={handleOpenGithub}>
                     https://github.com/{giturl}
                   </StLink>
                 </p>
               </StContent>
             </StIssue>
-            <StCode>
+            <StCode onClick={handleClick}>
               <div>
-                <AceEditor
+                {/* <AceEditor
                   ref={codeRef}
                   className="github code"
                   setOptions={{ useWorker: false }}
@@ -131,7 +190,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                   mode="javascript"
                   theme="tomorrow"
                   name="codeInput"
-                  height="30rem"
+                  height="40rem"
                   width="100%"
                   fontSize={30}
                   showPrintMargin
@@ -142,9 +201,68 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                   onCursorChange={() => {
                     handleCreateInput();
                   }}
+                /> */}
+                <DiffEditor
+                  height="40rem"
+                  language={language}
+                  original={code}
+                  modified={changeCode}
+                  options={{
+                    fontSize: 35,
+                    lineHeight: 20,
+                    // minimap: { enabled: false },
+                    // readOnly: true,
+                    scrollbar: {
+                      vertical: 'auto',
+                      horizontal: 'auto',
+                    },
+                  }}
+                  // eslint-disable-next-line react/jsx-no-bind
+                  onMount={handleEditorDidMount}
                 />
               </div>
             </StCode>
+            {isComment && (
+              <StInputWrapper>
+                <StInput>
+                  <textarea
+                    placeholder="코멘트를 입력하세요"
+                    value={opinion}
+                    onChange={(e) => {
+                      setOpinion(e.target.value);
+                    }}
+                  />
+                  <div>
+                    <div>
+                      <p>Selected Line</p>
+                      <p>
+                        {start} - {end}
+                      </p>
+                    </div>
+
+                    <Editor
+                      height="5rem"
+                      width="90rem"
+                      defaultValue="// 제안할 코드를 입력하세요"
+                      language={language}
+                      onChange={handleInput}
+                      options={{
+                        fontSize: 35,
+                        lineHeight: 30,
+                        minimap: { enabled: false },
+                        scrollbar: {
+                          vertical: 'auto',
+                          horizontal: 'auto',
+                        },
+                      }}
+                    />
+                  </div>
+                </StInput>
+                <button type="button" onClick={handleCreateComment}>
+                  입력
+                </button>
+              </StInputWrapper>
+            )}
           </StIssueWrapper>
           <StCommentWrapper>
             <StTitle>
@@ -158,27 +276,13 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
               {commentList &&
                 commentList.map((comment) => (
                   <CommentCard
-                    coderef={codeRef}
+                    coderef={modifyEditor}
                     key={comment.opinionId}
                     commentInfo={comment}
                     writer={writer}
                   />
                 ))}
             </StComment>
-            {isComment && (
-              <StInput>
-                <textarea
-                  placeholder="코멘트를 입력하세요"
-                  value={suggestCode}
-                  onChange={(e) => {
-                    setSuggestCode(e.target.value);
-                  }}
-                />
-                <button type="button" onClick={handleCreateComment}>
-                  입력
-                </button>
-              </StInput>
-            )}
           </StCommentWrapper>
         </StDiscussWrapper>
       </SquareModal>
@@ -195,7 +299,7 @@ const StDiscussWrapper = styled.div`
 const StIssueWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  width: 60%;
+  width: 80%;
   flex-wrap: wrap;
 
   padding: 1.5rem 2.4rem 2.4rem 3.4rem;
@@ -207,7 +311,7 @@ const StCommentWrapper = styled.div`
   display: flex;
   flex-direction: column;
 
-  width: 40%;
+  width: 20%;
   margin-top: 2.4rem;
   margin-left: 1.4rem;
   margin-right: 1.4rem;
@@ -244,7 +348,14 @@ const StTitle = styled.div`
   }
 `;
 
-const StComment = styled.div``;
+const StComment = styled.div`
+  height: 28rem;
+
+  overflow-y: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
 
 const StIssue = styled.div`
   display: flex;
@@ -257,12 +368,6 @@ const StIssue = styled.div`
     margin-top: 1rem;
   }
 
-  & > hr {
-    margin-top: 1rem;
-
-    background-color: ${({ theme }) => theme.colors.Learniverse_BG};
-  }
-
   overflow-y: scroll;
   &::-webkit-scrollbar {
     display: none;
@@ -272,6 +377,7 @@ const StIssue = styled.div`
 const StContent = styled.div`
   display: flex;
   flex-direction: column;
+  max-width: 90%;
 
   & > h3 {
     margin-left: 2.1rem;
@@ -293,17 +399,34 @@ const StContent = styled.div`
 const StCode = styled.div``;
 
 const StLink = styled.button`
-  ${({ theme }) => theme.fonts.Body9};
+  ${({ theme }) => theme.fonts.Body5};
   color: ${({ theme }) => theme.colors.Purple4};
 `;
 
-const StInput = styled.div`
-  padding: 0.5rem;
-  display: flex;
-  position: absolute;
-  bottom: 3rem;
+const StInputWrapper = styled.div`
+  margin-top: 1rem;
 
-  width: 90%;
+  display: flex;
+
+  & > button {
+    margin-left: 1rem;
+    width: 3.5rem;
+
+    border-radius: 0.5rem;
+    background-color: ${({ theme }) => theme.colors.Gray4};
+    color: ${({ theme }) => theme.colors.Learniverse_BG};
+    ${({ theme }) => theme.fonts.Body6};
+  }
+`;
+
+const StInput = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  padding: 0.5rem;
+  gap: 1rem;
+
+  width: 110rem;
 
   align-items: center;
   justify-content: space-between;
@@ -312,22 +435,22 @@ const StInput = styled.div`
   border-radius: 1rem;
 
   & > textarea {
-    height: 5rem;
-    width: 80%;
-    border: none;
+    height: 3rem;
+    width: 90%;
+    border: 1px solid;
     resize: none;
     background-color: ${({ theme }) => theme.colors.LightGray1};
     color: ${({ theme }) => theme.colors.Learniverse_BG};
-    ${({ theme }) => theme.fonts.Body7};
+    ${({ theme }) => theme.fonts.Body5};
   }
 
-  & > button {
-    width: 3.5rem;
-    height: 2.2rem;
+  & > div {
+    display: flex;
+    & > div {
+      margin-right: 1rem;
 
-    border-radius: 0.5rem;
-    background-color: ${({ theme }) => theme.colors.Gray4};
-    color: ${({ theme }) => theme.colors.Learniverse_BG};
-    ${({ theme }) => theme.fonts.Body6};
+      ${({ theme }) => theme.fonts.Title5};
+      color: ${({ theme }) => theme.colors.Purple4};
+    }
   }
 `;

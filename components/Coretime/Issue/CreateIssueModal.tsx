@@ -89,7 +89,8 @@ const CreateIssueModal = ({ isShowing, handleCancel }: Props) => {
               <input
                 type="text"
                 value={GithubRepoURL}
-                placeholder="https://github.com/ 이하 주소만 입력하세요."
+                pattern="https?://github.com/.+"
+                placeholder="https://github.com/로 시작하는 url을 입력하세요."
                 onChange={(e) => {
                   setGithubRepoURL(e.target.value);
                 }}

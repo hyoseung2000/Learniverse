@@ -1,10 +1,19 @@
+// import { useRouter } from 'next/router';
+// import { useSetRecoilState } from 'recoil';
 import { styled } from 'styled-components';
 
 import { IcLoginBtn } from '@/public/assets/icons';
 
+// import { memberIdState } from '@/recoil/atom';
+
 const Landing = () => {
+  // const router = useRouter();
+  // const setmemberId = useSetRecoilState(memberIdState);
+
   const handleLoginClick = async () => {
     window.location.href = `${process.env.NEXT_PUBLIC_APP_IP}/oauth2/authorization/github`;
+    // setmemberId(1);
+    // router.push('/home');
   };
 
   return (
