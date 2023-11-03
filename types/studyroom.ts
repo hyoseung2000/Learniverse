@@ -157,6 +157,9 @@ export interface PostIssueInfo {
   issueGitUrl: string;
   gitFileName: string;
 }
+export interface DiscussListInfo {
+  opinions: DiscussInfo[];
+}
 
 export interface DiscussInfo {
   opinionId: number;
@@ -166,6 +169,7 @@ export interface DiscussInfo {
   issueOpinionStartLine: number;
   issueOpinionEndLine: number;
   issueOpinionCode: string;
+  issueAccepted: boolean;
   createdDate: Date;
 }
 

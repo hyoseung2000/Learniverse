@@ -8,7 +8,7 @@ import { mutate } from 'swr';
 
 import { ModifyIssueDiscuss } from '@/apis/issue';
 import { IcChar } from '@/public/assets/icons';
-import { memberIdState, roomIdState } from '@/recoil/atom';
+import { roomIdState } from '@/recoil/atom';
 import { DiscussInfo, ModifyDiscussInfo } from '@/types/studyroom';
 import { getNickName } from '@/utils/getNicknames';
 import { MonacoDiffEditor } from '@monaco-editor/react';
@@ -19,6 +19,7 @@ interface Props {
   writer: number;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
   const {
     issueId,
@@ -27,8 +28,9 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
     issueOpinionStartLine,
     issueOpinionEndLine,
     issueOpinionCode,
+    issueAccepted,
   } = commentInfo;
-  const cMemberId = useRecoilValue(memberIdState);
+  // const cMemberId = useRecoilValue(memberIdState);
   const roomId = useRecoilValue(roomIdState);
   const [memberNickname, setMemberNickname] = useState('');
   const [modifyData, setModifyData] = useState<ModifyDiscussInfo>();
@@ -58,20 +60,16 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
     const splitedText = text.split('\n');
     const lines = issueOpinionEndLine - issueOpinionStartLine + 1;
     console.log(issueOpinionCode);
-    const lineContent = splitedText.splice(
-      issueOpinionStartLine - 1,
-      lines,
-      issueOpinionCode,
-    );
+    splitedText.splice(issueOpinionStartLine - 1, lines, issueOpinionCode);
 
-    console.log('split', lineContent);
+    console.log('split', splitedText);
 
     // const textToInsert = '// test'; // text to be inserted
 
     // splitedText[0] = [textToInsert];
 
     // coderef.setValue(splitedText.join('\n'));
-    coderef.setValue(lineContent.join('\n'));
+    coderef.setValue(splitedText.join('\n'));
 
     const changes: string = coderef.getValue();
 
@@ -86,6 +84,7 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
     console.log(modifyData);
     await ModifyIssueDiscuss(modifyData!);
     mutate(`/room/issue?issueId=${issueId}`);
+    mutate(`room/discussions?issueId=${issueId}`);
   };
 
   useEffect(() => {
@@ -107,7 +106,14 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
         </pre> */}
       </div>
 
-      {cMemberId == writer ? (
+      {/* {cMemberId == writer ? (
+        <StButton $isPersist onClick={handleModify}>
+          수락
+        </StButton>
+      ) : (
+        <StButton $isPersist={false}>불가</StButton>
+      )} */}
+      {!issueAccepted ? (
         <StButton $isPersist onClick={handleModify}>
           수락
         </StButton>
