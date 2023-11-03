@@ -7,10 +7,12 @@ import { useEffect, useRef, useState } from 'react';
 import AceEditor from 'react-ace';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
+import { mutate } from 'swr';
 
 import { getDiscussions, getIssueInfo, postDiscuss } from '@/apis/issue';
 import { StateDeleteBtn } from '@/components/Common/Button';
 import { SquareModal } from '@/components/Common/Modal';
+import useGetDiscussInfo from '@/hooks/StudyRooms/useGetDiscussInfo';
 import useGetIssueInfo from '@/hooks/StudyRooms/useGetIssueInfo';
 import { IcDiscussLogo } from '@/public/assets/icons';
 import { issueIdState, memberIdState } from '@/recoil/atom';
@@ -58,6 +60,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   const [end, setEnd] = useState<number>(1);
 
   const { issue, issueCode, isLoading } = useGetIssueInfo(issueId);
+  const { discuss, isDiscussLoading } = useGetDiscussInfo(issueId);
 
   const getIssueData = async () => {
     // const issueInfo = await getIssueInfo(issueId);
@@ -76,9 +79,13 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   };
 
   const getDiscuss = async () => {
-    const discussInfo = await getDiscussions(issueId);
-    console.log(discussInfo);
-    setCommentList(discussInfo);
+    // const discussInfo = await getDiscussions(issueId);
+    // console.log(discussInfo);
+    // setCommentList(discussInfo);
+    if (!isDiscussLoading) {
+      console.log(discuss);
+      setCommentList(discuss);
+    }
   };
 
   const handleOpenGithub = () => {
@@ -101,6 +108,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   const handleCreateComment = async () => {
     await postDiscuss(discussData!);
     setSuggestCode('');
+    mutate(`room/discussions?issueId=${issueId}`);
   };
 
   const changeData = () => {
@@ -150,6 +158,10 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
       getDiscuss();
     }
   }, [isShowing]);
+
+  useEffect(() => {
+    getDiscuss();
+  }, [discuss]);
 
   useEffect(() => {
     setDiscussData({

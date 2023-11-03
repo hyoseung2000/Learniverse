@@ -39,7 +39,6 @@ const CreateIssueModal = ({ isShowing, handleCancel }: Props) => {
   };
 
   const handleIssue = async () => {
-    console.log('이슈 생성');
     await createIssue(issueInfo!);
     handleCancel();
   };
