@@ -10,8 +10,6 @@ const useGetDiscussInfo = (issueId: number) => {
     mainGetFetcher,
   );
 
-  console.log(data?.data?.opinions);
-
   return {
     discuss: data?.data?.opinions,
     isDiscussLoading: isLoading,

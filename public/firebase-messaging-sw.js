@@ -18,7 +18,7 @@ const app = firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging(app);
 
 messaging.onBackgroundMessage((payload) => {
-  console.log('[Background] Message received.. ', payload);
+  console.log('[Background] Message received. ', payload);
 
   const bc = new BroadcastChannel('fcm_channel');
   bc.postMessage(payload);

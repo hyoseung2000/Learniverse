@@ -1,7 +1,7 @@
 import {
   ModifyDiscussInfo,
   PostDiscussInfo,
-  PostIssueInfo,
+  PostIssueInfo
 } from '@/types/studyroom';
 
 import { client } from './axios';
@@ -9,7 +9,6 @@ import { client } from './axios';
 export const createIssue = async (PostIssueData: PostIssueInfo) => {
   try {
     const { data } = await client.post(`/room/issue/create`, PostIssueData);
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
@@ -53,7 +52,6 @@ export const postDiscuss = async (postDiscussData: PostDiscussInfo) => {
       `room/discussion/create`,
       postDiscussData,
     );
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
@@ -66,7 +64,6 @@ export const deleteIssue = async (issueId: number) => {
     const { data } = await client.post(`room/issue/close`, {
       issueId,
     });
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
@@ -79,7 +76,6 @@ export const ModifyIssueDiscuss = async (
 ) => {
   try {
     const { data } = await client.post(`/room/issue/update`, postDiscussData);
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
