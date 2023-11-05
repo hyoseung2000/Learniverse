@@ -21,7 +21,7 @@ import {
   DiffEditor,
   Editor,
   MonacoDiffEditor,
-  useMonaco
+  useMonaco,
 } from '@monaco-editor/react';
 
 import CommentCard from './CommentCard';
