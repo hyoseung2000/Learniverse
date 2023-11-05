@@ -1,9 +1,12 @@
+import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
+import { mutate } from 'swr';
 
 import { deleteIssue } from '@/apis/issue';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { SmallModal } from '@/components/Common/Modal';
 import { IcCharacterX } from '@/public/assets/icons';
+import { roomIdState } from '@/recoil/atom';
 
 interface Props {
   isShowing: boolean;
@@ -12,9 +15,12 @@ interface Props {
 }
 
 const CloseIssueModal = ({ isShowing, issueId, handleCancel }: Props) => {
+  const roomId = useRecoilValue(roomIdState);
+
   const handleCloseIssue = async () => {
     await deleteIssue(issueId);
     handleCancel();
+    mutate(`/room/issues?roomId=${roomId}`);
   };
 
   return (

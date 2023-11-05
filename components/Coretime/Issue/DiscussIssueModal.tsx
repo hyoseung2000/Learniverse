@@ -1,10 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-// import 'ace-builds/src-noconflict/ace';
-// import 'ace-builds/src-noconflict/mode-python';
-// import 'ace-builds/src-noconflict/theme-tomorrow';
 
 import { useEffect, useRef, useState } from 'react';
-import AceEditor from 'react-ace';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 import { mutate } from 'swr';
@@ -42,7 +38,6 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   const [isComment, setIsComment] = useState(false);
   const [suggestCode, setSuggestCode] = useState<string>('');
   const [opinion, setOpinion] = useState<string>('');
-  const [index, setIndex] = useState<number>(0);
 
   const [language, setLanguage] = useState('typescript');
   const [code, setCode] = useState<string>('');
@@ -107,12 +102,8 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
 
   const handleCreateComment = async () => {
     await postDiscuss(discussData!);
-    setSuggestCode('');
+    initData();
     mutate(`room/discussions?issueId=${issueId}`);
-  };
-
-  const changeData = () => {
-    setSuggestCode('');
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -146,6 +137,12 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
     console.log(value);
   };
 
+  const initData = () => {
+    setIsComment(false);
+    setStart(1);
+    setEnd(1);
+  };
+
   useEffect(() => {
     if (monaco) {
       console.log('here is the monaco instance:', monaco);
@@ -154,14 +151,15 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
 
   useEffect(() => {
     if (isShowing) {
+      initData();
       getIssueData();
       getDiscuss();
     }
-  }, [isShowing]);
+  }, [isShowing, discuss]);
 
   useEffect(() => {
-    getDiscuss();
-  }, [discuss]);
+    initData();
+  }, []);
 
   useEffect(() => {
     setDiscussData({
@@ -177,6 +175,9 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   return (
     isShowing && (
       <SquareModal title="이슈 디스커션" isShowing={isShowing}>
+        <StCloseBtn type="button" onClick={handleCancel}>
+          𝗫
+        </StCloseBtn>
         <StDiscussWrapper>
           <StIssueWrapper>
             <StIssue>
@@ -215,7 +216,8 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                   }}
                 /> */}
                 <DiffEditor
-                  height="40rem"
+                  height="30rem"
+                  width="95%"
                   language={language}
                   original={code}
                   modified={changeCode}
@@ -223,7 +225,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                     fontSize: 35,
                     lineHeight: 20,
                     // minimap: { enabled: false },
-                    // readOnly: true,
+                    readOnly: true,
                     scrollbar: {
                       vertical: 'auto',
                       horizontal: 'auto',
@@ -254,7 +256,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
 
                     <Editor
                       height="5rem"
-                      width="90rem"
+                      width="95%"
                       defaultValue="// 제안할 코드를 입력하세요"
                       language={language}
                       onChange={handleInput}
@@ -303,6 +305,14 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
 };
 
 export default DiscussIssueModal;
+
+const StCloseBtn = styled.button`
+  position: absolute;
+  top: 1rem;
+  right: 3rem;
+
+  ${({ theme }) => theme.fonts.Title1};
+`;
 
 const StDiscussWrapper = styled.div`
   display: flex;
@@ -438,7 +448,7 @@ const StInput = styled.div`
   padding: 0.5rem;
   gap: 1rem;
 
-  width: 110rem;
+  width: 90%;
 
   align-items: center;
   justify-content: space-between;
@@ -448,6 +458,7 @@ const StInput = styled.div`
 
   & > textarea {
     height: 3rem;
+    margin-left: 5rem;
     width: 90%;
     border: 1px solid;
     resize: none;

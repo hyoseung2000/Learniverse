@@ -155,7 +155,7 @@ export interface PostIssueInfo {
   issueTitle: string;
   issueDescription: string;
   issueGitUrl: string;
-  gitFileName: string;
+  gitFileName?: string;
 }
 export interface DiscussListInfo {
   opinions: DiscussInfo[];

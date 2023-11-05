@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { getIssueList } from '@/apis/issue';
+// import { getIssueList } from '@/apis/issue';
 import { useModal } from '@/hooks/Common';
+import useGetIssueList from '@/hooks/StudyRooms/useGetIssueList';
 import { IcPlusBtn } from '@/public/assets/icons';
 import { roomIdState } from '@/recoil/atom';
 import { IssueInfo } from '@/types/studyroom';
@@ -17,13 +18,17 @@ const Issue = () => {
   const discuss = useModal();
 
   const roomID = useRecoilValue(roomIdState);
-  const [issueList, setIssueList] = useState<IssueInfo[]>();
+  // const [issueList, setIssueList] = useState<IssueInfo[]>();
   const [showClosed, setshowClosed] = useState(true);
 
-  const getIssues = async () => {
-    const issueInfo = await getIssueList(roomID);
+  const { issueList } = useGetIssueList(roomID);
 
-    setIssueList(issueInfo);
+  const getIssues = async () => {
+    // if (!isLoading) {
+    //   setIssueList(issues);
+    // }
+    // const issueInfo = await getIssueList(roomID);
+    // setIssueList(issueInfo);
   };
 
   const handleOpenIssue = () => {

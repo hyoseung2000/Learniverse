@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
+import { mutate } from 'swr';
 
 import { createIssue } from '@/apis/issue';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
@@ -19,8 +20,9 @@ const CreateIssueModal = ({ isShowing, handleCancel }: Props) => {
 
   const [ntitle, setNTitle] = useState('');
   const [ncontent, setNContent] = useState('');
-  const [GithubCodeURL, setGithubCodeURL] = useState('');
   const [GithubRepoURL, setGithubRepoURL] = useState('');
+  const [GithubCodeURL, setGithubCodeURL] = useState('');
+
   const [issueInfo, setIssueInfo] = useState<PostIssueInfo>();
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -39,7 +41,13 @@ const CreateIssueModal = ({ isShowing, handleCancel }: Props) => {
   };
 
   const handleIssue = async () => {
+    if (!ntitle || !ncontent || !GithubRepoURL) {
+      alert('이슈명, 내용, 레포지토리 링크 입력은 필수입니다.');
+      return;
+    }
+
     await createIssue(issueInfo!);
+    mutate(`/room/issues?roomId=${roomId}`);
     handleCancel();
   };
 
@@ -54,13 +62,17 @@ const CreateIssueModal = ({ isShowing, handleCancel }: Props) => {
     });
   }, [ntitle, ncontent, GithubRepoURL, GithubCodeURL]);
 
+  useEffect(() => {
+    initData();
+  }, []);
+
   return (
     isShowing && (
       <LargeModal title="이슈 생성하기" isShowing={isShowing}>
         <StCreateIssueModalWrapper>
           <StInputWrapper>
             <StInput>
-              <p>이슈명</p>
+              <p>이슈명 *</p>
               <input
                 type="text"
                 value={ntitle}
@@ -71,7 +83,7 @@ const CreateIssueModal = ({ isShowing, handleCancel }: Props) => {
               />
             </StInput>
             <StInput>
-              <p>내용</p>
+              <p>내용 *</p>
               <textarea
                 value={ncontent}
                 ref={inputRef}
@@ -84,7 +96,7 @@ const CreateIssueModal = ({ isShowing, handleCancel }: Props) => {
               />
             </StInput>
             <StInput>
-              <p>깃허브 레포 주소</p>
+              <p>깃허브 레포 주소 *</p>
               <input
                 type="text"
                 value={GithubRepoURL}
@@ -101,7 +113,7 @@ const CreateIssueModal = ({ isShowing, handleCancel }: Props) => {
                 type="text"
                 value={GithubCodeURL}
                 pattern=".+"
-                placeholder="레포지토리내 소스코드 파일명을 입력하세요. (index.ts)"
+                placeholder="레포지토리내 소스코드 전체 url을 입력하세요."
                 onChange={(e) => {
                   setGithubCodeURL(e.target.value);
                 }}

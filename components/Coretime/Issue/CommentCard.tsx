@@ -56,6 +56,7 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
     //   { identifier: 'new', range: modifyRange, text: 'import axios' },
     // ]);
 
+    coderef.updateOptions({ readOnly: false });
     const text = coderef.getValue();
     const splitedText = text.split('\n');
     const lines = issueOpinionEndLine - issueOpinionStartLine + 1;
