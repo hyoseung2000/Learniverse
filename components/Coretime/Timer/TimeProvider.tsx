@@ -29,7 +29,7 @@ const TimeProvider: React.FC<TimeProviderProps> = ({
       const now = new Date().getTime();
       const timeLeft = Math.floor((endTime - now) / 1000);
 
-      if (timeLeft <= 0) {
+      if (timeLeft < 0) {
         clearInterval(interval);
         alert('코어타임이 끝났습니다.');
         router.push(`/studyroom/${roomId}`);
@@ -42,13 +42,16 @@ const TimeProvider: React.FC<TimeProviderProps> = ({
   }, [endTime, roomId, router]);
 
   const formattedTime = useMemo(() => {
+    if (Number.isNaN(seconds)) {
+      return '00 : 00 : 00';
+    }
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
     return `${String(hours).padStart(2, '0')} : ${String(minutes).padStart(
       2,
       '0',
-    )}:${String(remainingSeconds).padStart(2, '0')}`;
+    )} : ${String(remainingSeconds).padStart(2, '0')}`;
   }, [seconds]);
 
   const value = useMemo(() => ({ formattedTime }), [formattedTime]);
