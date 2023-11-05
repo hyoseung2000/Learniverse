@@ -59,10 +59,7 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
     const text = coderef.getValue();
     const splitedText = text.split('\n');
     const lines = issueOpinionEndLine - issueOpinionStartLine + 1;
-    console.log(issueOpinionCode);
     splitedText.splice(issueOpinionStartLine - 1, lines, issueOpinionCode);
-
-    console.log('split', splitedText);
 
     // const textToInsert = '// test'; // text to be inserted
 
@@ -73,15 +70,12 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
 
     const changes: string = coderef.getValue();
 
-    console.log('수정', changes);
-
     setModifyData({
       issueId,
       roomId,
       gitCodeModify: changes,
     });
 
-    console.log(modifyData);
     await ModifyIssueDiscuss(modifyData!);
     mutate(`/room/issue?issueId=${issueId}`);
     mutate(`room/discussions?issueId=${issueId}`);

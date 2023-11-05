@@ -83,7 +83,6 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
     // console.log(discussInfo);
     // setCommentList(discussInfo);
     if (!isDiscussLoading) {
-      console.log(discuss);
       setCommentList(discuss);
     }
   };
@@ -143,7 +142,6 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleInput = (value: any) => {
     setSuggestCode(value);
-    console.log(value);
   };
 
   useEffect(() => {

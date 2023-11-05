@@ -62,7 +62,6 @@ const ManageModal = ({
     }
   }, [roomId, statusChange]);
 
-  console.log(applyList);
   return (
     isShowing && (
       <SmallModal title="신청자 관리하기" isShowing={isShowing}>

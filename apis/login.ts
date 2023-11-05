@@ -5,7 +5,6 @@ import { client } from './axios';
 export const getLoginInfo = async (memberId: number): Promise<LoginInfo> => {
   try {
     const { data } = await client.get(`/member/first?memberId=${memberId}`);
-    console.log(data.data);
     return data.data;
   } catch (err) {
     console.error(err);
