@@ -6,21 +6,27 @@ import { MemberInfo } from '@/types/member';
 import { RoomPeerInfo } from '@/types/socket';
 
 interface MemberMessageListProps {
-  memberList: MemberInfo[] | RoomPeerInfo[];
+  memberList: RoomPeerInfo[] | MemberInfo[];
 }
 
 const MemberMessageList = ({ memberList }: MemberMessageListProps) => {
   const [visibleMemberId, setVisibleMemberId] = useState<number | null>(null);
+
+  const uniqueMemberList = memberList.filter(
+    (member, index, self) =>
+      index === self.findIndex((m) => m.memberId === member.memberId),
+  );
 
   const toggleMessageVisibility = (memberid: number) => {
     setVisibleMemberId((prevVisibleMemberId) =>
       prevVisibleMemberId === memberid ? null : memberid,
     );
   };
+
   return (
     <StMemberWrapper>
-      {memberList &&
-        memberList.map((member) => (
+      {uniqueMemberList &&
+        uniqueMemberList.map((member) => (
           <StMember
             className="member"
             key={member.memberId}
@@ -31,6 +37,11 @@ const MemberMessageList = ({ memberList }: MemberMessageListProps) => {
             {visibleMemberId === member.memberId && member.memberMessage && (
               <StMessage>
                 <p>{member.memberMessage}</p>
+              </StMessage>
+            )}
+            {visibleMemberId === member.memberId && member.message && (
+              <StMessage>
+                <p>{member.message}</p>
               </StMessage>
             )}
           </StMember>

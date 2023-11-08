@@ -32,6 +32,7 @@ export interface RoomPeerInfo {
   socketId?: string; // socket id
   memberId: number; // memeber id
   nickname?: string; // memeber nickname
+  message?: string; // 지워야함
   memberMessage?: string;
 }
 
