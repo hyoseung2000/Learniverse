@@ -4,11 +4,13 @@ import { styled } from 'styled-components';
 
 import { getRoomMembers } from '@/apis/memberList';
 import { getRoomInfo } from '@/apis/studyroom';
-import { IcChar, IcRoomLogo } from '@/public/assets/icons';
+import { IcRoomLogo } from '@/public/assets/icons';
 import { memberIdState, roomIdState } from '@/recoil/atom';
 import { MemberInfo } from '@/types/member';
 import { StudyRoomInfo } from '@/types/studyroom';
 import { getCategoryColor } from '@/utils/getCategoryColor';
+
+import MemberMessageList from './MemberMessageList';
 
 const MemberList = () => {
   const roomId = useRecoilValue(roomIdState);
@@ -18,7 +20,6 @@ const MemberList = () => {
   const [rname, setRName] = useState<string>('');
   const [rcategory, setRCategory] = useState<string>('');
   const planetColor = getCategoryColor(rcategory);
-  const [visibleMemberId, setVisibleMemberId] = useState<number | null>(null);
 
   const getRoomName = async () => {
     const roomInfo: StudyRoomInfo = await getRoomInfo(roomId, memberId);
@@ -33,12 +34,6 @@ const MemberList = () => {
     setMemberList(members);
   };
 
-  const toggleMessageVisibility = (memberId: number) => {
-    setVisibleMemberId((prevVisibleMemberId) =>
-      prevVisibleMemberId === memberId ? null : memberId,
-    );
-  };
-
   useEffect(() => {
     getRoomName();
     getMembers();
@@ -50,24 +45,7 @@ const MemberList = () => {
         <IcRoomLogo />
         <h1>{rname}</h1>
       </StTitleWrapper>
-      <StMemberWrapper>
-        {memberList &&
-          memberList.map((member) => (
-            <StMember
-              className="member"
-              key={member.memberId}
-              onClick={() => toggleMessageVisibility(member.memberId)}
-            >
-              <IcChar />
-              {member.nickname}
-              {visibleMemberId === member.memberId && member.memberMessage && (
-                <StMessage>
-                  <p>{member.memberMessage}</p>
-                </StMessage>
-              )}
-            </StMember>
-          ))}
-      </StMemberWrapper>
+      {memberList && <MemberMessageList memberList={memberList} />}
     </StMembersWrapper>
   );
 };
@@ -76,42 +54,6 @@ export default MemberList;
 
 const StMembersWrapper = styled.div`
   margin: 2rem 2.2rem;
-`;
-
-const StMember = styled.div`
-  position: relative;
-
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
-  margin-top: 1rem;
-
-  color: ${({ theme }) => theme.colors.White};
-  ${({ theme }) => theme.fonts.Title5};
-
-  cursor: pointer;
-`;
-
-const StMessage = styled.div`
-  position: absolute;
-  top: 0rem;
-  left: 4rem;
-
-  z-index: 1;
-
-  width: fit-content;
-  height: 2rem;
-  padding: 1rem 2rem;
-
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 2rem;
-  text-align: center;
-
-  & > p {
-    color: ${({ theme }) => theme.colors.Learniverse_BG};
-    ${({ theme }) => theme.fonts.Body2};
-  }
 `;
 
 const StTitleWrapper = styled.div<{ $planetColor: string }>`
@@ -125,16 +67,9 @@ const StTitleWrapper = styled.div<{ $planetColor: string }>`
   }
 
   & > h1 {
-    margin-left: 1.5rem;
+    margin: 0 0 1rem 1.5rem;
+
     color: ${({ theme }) => theme.colors.White};
     ${({ theme }) => theme.fonts.Head1};
   }
-`;
-
-const StMemberWrapper = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-
-  margin-top: 2rem;
 `;

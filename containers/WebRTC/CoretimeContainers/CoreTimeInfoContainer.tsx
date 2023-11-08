@@ -51,7 +51,7 @@ const CoreTimeInfoContainer = ({
   useEffect(() => {
     setNickname();
   }, [curMemberId]);
-
+  console.log(curMembers);
   return (
     <StCoretimeInfoWrapper>
       <Member curMembers={curMembers} />
