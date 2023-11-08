@@ -44,13 +44,13 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
 
   const handleModify = async () => {
     coderef.updateOptions({ readOnly: false });
-    const text = coderef.getValue();
+    const text = coderef?.getModifiedEditor().getValue();
     const splitedText = text.split('\n');
     const lines = issueOpinionEndLine - issueOpinionStartLine + 1;
     splitedText.splice(issueOpinionStartLine - 1, lines, issueOpinionCode);
-    coderef.setValue(splitedText.join('\n'));
+    coderef?.getModifiedEditor().setValue(splitedText.join('\n'));
 
-    const changes: string = coderef.getValue();
+    const changes: string = coderef?.getModifiedEditor().getValue();
 
     setChange(changes);
 
