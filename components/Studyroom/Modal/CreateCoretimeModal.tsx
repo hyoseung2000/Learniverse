@@ -184,6 +184,12 @@ const StInputWrapper = styled.div`
 `;
 
 const StDate = styled.div`
+  & > .react-datepicker,
+  .react-datepicker__day,
+  .react-datepicker__day-name,
+  .react-datepicker__time-list-item {
+    font-size: 1rem !important;
+  }
   display: flex;
   align-items: center;
   justify-content: space-between;
