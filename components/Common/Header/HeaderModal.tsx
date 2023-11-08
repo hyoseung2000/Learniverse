@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useSetRecoilState } from 'recoil';
 import { styled } from 'styled-components';
 
+// import { logout } from '@/apis/login';
 import { memberIdState } from '@/recoil/atom';
 
 interface HeaderModalProps {
@@ -16,10 +17,12 @@ const HeaderModal = ({ isShowing }: HeaderModalProps) => {
   const handleProfile = () => {
     router.push('/profile');
   };
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setMemberId(0);
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    console.log('로그아웃');
+    // await logout();
     router.push('/');
   };
 

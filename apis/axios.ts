@@ -20,32 +20,62 @@ client.interceptors.request.use((config) => {
   return config;
 });
 
-// client.interceptors.response.use(
-//   function (res) {
-//     console.log('response', res);
-//     return res;
-//   },
-//   async (err) => {
-//     const {
-//       config,
-//       response: { status },
-//     } = err;
-//     if (status === 401) {
-//       if (err.response.data.message === '엑세스 토큰 만료') {
-//         const originalRequest = config;
+client.interceptors.response.use(
+  // eslint-disable-next-line func-names
+  function (res) {
+    return res;
+  },
+  async (err) => {
+    const { config, response } = err;
 
-//         // 새로운 엑세스 토큰 저장
-//         const { accessToken } = err.response.data.data;
-//         localStorage.setItem('accessToken', accessToken);
-//         originalRequest.headers.authorization = `Bearer ${accessToken}`;
-//         // 실패했던 요청 새로운 accessToken으로 재요청
-//         return axios(originalRequest);
-//       }
-//     }
-//     console.log('response error', err);
-//     return Promise.reject(err);
-//   },
-// );
+    // 엑세스 토큰 만료시
+    if (response.data.status === 401) {
+      if (response.data.message === 'Unauthorized') {
+        const originalRequest = config;
+
+        // 새로운 엑세스 토큰 저장
+        const data = null;
+        await client
+          .post(`/token/refresh`, data, {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+              Refresh: `${localStorage.getItem('refresh')}`,
+            },
+          })
+          .then((res) => {
+            try {
+              if (res.status === 200) {
+                console.log('토큰 재발급');
+                const accessToken = res.headers.Authorization;
+                console.log('new access 토큰 :', accessToken);
+                localStorage.setItem('accessToken', accessToken);
+                // config.headers!.Authorization = `Bearer ${accessToken}`;
+                originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+              }
+              return axios(originalRequest);
+            } catch (error) {
+              console.log('토큰 재발급 실패');
+              console.log(error);
+              throw error;
+            }
+          });
+      }
+      // 리프레시 만료시
+      if (
+        response.data.message ===
+        'Refresh 토큰이 만료되었습니다. 로그인이 필요합니다.'
+      ) {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        console.log('리프레시 만료');
+        window.location.href = '/';
+        return;
+      }
+    }
+    console.log('response error', err);
+  },
+);
 
 const media = axios.create({
   baseURL: process.env.NEXT_PUBLIC_MEDIA_IP,

@@ -5,7 +5,6 @@ import { client } from './axios';
 export const getLoginInfo = async (memberId: number): Promise<LoginInfo> => {
   try {
     const { data } = await client.get(`/member/first?memberId=${memberId}`);
-    console.log(data.data);
     return data.data;
   } catch (err) {
     console.error(err);
@@ -39,6 +38,23 @@ export const postInterests = async (memberId: number, roomIds: number[]) => {
 export const postLog = async (memberId: number) => {
   try {
     const { data } = await client.post(`/member/login`, memberId);
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
+export const logout = async () => {
+  try {
+    const input = null;
+    const token = localStorage.getItem('accessToken');
+    const { data } = await client.post(`/token/logout`, input, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return data;
   } catch (err) {
     console.error(err);
