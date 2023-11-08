@@ -18,7 +18,7 @@ const MemberList = () => {
   const [rname, setRName] = useState<string>('');
   const [rcategory, setRCategory] = useState<string>('');
   const planetColor = getCategoryColor(rcategory);
-  const [isMessageShowing, setIsMessageShowing] = useState(false);
+  const [visibleMemberId, setVisibleMemberId] = useState<number | null>(null);
 
   const getRoomName = async () => {
     const roomInfo: StudyRoomInfo = await getRoomInfo(roomId, memberId);
@@ -27,9 +27,16 @@ const MemberList = () => {
     setRName(roomName);
     setRCategory(roomCategory);
   };
+
   const getMembers = async () => {
     const members = await getRoomMembers(roomId);
     setMemberList(members);
+  };
+
+  const toggleMessageVisibility = (memberId: number) => {
+    setVisibleMemberId((prevVisibleMemberId) =>
+      prevVisibleMemberId === memberId ? null : memberId,
+    );
   };
 
   useEffect(() => {
@@ -46,10 +53,14 @@ const MemberList = () => {
       <StMemberWrapper>
         {memberList &&
           memberList.map((member) => (
-            <StMember className="member" key={member.memberId}>
+            <StMember
+              className="member"
+              key={member.memberId}
+              onClick={() => toggleMessageVisibility(member.memberId)}
+            >
               <IcChar />
               {member.nickname}
-              {member.memberMessage && (
+              {visibleMemberId === member.memberId && member.memberMessage && (
                 <StMessage>
                   <p>{member.memberMessage}</p>
                 </StMessage>
@@ -78,6 +89,8 @@ const StMember = styled.div`
 
   color: ${({ theme }) => theme.colors.White};
   ${({ theme }) => theme.fonts.Title5};
+
+  cursor: pointer;
 `;
 
 const StMessage = styled.div`
