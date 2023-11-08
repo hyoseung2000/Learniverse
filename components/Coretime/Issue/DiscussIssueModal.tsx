@@ -51,8 +51,8 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   const { discuss, isDiscussLoading } = useGetDiscussInfo(issueId);
 
   const getIssueData = async () => {
-    if (!isLoading) {
-      const { issueTitle, issueDescription, issueGitUrl, memberId } = issue!;
+    if (issue && !isLoading) {
+      const { issueTitle, issueDescription, issueGitUrl, memberId } = issue;
       if (!issueCode) {
         setIsCode(false);
       } else {
@@ -244,6 +244,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
               {commentList &&
                 commentList.map((comment) => (
                   <CommentCard
+                    modifyCode={changeCode}
                     coderef={modifyEditor!}
                     key={comment.opinionId}
                     commentInfo={comment}

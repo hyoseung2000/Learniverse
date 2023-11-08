@@ -15,12 +15,13 @@ import { MonacoDiffEditor } from '@monaco-editor/react';
 
 interface Props {
   commentInfo: DiscussInfo;
+  modifyCode: string;
   coderef: MonacoDiffEditor;
   writer: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
+const CommentCard = ({ commentInfo, coderef, modifyCode, writer }: Props) => {
   const {
     issueId,
     opinionId,
@@ -44,15 +45,14 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
 
   const handleModify = async () => {
     coderef.updateOptions({ readOnly: false });
-    const text = coderef.getValue();
+    const text = modifyCode;
+    console.log(text);
     const splitedText = text.split('\n');
     const lines = issueOpinionEndLine - issueOpinionStartLine + 1;
     splitedText.splice(issueOpinionStartLine - 1, lines, issueOpinionCode);
-    coderef.setValue(splitedText.join('\n'));
-
-    const changes: string = coderef.getValue();
-
-    setChange(changes);
+    console.log(splitedText);
+    setChange(splitedText?.join('\n'));
+    console.log(change);
 
     await modifyIssueDiscuss(modifyData!);
     await changeApplyState(opinionId);
@@ -77,23 +77,14 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
       <IcChar />
       <div>
         <h3>{memberNickname}</h3>
-        <p>
-          Line : {issueOpinionStartLine} - {issueOpinionEndLine}
-        </p>
+        {issueOpinionCode !== '' ? (
+          <p>
+            Line : {issueOpinionStartLine} - {issueOpinionEndLine}
+          </p>
+        ) : null}
         <p className="code">{issueOpinion}</p>
         <p>{issueOpinionCode}</p>
-        {/* <pre>
-          <code>{issueOpinion}</code>
-        </pre> */}
       </div>
-
-      {/* {cMemberId == writer ? (
-        <StButton $isPersist onClick={handleModify}>
-          수락
-        </StButton>
-      ) : (
-        <StButton $isPersist={false}>불가</StButton>
-      )} */}
       {cMemberId == writer ? (
         issueAccepted ? (
           <StButton $isPersist={false}>불가</StButton>
