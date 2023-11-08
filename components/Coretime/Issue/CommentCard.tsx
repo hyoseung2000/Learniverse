@@ -44,15 +44,19 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
 
   const handleModify = async () => {
     coderef.updateOptions({ readOnly: false });
-    const text = coderef?.getModifiedEditor().getValue();
-    const splitedText = text.split('\n');
+    const model = coderef?.getModel()?.modified;
+    console.log(model!);
+    const text = model?.getValue();
+    console.log('text', text!);
+    const splitedText = text?.split('\n');
     const lines = issueOpinionEndLine - issueOpinionStartLine + 1;
-    splitedText.splice(issueOpinionStartLine - 1, lines, issueOpinionCode);
-    coderef?.getModifiedEditor().setValue(splitedText.join('\n'));
+    splitedText?.splice(issueOpinionStartLine - 1, lines, issueOpinionCode);
+    const joinText = splitedText?.join('\n');
+    model?.setValue(joinText!);
 
-    const changes: string = coderef?.getModifiedEditor().getValue();
+    const changes = model?.getValue();
 
-    setChange(changes);
+    setChange(changes!);
 
     await modifyIssueDiscuss(modifyData!);
     await changeApplyState(opinionId);
@@ -77,9 +81,11 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
       <IcChar />
       <div>
         <h3>{memberNickname}</h3>
-        <p>
-          Line : {issueOpinionStartLine} - {issueOpinionEndLine}
-        </p>
+        {issueOpinionCode !== '' ? (
+          <p>
+            Line : {issueOpinionStartLine} - {issueOpinionEndLine}
+          </p>
+        ) : null}
         <p className="code">{issueOpinion}</p>
         <p>{issueOpinionCode}</p>
         {/* <pre>

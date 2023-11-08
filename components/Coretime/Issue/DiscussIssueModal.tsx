@@ -25,7 +25,6 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   const issueId = useRecoilValue(issueIdState);
   // const editorRef = useRef<MonacoDiffEditor>(null);
 
-  const [isComment, setIsComment] = useState(false);
   const [suggestCode, setSuggestCode] = useState<string>('');
   const [opinion, setOpinion] = useState<string>('');
 
@@ -100,7 +99,6 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
     const position = editor?.getSelection();
     setStart(position!.startLineNumber);
     setEnd(position!.endLineNumber);
-    setIsComment(true);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -110,7 +108,6 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
 
   const initData = () => {
     setOpinion('');
-    setIsComment(false);
     setStart(1);
     setEnd(1);
   };
@@ -183,24 +180,24 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                 />
               </div>
             </StCode>
-            {isComment && (
-              <StInputWrapper>
-                <StInput>
-                  <textarea
-                    placeholder="코멘트를 입력하세요"
-                    value={opinion}
-                    onChange={(e) => {
-                      setOpinion(e.target.value);
-                    }}
-                  />
-                  <div>
+
+            <StInputWrapper>
+              <StInput>
+                <textarea
+                  placeholder="코멘트를 입력하세요"
+                  value={opinion}
+                  onChange={(e) => {
+                    setOpinion(e.target.value);
+                  }}
+                />
+                {isCode ? (
+                  <CodeInput>
                     <div>
                       <p>Selected Line</p>
                       <p>
                         {start} - {end}
                       </p>
                     </div>
-
                     <CustomEditor
                       height="10rem"
                       width="95%"
@@ -209,7 +206,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                         setSuggestCode(value!);
                       }}
                       options={{
-                        // fontSize: 35,
+                        fontSize: 35,
                         // suggestFontSize: 200,
                         // codeLensFontSize: 10,
                         // suggestLineHeight: 30,
@@ -224,13 +221,13 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                         },
                       }}
                     />
-                  </div>
-                </StInput>
-                <button type="button" onClick={handleCreateComment}>
-                  입력
-                </button>
-              </StInputWrapper>
-            )}
+                  </CodeInput>
+                ) : null}
+              </StInput>
+              <button type="button" onClick={handleCreateComment}>
+                입력
+              </button>
+            </StInputWrapper>
           </StIssueWrapper>
           <StCommentWrapper>
             <StTitle>
@@ -456,3 +453,5 @@ const StInput = styled.div`
 `;
 
 const CustomEditor = styled(Editor)``;
+
+const CodeInput = styled.div``;
