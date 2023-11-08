@@ -18,10 +18,7 @@ const MemberList = () => {
   const [rname, setRName] = useState<string>('');
   const [rcategory, setRCategory] = useState<string>('');
   const planetColor = getCategoryColor(rcategory);
-  const [isShowing, setIsShowing] = useState(false);
-  const [message, setMessage] = useState('');
-  const [x, setX] = useState(0);
-  const [y, setY] = useState(0);
+  const [isMessageShowing, setIsMessageShowing] = useState(false);
 
   const getRoomName = async () => {
     const roomInfo: StudyRoomInfo = await getRoomInfo(roomId, memberId);
@@ -33,20 +30,6 @@ const MemberList = () => {
   const getMembers = async () => {
     const members = await getRoomMembers(roomId);
     setMemberList(members);
-  };
-  const handleMessage = (
-    xIndex: number,
-    yIndex: number,
-    memberMessage: string,
-  ) => {
-    setX(xIndex - 10);
-    setY(yIndex);
-    setMessage(memberMessage);
-    setIsShowing(true);
-    setTimeout(() => {
-      setIsShowing(false);
-      setMessage('');
-    }, 2000);
   };
 
   useEffect(() => {
@@ -65,23 +48,14 @@ const MemberList = () => {
           memberList.map((member) => (
             <StMember className="member" key={member.memberId}>
               <IcChar />
-              <button
-                type="button"
-                onClick={(event) => {
-                  const eventTarget = event.target as HTMLButtonElement;
-                  const position = eventTarget.getBoundingClientRect();
-                  handleMessage(position.x, position.y, member.memberMessage);
-                }}
-              >
-                {member.nickname}
-              </button>
+              {member.nickname}
+              {member.memberMessage && (
+                <StMessage>
+                  <p>{member.memberMessage}</p>
+                </StMessage>
+              )}
             </StMember>
           ))}
-        {isShowing && message && (
-          <StMessage x={x} y={y}>
-            <p>{message}</p>
-          </StMessage>
-        )}
       </StMemberWrapper>
     </StMembersWrapper>
   );
@@ -94,15 +68,36 @@ const StMembersWrapper = styled.div`
 `;
 
 const StMember = styled.div`
+  position: relative;
+
   display: flex;
   flex-direction: row;
   align-items: center;
 
   margin-top: 1rem;
 
-  & > button {
-    color: ${({ theme }) => theme.colors.White};
-    ${({ theme }) => theme.fonts.Title5};
+  color: ${({ theme }) => theme.colors.White};
+  ${({ theme }) => theme.fonts.Title5};
+`;
+
+const StMessage = styled.div`
+  position: absolute;
+  top: 0rem;
+  left: 4rem;
+
+  z-index: 1;
+
+  width: fit-content;
+  height: 2rem;
+  padding: 1rem 2rem;
+
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 2rem;
+  text-align: center;
+
+  & > p {
+    color: ${({ theme }) => theme.colors.Learniverse_BG};
+    ${({ theme }) => theme.fonts.Body2};
   }
 `;
 
@@ -129,27 +124,4 @@ const StMemberWrapper = styled.div`
   grid-template-rows: repeat(3, 1fr);
 
   margin-top: 2rem;
-`;
-
-const StMessage = styled.div<{ x: number; y: number }>`
-  width: fit-content;
-  height: 2rem;
-  z-index: 1000;
-
-  text-align: center;
-  align-items: center;
-
-  padding: 0 1rem;
-
-  & > p {
-    color: ${({ theme }) => theme.colors.Learniverse_BG};
-    ${({ theme }) => theme.fonts.Body4};
-  }
-
-  background-color: ${({ theme }) => theme.colors.White};
-  border-radius: 1rem;
-
-  position: absolute;
-  left: ${(props) => `${props.x}px`};
-  top: ${(props) => `${props.y} px`};
 `;
