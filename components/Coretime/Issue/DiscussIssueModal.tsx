@@ -4,7 +4,6 @@ import { styled } from 'styled-components';
 import { mutate } from 'swr';
 
 import { postDiscuss } from '@/apis/issue';
-import { StateDeleteBtn } from '@/components/Common/Button';
 import { SquareModal } from '@/components/Common/Modal';
 import useGetDiscussInfo from '@/hooks/StudyRooms/useGetDiscussInfo';
 import useGetIssueInfo from '@/hooks/StudyRooms/useGetIssueInfo';
@@ -82,6 +81,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
       return;
     }
     await postDiscuss(discussData!);
+    alert('이슈 디스커션이 등록되었습니다!');
     initData();
     mutate(`room/discussions?issueId=${issueId}`);
   };
@@ -122,8 +122,11 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
 
   useEffect(() => {
     getIssueData();
+  }, [issue]);
+
+  useEffect(() => {
     getDiscuss();
-  }, [issue, discuss]);
+  }, [discuss]);
 
   useEffect(() => {
     setDiscussData({
@@ -151,34 +154,30 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                 <p className="descrpt">{descrpt}</p>
                 <p>
                   🔗 깃허브 링크{' '}
-                  <StLink onClick={handleOpenGithub}>
-                    https://github.com/{giturl}
-                  </StLink>
+                  <StLink onClick={handleOpenGithub}>{giturl}</StLink>
                 </p>
               </StContent>
             </StIssue>
             <StCode $isCode={isCode} onClick={handleClick}>
-              <div>
-                <DiffEditor
-                  height="30rem"
-                  width="95%"
-                  language={language}
-                  original={code}
-                  modified={changeCode}
-                  options={{
-                    fontSize: 35,
-                    lineHeight: 20,
-                    // minimap: { enabled: false },
-                    readOnly: true,
-                    scrollbar: {
-                      vertical: 'auto',
-                      horizontal: 'auto',
-                    },
-                  }}
-                  // eslint-disable-next-line react/jsx-no-bind
-                  onMount={handleEditorDidMount}
-                />
-              </div>
+              <DiffEditor
+                height="30rem"
+                width="95%"
+                language={language}
+                original={code}
+                modified={changeCode}
+                options={{
+                  fontSize: 35,
+                  lineHeight: 20,
+                  // minimap: { enabled: false },
+                  readOnly: true,
+                  scrollbar: {
+                    vertical: 'auto',
+                    horizontal: 'auto',
+                  },
+                }}
+                // eslint-disable-next-line react/jsx-no-bind
+                onMount={handleEditorDidMount}
+              />
             </StCode>
 
             <StInputWrapper>
@@ -206,7 +205,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                         setSuggestCode(value!);
                       }}
                       options={{
-                        fontSize: 35,
+                        fontSize: 20,
                         // suggestFontSize: 200,
                         // codeLensFontSize: 10,
                         // suggestLineHeight: 30,
@@ -235,12 +234,12 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                 <p>의견</p>
                 <span>{commentList?.length}</span>
               </div>
-              <StateDeleteBtn btnName="창 닫기" handleClick={handleCancel} />
             </StTitle>
             <StComment>
               {commentList &&
                 commentList.map((comment) => (
                   <CommentCard
+                    modifyCode={changeCode}
                     coderef={modifyEditor!}
                     key={comment.opinionId}
                     commentInfo={comment}
@@ -388,6 +387,7 @@ const StContent = styled.div<{ $isCode: boolean }>`
 
 const StCode = styled.div<{ $isCode: boolean }>`
   display: ${({ $isCode }) => ($isCode ? 'block' : 'none')};
+  width: 100%;
 `;
 
 const StLink = styled.button`
@@ -399,6 +399,7 @@ const StInputWrapper = styled.div`
   margin-top: 1rem;
 
   display: flex;
+  width: 100%;
 
   & > button {
     margin-left: 1rem;
@@ -454,4 +455,6 @@ const StInput = styled.div`
 
 const CustomEditor = styled(Editor)``;
 
-const CodeInput = styled.div``;
+const CodeInput = styled.div`
+  width: 90%;
+`;

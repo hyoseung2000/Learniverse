@@ -15,12 +15,13 @@ import { MonacoDiffEditor } from '@monaco-editor/react';
 
 interface Props {
   commentInfo: DiscussInfo;
+  modifyCode: string;
   coderef: MonacoDiffEditor;
   writer: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
+const CommentCard = ({ commentInfo, coderef, modifyCode, writer }: Props) => {
   const {
     issueId,
     opinionId,
@@ -44,19 +45,14 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
 
   const handleModify = async () => {
     coderef.updateOptions({ readOnly: false });
-    const model = coderef?.getModel()?.modified;
-    console.log(model!);
-    const text = model?.getValue();
-    console.log('text', text!);
-    const splitedText = text?.split('\n');
+    const text = modifyCode;
+    console.log(text);
+    const splitedText = text.split('\n');
     const lines = issueOpinionEndLine - issueOpinionStartLine + 1;
-    splitedText?.splice(issueOpinionStartLine - 1, lines, issueOpinionCode);
-    const joinText = splitedText?.join('\n');
-    model?.setValue(joinText!);
-
-    const changes = model?.getValue();
-
-    setChange(changes!);
+    splitedText.splice(issueOpinionStartLine - 1, lines, issueOpinionCode);
+    console.log(splitedText);
+    setChange(splitedText?.join('\n'));
+    console.log(change);
 
     await modifyIssueDiscuss(modifyData!);
     await changeApplyState(opinionId);
@@ -88,18 +84,7 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
         ) : null}
         <p className="code">{issueOpinion}</p>
         <p>{issueOpinionCode}</p>
-        {/* <pre>
-          <code>{issueOpinion}</code>
-        </pre> */}
       </div>
-
-      {/* {cMemberId == writer ? (
-        <StButton $isPersist onClick={handleModify}>
-          수락
-        </StButton>
-      ) : (
-        <StButton $isPersist={false}>불가</StButton>
-      )} */}
       {cMemberId == writer ? (
         issueAccepted ? (
           <StButton $isPersist={false}>불가</StButton>
