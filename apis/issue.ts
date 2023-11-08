@@ -74,11 +74,22 @@ export const deleteIssue = async (issueId: number) => {
   }
 };
 
-export const ModifyIssueDiscuss = async (
+export const modifyIssueDiscuss = async (
   postDiscussData: ModifyDiscussInfo,
 ) => {
   try {
     const { data } = await client.post(`/room/issue/update`, postDiscussData);
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.error(err);
+    return err;
+  }
+};
+
+export const changeApplyState = async (opinionId: number) => {
+  try {
+    const { data } = await client.post(`/room/discussion/apply`, { opinionId });
     console.log(data);
     return data;
   } catch (err) {

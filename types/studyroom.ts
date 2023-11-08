@@ -133,6 +133,7 @@ export interface IssueListInfo {
 export interface IssueGetInfo {
   issue: IssueInfo;
   gitCode: string;
+  gitCodeModify: string;
 }
 
 export interface IssueInfo {

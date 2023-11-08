@@ -273,7 +273,7 @@ const StHashtags = styled.ol`
   overflow: hidden;
 
   width: 100%;
-  height: fit-content;
+  height: 2rem;
   max-width: 100%;
   margin: 0.6rem 0;
 

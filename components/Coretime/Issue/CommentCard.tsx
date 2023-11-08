@@ -1,14 +1,14 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable eqeqeq */
 // import { Range } from 'ace-builds';
 import { useEffect, useState } from 'react';
-// import AceEditor from 'react-ace';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 import { mutate } from 'swr';
 
-import { ModifyIssueDiscuss } from '@/apis/issue';
+import { changeApplyState, modifyIssueDiscuss } from '@/apis/issue';
 import { IcChar } from '@/public/assets/icons';
-import { roomIdState } from '@/recoil/atom';
+import { memberIdState, roomIdState } from '@/recoil/atom';
 import { DiscussInfo, ModifyDiscussInfo } from '@/types/studyroom';
 import { getNickName } from '@/utils/getNicknames';
 import { MonacoDiffEditor } from '@monaco-editor/react';
@@ -23,6 +23,7 @@ interface Props {
 const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
   const {
     issueId,
+    opinionId,
     memberId,
     issueOpinion,
     issueOpinionStartLine,
@@ -30,10 +31,11 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
     issueOpinionCode,
     issueAccepted,
   } = commentInfo;
-  // const cMemberId = useRecoilValue(memberIdState);
+  const cMemberId = useRecoilValue(memberIdState);
   const roomId = useRecoilValue(roomIdState);
   const [memberNickname, setMemberNickname] = useState('');
   const [modifyData, setModifyData] = useState<ModifyDiscussInfo>();
+  const [change, setChange] = useState<string>('');
 
   const setNickname = async (): Promise<void> => {
     const nickname = await getNickName(memberId);
@@ -41,49 +43,19 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
   };
 
   const handleModify = async () => {
-    // if (coderef) {
-    //   console.log(coderef.getValue());
-    //   const modifyRange = new Range(
-    //     issueOpinionStartLine,
-    //     0,
-    //     issueOpinionEndLine,
-    //     Infinity,
-    //   );
-    //   coderef.session.replace(modifyRange, issueOpinionCode);
-    //   const changes = coderef.getValue();
-    // const modifyRange = new Range(1, 0, 2, Infinity);
-    // coderef.executeEdits('new', [
-    //   { identifier: 'new', range: modifyRange, text: 'import axios' },
-    // ]);
-
     coderef.updateOptions({ readOnly: false });
     const text = coderef.getValue();
     const splitedText = text.split('\n');
     const lines = issueOpinionEndLine - issueOpinionStartLine + 1;
-    console.log(issueOpinionCode);
     splitedText.splice(issueOpinionStartLine - 1, lines, issueOpinionCode);
-
-    console.log('split', splitedText);
-
-    // const textToInsert = '// test'; // text to be inserted
-
-    // splitedText[0] = [textToInsert];
-
-    // coderef.setValue(splitedText.join('\n'));
     coderef.setValue(splitedText.join('\n'));
 
     const changes: string = coderef.getValue();
 
-    console.log('수정', changes);
+    setChange(changes);
 
-    setModifyData({
-      issueId,
-      roomId,
-      gitCodeModify: changes,
-    });
-
-    console.log(modifyData);
-    await ModifyIssueDiscuss(modifyData!);
+    await modifyIssueDiscuss(modifyData!);
+    await changeApplyState(opinionId);
     mutate(`/room/issue?issueId=${issueId}`);
     mutate(`room/discussions?issueId=${issueId}`);
   };
@@ -91,6 +63,14 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
   useEffect(() => {
     setNickname();
   }, []);
+
+  useEffect(() => {
+    setModifyData({
+      issueId,
+      roomId,
+      gitCodeModify: change,
+    });
+  }, [change]);
 
   return (
     <StComment>
@@ -114,13 +94,15 @@ const CommentCard = ({ commentInfo, coderef, writer }: Props) => {
       ) : (
         <StButton $isPersist={false}>불가</StButton>
       )} */}
-      {!issueAccepted ? (
-        <StButton $isPersist onClick={handleModify}>
-          수락
-        </StButton>
-      ) : (
-        <StButton $isPersist={false}>불가</StButton>
-      )}
+      {cMemberId == writer ? (
+        issueAccepted ? (
+          <StButton $isPersist={false}>불가</StButton>
+        ) : (
+          <StButton $isPersist onClick={handleModify}>
+            수락
+          </StButton>
+        )
+      ) : null}
     </StComment>
   );
 };

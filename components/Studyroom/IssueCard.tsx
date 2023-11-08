@@ -20,20 +20,19 @@ const IssueCard = ({ core, handleDiscuss, issueInfo }: Props) => {
   const { issueId, issueTitle, issueDescription, issueOpen } = issueInfo;
   const setIssueID = useSetRecoilState(issueIdState);
 
+  const handleClick = () => {
+    setIssueID(issueId);
+    if (issueOpen) {
+      handleDiscuss();
+    }
+  };
+
   return (
     <>
-      <StIssueWrapper
-        $issueOpen={issueOpen}
-        onClick={() => {
-          setIssueID(issueId);
-          if (issueOpen) {
-            handleDiscuss();
-          }
-        }}
-      >
+      <StIssueWrapper $issueOpen={issueOpen}>
         <div>
-          <IcIssueLogo />
-          <StContent $core={core}>
+          <IcIssueLogo onClick={handleClick} />
+          <StContent $core={core} onClick={handleClick}>
             <h3>{issueTitle}</h3>
             <p>{issueDescription}</p>
           </StContent>
@@ -87,6 +86,7 @@ const StIssueWrapper = styled.div<{ $issueOpen: boolean }>`
 `;
 
 const StContent = styled.div<{ $core: boolean }>`
+  max-width: 70%;
   & > h3 {
     margin-left: 2.1rem;
     margin-top: 0.4rem;
@@ -97,6 +97,12 @@ const StContent = styled.div<{ $core: boolean }>`
   & > p {
     margin-left: 2.1rem;
     margin-top: 0.4rem;
+
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 
     color: ${({ $core }) => ($core ? '#1E1F3B' : '#FFFFFF')};
     ${({ theme }) => theme.fonts.Body3};

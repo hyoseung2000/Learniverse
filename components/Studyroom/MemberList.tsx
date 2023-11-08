@@ -34,7 +34,13 @@ const MemberList = () => {
     const members = await getRoomMembers(roomId);
     setMemberList(members);
   };
-  const handleMessage = (memberMessage: string) => {
+  const handleMessage = (
+    xIndex: number,
+    yIndex: number,
+    memberMessage: string,
+  ) => {
+    setX(xIndex - 10);
+    setY(yIndex);
     setMessage(memberMessage);
     setIsShowing(true);
     setTimeout(() => {
@@ -64,9 +70,7 @@ const MemberList = () => {
                 onClick={(event) => {
                   const eventTarget = event.target as HTMLButtonElement;
                   const position = eventTarget.getBoundingClientRect();
-                  setX(position.x - 10);
-                  setY(position.y);
-                  handleMessage(member.memberMessage);
+                  handleMessage(position.x, position.y, member.memberMessage);
                 }}
               >
                 {member.nickname}
@@ -145,7 +149,7 @@ const StMessage = styled.div<{ x: number; y: number }>`
   background-color: ${({ theme }) => theme.colors.White};
   border-radius: 1rem;
 
-  position: fixed;
+  position: absolute;
   left: ${(props) => `${props.x}px`};
   top: ${(props) => `${props.y} px`};
 `;

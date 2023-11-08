@@ -1,11 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 import { mutate } from 'swr';
 
-import { getDiscussions, getIssueInfo, postDiscuss } from '@/apis/issue';
+import { postDiscuss } from '@/apis/issue';
 import { StateDeleteBtn } from '@/components/Common/Button';
 import { SquareModal } from '@/components/Common/Modal';
 import useGetDiscussInfo from '@/hooks/StudyRooms/useGetDiscussInfo';
@@ -13,12 +11,7 @@ import useGetIssueInfo from '@/hooks/StudyRooms/useGetIssueInfo';
 import { IcDiscussLogo } from '@/public/assets/icons';
 import { issueIdState, memberIdState } from '@/recoil/atom';
 import { DiscussInfo, PostDiscussInfo } from '@/types/studyroom';
-import {
-  DiffEditor,
-  Editor,
-  MonacoDiffEditor,
-  useMonaco,
-} from '@monaco-editor/react';
+import { DiffEditor, Editor, MonacoDiffEditor } from '@monaco-editor/react';
 
 import CommentCard from './CommentCard';
 
@@ -30,15 +23,13 @@ interface Props {
 const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   const cMemberId = useRecoilValue(memberIdState);
   const issueId = useRecoilValue(issueIdState);
-  // const codeRef = useRef<AceEditor>(null);
-  // const codeRef = useRef<MonacoDiffEditor>(null);
-  const editorRef = useRef<MonacoDiffEditor>(null);
-  // const editor = useRef<undefined | monaco.editor.IStandaloneCodeEditor>();
+  // const editorRef = useRef<MonacoDiffEditor>(null);
 
   const [isComment, setIsComment] = useState(false);
   const [suggestCode, setSuggestCode] = useState<string>('');
   const [opinion, setOpinion] = useState<string>('');
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [language, setLanguage] = useState('typescript');
   const [code, setCode] = useState<string>('');
   const [changeCode, setChangeCode] = useState<string>('');
@@ -49,23 +40,26 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   const [commentList, setCommentList] = useState<DiscussInfo[]>();
   const [discussData, setDiscussData] = useState<PostDiscussInfo>();
 
-  const [editor, setEditor] = useState<MonacoDiffEditor>(null);
-  const [modifyEditor, setmodifyEditor] = useState<MonacoDiffEditor>(null);
+  const [editor, setEditor] = useState<MonacoDiffEditor>();
+  const [modifyEditor, setmodifyEditor] = useState<MonacoDiffEditor>();
   const [start, setStart] = useState<number>(1);
   const [end, setEnd] = useState<number>(1);
+  const [isCode, setIsCode] = useState<boolean>(true);
 
-  const { issue, issueCode, isLoading } = useGetIssueInfo(issueId);
+  const { issue, issueCode, gitCodeModify, isLoading } =
+    useGetIssueInfo(issueId);
   const { discuss, isDiscussLoading } = useGetDiscussInfo(issueId);
 
   const getIssueData = async () => {
-    // const issueInfo = await getIssueInfo(issueId);
-    // const { issue, gitCode } = issueInfo!;
     if (!isLoading) {
       const { issueTitle, issueDescription, issueGitUrl, memberId } = issue!;
-      // const { issueTitle, issueDescription, issueGitUrl, memberId } = issue || {};
-      // setCode(issueCode!);
-      setCode(issueCode!);
-      setChangeCode(issueCode!);
+      if (!issueCode) {
+        setIsCode(false);
+      } else {
+        setIsCode(true);
+        setCode(issueCode!);
+        setChangeCode(gitCodeModify!);
+      }
       setTitle(issueTitle!);
       setDescrpt(issueDescription!);
       setGiturl(issueGitUrl!);
@@ -74,11 +68,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   };
 
   const getDiscuss = async () => {
-    // const discussInfo = await getDiscussions(issueId);
-    // console.log(discussInfo);
-    // setCommentList(discussInfo);
     if (!isDiscussLoading) {
-      console.log(discuss);
       setCommentList(discuss);
     }
   };
@@ -87,20 +77,11 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
     window.open(`https://github.com/${giturl}`);
   };
 
-  const handleCreateInput = () => {
-    // if (codeRef.current) {
-    //   const { editor } = codeRef.current;
-    //   const line = editor.getSelectionRange().start.row;
-    //   const range = editor.getSelectionRange();
-    //   const getSelectedText = editor.session.getTextRange(range);
-    //   console.log(line, range, getSelectedText);
-    //   setIsComment(true);
-    //   setIndex(line);
-    //   changeData();
-    // }
-  };
-
   const handleCreateComment = async () => {
+    if (!opinion) {
+      alert('코멘트는 필수 입력사항 입니다.');
+      return;
+    }
     await postDiscuss(discussData!);
     initData();
     mutate(`room/discussions?issueId=${issueId}`);
@@ -112,42 +93,27 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
     setEditor(original);
     const modify = e.getModifiedEditor();
     setmodifyEditor(modify);
-    // console.log('model', e.getModel());
-    // console.log('modify', e.getModifiedEditor());
-    // console.log('original', original);
-    // console.log(editorRef.current.getSelection());
-    // console.log(editor.current.getSelection());
   };
-
-  const monaco = useMonaco();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleClick = async () => {
-    editorRef.current = editor;
-    const position = editor.getSelection();
-    // console.log('position', editor.getvalue());
-    setStart(position.startLineNumber);
-    setEnd(position.endLineNumber - 1);
+    const position = editor?.getSelection();
+    setStart(position!.startLineNumber);
+    setEnd(position!.endLineNumber);
     setIsComment(true);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleInput = (value: any) => {
-    setSuggestCode(value);
-    console.log(value);
-  };
+  // const handleInput = (value: any) => {
+  //   setSuggestCode(value);
+  // };
 
   const initData = () => {
+    setOpinion('');
     setIsComment(false);
     setStart(1);
     setEnd(1);
   };
-
-  useEffect(() => {
-    if (monaco) {
-      console.log('here is the monaco instance:', monaco);
-    }
-  }, [monaco]);
 
   useEffect(() => {
     if (isShowing) {
@@ -155,11 +121,12 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
       getIssueData();
       getDiscuss();
     }
-  }, [isShowing, discuss]);
+  }, [isShowing]);
 
   useEffect(() => {
-    initData();
-  }, []);
+    getIssueData();
+    getDiscuss();
+  }, [issue, discuss]);
 
   useEffect(() => {
     setDiscussData({
@@ -182,9 +149,9 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
           <StIssueWrapper>
             <StIssue>
               <IcDiscussLogo />
-              <StContent>
+              <StContent $isCode={isCode}>
                 <h3>{title}</h3>
-                <p>{descrpt}</p>
+                <p className="descrpt">{descrpt}</p>
                 <p>
                   🔗 깃허브 링크{' '}
                   <StLink onClick={handleOpenGithub}>
@@ -193,28 +160,8 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                 </p>
               </StContent>
             </StIssue>
-            <StCode onClick={handleClick}>
+            <StCode $isCode={isCode} onClick={handleClick}>
               <div>
-                {/* <AceEditor
-                  ref={codeRef}
-                  className="github code"
-                  setOptions={{ useWorker: false }}
-                  placeholder="this is code editor"
-                  mode="javascript"
-                  theme="tomorrow"
-                  name="codeInput"
-                  height="40rem"
-                  width="100%"
-                  fontSize={30}
-                  showPrintMargin
-                  showGutter
-                  highlightActiveLine
-                  readOnly
-                  value={code}
-                  onCursorChange={() => {
-                    handleCreateInput();
-                  }}
-                /> */}
                 <DiffEditor
                   height="30rem"
                   width="95%"
@@ -254,19 +201,26 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                       </p>
                     </div>
 
-                    <Editor
-                      height="5rem"
+                    <CustomEditor
+                      height="10rem"
                       width="95%"
-                      defaultValue="// 제안할 코드를 입력하세요"
                       language={language}
-                      onChange={handleInput}
+                      onChange={(value) => {
+                        setSuggestCode(value!);
+                      }}
                       options={{
-                        fontSize: 35,
-                        lineHeight: 30,
+                        // fontSize: 35,
+                        // suggestFontSize: 200,
+                        // codeLensFontSize: 10,
+                        // suggestLineHeight: 30,
+                        // lineHeight: 30,
                         minimap: { enabled: false },
                         scrollbar: {
                           vertical: 'auto',
                           horizontal: 'auto',
+                        },
+                        inlineSuggest: {
+                          enabled: false,
                         },
                       }}
                     />
@@ -290,7 +244,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
               {commentList &&
                 commentList.map((comment) => (
                   <CommentCard
-                    coderef={modifyEditor}
+                    coderef={modifyEditor!}
                     key={comment.opinionId}
                     commentInfo={comment}
                     writer={writer}
@@ -371,7 +325,8 @@ const StTitle = styled.div`
 `;
 
 const StComment = styled.div`
-  height: 28rem;
+  height: 80%;
+  width: 90%;
 
   overflow-y: scroll;
   &::-webkit-scrollbar {
@@ -396,10 +351,11 @@ const StIssue = styled.div`
   }
 `;
 
-const StContent = styled.div`
+const StContent = styled.div<{ $isCode: boolean }>`
   display: flex;
   flex-direction: column;
   max-width: 90%;
+  width: 90%;
 
   & > h3 {
     margin-left: 2.1rem;
@@ -407,6 +363,21 @@ const StContent = styled.div`
 
     color: ${({ theme }) => theme.colors.Learniverse_BG};
     ${({ theme }) => theme.fonts.Title5};
+  }
+  & > .descrpt {
+    align-items: center;
+    margin-left: 2.1rem;
+    margin-top: 0.4rem;
+
+    height: fit-content;
+
+    max-height: ${({ $isCode }) => ($isCode ? '5rem' : '30rem')};
+    overflow-y: scroll;
+
+    background-color: ${({ theme }) => theme.colors.LightGray2};
+
+    color: ${({ theme }) => theme.colors.Learniverse_BG};
+    ${({ theme }) => theme.fonts.Body3};
   }
   & > p {
     align-items: center;
@@ -418,7 +389,9 @@ const StContent = styled.div`
   }
 `;
 
-const StCode = styled.div``;
+const StCode = styled.div<{ $isCode: boolean }>`
+  display: ${({ $isCode }) => ($isCode ? 'block' : 'none')};
+`;
 
 const StLink = styled.button`
   ${({ theme }) => theme.fonts.Body5};
@@ -469,6 +442,10 @@ const StInput = styled.div`
 
   & > div {
     display: flex;
+    & > .monaco-editor .inputarea,
+    textarea {
+      font-size: 100rem !important;
+    }
     & > div {
       margin-right: 1rem;
 
@@ -477,3 +454,5 @@ const StInput = styled.div`
     }
   }
 `;
+
+const CustomEditor = styled(Editor)``;

@@ -45,7 +45,6 @@ const CreateIssueModal = ({ isShowing, handleCancel }: Props) => {
       alert('이슈명, 내용, 레포지토리 링크 입력은 필수입니다.');
       return;
     }
-
     await createIssue(issueInfo!);
     mutate(`/room/issues?roomId=${roomId}`);
     handleCancel();

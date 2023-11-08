@@ -10,8 +10,6 @@ const useGetIssueList = (roomId: number) => {
     mainGetFetcher,
   );
 
-  console.log(data?.data?.issues);
-
   return {
     issueList: data?.data?.issues,
     isLoading,
