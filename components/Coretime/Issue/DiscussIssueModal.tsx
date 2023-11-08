@@ -244,6 +244,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
               {commentList &&
                 commentList.map((comment) => (
                   <CommentCard
+                    modifyCode={changeCode}
                     coderef={modifyEditor!}
                     key={comment.opinionId}
                     commentInfo={comment}

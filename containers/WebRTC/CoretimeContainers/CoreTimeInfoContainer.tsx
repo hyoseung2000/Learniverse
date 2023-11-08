@@ -27,6 +27,7 @@ const CoreTimeInfoContainer = ({
   exit,
 }: CoreTimeInfoContainerProps) => {
   const curMemberId = useRecoilValue(memberIdState);
+  const [uniqueMembers, setUniqueMembers] = useState<RoomPeerInfo[]>([]);
   const [curNickname, setCurNickname] = useState('');
   const [chatting, setChatting, handleSendChatting] = useChatHandler(
     curSocket!,
@@ -51,10 +52,19 @@ const CoreTimeInfoContainer = ({
   useEffect(() => {
     setNickname();
   }, [curMemberId]);
-  console.log(curMembers);
+
+  useEffect(() => {
+    const unique = curMembers.filter(
+      (member, index, self) =>
+        index === self.findIndex((m) => m.memberId === member.memberId),
+    );
+
+    setUniqueMembers(unique);
+  }, [curMembers]);
+
   return (
     <StCoretimeInfoWrapper>
-      <Member curMembers={curMembers} />
+      <Member curMembers={uniqueMembers} />
       <StChattingWrapper>
         <Chatting curNickname={curNickname} chattingList={chattingList} />
         <StChatInputWrapper>

@@ -12,11 +12,6 @@ interface MemberMessageListProps {
 const MemberMessageList = ({ memberList }: MemberMessageListProps) => {
   const [visibleMemberId, setVisibleMemberId] = useState<number | null>(null);
 
-  const uniqueMemberList = memberList.filter(
-    (member, index, self) =>
-      index === self.findIndex((m) => m.memberId === member.memberId),
-  );
-
   const toggleMessageVisibility = (memberid: number) => {
     setVisibleMemberId((prevVisibleMemberId) =>
       prevVisibleMemberId === memberid ? null : memberid,
@@ -25,8 +20,8 @@ const MemberMessageList = ({ memberList }: MemberMessageListProps) => {
 
   return (
     <StMemberWrapper>
-      {uniqueMemberList &&
-        uniqueMemberList.map((member) => (
+      {memberList &&
+        memberList.map((member) => (
           <StMember
             className="member"
             key={member.memberId}
