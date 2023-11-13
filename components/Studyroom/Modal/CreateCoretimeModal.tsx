@@ -51,6 +51,7 @@ const CreateCoretimeModal = ({ isShowing, handleCancel }: Props) => {
         };
         console.log('captureTimeData', captureTimeData);
         await createCaptureTime(captureTimeData);
+        alert('코어타임이 생성되었습니다.');
         mutate(`/room/core/list?roomId=${roomID}`);
       }
       handleCancel();

@@ -45,9 +45,17 @@ const CreateIssueModal = ({ isShowing, handleCancel }: Props) => {
       alert('이슈명, 내용, 레포지토리 링크 입력은 필수입니다.');
       return;
     }
-    await createIssue(issueInfo!);
-    mutate(`/room/issues?roomId=${roomId}`);
-    handleCancel();
+    const data = await createIssue(issueInfo!);
+    // eslint-disable-next-line eqeqeq
+    if (data == 400) {
+      alert(
+        '입력된 레포지토리 주소가 존재하지 않거나, 접근 권한이 없습니다. 레포지토리를 Public 상태로 바꿔주세요.',
+      );
+    } else {
+      alert('이슈가 생성되었습니다.');
+      mutate(`/room/issues?roomId=${roomId}`);
+      handleCancel();
+    }
   };
 
   useEffect(() => {

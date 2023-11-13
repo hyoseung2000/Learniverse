@@ -4,7 +4,6 @@ import { styled } from 'styled-components';
 import { mutate } from 'swr';
 
 import { postDiscuss } from '@/apis/issue';
-import { StateDeleteBtn } from '@/components/Common/Button';
 import { SquareModal } from '@/components/Common/Modal';
 import useGetDiscussInfo from '@/hooks/StudyRooms/useGetDiscussInfo';
 import useGetIssueInfo from '@/hooks/StudyRooms/useGetIssueInfo';
@@ -25,7 +24,6 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   const issueId = useRecoilValue(issueIdState);
   // const editorRef = useRef<MonacoDiffEditor>(null);
 
-  const [isComment, setIsComment] = useState(false);
   const [suggestCode, setSuggestCode] = useState<string>('');
   const [opinion, setOpinion] = useState<string>('');
 
@@ -83,6 +81,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
       return;
     }
     await postDiscuss(discussData!);
+    alert('이슈 디스커션이 등록되었습니다!');
     initData();
     mutate(`room/discussions?issueId=${issueId}`);
   };
@@ -100,7 +99,6 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
     const position = editor?.getSelection();
     setStart(position!.startLineNumber);
     setEnd(position!.endLineNumber);
-    setIsComment(true);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -110,7 +108,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
 
   const initData = () => {
     setOpinion('');
-    setIsComment(false);
+    setSuggestCode('');
     setStart(1);
     setEnd(1);
   };
@@ -125,8 +123,11 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
 
   useEffect(() => {
     getIssueData();
+  }, [issue]);
+
+  useEffect(() => {
     getDiscuss();
-  }, [issue, discuss]);
+  }, [discuss]);
 
   useEffect(() => {
     setDiscussData({
@@ -154,66 +155,65 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                 <p className="descrpt">{descrpt}</p>
                 <p>
                   🔗 깃허브 링크{' '}
-                  <StLink onClick={handleOpenGithub}>
-                    https://github.com/{giturl}
-                  </StLink>
+                  <StLink onClick={handleOpenGithub}>{giturl}</StLink>
                 </p>
               </StContent>
             </StIssue>
             <StCode $isCode={isCode} onClick={handleClick}>
-              <div>
-                <DiffEditor
-                  height="30rem"
-                  width="95%"
-                  language={language}
-                  original={code}
-                  modified={changeCode}
-                  options={{
-                    fontSize: 35,
-                    lineHeight: 20,
-                    // minimap: { enabled: false },
-                    readOnly: true,
-                    scrollbar: {
-                      vertical: 'auto',
-                      horizontal: 'auto',
-                    },
-                  }}
-                  // eslint-disable-next-line react/jsx-no-bind
-                  onMount={handleEditorDidMount}
-                />
-              </div>
+              <DiffEditor
+                height="30rem"
+                width="95%"
+                language={language}
+                original={code}
+                modified={changeCode}
+                options={{
+                  fontSize: 35,
+                  lineHeight: 20,
+                  // minimap: { enabled: false },
+                  readOnly: true,
+                  scrollbar: {
+                    vertical: 'auto',
+                    horizontal: 'auto',
+                  },
+                }}
+                // eslint-disable-next-line react/jsx-no-bind
+                onMount={handleEditorDidMount}
+              />
             </StCode>
-            {isComment && (
-              <StInputWrapper>
-                <StInput>
-                  <textarea
-                    placeholder="코멘트를 입력하세요"
-                    value={opinion}
-                    onChange={(e) => {
-                      setOpinion(e.target.value);
-                    }}
-                  />
-                  <div>
+
+            <StInputWrapper>
+              <StInput $isCode={isCode}>
+                <textarea
+                  placeholder="코멘트를 입력하세요"
+                  value={opinion}
+                  onChange={(e) => {
+                    setOpinion(e.target.value);
+                  }}
+                />
+                {isCode ? (
+                  <CodeInput>
                     <div>
                       <p>Selected Line</p>
                       <p>
                         {start} - {end}
                       </p>
                     </div>
-
                     <CustomEditor
-                      height="10rem"
+                      height="5rem"
                       width="95%"
+                      defaultValue="//test"
                       language={language}
                       onChange={(value) => {
                         setSuggestCode(value!);
                       }}
                       options={{
-                        // fontSize: 35,
-                        // suggestFontSize: 200,
-                        // codeLensFontSize: 10,
+                        snippetSuggestions: 'none',
+                        screenReaderAnnounceInlineSuggestion: false,
+                        fontSize: 30,
+                        suggestFontSize: 400,
+                        // // codeLensFontSize: 400,
                         // suggestLineHeight: 30,
-                        // lineHeight: 30,
+                        // lineHeight: 20,
                         minimap: { enabled: false },
                         scrollbar: {
                           vertical: 'auto',
@@ -222,15 +222,16 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                         inlineSuggest: {
                           enabled: false,
                         },
+                        codeLens: false,
                       }}
                     />
-                  </div>
-                </StInput>
-                <button type="button" onClick={handleCreateComment}>
-                  입력
-                </button>
-              </StInputWrapper>
-            )}
+                  </CodeInput>
+                ) : null}
+              </StInput>
+              <button type="button" onClick={handleCreateComment}>
+                입력
+              </button>
+            </StInputWrapper>
           </StIssueWrapper>
           <StCommentWrapper>
             <StTitle>
@@ -238,7 +239,6 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                 <p>의견</p>
                 <span>{commentList?.length}</span>
               </div>
-              <StateDeleteBtn btnName="창 닫기" handleClick={handleCancel} />
             </StTitle>
             <StComment>
               {commentList &&
@@ -277,13 +277,13 @@ const StIssueWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 80%;
-  flex-wrap: wrap;
 
   padding: 1.5rem 2.4rem 2.4rem 3.4rem;
   box-sizing: border-box;
 
   border-right: 0.1rem solid ${({ theme }) => theme.colors.Learniverse_BG};
 `;
+
 const StCommentWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -338,17 +338,13 @@ const StComment = styled.div`
 const StIssue = styled.div`
   display: flex;
   align-items: center;
+  height: fit-content;
 
   margin-bottom: 1.4rem;
 
   & > div {
     display: flex;
     margin-top: 1rem;
-  }
-
-  overflow-y: scroll;
-  &::-webkit-scrollbar {
-    display: none;
   }
 `;
 
@@ -392,6 +388,7 @@ const StContent = styled.div<{ $isCode: boolean }>`
 
 const StCode = styled.div<{ $isCode: boolean }>`
   display: ${({ $isCode }) => ($isCode ? 'block' : 'none')};
+  width: 100%;
 `;
 
 const StLink = styled.button`
@@ -400,9 +397,16 @@ const StLink = styled.button`
 `;
 
 const StInputWrapper = styled.div`
+  .view-overlays,
+  .current-line,
+  .view-overlays > div {
+    font-size: 100rem !important;
+  }
+
   margin-top: 1rem;
 
   display: flex;
+  width: 100%;
 
   & > button {
     margin-left: 1rem;
@@ -415,7 +419,12 @@ const StInputWrapper = styled.div`
   }
 `;
 
-const StInput = styled.div`
+const StInput = styled.div<{ $isCode: boolean }>`
+  .view-overlays,
+  .current-line,
+  .view-overlays > div {
+    font-size: 100rem !important;
+  }
   display: flex;
   flex-direction: column;
 
@@ -427,7 +436,7 @@ const StInput = styled.div`
   align-items: center;
   justify-content: space-between;
 
-  border: 0.2rem solid ${({ theme }) => theme.colors.Learniverse_BG};
+  border: ${({ $isCode }) => ($isCode ? '0.2rem solid #000000' : '')};
   border-radius: 1rem;
 
   & > textarea {
@@ -443,17 +452,43 @@ const StInput = styled.div`
 
   & > div {
     display: flex;
-    & > .monaco-editor .inputarea,
     textarea {
       font-size: 100rem !important;
     }
     & > div {
       margin-right: 1rem;
 
-      ${({ theme }) => theme.fonts.Title5};
+      ${({ theme }) => theme.fonts.Body6};
       color: ${({ theme }) => theme.colors.Purple4};
     }
   }
 `;
 
-const CustomEditor = styled(Editor)``;
+const CustomEditor = styled(Editor)`
+  .view-overlays,
+  .current-line,
+  .view-overlays > div {
+    font-size: 100rem !important;
+  }
+`;
+
+const CodeInput = styled.div`
+  display: flex;
+  height: 90%;
+  width: 90%;
+
+  /* & > .monaco-editor .view-overlays .current-line {
+    font-size: 10rem !important;
+  }
+
+  & > .monaco-editor .view-overlays,
+  .monaco-editor .view-overlays > div {
+    font-size: 10rem !important;
+  } */
+
+  .view-overlays,
+  .current-line,
+  .view-overlays > div {
+    font-size: 100rem !important;
+  }
+`;

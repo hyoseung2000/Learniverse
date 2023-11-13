@@ -11,11 +11,11 @@ const client = axios.create({
 
 client.interceptors.request.use((config) => {
   const accessToken = localStorage.getItem('accessToken');
-  const refreshToken = localStorage.getItem('refreshToken');
 
-  if (accessToken && refreshToken) {
+  if (config.url === `/token/refresh`) {
+    config.headers.Refresh = `${localStorage.getItem('refreshToken')}`;
+  } else {
     config.headers.Authorization = `Bearer ${accessToken}`;
-    config.headers.Refresh = refreshToken;
   }
   return config;
 });
@@ -27,6 +27,7 @@ client.interceptors.response.use(
   },
   async (err) => {
     const { config, response } = err;
+    console.log(err);
 
     // 엑세스 토큰 만료시
     if (response.data.status === 401) {
@@ -35,31 +36,22 @@ client.interceptors.response.use(
 
         // 새로운 엑세스 토큰 저장
         const data = null;
-        await client
-          .post(`/token/refresh`, data, {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-              Refresh: `${localStorage.getItem('refresh')}`,
-            },
-          })
-          .then((res) => {
-            try {
-              if (res.status === 200) {
-                console.log('토큰 재발급');
-                const accessToken = res.headers.Authorization;
-                console.log('new access 토큰 :', accessToken);
-                localStorage.setItem('accessToken', accessToken);
-                // config.headers!.Authorization = `Bearer ${accessToken}`;
-                originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-              }
-              return axios(originalRequest);
-            } catch (error) {
-              console.log('토큰 재발급 실패');
-              console.log(error);
-              throw error;
+        await client.post(`/token/refresh`, data).then((res) => {
+          try {
+            console.log('res', res);
+            console.log('headers', res.headers);
+            if (res.status === 200) {
+              const accessToken = res.headers.authorization;
+              localStorage.setItem('accessToken', accessToken);
+              originalRequest.headers.Authorization = `Bearer ${accessToken}`;
             }
-          });
+            return axios(originalRequest);
+          } catch (error) {
+            console.log('토큰 재발급 실패');
+            console.log(error);
+            throw error;
+          }
+        });
       }
       // 리프레시 만료시
       if (

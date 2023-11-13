@@ -6,6 +6,7 @@ import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 import { mutate } from 'swr';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { changeApplyState, modifyIssueDiscuss } from '@/apis/issue';
 import { IcChar } from '@/public/assets/icons';
 import { memberIdState, roomIdState } from '@/recoil/atom';
@@ -24,6 +25,7 @@ interface Props {
 const CommentCard = ({ commentInfo, coderef, modifyCode, writer }: Props) => {
   const {
     issueId,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     opinionId,
     memberId,
     issueOpinion,
@@ -36,33 +38,34 @@ const CommentCard = ({ commentInfo, coderef, modifyCode, writer }: Props) => {
   const roomId = useRecoilValue(roomIdState);
   const [memberNickname, setMemberNickname] = useState('');
   const [modifyData, setModifyData] = useState<ModifyDiscussInfo>();
-  const [change, setChange] = useState<string>('');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [change, setChange] = useState('');
 
   const setNickname = async (): Promise<void> => {
     const nickname = await getNickName(memberId);
     setMemberNickname(nickname);
   };
 
-  const handleModify = async () => {
+  const handleModify = () => {
     coderef.updateOptions({ readOnly: false });
     const text = modifyCode;
-    console.log(text);
     const splitedText = text.split('\n');
     const lines = issueOpinionEndLine - issueOpinionStartLine + 1;
     splitedText.splice(issueOpinionStartLine - 1, lines, issueOpinionCode);
-    console.log(splitedText);
-    setChange(splitedText?.join('\n'));
-    console.log(change);
-
-    await modifyIssueDiscuss(modifyData!);
-    await changeApplyState(opinionId);
-    mutate(`/room/issue?issueId=${issueId}`);
-    mutate(`room/discussions?issueId=${issueId}`);
+    const joinText = splitedText?.join('\n');
+    setChange(joinText);
   };
 
-  useEffect(() => {
-    setNickname();
-  }, []);
+  const postDiscuss = async () => {
+    if (change) {
+      await modifyIssueDiscuss(modifyData!);
+      await changeApplyState(opinionId);
+      alert('제안된 코드가 수락되었습니다!');
+
+      mutate(`/room/issue?issueId=${issueId}`);
+      mutate(`room/discussions?issueId=${issueId}`);
+    }
+  };
 
   useEffect(() => {
     setModifyData({
@@ -71,6 +74,16 @@ const CommentCard = ({ commentInfo, coderef, modifyCode, writer }: Props) => {
       gitCodeModify: change,
     });
   }, [change]);
+
+  useEffect(() => {
+    if (change) {
+      postDiscuss();
+    }
+  }, [modifyData]);
+
+  useEffect(() => {
+    setNickname();
+  }, []);
 
   return (
     <StComment>

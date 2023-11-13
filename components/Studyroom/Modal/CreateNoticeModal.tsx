@@ -36,6 +36,7 @@ const CreateNoticeModal = ({ isShowing, handleCancel }: Props) => {
       return;
     }
     await postNotice(noticeData!);
+    alert('공지사항이 생성되었습니다.');
     mutate(`/room/boards?roomId=${roomID}`);
     handleCancel();
   };

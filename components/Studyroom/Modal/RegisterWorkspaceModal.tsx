@@ -24,6 +24,7 @@ const RegisterWorkspaceModal = ({ isShowing, handleCancel }: Props) => {
 
   const handleRegWS = async () => {
     await postWorkspace(workSpaceData!);
+    alert('공지사항이 등록되었습니다.');
     handleCancel();
     mutate(`/room/info/workspace?roomId=${roomID}`);
   };
