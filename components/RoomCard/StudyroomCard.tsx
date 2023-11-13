@@ -273,7 +273,7 @@ const StHashtags = styled.ol`
   overflow: hidden;
 
   width: 100%;
-  height: 2rem;
+  height: 1.5rem;
   max-width: 100%;
   margin: 0.6rem 0;
 
@@ -281,7 +281,7 @@ const StHashtags = styled.ol`
     display: inline-block;
     height: 1rem;
 
-    padding: 0.2rem 0.5rem;
+    padding: 0.1rem 0.5rem 0.3rem 0.5rem;
 
     border-radius: 1.6rem;
     background-color: ${({ theme }) => theme.colors.Gray4};

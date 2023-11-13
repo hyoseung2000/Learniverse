@@ -15,7 +15,12 @@ const Landing = () => {
   return (
     <StLandingWrapper>
       <h1>LearniVerse</h1>
-      <StLoginBtn type="button" onClick={handleLoginClick}>
+      <StLoginBtn
+        type="button"
+        id="github-login-btn"
+        title="github-login-btn"
+        onClick={handleLoginClick}
+      >
         <IcLoginBtn />
       </StLoginBtn>
     </StLandingWrapper>

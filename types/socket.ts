@@ -29,10 +29,11 @@ export interface PeersInfo {
 }
 
 export interface RoomPeerInfo {
-  socketId: string; // socket id
+  socketId?: string; // socket id
   memberId: number; // memeber id
   nickname?: string; // memeber nickname
-  message?: string;
+  message?: string; // 지워야함
+  memberMessage?: string;
 }
 
 export interface ChattingInfo {

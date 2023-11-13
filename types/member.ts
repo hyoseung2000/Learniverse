@@ -7,6 +7,7 @@ export interface MemberInfo {
   memberEmail: string;
   githubId: string;
   nickname: string;
+  message?: string; // 지워야함
   memberMessage: string;
   status: boolean;
   isMember: string;

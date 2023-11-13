@@ -17,33 +17,34 @@ const TimeProvider: React.FC<TimeProviderProps> = ({
 }) => {
   const router = useRouter();
   const roomId = useRecoilValue(roomIdState);
+  const endTime = new Date(coreEndTime).getTime();
 
-  const endTime = new Date(coreEndTime);
-  const [seconds, setSeconds] = useState<number>(100);
-
-  useEffect(() => {
-    const diff = Math.floor((endTime.getTime() - new Date().getTime()) / 1000);
-    const timeLeft = Number.isNaN(Number(diff)) ? 3600 : diff;
-    setSeconds(timeLeft);
-  }, [coreEndTime]);
+  const [seconds, setSeconds] = useState<number>(() => {
+    const now = new Date().getTime();
+    return Math.floor((endTime - now) / 1000);
+  });
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setSeconds((prevSeconds) => {
-        if (prevSeconds <= 0) {
-          clearInterval(timer);
-          alert('코어타임이 끝났습니다.');
-          router.push(`/studyroom/${roomId}`);
-          return 0;
-        }
-        return prevSeconds - 1;
-      });
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      const timeLeft = Math.floor((endTime - now) / 1000);
+
+      if (timeLeft < 0) {
+        clearInterval(interval);
+        alert('코어타임이 끝났습니다.');
+        router.push(`/studyroom/${roomId}`);
+      } else {
+        setSeconds(timeLeft);
+      }
     }, 1000);
 
-    return () => clearInterval(timer);
-  }, [seconds]);
+    return () => clearInterval(interval);
+  }, [endTime, roomId, router]);
 
   const formattedTime = useMemo(() => {
+    if (Number.isNaN(seconds)) {
+      return '00 : 00 : 00';
+    }
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;

@@ -21,6 +21,7 @@ interface Props {
   writer: number;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const CommentCard = ({ commentInfo, coderef, modifyCode, writer }: Props) => {
   const {
     issueId,
