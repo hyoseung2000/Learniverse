@@ -22,6 +22,7 @@ const DeleteCoretimeModal = ({
 
   const handleDeleteCoretime = async () => {
     await DeleteCoretime(coreTimeId);
+    alert('코어타임이 삭제되었습니다.');
     handleCancel();
   };
 

@@ -20,6 +20,7 @@ const CloseIssueModal = ({ isShowing, issueId, handleCancel }: Props) => {
   const handleCloseIssue = async () => {
     await deleteIssue(issueId);
     handleCancel();
+    alert('이슈가 성공적으로 CLOSE 되었습니다.');
     mutate(`/room/issues?roomId=${roomId}`);
   };
 

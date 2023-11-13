@@ -1,13 +1,11 @@
 /* eslint-disable eqeqeq */
-import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { getNoticeList } from '@/apis/studyroom';
 import { useModal } from '@/hooks/Common';
+import useGetNoticeList from '@/hooks/StudyRooms/useGetNoticeList';
 import { IcPlusBtn } from '@/public/assets/icons';
 import { memberIdState, roomIdState } from '@/recoil/atom';
-import { NoticeInfo } from '@/types/studyroom';
 
 import CreateNoticeModal from './Modal/CreateNoticeModal';
 import NoticeCard from './NoticeCard';
@@ -17,20 +15,11 @@ const Notice = () => {
   const curMemberId = useRecoilValue(memberIdState);
 
   const create = useModal();
-  const [noticeList, setNoticeList] = useState<NoticeInfo[]>();
-
-  const getNotices = async () => {
-    const noticeInfo = await getNoticeList(roomID);
-    setNoticeList(noticeInfo);
-  };
+  const { noticeList } = useGetNoticeList(roomID);
 
   const handleOpen = () => {
     create.toggle();
   };
-
-  useEffect(() => {
-    getNotices();
-  }, []);
 
   return (
     <>

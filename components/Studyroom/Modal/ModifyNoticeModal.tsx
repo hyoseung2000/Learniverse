@@ -37,6 +37,7 @@ const ModifyNoticeModal = ({ isShowing, noticeInfo, handleCancel }: Props) => {
       return;
     }
     await modifyNotice(noticeData!);
+    alert('공지사항이 수정되었습니다.');
     mutate(`/room/boards?roomId=${roomID}`);
     handleCancel();
   };
