@@ -108,6 +108,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
 
   const initData = () => {
     setOpinion('');
+    setSuggestCode('');
     setStart(1);
     setEnd(1);
   };
@@ -181,7 +182,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
             </StCode>
 
             <StInputWrapper>
-              <StInput>
+              <StInput $isCode={isCode}>
                 <textarea
                   placeholder="코멘트를 입력하세요"
                   value={opinion}
@@ -198,18 +199,21 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                       </p>
                     </div>
                     <CustomEditor
-                      height="10rem"
+                      height="5rem"
                       width="95%"
+                      defaultValue="//test"
                       language={language}
                       onChange={(value) => {
                         setSuggestCode(value!);
                       }}
                       options={{
-                        fontSize: 20,
-                        // suggestFontSize: 200,
-                        // codeLensFontSize: 10,
+                        snippetSuggestions: 'none',
+                        screenReaderAnnounceInlineSuggestion: false,
+                        fontSize: 30,
+                        suggestFontSize: 400,
+                        // // codeLensFontSize: 400,
                         // suggestLineHeight: 30,
-                        // lineHeight: 30,
+                        // lineHeight: 20,
                         minimap: { enabled: false },
                         scrollbar: {
                           vertical: 'auto',
@@ -218,6 +222,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                         inlineSuggest: {
                           enabled: false,
                         },
+                        codeLens: false,
                       }}
                     />
                   </CodeInput>
@@ -272,13 +277,13 @@ const StIssueWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 80%;
-  flex-wrap: wrap;
 
   padding: 1.5rem 2.4rem 2.4rem 3.4rem;
   box-sizing: border-box;
 
   border-right: 0.1rem solid ${({ theme }) => theme.colors.Learniverse_BG};
 `;
+
 const StCommentWrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -333,17 +338,13 @@ const StComment = styled.div`
 const StIssue = styled.div`
   display: flex;
   align-items: center;
+  height: fit-content;
 
   margin-bottom: 1.4rem;
 
   & > div {
     display: flex;
     margin-top: 1rem;
-  }
-
-  overflow-y: scroll;
-  &::-webkit-scrollbar {
-    display: none;
   }
 `;
 
@@ -396,6 +397,12 @@ const StLink = styled.button`
 `;
 
 const StInputWrapper = styled.div`
+  .view-overlays,
+  .current-line,
+  .view-overlays > div {
+    font-size: 100rem !important;
+  }
+
   margin-top: 1rem;
 
   display: flex;
@@ -412,7 +419,12 @@ const StInputWrapper = styled.div`
   }
 `;
 
-const StInput = styled.div`
+const StInput = styled.div<{ $isCode: boolean }>`
+  .view-overlays,
+  .current-line,
+  .view-overlays > div {
+    font-size: 100rem !important;
+  }
   display: flex;
   flex-direction: column;
 
@@ -424,7 +436,7 @@ const StInput = styled.div`
   align-items: center;
   justify-content: space-between;
 
-  border: 0.2rem solid ${({ theme }) => theme.colors.Learniverse_BG};
+  border: ${({ $isCode }) => ($isCode ? '0.2rem solid #000000' : '')};
   border-radius: 1rem;
 
   & > textarea {
@@ -440,21 +452,43 @@ const StInput = styled.div`
 
   & > div {
     display: flex;
-    & > .monaco-editor .inputarea,
     textarea {
       font-size: 100rem !important;
     }
     & > div {
       margin-right: 1rem;
 
-      ${({ theme }) => theme.fonts.Title5};
+      ${({ theme }) => theme.fonts.Body6};
       color: ${({ theme }) => theme.colors.Purple4};
     }
   }
 `;
 
-const CustomEditor = styled(Editor)``;
+const CustomEditor = styled(Editor)`
+  .view-overlays,
+  .current-line,
+  .view-overlays > div {
+    font-size: 100rem !important;
+  }
+`;
 
 const CodeInput = styled.div`
+  display: flex;
+  height: 90%;
   width: 90%;
+
+  /* & > .monaco-editor .view-overlays .current-line {
+    font-size: 10rem !important;
+  }
+
+  & > .monaco-editor .view-overlays,
+  .monaco-editor .view-overlays > div {
+    font-size: 10rem !important;
+  } */
+
+  .view-overlays,
+  .current-line,
+  .view-overlays > div {
+    font-size: 100rem !important;
+  }
 `;

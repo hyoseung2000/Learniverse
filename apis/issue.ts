@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import {
   ModifyDiscussInfo,
   PostDiscussInfo,
@@ -12,8 +14,11 @@ export const createIssue = async (PostIssueData: PostIssueInfo) => {
     console.log(data);
     return data;
   } catch (err) {
-    console.error(err);
-    throw err;
+    if (axios.isAxiosError(err))
+      if (err.response?.status === 400) {
+        return 400;
+      }
+    return err;
   }
 };
 
