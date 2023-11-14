@@ -55,6 +55,7 @@ const CreateIssueModal = ({ isShowing, handleCancel }: Props) => {
       alert('이슈가 생성되었습니다.');
       mutate(`/room/issues?roomId=${roomId}`);
       handleCancel();
+      initData();
     }
   };
 

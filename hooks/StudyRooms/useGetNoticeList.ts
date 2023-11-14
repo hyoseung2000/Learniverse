@@ -11,7 +11,7 @@ const useGetNoticeList = (roomId: number) => {
   );
 
   return {
-    noticeList: data?.data?.notices,
+    noticeList: data?.data.boards,
     isLoading,
     isError: error,
   };

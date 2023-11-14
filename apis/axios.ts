@@ -27,7 +27,6 @@ client.interceptors.response.use(
   },
   async (err) => {
     const { config, response } = err;
-    console.log(err);
 
     // 엑세스 토큰 만료시
     if (response.data.status === 401) {
@@ -38,8 +37,6 @@ client.interceptors.response.use(
         const data = null;
         await client.post(`/token/refresh`, data).then((res) => {
           try {
-            console.log('res', res);
-            console.log('headers', res.headers);
             if (res.status === 200) {
               const accessToken = res.headers.authorization;
               localStorage.setItem('accessToken', accessToken);
@@ -49,6 +46,7 @@ client.interceptors.response.use(
           } catch (error) {
             console.log('토큰 재발급 실패');
             console.log(error);
+            window.location.href = '/';
             throw error;
           }
         });
