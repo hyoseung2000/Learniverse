@@ -209,7 +209,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                       options={{
                         snippetSuggestions: 'none',
                         screenReaderAnnounceInlineSuggestion: false,
-                        fontSize: 30,
+                        fontSize: 35,
                         suggestFontSize: 400,
                         // // codeLensFontSize: 400,
                         // suggestLineHeight: 30,
@@ -271,6 +271,7 @@ const StCloseBtn = styled.button`
 
 const StDiscussWrapper = styled.div`
   display: flex;
+  height: 90%;
 `;
 
 const StIssueWrapper = styled.div`
@@ -337,10 +338,17 @@ const StComment = styled.div`
 
 const StIssue = styled.div`
   display: flex;
+  justify-content: center;
   align-items: center;
   height: fit-content;
 
   margin-bottom: 1.4rem;
+
+  & > svg {
+    position: absolute;
+    top: 9rem;
+    left: 5rem;
+  }
 
   & > div {
     display: flex;
@@ -353,6 +361,7 @@ const StContent = styled.div<{ $isCode: boolean }>`
   flex-direction: column;
   max-width: 90%;
   width: 90%;
+  white-space: pre-wrap;
 
   & > h3 {
     margin-left: 2.1rem;
@@ -365,10 +374,11 @@ const StContent = styled.div<{ $isCode: boolean }>`
     align-items: center;
     margin-left: 2.1rem;
     margin-top: 0.4rem;
+    padding: 1rem;
 
-    height: fit-content;
+    // height: fit-content;
 
-    max-height: ${({ $isCode }) => ($isCode ? '5rem' : '30rem')};
+    height: ${({ $isCode }) => ($isCode ? '5rem' : '30rem')};
     overflow-y: scroll;
 
     background-color: ${({ theme }) => theme.colors.LightGray2};
@@ -458,7 +468,7 @@ const StInput = styled.div<{ $isCode: boolean }>`
     & > div {
       margin-right: 1rem;
 
-      ${({ theme }) => theme.fonts.Body6};
+      ${({ theme }) => theme.fonts.Title5};
       color: ${({ theme }) => theme.colors.Purple4};
     }
   }
@@ -470,12 +480,31 @@ const CustomEditor = styled(Editor)`
   .view-overlays > div {
     font-size: 100rem !important;
   }
+  & > .monaco-scrollable-element-editor-scrollable.vs {
+    font-size: 100rem !important;
+  }
+
+  & > .lines-content.monaco-editor-background {
+    font-size: 100rem !important;
+  }
 `;
 
 const CodeInput = styled.div`
   display: flex;
   height: 90%;
   width: 90%;
+
+  & > .monaco-scrollable-element-editor-scrollable.vs {
+    font-size: 100rem !important;
+  }
+
+  & > .lines-content.monaco-editor-background {
+    font-size: 100rem !important;
+  }
+
+  & > .current-line {
+    font-size: 100rem !important;
+  }
 
   /* & > .monaco-editor .view-overlays .current-line {
     font-size: 10rem !important;

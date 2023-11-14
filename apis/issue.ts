@@ -3,7 +3,7 @@ import axios from 'axios';
 import {
   ModifyDiscussInfo,
   PostDiscussInfo,
-  PostIssueInfo
+  PostIssueInfo,
 } from '@/types/studyroom';
 
 import { client } from './axios';
@@ -91,7 +91,6 @@ export const modifyIssueDiscuss = async (
 export const changeApplyState = async (opinionId: number) => {
   try {
     const { data } = await client.post(`/room/discussion/apply`, { opinionId });
-    console.log(data);
     return data;
   } catch (err) {
     console.error(err);

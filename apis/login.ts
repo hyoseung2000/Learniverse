@@ -41,7 +41,8 @@ export const postLog = async (memberId: number) => {
     return data;
   } catch (err) {
     console.error(err);
-    throw err;
+    return err;
+    // throw err;
   }
 };
 
