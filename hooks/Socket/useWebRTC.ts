@@ -5,7 +5,7 @@ import {
   Consumer,
   RtpCapabilities,
   Transport,
-  UnsupportedError
+  UnsupportedError,
 } from 'mediasoup-client/lib/types';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -22,7 +22,7 @@ import {
   PeersInfo,
   RemoveRoomInfo,
   RoomInfo,
-  RoomPeerInfo
+  RoomPeerInfo,
 } from '@/types/socket';
 
 import { addNickNameToPeer, getNickName } from '../../utils/getNicknames';
@@ -30,7 +30,7 @@ import {
   handleConnectError,
   handleConsumerClosed,
   handleMessage,
-  handleNewProducers
+  handleNewProducers,
 } from './socketHandlers';
 
 const useWebRTC = (
@@ -131,8 +131,8 @@ const useWebRTC = (
     const peerList: RoomInfo = await socket.request('getRoomInfo');
     console.log('4-1. peerList', peerList);
     setCurPeerList(peerList.peers);
-    const formatData = peerList.peers.slice(0, -2);
-    await consumeProducers(formatData);
+    // const formatData = peerList.peers.slice(0, -1);
+    await consumeProducers(peerList.peers);
 
     const peers: RoomPeerInfo[] = await socket.request('getRoomPeerInfo');
     console.log('4-1. getRoomPeerInfo', peers);
@@ -144,6 +144,7 @@ const useWebRTC = (
 
   const consumeProducers = async (producers: PeersInfo[]) => {
     if (!socket || !socket.request) return;
+    console.log('consumeProducers', producers);
 
     if (!curDevice) {
       const data = await socket.request('getRouterRtpCapabilities');
