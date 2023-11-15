@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
@@ -24,9 +24,29 @@ const MediaContainer = ({
   const captureTime = useRecoilValue(captureTimeState);
   const [selectedVideo, handleSelectVideo] = useVideoSelector();
 
+  const selectedStream = videoStreams.find(
+    (stream) => stream.consumer_id === selectedVideo,
+  );
+  const otherStreams = videoStreams.filter(
+    (stream) => stream.consumer_id !== selectedVideo,
+  );
+
   return (
     <StMediaWrapper>
-      {videoStreams.map((stream) => (
+      {selectedStream && (
+        <WebRTCVideo
+          key={selectedStream.consumer_id}
+          memberId={selectedStream.memberId}
+          coreTimeId={curCoreTimeId!}
+          nickname={selectedStream.nickname}
+          mediaStream={selectedStream.stream}
+          captureTime={captureTime}
+          setCapturedImageFile={setCapturedImageFile}
+          isSelected
+          onClick={() => handleSelectVideo(selectedStream)}
+        />
+      )}
+      {otherStreams.map((stream) => (
         <WebRTCVideo
           key={stream.consumer_id}
           memberId={stream.memberId}
@@ -35,7 +55,7 @@ const MediaContainer = ({
           mediaStream={stream.stream}
           captureTime={captureTime}
           setCapturedImageFile={setCapturedImageFile}
-          isSelected={selectedVideo === stream.consumer_id}
+          isSelected={false}
           onClick={() => handleSelectVideo(stream)}
         />
       ))}
@@ -55,9 +75,6 @@ export default MediaContainer;
 
 const StMediaWrapper = styled.section`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  justify-items: center;
-  gap: 1rem;
-
-  width: fit-content;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1rem;
 `;

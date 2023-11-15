@@ -75,19 +75,8 @@ const WebRTCVideo = ({
   }, [captureTime]);
 
   return (
-    <StVideoWrapper>
-      <StVideo
-        ref={viewRef}
-        onClick={onClick}
-        style={{
-          minWidth: isSelected ? '60rem' : '30rem',
-          maxWidth: isSelected ? '60rem' : '30rem',
-          minHeight: isSelected ? '40rem' : '20rem',
-          maxHeight: isSelected ? '40rem' : '20rem',
-        }}
-        autoPlay
-        playsInline
-      />
+    <StVideoWrapper $isSelected={isSelected}>
+      <StVideo ref={viewRef} onClick={onClick} autoPlay playsInline />
       <IcCoreChar />
       <StName>{nickname}</StName>
     </StVideoWrapper>
@@ -96,9 +85,11 @@ const WebRTCVideo = ({
 
 export default WebRTCVideo;
 
-const StVideoWrapper = styled.div`
+const StVideoWrapper = styled.div<{ $isSelected: boolean }>`
   position: relative;
   display: flex;
+  grid-area: ${({ $isSelected }) => ($isSelected ? '1 / 1 / 2 / 3' : 'auto')};
+  transition: grid-area 0.3s ease;
 
   & > button {
     width: 60%;
@@ -111,10 +102,10 @@ const StVideoWrapper = styled.div`
 `;
 
 const StVideo = styled.video`
-  min-width: 30rem;
-  max-width: 30rem;
-  min-height: 20rem;
-  max-height: 20rem;
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 100%;
+  max-height: 100%;
 
   background-color: ${({ theme }) => theme.colors.Gray4};
   border-radius: 1rem;
