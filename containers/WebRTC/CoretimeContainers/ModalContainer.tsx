@@ -6,12 +6,12 @@ import { GalleryModal } from '@/components/Coretime/Gallery';
 import {
   CreateIssueModal,
   DiscussIssueModal,
-  IssueModal
+  IssueModal,
 } from '@/components/Coretime/Issue';
 import {
   CaptureCompleteModal,
   CaptureModal,
-  ExitCoretimeModal
+  ExitCoretimeModal,
 } from '@/components/Coretime/Modal';
 import { UseModalReturnType } from '@/hooks/Common/useModal';
 

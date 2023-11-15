@@ -10,10 +10,11 @@ export const createCoretime = async (postCoreTimeData: PostCoreTimeInfo) => {
     const { data } = await client.post(`/room/core/create`, postCoreTimeData);
     return data.data;
   } catch (err) {
-    if (axios.isAxiosError(err))
+    if (axios.isAxiosError(err)) {
       if (err.response?.status === 422) {
         alert('중복된 코어타임 시간을 입력하였습니다.');
       }
+    }
     return err;
   }
 };

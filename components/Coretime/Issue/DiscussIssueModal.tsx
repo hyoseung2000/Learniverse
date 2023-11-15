@@ -43,6 +43,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   const [start, setStart] = useState<number>(1);
   const [end, setEnd] = useState<number>(1);
   const [isCode, setIsCode] = useState<boolean>(true);
+  const [isPosting, setIsPosting] = useState<boolean>(false);
 
   const { issue, issueCode, gitCodeModify, isLoading } =
     useGetIssueInfo(issueId);
@@ -72,18 +73,21 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
   };
 
   const handleOpenGithub = () => {
-    window.open(`https://github.com/${giturl}`);
+    window.open(`${giturl}/issues`);
   };
 
   const handleCreateComment = async () => {
+    if (isPosting) return;
     if (!opinion) {
       alert('코멘트는 필수 입력사항 입니다.');
       return;
     }
+    setIsPosting(true);
     await postDiscuss(discussData!);
     alert('이슈 디스커션이 등록되었습니다!');
     initData();
     mutate(`room/discussions?issueId=${issueId}`);
+    setIsPosting(false);
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -155,7 +159,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                 <p className="descrpt">{descrpt}</p>
                 <p>
                   🔗 깃허브 링크{' '}
-                  <StLink onClick={handleOpenGithub}>{giturl}</StLink>
+                  <StLink onClick={handleOpenGithub}>{giturl}/issues</StLink>
                 </p>
               </StContent>
             </StIssue>
@@ -167,10 +171,16 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                 original={code}
                 modified={changeCode}
                 options={{
-                  fontSize: 35,
+                  fontSize: 40,
                   lineHeight: 20,
                   // minimap: { enabled: false },
                   readOnly: true,
+                  quickSuggestions: false,
+                  screenReaderAnnounceInlineSuggestion: false,
+                  suggestOnTriggerCharacters: false,
+                  snippetSuggestions: 'none',
+                  codeLens: false,
+                  diffCodeLens: false,
                   scrollbar: {
                     vertical: 'auto',
                     horizontal: 'auto',
@@ -209,8 +219,8 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
                       options={{
                         snippetSuggestions: 'none',
                         screenReaderAnnounceInlineSuggestion: false,
-                        fontSize: 35,
-                        suggestFontSize: 400,
+                        // fontSize: 35,
+                        // suggestFontSize: 400,
                         // // codeLensFontSize: 400,
                         // suggestLineHeight: 30,
                         // lineHeight: 20,
@@ -327,7 +337,7 @@ const StTitle = styled.div`
 `;
 
 const StComment = styled.div`
-  height: 80%;
+  height: 90%;
   width: 90%;
 
   overflow-y: scroll;
@@ -407,12 +417,13 @@ const StLink = styled.button`
 `;
 
 const StInputWrapper = styled.div`
-  .view-overlays,
+  /* .view-overlays,
   .current-line,
   .view-overlays > div {
     font-size: 100rem !important;
-  }
+  } */
 
+  font-size: 100% !important;
   margin-top: 1rem;
 
   display: flex;
@@ -430,11 +441,15 @@ const StInputWrapper = styled.div`
 `;
 
 const StInput = styled.div<{ $isCode: boolean }>`
+  /* & > .monaco-editor.no-user-select.showUnused.showDeprecated.vs,
+  .overflow-guard,
+  .monaco-scrollable-element.editor-scrollable.vs,
   .view-overlays,
   .current-line,
   .view-overlays > div {
-    font-size: 100rem !important;
-  }
+    font-size: 10rem !important;
+  } */
+  font-size: 100% !important;
   display: flex;
   flex-direction: column;
 
@@ -475,18 +490,52 @@ const StInput = styled.div<{ $isCode: boolean }>`
 `;
 
 const CustomEditor = styled(Editor)`
+  font-size: 100% !important;
+  & > .monaco-editor.no-user-select.showUnused.showDeprecated.vs,
+  .overflow-guard,
+  .monaco-scrollable-element.editor-scrollable.vs,
   .view-overlays,
+  .view-overlays.focused,
+  .view-overlays.focused > div,
+  .lines-content.monaco-editor-background,
+  .view-overlays > div,
+  .view-overlays > div > div,
+  .current-line,
+  .view-lines.monaco-mouse-cursor-text,
+  .view-line,
+  .view-line > span > span,
+  .cursor.monaco-mouse-cursor-text,
+  .editor-widget.suggest-widget,
+  .monaco-sash.vertical,
+  .monaco-sash.vertical.disabled,
+  .monaco-sash.orthogonal-edge-north.horizontal.disabled,
+  .action-item.menu-entry,
+  .action-label,
+  .slider,
+  .monaco-list-rows,
+  .monaco-list-row, // suggest
+  .line-numbers {
+    font-size: 100% !important;
+  }
+
+  /* & > .monaco-scrollable-element.editor-scrollable.vs {
+    font-size: 100% !important;
+  }
+
+  & > .view-overlays {
+    font-size: 100% !important;
+  } */
+
+  /* .view-overlays,
   .current-line,
   .view-overlays > div {
     font-size: 100rem !important;
   }
-  & > .monaco-scrollable-element-editor-scrollable.vs {
-    font-size: 100rem !important;
-  }
+  
 
   & > .lines-content.monaco-editor-background {
     font-size: 100rem !important;
-  }
+  } */
 `;
 
 const CodeInput = styled.div`
@@ -494,7 +543,9 @@ const CodeInput = styled.div`
   height: 90%;
   width: 90%;
 
-  & > .monaco-scrollable-element-editor-scrollable.vs {
+  font-size: 100% !important;
+
+  /* & > .monaco-scrollable-element-editor-scrollable.vs {
     font-size: 100rem !important;
   }
 
@@ -506,18 +557,18 @@ const CodeInput = styled.div`
     font-size: 100rem !important;
   }
 
-  /* & > .monaco-editor .view-overlays .current-line {
+  & > .monaco-editor .view-overlays .current-line {
     font-size: 10rem !important;
   }
 
   & > .monaco-editor .view-overlays,
   .monaco-editor .view-overlays > div {
     font-size: 10rem !important;
-  } */
+  }
 
   .view-overlays,
   .current-line,
   .view-overlays > div {
     font-size: 100rem !important;
-  }
+  } */
 `;
