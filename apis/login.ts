@@ -2,9 +2,9 @@ import { LoginInfo } from '@/types/login';
 
 import { client } from './axios';
 
-export const getLoginInfo = async (): Promise<LoginInfo> => {
+export const getLoginInfo = async (memberId: number): Promise<LoginInfo> => {
   try {
-    const { data } = await client.get(`/member/first`);
+    const { data } = await client.get(`/member/first?memberId=${memberId}`);
     return data.data;
   } catch (err) {
     console.error(err);

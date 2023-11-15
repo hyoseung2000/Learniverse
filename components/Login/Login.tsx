@@ -16,7 +16,7 @@ const Login = () => {
   };
 
   const handleLogin = async () => {
-    const data = await getLoginInfo();
+    const data = await getLoginInfo(memberId);
     const { memberFirst, refreshToken } = data!;
     localStorage.setItem('refreshToken', refreshToken);
     // eslint-disable-next-line eqeqeq
