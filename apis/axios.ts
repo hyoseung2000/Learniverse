@@ -63,6 +63,10 @@ client.interceptors.response.use(
         return;
       }
     }
+    if (response.data.status === 422) {
+      alert('중복된 코어타임을 입력하였습니다.');
+      return;
+    }
     console.log('response error', err);
   },
 );

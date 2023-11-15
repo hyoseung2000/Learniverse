@@ -98,7 +98,7 @@ const CommentCard = ({ commentInfo, coderef, modifyCode, writer }: Props) => {
         <p className="code">{issueOpinion}</p>
         <p>{issueOpinionCode}</p>
       </div>
-      {cMemberId == writer ? (
+      {cMemberId == writer && issueOpinionCode ? (
         issueAccepted ? (
           <StButton $isPersist={false}>불가</StButton>
         ) : (
@@ -129,25 +129,26 @@ const StComment = styled.div`
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    max-width: 80%;
+    max-width: 60%;
     flex-wrap: wrap;
+    margin-right: 0.1rem;
 
     white-space: pre-wrap;
   }
 
   & > div > p {
     color: ${({ theme }) => theme.colors.Purple3};
-    ${({ theme }) => theme.fonts.Body6};
+    ${({ theme }) => theme.fonts.Body4};
   }
 
   & > div > .code {
     color: ${({ theme }) => theme.colors.Learniverse_BG};
-    ${({ theme }) => theme.fonts.Body7};
+    ${({ theme }) => theme.fonts.Body5};
   }
 `;
 
 const StButton = styled.button<{ $isPersist: boolean }>`
-  width: 3.5rem;
+  width: 12%;
   height: 2.2rem;
 
   position: absolute;

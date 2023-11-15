@@ -27,6 +27,10 @@ const IssueCard = ({ core, handleDiscuss, issueInfo }: Props) => {
     }
   };
 
+  const handleClose = () => {
+    iDelete.toggle();
+  };
+
   return (
     <>
       <StIssueWrapper $issueOpen={issueOpen}>
@@ -37,7 +41,7 @@ const IssueCard = ({ core, handleDiscuss, issueInfo }: Props) => {
             <p>{issueDescription}</p>
           </StContent>
           {issueOpen ? (
-            <StBtn onClick={iDelete.toggle} $issueOpen={issueOpen}>
+            <StBtn onClick={handleClose} $issueOpen={issueOpen}>
               CLOSE
             </StBtn>
           ) : (
@@ -125,9 +129,9 @@ const StBtn = styled.button<{ $issueOpen: boolean }>`
 
 const StCloseIssueModalWrapper = styled.div<{ $showing: boolean }>`
   display: ${({ $showing }) => ($showing ? 'block' : 'none')};
-  position: fixed;
+  /* position: fixed;
   top: 0;
-  left: 0;
+  left: 0; */
   z-index: 1000;
 
   justify-content: center;
@@ -136,5 +140,5 @@ const StCloseIssueModalWrapper = styled.div<{ $showing: boolean }>`
   width: 100vw;
   height: 100vh;
 
-  background-color: rgba(0, 0, 0, 0.5);
+  /* background-color: rgba(0, 0, 0, 0.5); */
 `;

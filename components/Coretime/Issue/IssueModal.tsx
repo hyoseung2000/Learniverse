@@ -1,12 +1,11 @@
 /* eslint-disable react/jsx-boolean-value */
-import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
 
-import { getIssueList } from '@/apis/issue';
 import { CancelButton, ConfirmButton } from '@/components/Common/Button';
 import { LargeModal } from '@/components/Common/Modal';
 import IssueCard from '@/components/Studyroom/IssueCard';
+import useGetIssueList from '@/hooks/StudyRooms/useGetIssueList';
 import { roomIdState } from '@/recoil/atom';
 import { IssueInfo } from '@/types/studyroom';
 
@@ -24,21 +23,22 @@ const IssueModal = ({
   handleCancel,
 }: Props) => {
   const roomID = useRecoilValue(roomIdState);
-  const [issueList, setIssueList] = useState<IssueInfo[]>();
+  // const [issueList, setIssueList] = useState<IssueInfo[]>();
+  const { issueList } = useGetIssueList(roomID);
 
-  const getIssues = async () => {
-    const issueInfo = await getIssueList(roomID);
+  // const getIssues = async () => {
+  //   const issueInfo = await getIssueList(roomID);
 
-    setIssueList(issueInfo);
-  };
+  //   setIssueList(issueInfo);
+  // };
 
   const handleCreateIssue = () => {
     handleCreate();
   };
 
-  useEffect(() => {
-    if (isShowing) getIssues();
-  }, [isShowing]);
+  // useEffect(() => {
+  //   if (isShowing) getIssues();
+  // }, [isShowing]);
 
   return (
     isShowing && (
