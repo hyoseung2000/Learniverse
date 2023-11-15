@@ -99,7 +99,7 @@ const StudyroomCard = ({
           {isMyroom && (isPinned ? <IcStarPinned /> : <IcStar />)}
         </StStarWrapper>
         <StIconWrapper $planetColor={planetColor}>
-          {roomId}
+          {/* {roomId} */}
           <IcPlanet />
         </StIconWrapper>
         <StRoomName>{displayedRoomName}</StRoomName>
@@ -317,6 +317,7 @@ const StJoinWrapper = styled.div`
 `;
 
 const StLimit = styled.p`
+  padding-left: 0.5rem;
   color: ${({ theme }) => theme.colors.Learniverse_BG};
   ${({ theme }) => theme.fonts.Body6};
 
@@ -327,14 +328,15 @@ const StLimit = styled.p`
 `;
 
 const StEnter = styled.button`
-  padding: 0.2rem 0.7rem;
+  /* padding: 0.2rem 0.7rem; */
+  padding: 0.5rem 1rem;
 
   border-radius: 0.4rem;
   background-color: ${({ theme, disabled }) =>
     disabled ? theme.colors.Gray4 : theme.colors.Yellow2};
   color: ${({ theme, disabled }) =>
     disabled ? theme.colors.White : theme.colors.Learniverse_BG};
-  ${({ theme }) => theme.fonts.Body8};
+  ${({ theme }) => theme.fonts.Body6};
 
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
 `;

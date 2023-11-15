@@ -9,7 +9,7 @@ import { LargeModal, ModalWrapper } from '@/components/Common/Modal';
 import { StudyroomCard } from '@/components/RoomCard';
 import {
   StContentWrapper,
-  StSmallModalWrapper
+  StSmallModalWrapper,
 } from '@/containers/Apply/ApplyContainer';
 import { useModal } from '@/hooks/Common';
 import { useGetRecommendRoomList } from '@/hooks/StudyRooms';
@@ -43,14 +43,14 @@ const RecommendModal = ({
   };
 
   const handleRecommend = async () => {
-    setLoading(true);
-    if (recommendRoomIdList) {
+    if (recommendRoomIdList && recommendRoomIdList.length > 0) {
+      setLoading(true);
       mutate(`/recommendRoom?memberId=${curMemberId}`);
       const roomDataPromises = recommendRoomIdList.map((id) => getRoomData(id));
       const rooms = await Promise.all(roomDataPromises);
       setRecommendResult(rooms);
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleApplyClick = async (roomId: number) => {
@@ -59,9 +59,10 @@ const RecommendModal = ({
   };
 
   useEffect(() => {
-    handleRecommend();
-    handleRecommend();
-  }, [isShowing]);
+    if (isShowing) {
+      handleRecommend();
+    }
+  }, [isShowing, recommendRoomIdList]);
 
   return (
     <>
