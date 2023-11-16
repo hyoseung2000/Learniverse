@@ -164,7 +164,7 @@ const DiscussIssueModal = ({ isShowing, handleCancel }: Props) => {
               </StContent>
             </StIssue>
             <StCode $isCode={isCode} onClick={handleClick}>
-              <DiffEditor
+              <CustomDiffEditor
                 height="30rem"
                 width="95%"
                 language={language}
@@ -536,6 +536,12 @@ const CustomEditor = styled(Editor)`
   & > .lines-content.monaco-editor-background {
     font-size: 100rem !important;
   } */
+`;
+
+const CustomDiffEditor = styled(DiffEditor)`
+  & > .line-delete {
+    width: 50% !important;
+  }
 `;
 
 const CodeInput = styled.div`
