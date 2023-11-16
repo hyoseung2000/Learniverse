@@ -100,10 +100,10 @@ const CommentCard = ({ commentInfo, coderef, modifyCode, writer }: Props) => {
       </div>
       {cMemberId == writer && issueOpinionCode ? (
         issueAccepted ? (
-          <StButton $isPersist={false}>불가</StButton>
+          <StButton $isPersist={false}>완료</StButton>
         ) : (
           <StButton $isPersist onClick={handleModify}>
-            완료
+            수락
           </StButton>
         )
       ) : null}

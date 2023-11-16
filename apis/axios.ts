@@ -64,8 +64,16 @@ client.interceptors.response.use(
       }
     }
     if (response.data.status === 422) {
-      alert('중복된 코어타임을 입력하였습니다.');
-      return;
+      if (
+        response.data.message ===
+        '해당 시간과 겹치는 코어타임 시간이 이미 존재합니다.'
+      ) {
+        alert('중복된 코어타임을 입력하였습니다.');
+        return;
+      }
+      if (response.data.message === '이미 moomScore가 4단계 입니다.') {
+        return;
+      }
     }
     console.log('response error', err);
   },
