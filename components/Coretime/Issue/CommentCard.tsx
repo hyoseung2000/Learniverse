@@ -8,6 +8,7 @@ import { mutate } from 'swr';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { changeApplyState, modifyIssueDiscuss } from '@/apis/issue';
+import useGetDiscussInfo from '@/hooks/StudyRooms/useGetDiscussInfo';
 import { IcChar } from '@/public/assets/icons';
 import { memberIdState, roomIdState } from '@/recoil/atom';
 import { DiscussInfo, ModifyDiscussInfo } from '@/types/studyroom';
@@ -40,18 +41,40 @@ const CommentCard = ({ commentInfo, coderef, modifyCode, writer }: Props) => {
   const [modifyData, setModifyData] = useState<ModifyDiscussInfo>();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [change, setChange] = useState('');
+  const { discuss } = useGetDiscussInfo(issueId);
 
   const setNickname = async (): Promise<void> => {
     const nickname = await getNickName(memberId);
     setMemberNickname(nickname);
   };
-
   const handleModify = () => {
+    let changedLines = 0;
+    discuss?.map((comment) => {
+      if (
+        comment.issueAccepted &&
+        comment.issueOpinionStartLine < issueOpinionStartLine
+      ) {
+        const changed = comment.issueOpinionCode.split('\n').length;
+        changedLines =
+          changedLines +
+          comment.issueOpinionEndLine -
+          comment.issueOpinionStartLine +
+          1 -
+          changed;
+        console.log(changedLines);
+        return changedLines;
+      }
+      return changedLines;
+    });
     coderef.updateOptions({ readOnly: false });
     const text = modifyCode;
     const splitedText = text.split('\n');
     const lines = issueOpinionEndLine - issueOpinionStartLine + 1;
-    splitedText.splice(issueOpinionStartLine - 1, lines, issueOpinionCode);
+    splitedText.splice(
+      issueOpinionStartLine - changedLines - 1,
+      lines,
+      issueOpinionCode,
+    );
     const joinText = splitedText?.join('\n');
     setChange(joinText);
   };
