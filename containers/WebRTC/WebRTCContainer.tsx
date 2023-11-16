@@ -15,7 +15,7 @@ import {
   captureTimeState,
   coreTimeIdState,
   memberIdState,
-  moonScoreState
+  moonScoreState,
 } from '@/recoil/atom';
 import { formatHHMMSS } from '@/utils/getFormattedTime';
 
@@ -23,7 +23,7 @@ import {
   CoreTimeInfoContainer,
   MediaContainer,
   ModalContainer,
-  SettingContainer
+  SettingContainer,
 } from './CoretimeContainers';
 
 const WebRTCContainer = () => {

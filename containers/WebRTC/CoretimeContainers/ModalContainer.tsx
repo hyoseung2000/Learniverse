@@ -88,7 +88,10 @@ const ModalContainer = ({
           isShowing={exit.isShowing}
           handleExit={() => {
             handleExitAndNavigate();
-            router.push('/home');
+            // router.push('/home');
+            router.push('/home').then(() => {
+              window.location.reload();
+            });
           }}
           handleCancel={exit.toggle}
         />

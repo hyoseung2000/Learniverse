@@ -40,7 +40,9 @@ const useRouteChangeBlocking = (blockingCallback: () => void) => {
       setIsOff(true);
       offBlockingCallback?.();
       if (!requestedUrl) return;
-      router.replace(requestedUrl);
+      router.replace(requestedUrl).then(() => {
+        window.location.reload();
+      });
     },
     [handleRouterChangeStart, requestedUrl, router],
   );
