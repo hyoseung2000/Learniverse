@@ -338,7 +338,7 @@ const StTitle = styled.div`
 
 const StComment = styled.div`
   height: 90%;
-  width: 90%;
+  width: 100%;
 
   overflow-y: scroll;
   &::-webkit-scrollbar {

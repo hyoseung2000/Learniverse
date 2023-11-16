@@ -95,15 +95,15 @@ const CommentCard = ({ commentInfo, coderef, modifyCode, writer }: Props) => {
             Line : {issueOpinionStartLine} - {issueOpinionEndLine}
           </p>
         ) : null}
-        <p className="code">{issueOpinion}</p>
-        <p>{issueOpinionCode}</p>
+        <p className="opinion">{issueOpinion}</p>
+        <p className="code">{issueOpinionCode}</p>
       </div>
       {cMemberId == writer && issueOpinionCode ? (
         issueAccepted ? (
           <StButton $isPersist={false}>불가</StButton>
         ) : (
           <StButton $isPersist onClick={handleModify}>
-            수락
+            완료
           </StButton>
         )
       ) : null}
@@ -134,6 +134,8 @@ const StComment = styled.div`
     margin-right: 0.1rem;
 
     white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-all;
   }
 
   & > div > p {
@@ -141,9 +143,13 @@ const StComment = styled.div`
     ${({ theme }) => theme.fonts.Body4};
   }
 
-  & > div > .code {
+  & > div > .opinion {
     color: ${({ theme }) => theme.colors.Learniverse_BG};
     ${({ theme }) => theme.fonts.Body5};
+  }
+  & > div > .code {
+    color: ${({ theme }) => theme.colors.Purple3};
+    ${({ theme }) => theme.fonts.Body4};
   }
 `;
 
